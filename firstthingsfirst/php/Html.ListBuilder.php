@@ -22,7 +22,6 @@ function action_add_listbuilder_row ($field_type, $definition)
 {
     global $user;
     global $response;
-    global $logging;
     
     $user->set_action(ACTION_ADD_LISTBUILDER_ROW);
     handle_action($field_type, $definition, "field_definition_table");
@@ -35,7 +34,6 @@ function action_move_listbuilder_row ($row_number, $direction, $definition)
 {
     global $user;
     global $response;
-    global $logging;
     
     $user->set_action(ACTION_MOVE_LISTBUILDER_ROW);
     handle_action($row_number, $direction, $definition, "field_definition_table");
@@ -48,7 +46,6 @@ function action_del_listbuilder_row ($row_number, $definition)
 {
     global $user;
     global $response;
-    global $logging;
     
     $user->set_action(ACTION_DEL_LISTBUILDER_ROW);
     handle_action($row_number, $definition, "field_definition_table");
@@ -61,41 +58,23 @@ function action_refresh_listbuilder ($definition)
 {
     global $user;
     global $response;
-    global $logging;
     
     $user->set_action(ACTION_REFRESH_LISTBUILDER);
     handle_action($definition, "field_definition_table");
     return $response;
 }
 
-# create a new list
+# create a new list and get the portal page
 # this function is registered in xajax
 # TODO add checks and errors
 function action_create_list ($title, $description, $definition)
 {
-    global $json;
-    global $logging;
-    global $list_table_description;
-    global $list_table;
+    global $user;
+    global $response;
     
-    $logging->debug("create list (title=".$title.", desc=".$description.", definition=".$definition).")";
-    (array)$list_definition = $json->decode($definition);
-    $new_definition = array();
-    foreach ($list_definition as $row_definition)
-    {
-        $logging->log_array($row_definition, "row_definition");
-        $new_definition[$row_definition[1]] = array($row_definition[0], $row_definition[3], $row_definition[2]);
-    }   
-    
-    $list_table_description->set_title($title);
-    $list_table_description->set_group("none");
-    $list_table_description->set_description($description);
-    $list_table_description->set_definition($new_definition);
-    $list_table_description->write();
-    $list_table->set();
-    $list_table->create();
-    
-    return action_get_portal_page();
+    $user->set_action(ACTION_CREATE_LIST);
+    handle_action($title, $description, $definition, "the_whole_body");
+    return $response;
 }
 
 # return the html for a complete list page
@@ -143,7 +122,7 @@ function get_listbuilder_page ()
     $html_str .= "        </td>\n";
     $html_str .= "    </tr>\n";
     $html_str .= "    <tr>\n";
-    $html_str .= "        <td id=\"status\"><a xhref=\"javascript:void(0);\" onclick=\"processValues()\">configure</a></td>\n";
+    $html_str .= "        <td id=\"status\"><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_create_list(document.getElementById('list_title').value, document.getElementById('list_description').value, xajax.getFormValues('database_definition_form'))\">create</a>\n";
     $html_str .= "    </tr>\n";
     $html_str .= "<table>\n";
     
@@ -386,5 +365,43 @@ function refresh_listbuilder ($definition)
 
     return;
 }
+
+function create_list ($title, $description, $definition)
+{
+    global $logging;
+    global $list_table_description;
+    global $list_table;
+
+    # get rid of keynames
+    $tmp_definition = array_values($definition);
+    $new_definition = array();
+
+    $logging->debug("create list (title=".$title.", desc=".$description.")");
+    $logging->log_array($tmp_definition, "tmp_definition");
+
+    for ($position = 0; $position < (count($tmp_definition) / 3); $position += 1)
+    {
+        # only the first column is part of the key
+        if ($position == 0)
+            $new_definition[$tmp_definition[($position * 3) + 1]] = array($tmp_definition[$position * 3], 1, $tmp_definition[($position * 3) + 2]);
+        else
+            $new_definition[$tmp_definition[($position * 3) + 1]] = array($tmp_definition[$position * 3], 0, $tmp_definition[($position * 3) + 2]);
+    }
+
+    $list_table_description->set_title($title);
+    $list_table_description->set_group("none");
+    $list_table_description->set_description($description);
+    $list_table_description->set_definition($new_definition);
+    $list_table_description->write();
+    $list_table->set();
+    $list_table->create();
+    
+    $logging->debug("created list");
+
+    get_portal_page();
+
+    return;
+}
+
 
 ?>

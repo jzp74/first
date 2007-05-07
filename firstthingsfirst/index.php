@@ -132,7 +132,7 @@ $xajax->registerFunction("action_add_listbuilder_row");
 $xajax->registerFunction("action_move_listbuilder_row");
 $xajax->registerFunction("action_del_listbuilder_row");
 $xajax->registerFunction("action_refresh_listbuilder");
-$xajax->registerFunction("get_field_descriptions");
+$xajax->registerFunction("action_create_list");
 
 $xajax->processRequests();
 

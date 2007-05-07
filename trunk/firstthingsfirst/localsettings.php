@@ -7,10 +7,10 @@ $tasklist_portal_title = "Tasklist Portal";
 $tasklist_portal_intro_text = "Welcome to the tasklist portal. Please select a tasklist or create a new one";
 
 # relative address on host
-$tasklist_portal_address = "/task";
+$tasklist_portal_address = "/tasklist";
 
 # full path name to portal on host
-$tasklist_full_pathname = "e:///sites/task";
+$tasklist_full_pathname = "e:///sites/tasklist";
 
 # date setting for all lists
 $tasklist_date_string = DATE_FORMAT_EU;

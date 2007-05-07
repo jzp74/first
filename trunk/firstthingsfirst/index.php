@@ -4,6 +4,8 @@
 # Jasper de Jong
 # 2007
 
+# TODO how much data can we transfer from php to js?
+
 
 require_once("globals.php");
 require_once("localsettings.php");

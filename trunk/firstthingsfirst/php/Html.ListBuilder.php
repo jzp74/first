@@ -1,11 +1,12 @@
 <?php
 
 
-# This class contains all php code that is used to generate listbuilder html 
+# This class contains all php code that is used to generate listbuilder html
 
 
-# wrapper function to generate html for the listbuilder
+# wrapper function to generate html for the listbuilder page
 # this function is registered in xajax
+# see get_listbuilder_page function for details
 function action_get_listbuilder_page ()
 {
     global $user;
@@ -18,6 +19,7 @@ function action_get_listbuilder_page ()
 
 # wrapper function to add a listbuilder row
 # this function is registered in xajax
+# see add_listbuilder_row function for details
 function action_add_listbuilder_row ($field_type, $definition)
 {
     global $user;
@@ -28,8 +30,9 @@ function action_add_listbuilder_row ($field_type, $definition)
     return $response;
 }
 
-# wrapper function to move a listbuilder row
+# wrapper function to move a listbuilder row up or down
 # this function is registered in xajax
+# see move_listbuilder_row function for details
 function action_move_listbuilder_row ($row_number, $direction, $definition)
 {
     global $user;
@@ -42,6 +45,7 @@ function action_move_listbuilder_row ($row_number, $direction, $definition)
 
 # wrapper function to delete a listbuilder row
 # this function is registered in xajax
+# see del_listbuilder_row function for details
 function action_del_listbuilder_row ($row_number, $definition)
 {
     global $user;
@@ -54,6 +58,7 @@ function action_del_listbuilder_row ($row_number, $definition)
 
 # wrapper function to refresh a listbuilder
 # this function is registered in xajax
+# see refresh_listbuilder function for details
 function action_refresh_listbuilder ($definition)
 {
     global $user;
@@ -64,9 +69,9 @@ function action_refresh_listbuilder ($definition)
     return $response;
 }
 
-# create a new list and get the portal page
+# wrapper function to create a new list
 # this function is registered in xajax
-# TODO add checks and errors
+# see create_list function for details
 function action_create_list ($title, $description, $definition)
 {
     global $user;
@@ -84,7 +89,7 @@ function get_listbuilder_page ()
     global $result;    
     global $tasklist_field_descriptions;
 
-    $logging->debug("getting list_builer");
+    $logging->trace("getting list_builer");
     
     $field_types = array_keys($tasklist_field_descriptions);
     $definition = array($field_types[0], "id", "", $field_types[3], "", "");
@@ -128,12 +133,13 @@ function get_listbuilder_page ()
     
     $result->set_result_str($html_str);   
     
-    $logging->debug("got list_builer (size=".strlen($result->get_result_str()).")");
+    $logging->trace("got list_builer (size=".strlen($result->get_result_str()).")");
     return;
 }
 
 # return the html for a select box
 # set id to given id (don't set id when no id has been given)
+# set onChange function to action_reresh_listbuilder
 # set selection to given selection string
 function get_select ($id, $name, $selection)
 {
@@ -142,7 +148,7 @@ function get_select ($id, $name, $selection)
     
     $field_types = array_keys($tasklist_field_descriptions);
 
-    $logging->debug("getting select (id=".$id.", name=".$name.", selection=".$selection.")");
+    $logging->trace("getting select (id=".$id.", name=".$name.", selection=".$selection.")");
 
     $html_str = "<select class=\"selection_box\" name=\"".$name."\"";
     if ($id != "")
@@ -160,18 +166,22 @@ function get_select ($id, $name, $selection)
     }
     $html_str .= "</select>";
     
-    $logging->debug("got select");
+    $logging->trace("got select");
 
     return $html_str;
 }
 
+# return the html for a tabel that contains the current current list that is being build
+# use given definition to create this table
+# also returns the 'add' button to add a row to the list
+# array definition: defintion of current list that is being build
 function get_field_definition_table ($definition)
 {
     global $logging;
     global $result;
     global $list_table_description;
 
-    $logging->debug("getting field definition table");
+    $logging->trace("getting field definition table");
     $logging->log_array($definition, "definition");
 
     $input_html_name = "<input type=text size=10 maxlength=10 class=\"input_box\"";
@@ -254,29 +264,35 @@ function get_field_definition_table ($definition)
     
     $result->set_result_str($html_str);   
     
-    $logging->debug("got field definition table (size=".strlen($html_str).")");
+    $logging->trace("got field definition table (size=".strlen($html_str).")");
     return;
 }
 
+# add a listbuilder row
+# string field_type: type of field to add
+# array definition: defintion of current list that is being build
 function add_listbuilder_row ($field_type, $definition)
 {
     global $logging;
     global $result;
 
-    $logging->debug("add listbuilder row (field_type=".$field_type.")");
+    $logging->trace("add listbuilder row (field_type=".$field_type.")");
 
     $new_row = array($field_type, "", "");
     # get rid of keynames
     $new_definition = array_merge(array_values($definition), $new_row);
-    $logging->log_array($new_definition, "new_definition");
-    
+
     get_field_definition_table($new_definition);
     
-    $logging->debug("added listbuilder row (size=".strlen($result->get_result_str()).")");
+    $logging->trace("added listbuilder row (size=".strlen($result->get_result_str()).")");
     
     return;
 }
 
+# move a listbuilder row up or down
+# int row_number: number of the row that needs to be moved
+# string direction: direction to move row ("up" or "down")
+# array definition: defintion of current list that is being build
 function move_listbuilder_row ($row_number, $direction, $definition)
 {
     global $logging;
@@ -286,8 +302,7 @@ function move_listbuilder_row ($row_number, $direction, $definition)
     # get rid of keynames
     $new_definition = array_values($definition);
 
-    $logging->debug("move listbuilder row (row=".$row_number.", direction=".$direction.")");
-    $logging->log_array($new_definition, "new_definition");
+    $logging->trace("move listbuilder row (row=".$row_number.", direction=".$direction.")");
 
     # store values of given row number
     for ($position = 0; $position < 3; $position += 1)
@@ -295,7 +310,6 @@ function move_listbuilder_row ($row_number, $direction, $definition)
         $definition_position = ($row_number * 3) + $position;
         array_push($backup_definition, $new_definition[$definition_position]);
     }
-    $logging->log_array($backup_definition, "backup_definition");
 
     # copy values from given row number to previous or next row (up or down)
     # copy previously stored values to given row number
@@ -315,16 +329,17 @@ function move_listbuilder_row ($row_number, $direction, $definition)
         $new_definition[$position_from + $position] = $new_definition[$position_to + $position];
         $new_definition[$position_to + $position] = $backup_definition[$position];
     }
-        
-    $logging->log_array($new_definition, "new_definition");
-    
+            
     get_field_definition_table($new_definition);
     
-    $logging->debug("moved listbuilder row (size=".strlen($result->get_result_str()).")");
+    $logging->trace("moved listbuilder row (size=".strlen($result->get_result_str()).")");
     
     return;
 }
 
+# delete a listbuilder row
+# int row_number: number of the row that needs to be deleted
+# array definition: defintion of current list that is being build
 function del_listbuilder_row ($row_number, $definition)
 {
     global $logging;
@@ -334,8 +349,7 @@ function del_listbuilder_row ($row_number, $definition)
     $backup_definition = array_values($definition);
     $new_definition = array();
     
-    $logging->debug("delete listbuilder row (row=".$row_number.")");
-    $logging->log_array($backup_definition, "backup_definition");
+    $logging->trace("delete listbuilder row (row=".$row_number.")");
 
     for ($position = 0; $position < count($backup_definition); $position += 1)
     {
@@ -343,29 +357,36 @@ function del_listbuilder_row ($row_number, $definition)
         if ($position < ($row_number * 3) || $position >= (($row_number + 1) * 3))
             array_push($new_definition, $backup_definition[$position]);
     }
-    $logging->log_array($new_definition, "new_definition");
 
     get_field_definition_table($new_definition);
 
-    $logging->debug("deleted listbuilder row (size=".strlen($result->get_result_str()).")");
+    $logging->trace("deleted listbuilder row (size=".strlen($result->get_result_str()).")");
 
     return;
 }
 
+# refresh a listbuilder
+# this function is called when user changes the field_type of a particular row
+# array definition: defintion of current list that is being build
 function refresh_listbuilder ($definition)
 {
     global $logging;
     global $result;
 
-    $logging->debug("refresh listbuilder");
+    $logging->trace("refresh listbuilder");
 
     get_field_definition_table(array_values($definition));
 
-    $logging->debug("refreshed listbuilder");
+    $logging->trace("refreshed listbuilder");
 
     return;
 }
 
+# create a new list and get the portal page
+# string title: title of the new list
+# string description: description of the new list
+# array definition: defintion of current list that is being build
+# TODO add checks and errors
 function create_list ($title, $description, $definition)
 {
     global $logging;
@@ -376,8 +397,7 @@ function create_list ($title, $description, $definition)
     $tmp_definition = array_values($definition);
     $new_definition = array();
 
-    $logging->debug("create list (title=".$title.", desc=".$description.")");
-    $logging->log_array($tmp_definition, "tmp_definition");
+    $logging->trace("create list (title=".$title.", desc=".$description.")");
 
     for ($position = 0; $position < (count($tmp_definition) / 3); $position += 1)
     {
@@ -396,7 +416,7 @@ function create_list ($title, $description, $definition)
     $list_table->set();
     $list_table->create();
     
-    $logging->debug("created list");
+    $logging->trace("created list");
 
     get_portal_page();
 

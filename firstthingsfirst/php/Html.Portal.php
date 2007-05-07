@@ -6,6 +6,7 @@
 
 # wrapper function to generate portal html
 # this function is registered in xajax
+# see get_portal_page function for details
 function action_get_portal_page ()
 {
     global $user;
@@ -25,7 +26,7 @@ function get_portal_page ()
     global $logging;
     global $result;
 
-    $logging->debug("getting portal");
+    $logging->trace("getting portal");
 
     $html_str = "";
     $html_str .= "\n<table width=\"100%\" align=\"left\" valign=\"top\" cellspacing=\"10px\" border=\"0\">\n";
@@ -56,11 +57,10 @@ function get_portal_page ()
     
     $result->set_result_str($html_str);    
 
-    $logging->debug("got portal (size=".strlen($result->get_result_str()).")");
+    $logging->trace("got portal (size=".strlen($result->get_result_str()).")");
     return;
 }
 
-# TODO For some reason this page reloads 3 times (POST and GET)
 # return the html for an overview of all ListTables contained in database
 function get_list_tables ()
 {
@@ -69,12 +69,12 @@ function get_list_tables ()
     global $result;
     global $database;
 
-    $logging->debug("getting list_tables");
+    $logging->trace("getting list_tables");
 
     $html_str = "";
+    $list_table_descriptions = array();
 
     # get all list_tables from database
-    $list_table_descriptions = array();
     $query = "SELECT _title, _description FROM ".LISTTABLEDESCRIPTION_TABLE_NAME;
     $result_object = $database->query($query);
     while ($row = $database->fetch($result_object))
@@ -113,7 +113,7 @@ function get_list_tables ()
     
     $result->set_result_str($html_str);    
 
-    $logging->debug("got list_tables (size=".strlen($html_str).")");
+    $logging->trace("got list_tables (size=".strlen($html_str).")");
     return;
 }
 

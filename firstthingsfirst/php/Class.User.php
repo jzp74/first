@@ -225,7 +225,7 @@ class User
         $this->set_action(ACTION_GET_PORTAL);
         $this->set_page_title("-");
         $this->set_list_order_by_field("");
-        $this->set_list_order_ascending(1);
+        $this->set_list_order_ascending(0);
     }
 
     # check if user is really logged in
@@ -274,7 +274,7 @@ class User
                 $this->set_action(ACTION_GET_PORTAL);
                 $this->set_page_title("-");
                 $this->set_list_order_by_field("");
-                $this->set_list_order_ascending(1);
+                $this->set_list_order_ascending(0);
                 
                 # update the number of times this user has logged in
                 $query = "UPDATE ".USER_TABLE_NAME." SET _times_login=\"".$times_login."\" where _name=\"".$name."\"";

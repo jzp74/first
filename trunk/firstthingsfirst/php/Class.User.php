@@ -39,17 +39,15 @@ class User
         
         # reset relevant session parameters
         
-        if (($this->get_id() != USER_ID_RESET_VALUE) && ($this->get_name() != USER_NAME_RESET_VALUE) && ($this->get_name() != ""))
+        if ($this->is_login())
         {
             $this->_log->debug("user session is still active (name=".$this->get_name().")");
             $this->page = ACTION_GET_PORTAL;
             $this->page_title = "-";
         }
-        # TODO tidy this up
-        #else
-            #$this->reset();
+        else
+            $this->reset();
         
-        $this->_log->trace($this);
         $this->_log->trace("constructed new User object");
     }
 
@@ -225,7 +223,7 @@ class User
         $this->set_action(ACTION_GET_PORTAL);
         $this->set_page_title("-");
         $this->set_list_order_by_field("");
-        $this->set_list_order_ascending(0);
+        $this->set_list_order_ascending(1);
     }
 
     # check if user is really logged in
@@ -274,7 +272,7 @@ class User
                 $this->set_action(ACTION_GET_PORTAL);
                 $this->set_page_title("-");
                 $this->set_list_order_by_field("");
-                $this->set_list_order_ascending(0);
+                $this->set_list_order_ascending(1);
                 
                 # update the number of times this user has logged in
                 $query = "UPDATE ".USER_TABLE_NAME." SET _times_login=\"".$times_login."\" where _name=\"".$name."\"";

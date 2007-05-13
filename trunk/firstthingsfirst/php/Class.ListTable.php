@@ -117,7 +117,7 @@ class ListTable
         return sprintf("%04d-%02d-%02d", $year, $month, $day);
     }
 
-    function _get_key_string($table_row)
+    function _get_key_string ($table_row)
     {
         global $tasklist_table_definition;
 
@@ -128,6 +128,19 @@ class ListTable
             if ($definition[$field_name][1])
                 array_push($name_values, $this->_get_db_field_name($field_name)."='".$table_row[$this->_get_db_field_name($field_name)]."'");
         return implode($name_values, " and ");
+    }
+    
+    function _get_key_values_string ($table_row)
+    {
+        global $tasklist_table_definition;
+
+        $val_str = "";
+        $definition = $this->_list_table_description->get_definition();
+        
+        foreach ($this->field_names as $field_name)
+            if ($definition[$field_name][1])
+                $val_str .= "_".$table_row[$this->_get_db_field_name($field_name)];
+        return $val_str;
     }
 
     # getter
@@ -318,14 +331,10 @@ class ListTable
             $this->set_order_by_field($this->_get_db_field_name($order_by_field));
             $order_by_field = $this->_get_db_field_name($order_by_field);
 
-            $this->_log->debug("order ascending [before]: ".$this->get_order_ascending().".");            
-            
             if ($this->get_order_ascending())
                 $this->set_order_ascending(0);
             else
                 $this->set_order_ascending(1);
-
-            $this->_log->debug("order ascending [after ]: ".$this->get_order_ascending().".");            
         }
     
         # get the number of entries
@@ -518,6 +527,31 @@ class ListTable
         return TRUE;
     }
 
+    function del ($key_string)
+    {
+        $definition = $this->_list_table_description->get_definition();
+        
+        $this->_log->debug("delete entry from ListTable (key_string=".$key_string.")");
+
+        if (!$this->_database->table_exists($this->table_name))
+        {
+            $this->_log->error("TableList does not exist in database");
+            return array();
+        }
+
+        $query = "DELETE FROM ".$this->table_name." WHERE ".$key_string;
+        $result = $this->_database->query($query);
+
+        if ($result == FALSE)
+        {
+            $this->_log->error("could not delete entry to ListTable");
+            $this->_log->error("database error: ".$this->_database->get_error());
+            return FALSE;
+        }
+
+        $this->_log->info("deleted entry to ListTable");
+        return TRUE;
+    }
 }
 
 ?>

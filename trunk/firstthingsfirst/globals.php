@@ -11,12 +11,20 @@ define("DB_DATE_FORMAT", "%Y-%m-%d");
 
 # define all possible user actions
 # each define is the actual name of a function
+
+# portal actions
 define("ACTION_GET_PORTAL_PAGE", "get_portal_page");
+
+# list actions
 define("ACTION_GET_LIST_PAGE", "get_list_page");
 define("ACTION_GET_LIST_CONTENT", "get_list_content");
 define("ACTION_GET_LIST_ROW", "get_list_row");
+define("ACTION_UPDATE_LIST_ROW", "update_list_row");
 define("ACTION_ADD_LIST_ROW", "add_list_row");
+define("ACTION_DEL_LIST_ROW", "del_list_row");
 define("ACTION_CANCEL_LIST_ACTION", "cancel_list_action");
+
+# listbuilder actions
 define("ACTION_GET_LISTBUILDER_PAGE", "get_listbuilder_page");
 define("ACTION_ADD_LISTBUILDER_ROW", "add_listbuilder_row");
 define("ACTION_MOVE_LISTBUILDER_ROW", "move_listbuilder_row");
@@ -32,7 +40,9 @@ $tasklist_action_descriptions = array(
     ACTION_GET_LIST_PAGE        => array(1, 1, 0),
     ACTION_GET_LIST_CONTENT     => array(1, 1, 0),
     ACTION_GET_LIST_ROW         => array(1, 1, 1),
+    ACTION_UPDATE_LIST_ROW      => array(1, 1, 1),
     ACTION_ADD_LIST_ROW         => array(1, 1, 1),
+    ACTION_DEL_LIST_ROW         => array(1, 1, 1),
     ACTION_GET_LISTBUILDER_PAGE => array(0, 1, 1),
     ACTION_ADD_LISTBUILDER_ROW  => array(0, 1, 1),
     ACTION_MOVE_LISTBUILDER_ROW => array(0, 1, 1),

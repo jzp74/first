@@ -115,20 +115,19 @@ function handle_action ()
 # Initialize xajax
 $xajax = new xajax();
 
-# display portal function
+# register portal actions
 $xajax->registerFunction("action_get_portal_page");
 
-# action_get list functions
+# register list actions
 $xajax->registerFunction("action_get_list_page");
 $xajax->registerFunction("action_get_list_content");
 $xajax->registerFunction("action_get_list_row");
+$xajax->registerFunction("action_update_list_row");
 $xajax->registerFunction("action_add_list_row");
+$xajax->registerFunction("action_del_list_row");
 $xajax->registerFunction("action_cancel_list_action");
 
-# edit/delete/add list rows functions
-#$sajax_
-
-# listbuilder functions
+# register listbuilder actions
 $xajax->registerFunction("action_get_listbuilder_page");
 $xajax->registerFunction("action_add_listbuilder_row");
 $xajax->registerFunction("action_move_listbuilder_row");
@@ -138,6 +137,9 @@ $xajax->registerFunction("action_create_list");
 
 $xajax->processRequests();
 
+# TODO remove this temporary hack
+if (!$user->is_login())
+    $user->login("jasper", "jasper");
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">

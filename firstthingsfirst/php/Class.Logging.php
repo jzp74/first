@@ -66,10 +66,11 @@ class Logging
         $keys = array_keys($the_array);
         if (count($keys))
         {
-            foreach ($keys as $array_key)
+            for ($i=0; $i<count($keys); $i++)
             {
+                $array_key = $keys[$i];
                 $log_str .= $array_key."=".$the_array[$array_key];
-                if ($keys[count($keys) - 1] != $array_key)
+                if ($i < (count($keys) - 1))
                     $log_str .= ", ";
             }
         }

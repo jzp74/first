@@ -16,7 +16,7 @@ $tasklist_full_pathname = "e:///sites/tasklist";
 $tasklist_date_string = DATE_FORMAT_EU;
 
 # maximum numbers of entries per page
-$tasklist_list_page_entries = 4;
+$tasklist_list_page_entries = 10;
     
 # database settings
 $tasklist_db_host = "127.0.0.1";

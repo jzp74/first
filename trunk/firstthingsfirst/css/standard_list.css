@@ -1,0 +1,121 @@
+/* This stylesheet contains all list styles */
+
+
+/*  defines the pane that contains the list contents */
+#list_content_pane {
+    margin: 12px 10px 12px 10px;
+    color: rgb(0, 0, 102);
+    }
+
+/*  defines list pages above the list contents */
+#list_pages_top {
+    margin: 12px 38% 4px 38%;
+    padding: 3px 4px 3px 4px;
+    text-align: center;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    }    
+    
+/*  defines table that contains list contents */
+#list_contents {
+    width: 100%;
+    float: none;
+    margin: 2px 0px 2px 0px;
+    color: rgb(0, 0, 102);
+    text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    }
+
+#list_contents tr {
+    background-color: rgb(250, 230, 230);
+    }
+    
+#list_contents th {
+    padding: 4px 4px 4px 4px;
+    }
+
+#list_contents td {
+    padding: 4px 4px 4px 4px;
+    vertical-align: top;
+    }
+
+#list_contents tbody tr:hover {
+    background-color: rgb(250, 210, 210);
+    }
+    
+#list_contents a, #list_contents a:link, #list_contents a:visited {
+    text-decoration: none;
+    font-weight: bold;
+    }
+
+#list_contents a:hover { 
+    color: rgb(60, 60, 175);
+    text-decoration: underline;
+    }
+
+/*  defines list pages below the list contents */
+#list_pages_bottom {
+    margin: 4px 38% 12px 38%;
+    padding: 3px 4px 3px 4px;
+    text-align: center;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    }
+    
+#list_pages_bottom a, #list_pages_bottom a:link, #list_pages_bottom a:visited {
+    text-align: center;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    text-decoration: none;
+    font-weight: bold;
+    }
+
+#list_pages_bottom a:hover {
+    color: rgb(60, 60, 175);
+    text-decoration: underline;
+    }
+
+/*  defines pane that contains list row contents */
+#list_row_contens_pane {
+    float: none;
+    padding: 10px 0px 2px 0px;
+    background-color: rgb(238, 246, 238);
+    text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    }
+    
+/*  defines table that contains contents of one list row */
+#list_row_contents {
+    float: none;
+    color: rgb(0, 0, 102);
+    text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    }
+    
+#list_row_contents td {
+    padding: 3px 10px 3px 4px;
+    }
+
+#list_row_contents select { 
+    padding: 1px 1px 3px 0px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(208, 239, 208);
+    text-align: left;
+    }
+
+#list_row_contents input { 
+    padding: 1px 5px 3px 5px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(208, 239, 208);
+    text-align: left;
+    }
+

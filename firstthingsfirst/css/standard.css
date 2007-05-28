@@ -1,205 +1,191 @@
-/* Several global defines */
+/* This stylesheet contains all shared styles */
 
-body, p { 
+
+/*  defines shared settings for all styles */
+* {
     margin: 0px 0px 0px 0px;
     padding: 0px 0px 0px 0px;
-    background-color: rgb(249, 249, 249);
-    color: rgb(0, 0, 0);
-    text-align: left;
-    font-weight: normal;
-    font-size: small;
-    font-family: sans-serif;
-    }    
-
-h1 {
-    margin: 6px 6px 6px 6px;
-    font-weight: bold;
-    font-size: xx-large;
-    text-align: center;
+    border: none;
+    z-index: 10;
     }
 
-h2 {
-    margin: 4px 4px 4px 4px;
-    font-weight: bold;
-    font-size: x-large;
-    }
-    
-h3 {
-    margin: 2px 2px 2px 2px;
-    font-weight: bold;
-    font-size: large;
-    }
-
-table {
-    float: none;
-    }
-
-td {
-    text-align: left;
-    padding: 10px 10px 10px 10px;
-    border: rgb(170, 170, 170) solid 1px;
-    font-size: small;
-    }
-
-th {
-    text-align: left;
-    font-weight: bold;
-    font-size: small;
-    }
-
-a, a:link, a:visited {
-    color: rgb(1, 44, 184);
-    text-decoration: none;
-    font-weight: bold;
-    }
-    
-a:hover {
-    text-decoration: underline;
-    }
-    
-/* Defines for login page */
-
-.login_table td {
-    text-align: left;
-    padding: 2px 2px 2px 2px;
-    border: 0px;
-}
-
-/* Defines for error page */
-
-.error_table th {
-    padding: 4px 7px 6px 7px;
-    margin: 0px 0px 0px 0px;
-    background-color: rgb(238, 238, 238);
-    color: rgb(0, 0, 0);
-    }
-
-.error_table td {
-    padding: 4px 7px 6px 7px;
-    margin: 0px 0px 0px 0px;
-    background-color: rgb(238, 238, 238);
-    border: 0px;
-    }
-    
-/* Defines for list overview */
-
-.list_table th {
-    padding: 3px 7px 5px 7px;
-    margin: 0px 0px 0px 0px;
-    background-color: rgb(236, 236, 236);
-    }
-
-.list_table td {
-    padding: 1px 7px 3px 7px;
-    margin: 0px 0px 0px 0px;
-    border: 0px;
-    }
-
-.list_table tr.odd {
-    background-color: rgb(236, 236, 236);
-    }
-    
-.list_table tr:hover {
-    background-color: rgb(240, 240, 240);
-    }
-
-/* Defines for the list_table */
-
-.main_table tr:hover {
-    color: rgb(250, 189, 35);
-    }
-
-.main_table th {
-    padding: 3px 7px 5px 7px;
-    margin: 0px 0px 0px 0px;
-    background-color: rgb(238, 238, 238);
-    }
-
-.main_table td {
-    padding: 1px 7px 3px 7px;
-    margin: 0px 0px 0px 0px;
-    background-color: rgb(238, 238, 238);
-    border: 0px;
-    }
-
-.main_table a, .main_table a:link, .main_table a:visited {
-    color: rgb(1, 44, 184);
-    text-decoration: none;
-    font-weight: bold;
-    }
-    
-.main_table a:hover {
-    text-decoration: underline;
-    }
-
-/* Table data of the main row should look slightly different when it is edited */
-
-.main_table_edit td {
-    padding: 0px 0px 0px 0px;
+/*  defines the html overall style of a page */
+html {
+    height: 100%;
     background-color: rgb(255, 255, 255);
     }
 
-/* Defines for the add_row_table */
-
-.add_row_table th {
-    padding: 4px 7px 6px 7px;
-    margin: 0px 0px 0px 0px;
-    background-color: rgb(238, 238, 238);
-    color: rgb(0, 0, 0);
+/*  defines the body  */
+body {
+    min-height: 100%;
+    position: relative;
+    margin: 0px 12px 0px 12px;
+    background-color: rgb(255, 255, 255);
     }
 
-.add_row_table td {
-    padding: 4px 7px 6px 7px;
-    margin: 0px 0px 0px 0px;
-    background-color: rgb(238, 238, 238);
-    border: 0px;
-    }
-
-.add_row_table a, .add_row_table a:link, .add_row_table a:visited {
-    color: rgb(1, 44, 184);
-    text-decoration: none;
-    font-weight: bold;
+/*  defines the innermost left margin */
+#left_margin {
+    position: absolute;
+    min-height: 100%;
+    width: 6px;
+    top: 0px;
+    left: 0px;
+    background-color: rgb(157, 181, 222);
     }
     
-.add_row_table a:hover {
-    text-decoration: underline;
+/*  defines the innermost right margin */
+#right_margin {
+    position: absolute;
+    min-height: 100%;
+    width: 6px;
+    top: 0px;
+    right: 0px;
+    background-color: rgb(157, 181, 222);
     }
 
-/* Defines all input_boxes */
+/*  defines the colored margin at the bottom of the page */
+#upper_margin {
+    height: 16px;
+    width: 100%;
+    top: 0px;
+    position: absolute;
+    display: block;
+    float: none;
+    background-color: rgb(255, 255, 255);
+    z-index: 20;
+    }    
 
-.input_box {
-    padding: 1px 7px 3px 7px;
-    margin: 0px 0px 0px 0px;
-    border: rgb(170, 170, 170) solid 1px;
+/*  defines the header of a page */
+#header {
+    width: 100%;
+    position: absolute;
+    display: block;
+    float: none;
+    top: 16px;
+    padding: 4px 0px 4px 0px;
+    background-color: rgb(157, 181, 222);
+    color: rgb(255, 255, 255);
     text-align: left;
+    font-family: verdana;
+    font-size: x-small;
     font-weight: normal;
-    font-size: small;
-    font-family: sans-serif;
-    }
-
-/* Defines all selection_boxes */
-
-.selection_box {
-    padding: 1px 3px 3px 3px;
-    margin: 0px 0px 0px 0px;
-    border: rgb(170, 170, 170) solid 1px;
-    text-align: left;
-    font-weight: normal;
-    font-size: small;
-    font-family: sans-serif;
+    z-index: 30;
     }
     
-/* Defines objects that do take up space but are invisible */
-.invisible {
+/*  this style is used only to define upper margin 
+    font characteristics should be equal to those of #header */
+#hidden_upper_margin {
+    margin: 0px 0px 16px 0px;
+    padding: 4px 0px 4px 0px;
+    font-family: verdana;
+    font-size: x-small;
+    font-weight: normal;
     visibility: hidden;
     }
 
-/* Defines footer */
+/*  container for all page contents */
+#main_body {
+    margin: 0px 6px 0px 6px;
+    position: relative;
+    z-index: 10;
+    }    
 
-.footer td {
-    background-color: rgb(255, 255, 255);
-    text-align: right;
-    padding: 10px 10px 10px 10px;
-    border: rgb(250, 189, 35) solid 1px;
-    font-size: x-small;
+/*  defines the title of a page */    
+#page_title {
+    padding: 4px 0px 4px 0px;
+    background-color: rgb(157, 181, 222);
+    color: rgb(255, 255, 255);
+    font-family: arial black;    
+    font-size: x-large;
+    font-weight: bold;
+    text-align: center;
     }
+
+/*  defines the login status of a user */    
+#login_status {
+    padding: 4px 0px 4px 0px;
+    background-color: rgb(157, 181, 222);
+    color: rgb(255, 255, 255);
+    text-align: right;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    }
+
+/*  defines the footer of a page */
+#footer {
+    width: 100%;
+    bottom: 24px;
+    position: absolute;
+    padding: 4px 0px 4px 0px;
+    background-color: rgb(157, 181, 222);
+    color: rgb(255, 255, 255);
+    text-align: center;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    }    
+
+/*  defines the colored margin at the bottom of the page */
+#lower_margin {
+    height: 16px;
+    width: 100%;
+    bottom: 0px;
+    position: absolute;
+    padding: 4px 0px 4px 0px;
+    background-color: rgb(255, 255, 255);
+    z-index: 1000;
+    }    
+
+/*  this style is used only to define lower margin 
+    font characteristics should be equal to those of #footer */
+#hidden_lower_margin {
+    margin: 0px 0px 16px 0px;
+    padding: 4px 0px 4px 0px;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    visibility: hidden;
+    }
+
+/*  defines the pane that contains the action bar */
+#action_pane {
+    margin: 12px 10px 12px 10px;
+    color: rgb(0, 0, 102);
+    }
+
+/*  defines the action bar that contains a number of actions (hrefs) */
+#action_bar {
+    padding: 2px 2px 2px 2px;
+    background-color: rgb(208, 239, 208);
+    text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    }
+    
+#action_bar p {
+    padding: 4px 0px 4px 0px;
+    }
+
+#action_bar p span {
+    padding: 4px 2px 4px 2px;
+    background-color: rgb(238, 246, 238);
+    }
+
+#action_bar a, #action_bar a:link, #action_bar a:visited {
+    text-decoration: none;
+    font-weight: bold;
+    }
+
+#action_bar a:hover { 
+    color: rgb(60, 60, 175);
+    text-decoration: underline;
+    }
+
+#action_bar select { 
+    padding: 1px 1px 3px 0px;
+    background-color: rgb(255, 255, 255);
+    text-align: left;
+    }    
+

@@ -1,0 +1,123 @@
+/* This stylesheet contains all portal styles */
+
+
+/*  defines the title of the general settings pane */
+#listbuilder_general_settings_title {
+    margin: 12px 10px 0px 10px;
+    padding: 2px 3px 2px 3px;
+    background-color: rgb(240, 240, 200);
+    color: rgb(0, 0, 102);
+    font-family: arial black;    
+    font-size: normal;
+    font-weight: normal;
+    text-align: left;
+    }
+    
+/*  defines the pane that containes general settings */    
+#listbuilder_general_settings_pane {
+    margin: 0px 10px 2px 10px;
+    background-color: rgb(255, 255, 220);
+    color: rgb(0, 0, 102);
+    border: 2px solid rgb(240, 240, 200);
+    }
+
+/*  defines the table that contains the general settings */    
+#listbuilder_general_settings {
+    float: none;
+    color: rgb(0, 0, 102);
+    text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    }
+
+#listbuilder_general_settings td {
+    padding: 4px 10px 4px 4px;
+    vertical-align: top;
+    }
+
+#listbuilder_general_settings input, #listbuilder_general_settings textarea { 
+    padding: 1px 5px 3px 5px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(240, 240, 200);
+    font-family: verdana;
+    font-size: small;
+    text-align: left;
+    }
+
+/*  defines the title of the definition pane */
+#listbuilder_definition_title {
+    margin: 12px 10px 0px 10px;
+    padding: 2px 3px 2px 3px;
+    background-color: rgb(240, 240, 200);
+    color: rgb(0, 0, 102);
+    font-family: arial black;    
+    font-size: normal;
+    font-weight: normal;
+    text-align: left;
+    }
+
+/*  defines the pane that contains the list definition */
+#listbuilder_definition_pane {
+    margin: 0px 10px 2px 10px;
+    background-color: rgb(255, 255, 220);
+    color: rgb(0, 0, 102);
+    border: 2px solid rgb(240, 240, 200);
+    }
+
+/*  defines the table that contains the list definition */
+#listbuilder_definition {
+    width: 100%;
+    float: none;
+    color: rgb(0, 0, 102);
+    text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    }
+
+#listbuilder_definition tr {
+    background-color: rgb(255, 255, 220);
+    }
+    
+#listbuilder_definition tbody tr:hover {
+    background-color: rgb(240, 240, 200);
+    }
+    
+#listbuilder_definition th {
+    padding: 4px 4px 4px 4px;
+    }
+
+#listbuilder_definition td {
+    padding: 4px 4px 4px 4px;
+    vertical-align: top;
+    }
+
+#listbuilder_definition select { 
+    padding: 1px 1px 3px 0px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(240, 240, 200);
+    text-align: left;
+    }
+
+#listbuilder_definition input { 
+    padding: 1px 5px 3px 5px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(240, 240, 200);
+    text-align: left;
+    }
+
+#listbuilder_definition a, #listbuilder_definition a:link, #listbuilder_definition a:visited {
+    text-align: center;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    text-decoration: none;
+    font-weight: bold;
+    }
+
+#listbuilder_definition a:hover {
+    color: rgb(60, 60, 175);
+    text-decoration: underline;
+    }
+

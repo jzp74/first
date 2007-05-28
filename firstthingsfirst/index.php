@@ -151,17 +151,35 @@ if (!$user->is_login())
     
     <title><?php echo $tasklist_portal_title ?></title>
     <link rel="stylesheet" href="css/standard.css">
-    <script type="text/javascript" src="js/external/json.js"></script>
+    <link rel="stylesheet" href="css/standard_list.css">
+    <link rel="stylesheet" href="css/standard_portal.css">
+    <link rel="stylesheet" href="css/standard_listbuilder.css">
 
     <?php $xajax->printJavascript("xajax"); ?>
 
 </head>
 
 <body>
-    <div id="the_whole_body" width="100%">    
-        <script language="javaScript">xajax_action_get_portal_page()</script>
-    </div>
+    
+    <div id="left_margin"></div>    
+
+    <div id="right_margin"></div>    
+
+    <div id="upper_margin"></div>    
+    
+    <?php echo "<div id=\"header\">&nbsp;&nbsp;".file_get_contents("VERSION")."    </div>\n" ?>
+
+    <div id="main_body">
+
+        <script language="javaScript">xajax_action_get_portal_page()</script>            
+
+    </div> <!-- main_body -->
+
+    <div id="footer">...</div>
+
+    <div id="lower_margin"></div>
+
 </body>
 
-</html>
+<html>
 

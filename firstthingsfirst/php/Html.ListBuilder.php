@@ -13,7 +13,7 @@ function action_get_listbuilder_page ()
     global $response;
 
     $user->set_action(ACTION_GET_LISTBUILDER_PAGE);
-    handle_action("the_whole_body");
+    handle_action("main_body");
     return $response;
 }
 
@@ -26,7 +26,7 @@ function action_add_listbuilder_row ($field_type, $definition)
     global $response;
     
     $user->set_action(ACTION_ADD_LISTBUILDER_ROW);
-    handle_action($field_type, $definition, "field_definition_table");
+    handle_action($field_type, $definition, "listbuilder_definition_pane");
     return $response;
 }
 
@@ -39,7 +39,7 @@ function action_move_listbuilder_row ($row_number, $direction, $definition)
     global $response;
     
     $user->set_action(ACTION_MOVE_LISTBUILDER_ROW);
-    handle_action($row_number, $direction, $definition, "field_definition_table");
+    handle_action($row_number, $direction, $definition, "listbuilder_definition_pane");
     return $response;
 }
 
@@ -52,7 +52,7 @@ function action_del_listbuilder_row ($row_number, $definition)
     global $response;
     
     $user->set_action(ACTION_DEL_LISTBUILDER_ROW);
-    handle_action($row_number, $definition, "field_definition_table");
+    handle_action($row_number, $definition, "listbuilder_definition_pane");
     return $response;
 }
 
@@ -65,7 +65,7 @@ function action_refresh_listbuilder ($definition)
     global $response;
     
     $user->set_action(ACTION_REFRESH_LISTBUILDER);
-    handle_action($definition, "field_definition_table");
+    handle_action($definition, "listbuilder_definition_pane");
     return $response;
 }
 
@@ -78,7 +78,7 @@ function action_create_list ($title, $description, $definition)
     global $response;
     
     $user->set_action(ACTION_CREATE_LIST);
-    handle_action($title, $description, $definition, "the_whole_body");
+    handle_action($title, $description, $definition, "main_body");
     return $response;
 }
 
@@ -95,41 +95,39 @@ function get_listbuilder_page ()
     $definition = array($field_types[0], "id", "", $field_types[3], "", "");
     
     $html_str = "";
-    $html_str .= "<table width=\"100%\" align=\"left\" cellspacing=\"10px\" border=\"0\">\n";
-    $html_str .= "    <tr>\n";
-    $html_str .= "        <td>\n";
-    $html_str .= "            <h1>Configure</h1><p>&nbsp;</p>\n";
-    $html_str .= "        </td>\n";
-    $html_str .= "    </tr>\n";
-    $html_str .= "    <tr>\n";
-    $html_str .= "        <td width=\"100%\" align=\"left\" id=\"general_settings\">\n";
-    $html_str .= "            <h3>Define database settings</h3><br>\n";
-    $html_str .= "            <table cellspacing=\"1\" border=\"0\" align=\"left\" class=\"add_row_table\">\n";
+    $html_str .= "        <div id=\"page_title\">Configure a new list</div>\n\n";
+    $html_str .= "        <div id=\"login_status\">user: jasper&nbsp;&nbsp;<strong>logout</strong>&nbsp;&nbsp;</div>\n\n";
+    $html_str .= "        <div id=\"listbuilder_general_settings_title\">General settings</div>\n\n";        
+    $html_str .= "        <div id=\"listbuilder_general_settings_pane\">\n\n";
+    $html_str .= "            <table id=\"listbuilder_general_settings\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
     $html_str .= "                <tbody>\n";
     $html_str .= "                    <tr>\n";
     $html_str .= "                        <td>Title of this list</td>\n";
-    $html_str .= "                        <td><input type=text size=20 maxlength=100 class=\"input_box\" id=\"list_title\"></td>\n";
+    $html_str .= "                        <td><input size=\"20\" maxlength=\"100\" id=\"listbuilder_list_title\" type=\"text\"></td>\n";
     $html_str .= "                    </tr>\n";
     $html_str .= "                    <tr>\n";
     $html_str .= "                        <td>Short description of this list</td>\n";
-    $html_str .= "                        <td><textarea cols=40 rows=4 class=\"input_box\" id=\"list_description\"></textarea></td>\n";
+    $html_str .= "                        <td><textarea cols=\"40\" rows=\"4\" id=\"listbuilder_list_description\"></textarea></td>\n";
+    $html_str .= "                    </tr>\n";
     $html_str .= "                </tbody>\n";
-    $html_str .= "            </table>\n";
-    $html_str .= "        </td>\n";
-    $html_str .= "    </tr>\n";
-    $html_str .= "    <tr>\n";
-    $html_str .= "        <td align=\"left\" width=\"100%\" id=\"field_definition_table\">\n";
+    $html_str .= "            </table> <!-- listbuilder_general_settings -->\n\n";
+    $html_str .= "        </div> <!-- listbuilder_general_settings_pane -->\n\n";
+    $html_str .= "        <div id=\"listbuilder_definition_title\">Define table fields</div>\n\n";
+    $html_str .= "        <div id=\"listbuilder_definition_pane\">\n\n";
 
     $result->set_result_str($html_str);    
     get_field_definition_table($definition);
 
     $html_str = "";            
-    $html_str .= "        </td>\n";
-    $html_str .= "    </tr>\n";
-    $html_str .= "    <tr>\n";
-    $html_str .= "        <td id=\"status\"><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_create_list(document.getElementById('list_title').value, document.getElementById('list_description').value, xajax.getFormValues('database_definition_form'))\">create</a>\n";
-    $html_str .= "    </tr>\n";
-    $html_str .= "<table>\n";
+    $html_str .= "        </div> <!-- listbuiler_definition_pane -->\n\n";
+    $html_str .= "        <div id=\"action_pane\">\n\n";
+    $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
+    $html_str .= "                <p><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_add_listbuilder_row(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'))\">add field</a>\n";
+    $html_str .= "                &nbsp;".get_select("add_select", "add_it", "")."\n";
+    $html_str .= "                &nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_create_list(document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value, xajax.getFormValues('database_definition_form'))\">add a list</a></p>\n";
+    $html_str .= "            </div> <!-- action_bar -->\n\n";    
+    $html_str .= "        </div> <!-- action_pane -->\n\n";           
+    $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
     
     $result->set_result_str($html_str);   
     
@@ -155,16 +153,16 @@ function get_select ($id, $name, $selection)
         $html_str .= " id=\"".$id."\"";
     else
         $html_str .= " onChange=\"xajax_action_refresh_listbuilder(xajax.getFormValues('database_definition_form'));\"";
-    $html_str .= ">";
+    $html_str .= ">\n";
     
     foreach ($field_types as $field_type)
     {
-        $html_str .= "<option value=\"".$field_type."\"";
+        $html_str .= "                                <option value=\"".$field_type."\"";
         if ($field_type == $selection)
             $html_str .= " selected";
-        $html_str .= ">".$field_type."\n";
+        $html_str .= ">".$field_type."</option>\n";
     }
-    $html_str .= "</select>";
+    $html_str .= "                            </select>";
     
     $logging->trace("got select");
 
@@ -187,23 +185,24 @@ function get_field_definition_table ($definition)
     $input_html_name = "<input type=text size=10 maxlength=10 class=\"input_box\"";
     $input_html_value = "<input type=text size=20 maxlength=100 class=\"input_box\"";
     $input_html_value_invisible = "<input type=text size=20 maxlength=100 class=\"invisible\"";
-    $html_str = "";
+    $html_str = "";    
     
-    $html_str .= "            <h3>Define table fields</h3><br>\n";   
-    $html_str .= "            <form id=\"database_definition_form\">\n";
-    $html_str .= "            <table cellspacing=\"1\" border=\"0\" width=\"100%\" align=\"left\" class=\"add_row_table\">\n";
-    $html_str .= "                <tbody>\n";
-    $html_str .= "                    <tr>\n";
-    $html_str .= "                        <th>Fieldtype</th>\n";
-    $html_str .= "                        <th>Fieldname</th>\n";
-    $html_str .= "                        <th>Options</th>\n";
-    $html_str .= "                        <th>Comment</th>\n";
-    $html_str .= "                        <th colspan=\"3\">Action</th>\n";
-    $html_str .= "                    </tr>\n";
+    $html_str .= "\n\n            <form id=\"database_definition_form\">\n";
+    $html_str .= "                <table id=\"listbuilder_definition\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
+    $html_str .= "                    <thead>\n";
+    $html_str .= "                        <tr>\n";
+    $html_str .= "                            <th>Fieldtype</th>\n";
+    $html_str .= "                            <th>Fieldname</th>\n";
+    $html_str .= "                            <th>Options</th>\n";
+    $html_str .= "                            <th>Comment</th>\n";
+    $html_str .= "                            <th colspan=\"3\">Action</th>\n";
+    $html_str .= "                        </tr>\n";
+    $html_str .= "                    </thead>\n";
+    $html_str .= "                    <tbody>\n";
     
     for ($row = 0; $row < (count($definition) / 3); $row += 1)
     {
-        $html_str .= "                    <tr>\n";
+        $html_str .= "                        <tr>\n";
         $position_type = $row * 3;
         $position_name = ($row * 3) + 1;
         $position_options = ($row * 3) + 2;
@@ -212,55 +211,54 @@ function get_field_definition_table ($definition)
 
         # the first column - type
         if ($row == 0)
-            $html_str .= "                        <td>".$input_html_name." name=\"row_".$row."_1\" readonly value=\"autonumber\"></td>\n";
+            $html_str .= "                            <td>".$input_html_name." name=\"row_".$row."_1\" readonly value=\"autonumber\"></td>\n";
         else
-            $html_str .= "                        <td>".get_select("", "row_".$row."_1", $definition[$position_type])."</td>\n";
+            $html_str .= "                            <td>".get_select("", "row_".$row."_1", $definition[$position_type])."</td>\n";
         
         # the second column - name
-        $html_str .= "                        <td>".$input_html_value." name=\"row_".$row."_2\" ";
+        $html_str .= "                            <td>".$input_html_value." name=\"row_".$row."_2\" ";
         if ($row == 0)
             $html_str .="readonly ";
         $html_str .= "value=\"".$definition[$position_name]."\"></td>\n";
 
         # the third column - options
         if ($definition[$position_type] == "selection")
-            $html_str .= "                        <td>".$input_html_value." name=\"row_".$row."_3\" value=\"".$definition[$position_options]."\"></td>\n";
+            $html_str .= "                            <td>".$input_html_value." name=\"row_".$row."_3\" value=\"".$definition[$position_options]."\"></td>\n";
         else
-            $html_str .= "                        <td>".$input_html_value_invisible." name=\"row_".$row."_3\" value=\"\"></td>\n";
+            $html_str .= "                            <td>".$input_html_value_invisible." name=\"row_".$row."_3\" value=\"\"></td>\n";
 
         # the fourth column - remarks
         if ($row == 0)
-            $html_str .= "                        <td><em>This field cannot be changed</em></td>\n";
+            $html_str .= "                            <td><em>This field cannot be changed</em></td>\n";
         else if ($definition[$position_type] == "selection")
-            $html_str .= "                        <td><em>Specify '|' seperated options for this selection field.<br>For instance: 'dog|cat|sheep'</em></td>\n";
+            $html_str .= "                            <td><em>Specify '|' seperated options for this selection field.<br>For instance: 'dog|cat|sheep'</em></td>\n";
         else
-            $html_str .= "                        <td>&nbsp</td>\n";
+            $html_str .= "                            <td>&nbsp</td>\n";
         
         # the fifth column - up
         if ($row > 1)
-            $html_str .= "                        <td><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_move_listbuilder_row(".$row.", 'up', xajax.getFormValues('database_definition_form'))\">&nbsp;up&nbsp;</a></td>\n";
+            $html_str .= "                            <td width=\"1%\"><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_move_listbuilder_row(".$row.", 'up', xajax.getFormValues('database_definition_form'))\">&nbsp;up&nbsp;</a></td>\n";
         else
-            $html_str .= "                        <td><p class=\"invisible\">&nbsp;up&nbsp;</p></td>\n";
+            $html_str .= "                            <td width=\"1%\"><p style=\"visibility: hidden;\">&nbsp;up&nbsp;</p></td>\n";
         
         # the sixth column - down
         if ($row > 0 && $row < ((count($definition) / 3) - 1))
-            $html_str .= "                        <td><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_move_listbuilder_row(".$row.", 'down', xajax.getFormValues('database_definition_form'))\">down</a></td>\n";
+            $html_str .= "                            <td width=\"1%\"><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_move_listbuilder_row(".$row.", 'down', xajax.getFormValues('database_definition_form'))\">down</a></td>\n";
         else
-            $html_str .= "                        <td><p class=\"invisible\">down</p></td>\n";
+            $html_str .= "                            <td width=\"1%\"><p style=\"visibility: hidden;\">down</p></td>\n";
         
         # the seventh column - delete
         if ($row > 0)
-            $html_str .= "                        <td><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_del_listbuilder_row(".$row.", xajax.getFormValues('database_definition_form'))\">delete</a></td>\n";
+            $html_str .= "                            <td width=\"1%\"><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_del_listbuilder_row(".$row.", xajax.getFormValues('database_definition_form'))\">delete</a></td>\n";
         else
-            $html_str .= "                        <td><p class=\"invisible\">delete</p></td>\n";
+            $html_str .= "                            <td width=\"1%\"><p style=\"visibility: hidden;\">delete</p></td>\n";
+    
+        $html_str .= "                        </tr>\n";
     }
     
-    $html_str .= "                    </tr>\n";
-    $html_str .= "                </tbody>\n";
-    $html_str .= "            </table>\n";
-    $html_str .= "            </form>\n";
-    $html_str .= get_select("add_select", "add_it", "");
-    $html_str .= "            &nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_add_listbuilder_row(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'))\">add field</a>\n";
+    $html_str .= "                    </tbody>\n";
+    $html_str .= "                </table> <!-- listbuilder_general_settings -->\n";
+    $html_str .= "            </form> <!-- database_definition_form -->\n\n";
     
     $result->set_result_str($html_str);   
     

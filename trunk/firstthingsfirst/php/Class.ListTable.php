@@ -93,6 +93,8 @@ class ListTable
     function _check_date ($date_string)
     {
         global $tasklist_date_string;
+        
+        $this->_log->trace("checking date (date_string=".$date_string.")");
     
         if ($tasklist_date_string == DATE_FORMAT_US)
         {
@@ -430,6 +432,7 @@ class ListTable
     {
         $names = array();
         $values = array();
+        $keys = array_keys($name_values);
         $definition = $this->_list_table_description->get_definition();
         
         $this->_log->debug("add entry to ListTable");
@@ -441,7 +444,6 @@ class ListTable
             return array();
         }
 
-        $keys = array_keys($name_values);
         foreach ($keys as $array_key)
         {
             $value = $name_values[$array_key];
@@ -450,9 +452,8 @@ class ListTable
             if (stristr($definition[$array_key][0], "date"))
             {
                 $result = $this->_check_date($value);
-                if ($result == "error")
+                if ($result == "ERROR")
                 {
-                    $this->_result.set_error("Error in date string (field=".$value.")");
                     $this->_log->error("given date string is not correct (".$value.")");
                     return FALSE;
                 }
@@ -478,38 +479,39 @@ class ListTable
         return TRUE;
     }
 
-    # change a row in database
-    function change ($name_values_string, $key_string)
+    # update a row in database
+    function update ($key_string, $name_values)
     {
         $name_values_array = array();
-        $name_values = $this->_json->decode($name_values_string);
+        $keys = array_keys($name_values);
+        $definition = $this->_list_table_description->get_definition();
 
-        $this->_log->debug("change entry of ListTable (key_string=".$key_string.")");
-
+        $this->_log->debug("update entry of ListTable (key_string=".$key_string.")");
+        $this->_log->log_array($name_values, "name_values");
+        
         if (!$this->_database->table_exists($this->table_name))
         {
             $this->_log->error("TableList does not exist in database");
             return array();
         }
-
-        foreach ($name_values as $name_value)
+        
+        foreach ($keys as $array_key)
         {
-            $definition = $this->_list_table_description->get_definition();
+            $value = $name_values[$array_key];
             
-            if (stristr($definition[$name_value[0]][0], "date"))
+            if (stristr($definition[$array_key][0], "date"))
             {
-                $result = $this->_check_date($name_value[1]);
-                if ($result == "error")
+                $result = $this->_check_date($value);
+                if ($result == "ERROR")
                 {
-                    $this->_result.set_error("Error in date string (field=".$name_value[0].")");
-                    $this->_log->error("given date string is not correct (".$name_value[0]."=".$name_value[1].")");
-                    return;
+                    $this->_log->error("given date string is not correct (".$value.")");
+                    return FALSE;
                 }
                 else
-                    array_push($name_values_array, $name_value[0]."='".$result."'");
+                    array_push($name_values_array, $this->_get_db_field_name($array_key)."='".$result."'");
             }
-            else       
-                array_push($name_values_array, $name_value[0]."='".$name_value[1]."'");
+            else
+                array_push($name_values_array, $this->_get_db_field_name($array_key)."='".$value."'");
         }
 
         $query = "UPDATE ".$this->table_name." SET ".implode($name_values_array, ", ");
@@ -518,12 +520,12 @@ class ListTable
 
         if ($result == FALSE)
         {
-            $this->_log->error("could not change entry of ListTable (key_string=".$key_string.")");
+            $this->_log->error("could not update entry of ListTable (key_string=".$key_string.")");
             $this->_log->error("database error: ".$this->_database->get_error());
             return FALSE;
         }
 
-        $this->_log->info("changed entry of ListTable (key_string=".$key_string.")");
+        $this->_log->info("updated entry of ListTable");
         return TRUE;
     }
 

@@ -1,0 +1,72 @@
+<html>
+
+<head>
+    <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Tasklist Portal</title>
+    <link rel="stylesheet" href="../css/standard.css">
+    <link rel="stylesheet" href="../css/standard_list.css">
+    <link rel="stylesheet" href="../css/standard_portal.css">
+    <link rel="stylesheet" href="../css/standard_listbuilder.css">
+</head>
+
+<body>
+    
+    <div id="left_margin"></div>    
+
+    <div id="right_margin"></div>    
+
+    <div id="upper_margin"></div>    
+
+    <div id="header">&nbsp;&nbsp;Tasklist version: 0.1</div>
+
+    <div id="main_body">
+
+        <div id="hidden_upper_margin">something to fill space</div>
+
+        <div id="page_title">Tasklist Portal</div>
+
+        <div id="portal_explanation"><em>Welcome to the tasklist portal. Please select a tasklist or create a new one</em></div>
+
+        <div id="login_status">user: jasper&nbsp;&nbsp;<strong>logout</strong>&nbsp;&nbsp;</div>
+
+        <div id="portal_overview_pane">
+
+            <table id="portal_overview" align="left" border="0" cellspacing="2">
+                <thead>
+                    <tr>
+                        <th>name</th>
+                        <th>description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="odd">
+                        <td><a xhref="javascript:void(0);" onclick="xajax_action_get_list_page('test')">test</a></td>
+                        <td><em>some test</em></td>
+                    </tr>
+                    <tr class="odd">
+                        <td><a xhref="javascript:void(0);" onclick="xajax_action_get_list_page('todo')">todo</a></td>
+                        <td><em>things to do</em></td>
+                    </tr>
+                </tbody>
+            </table> <!-- portal_overview -->
+            
+        </div> <!-- portal_overview_pane -->
+
+        <div id="action_pane">
+
+            <div id="action_bar" align="left">
+                <p><a xhref="javascript:void(0);" onclick="xajax_action_get_listbuilder_page()">add a list</a></p>    
+            </div> <!-- action_pane -->
+    
+        </div> <!-- action_bar -->
+           
+        <div id="hidden_lower_margin">something to fill space</div>    
+    
+    </div> <!-- main_body -->
+
+    <div id="footer">Nothing sensible to mention rigth now</div>
+
+    <div id="lower_margin"></div>
+
+</body>
+
+<html>

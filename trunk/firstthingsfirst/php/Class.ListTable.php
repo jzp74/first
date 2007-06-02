@@ -475,6 +475,9 @@ class ListTable
             return FALSE;
         }
 
+        # update list table description (date modified)
+        $this->_list_table_description->write();
+
         $this->_log->info("added entry to ListTable");
         return TRUE;
     }
@@ -525,6 +528,9 @@ class ListTable
             return FALSE;
         }
 
+        # update list table description (date modified)
+        $this->_list_table_description->write();
+
         $this->_log->info("updated entry of ListTable");
         return TRUE;
     }
@@ -550,6 +556,9 @@ class ListTable
             $this->_log->error("database error: ".$this->_database->get_error());
             return FALSE;
         }
+
+        # update list table description (date modified)
+        $this->_list_table_description->write();
 
         $this->_log->info("deleted entry to ListTable");
         return TRUE;

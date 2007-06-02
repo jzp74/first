@@ -171,6 +171,30 @@ class ListTableDescription
     }
 
     # getter
+    function get_creator ()
+    {
+        return $this->creator;
+    }
+
+    # getter
+    function get_created ()
+    {
+        return $this->created;
+    }
+
+    # getter
+    function get_modifier ()
+    {
+        return $this->modifier;
+    }
+
+    # getter
+    function get_modified ()
+    {
+        return $this->modified;
+    }
+
+    # getter
     # decode definition from string to array before returning it
     function get_definition ()
     {
@@ -194,6 +218,18 @@ class ListTableDescription
     function set_description ($description)
     {
         $this->description = $description;
+    }
+
+    # setter
+    function set_modifier ()
+    {
+        $this->modifier = $this->_user->get_name();
+    }
+
+    # setter
+    function set_modified ()
+    {
+        $this->modified = strftime(LISTTABLEDESCRIPTION_DATETIME_FORMAT);
     }
 
     # setter
@@ -303,13 +339,17 @@ class ListTableDescription
             $query .= "\"".$this->group."\", ";
             $query .= "\"".$this->description."\", ";
             $query .= "\"".$this->definition."\", ";
-            $query .= "\""."-"."\", ";
+            $query .= "\"".$this->_user->get_name()."\", ";
             $query .= "\"".strftime(LISTTABLEDESCRIPTION_DATETIME_FORMAT)."\", ";
-            $query .= "\""."-"."\", ";
+            $query .= "\"".$this->_user->get_name()."\", ";
             $query .= "\"".strftime(LISTTABLEDESCRIPTION_DATETIME_FORMAT)."\")";
         }
         else
         {
+            # update modifier and modified attributes
+            $this->set_modifier();
+            $this->set_modified();
+            
             # update ListTableDescription in database
             $this->_log->debug("update current ListTableDescription to database");
             
@@ -317,9 +357,9 @@ class ListTableDescription
             $query .= "_title=\"".$this->title."\", ";
             $query .= "_group=\"".$this->group."\", ";
             $query .= "_description=\"".$this->description."\", ";
-            $query .= "_definition=\"".$this->definition."\" ";
-            $query .= "_modifier=\""."-"."\" ";
-            $query .= "_modified=\"".strftime(LISTTABLEDESCRIPTION_DATETIME_FORMAT)."\" ";
+            $query .= "_definition=\"".$this->definition."\", ";
+            $query .= "_modifier=\"".$this->get_modifier()."\", ";
+            $query .= "_modified=\"".$this->get_modified()."\" ";
             $query .= "WHERE _id=\"".$this->id."\"";
         }
         

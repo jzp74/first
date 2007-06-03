@@ -24,7 +24,7 @@
 
         <div id="page_title">Configure a new list</div>
         
-        <div id="login_status">user: jasper&nbsp;&nbsp;<strong>logout</strong>&nbsp;&nbsp;</div>
+        <div id="login_status">user: somebody&nbsp;&nbsp;<a xhref="javascript:void(0);" onclick="xajax_action_logout()">logout</a>&nbsp;&nbsp;</div>
 
         <div id="listbuilder_general_settings_title">General settings</div>
             
@@ -64,7 +64,7 @@
                         <tr>
                             <td><input size="10" maxlength="10" class="input_box" name="row_0_1" readonly="readonly" value="autonumber" type="text"></td>
                             <td><input size="20" maxlength="100" class="input_box" name="row_0_2" readonly="readonly" value="id" type="text"></td>
-                            <td><input size="20" maxlength="100" class="invisible" name="row_0_3" value="" type="text"></td>
+                            <td><input style="visibility: hidden;" size="20" maxlength="100"name="row_0_3" value="" type="text"></td>
                             <td><em>This field cannot be changed</em></td>
                             <td><p style="visibility: hidden;">&nbsp;up&nbsp;</p></td>
                             <td><p style="visibility: hidden;">down</p></td>
@@ -83,7 +83,7 @@
                                 </select>
                             </td>
                             <td><input size="20" maxlength="100" class="input_box" name="row_1_2" value="creation date" type="text"></td>
-                            <td><input size="20" maxlength="100" class="invisible" name="row_1_3" value="" type="text"></td>
+                            <td><input style="visibility: hidden;" size="20" maxlength="100" name="row_1_3" value="" type="text"></td>
                             <td>&nbsp;</td>
                             <td><p style="visibility: hidden;">&nbsp;up&nbsp;</p></td>
                             <td><a xhref="javascript:void(0);" onclick="xajax_action_move_listbuilder_row(1, 'down', xajax.getFormValues('database_definition_form'))">down</a></td>
@@ -102,7 +102,7 @@
                                 </select>
                             </td>
                             <td><input size="20" maxlength="100" class="input_box" name="row_2_2" value="description" type="text"></td>
-                            <td><input size="20" maxlength="100" class="invisible" name="row_2_3" value="" type="text"></td>
+                            <td><input style="visibility: hidden;" size="20" maxlength="100" name="row_2_3" value="" type="text"></td>
                             <td>&nbsp;</td>
                             <td><a xhref="javascript:void(0);" onclick="xajax_action_move_listbuilder_row(2, 'up', xajax.getFormValues('database_definition_form'))">&nbsp;up&nbsp;</a></td>
                             <td><a xhref="javascript:void(0);" onclick="xajax_action_move_listbuilder_row(2, 'down', xajax.getFormValues('database_definition_form'))">down</a></td>
@@ -121,7 +121,7 @@
                                 </select>
                             </td>
                             <td><input size="20" maxlength="100" class="input_box" name="row_3_2" value="due date" type="text"></td>
-                            <td><input size="20" maxlength="100" class="invisible" name="row_3_3" value="" type="text"></td>
+                            <td><input style="visibility: hidden;" size="20" maxlength="100" name="row_3_3" value="" type="text"></td>
                             <td>&nbsp;</td>
                             <td><a xhref="javascript:void(0);" onclick="xajax_action_move_listbuilder_row(3, 'up', xajax.getFormValues('database_definition_form'))">&nbsp;up&nbsp;</a></td>
                             <td><a xhref="javascript:void(0);" onclick="xajax_action_move_listbuilder_row(3, 'down', xajax.getFormValues('database_definition_form'))">down</a></td>
@@ -175,7 +175,7 @@
     
     </div> <!-- main_body -->
 
-    <div id="footer">Nothing sensible to mention rigth now</div>
+    <div id="footer">&nbsp;</div>
 
     <div id="lower_margin"></div>
 

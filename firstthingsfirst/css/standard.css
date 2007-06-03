@@ -112,6 +112,16 @@ body {
     font-weight: normal;
     }
 
+#login_status a, #login_status a:link, #login_status a:visited {
+    color: rgb(60, 60, 175);
+    text-decoration: none;
+    font-weight: bold;
+    }
+
+#login_status a:hover { 
+    text-decoration: underline;
+    }
+
 /*  defines the footer of a page */
 #footer {
     width: 100%;
@@ -174,12 +184,12 @@ body {
     }
 
 #action_bar a, #action_bar a:link, #action_bar a:visited {
+    color: rgb(60, 60, 175);
     text-decoration: none;
     font-weight: bold;
     }
 
 #action_bar a:hover { 
-    color: rgb(60, 60, 175);
     text-decoration: underline;
     }
 

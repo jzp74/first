@@ -186,7 +186,7 @@ function get_field_definition_table ($definition)
 
     $input_html_name = "<input type=text size=10 maxlength=10 class=\"input_box\"";
     $input_html_value = "<input type=text size=20 maxlength=100 class=\"input_box\"";
-    $input_html_value_invisible = "<input type=text size=20 maxlength=100 class=\"invisible\"";
+    $input_html_value_invisible = "<input style=\"visibility: hidden;\" type=text size=20 maxlength=100";
     $html_str = "";    
     
     $html_str .= "\n\n            <form id=\"database_definition_form\">\n";

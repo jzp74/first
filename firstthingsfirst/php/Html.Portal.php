@@ -15,6 +15,7 @@ function action_get_portal_page ()
     $user->set_action(ACTION_GET_PORTAL_PAGE);
     handle_action("main_body");
     $response->addAssign("login_status", "innerHTML", get_login_status());
+    set_footer("&nbsp;");
     return $response;
 }
 

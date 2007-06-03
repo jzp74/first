@@ -54,7 +54,6 @@ function get_login_status ()
 {
     global $user;
     global $logging;
-    global $response;
     
     $logging->trace("getting login_status");
     

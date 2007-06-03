@@ -1,7 +1,7 @@
 <?php
 
 
-# This class contains all php code that is used to generate listbuilder html
+# This file contains all php code that is used to generate listbuilder html
 
 
 # wrapper function to generate html for the listbuilder page
@@ -14,6 +14,7 @@ function action_get_listbuilder_page ()
 
     $user->set_action(ACTION_GET_LISTBUILDER_PAGE);
     handle_action("main_body");
+    $response->addAssign("login_status", "innerHTML", get_login_status());
     return $response;
 }
 
@@ -96,7 +97,7 @@ function get_listbuilder_page ()
     
     $html_str = "";
     $html_str .= "        <div id=\"page_title\">Configure a new list</div>\n\n";
-    $html_str .= "        <div id=\"login_status\">user: jasper&nbsp;&nbsp;<strong>logout</strong>&nbsp;&nbsp;</div>\n\n";
+    $html_str .= "        <div id=\"login_status\">user: </div>\n\n";
     $html_str .= "        <div id=\"listbuilder_general_settings_title\">General settings</div>\n\n";        
     $html_str .= "        <div id=\"listbuilder_general_settings_pane\">\n\n";
     $html_str .= "            <table id=\"listbuilder_general_settings\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";

@@ -14,6 +14,7 @@ function action_get_portal_page ()
 
     $user->set_action(ACTION_GET_PORTAL_PAGE);
     handle_action("main_body");
+    $response->addAssign("login_status", "innerHTML", get_login_status());
     return $response;
 }
 
@@ -32,7 +33,7 @@ function get_portal_page ()
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
     $html_str .= "        <div id=\"page_title\">".$tasklist_portal_title."</div>\n\n";
     $html_str .= "        <div id=\"portal_explanation\"><em>".$tasklist_portal_intro_text."</em></div>\n\n";
-    $html_str .= "        <div id=\"login_status\">user: jasper&nbsp;&nbsp;<strong>logout</strong>&nbsp;&nbsp;</div>\n\n";
+    $html_str .= "        <div id=\"login_status\">user: </div>\n\n";
     $html_str .= "        <div id=\"portal_overview_pane\">\n\n";
 
     $result->set_result_str($html_str);    

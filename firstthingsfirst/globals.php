@@ -15,6 +15,11 @@ define("DB_DATE_FORMAT", "%Y-%m-%d");
 # portal actions
 define("ACTION_GET_PORTAL_PAGE", "get_portal_page");
 
+# login actions
+define("ACTION_GET_LOGIN_PAGE", "get_login_page");
+define("ACTION_LOGIN", "login");
+define("ACTION_LOGOUT", "logout");
+
 # list actions
 define("ACTION_GET_LIST_PAGE", "get_list_page");
 define("ACTION_GET_LIST_CONTENT", "get_list_content");
@@ -37,6 +42,9 @@ define("ACTION_CREATE_LIST", "create_list");
 #   action => (load_list, rd_perm_required, wr_perm_required)
 $tasklist_action_descriptions = array(
     ACTION_GET_PORTAL_PAGE      => array(0, 1, 0),
+    ACTION_GET_LOGIN_PAGE       => array(0, 0, 0),
+    ACTION_LOGIN                => array(0, 0, 0),
+    ACTION_LOGOUT               => array(0, 0, 0),
     ACTION_GET_LIST_PAGE        => array(1, 1, 0),
     ACTION_GET_LIST_CONTENT     => array(1, 1, 0),
     ACTION_GET_LIST_ROW         => array(1, 1, 1),

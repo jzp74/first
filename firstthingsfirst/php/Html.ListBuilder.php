@@ -127,7 +127,8 @@ function get_listbuilder_page ()
     $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
     $html_str .= "                <p><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_add_listbuilder_row(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'))\">add field</a>\n";
     $html_str .= "                &nbsp;".get_select("add_select", "add_it", "")."\n";
-    $html_str .= "                &nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_create_list(document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value, xajax.getFormValues('database_definition_form'))\">add a list</a></p>\n";
+    $html_str .= "                &nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_create_list(document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value, xajax.getFormValues('database_definition_form'))\">add a list</a>\n";
+    $html_str .= "                &nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_get_portal_page()\">back</a></p>\n";
     $html_str .= "            </div> <!-- action_bar -->\n\n";    
     $html_str .= "        </div> <!-- action_pane -->\n\n";           
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";

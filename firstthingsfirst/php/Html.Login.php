@@ -17,6 +17,21 @@ function action_get_login_page ()
     return $response;
 }
 
+# wrapper function to login
+# this function is registered in xajax
+# see login function for details
+function action_login ($user_name, $password)
+{
+    global $user;
+    global $response;
+    
+    $user->set_action(ACTION_LOGIN);
+    handle_action($user_name, $password, "main_body");
+    $response->addAssign("login_status", "innerHTML", get_login_status());
+    set_footer("&nbsp;");
+    return $response;
+}
+
 # wrapper function to logout
 # this function is registered in xajax
 # see logout function for details
@@ -28,6 +43,63 @@ function action_logout ()
     $user->set_action(ACTION_LOGOUT);
     handle_action("login_status");
     return $response;
+}
+
+# return the html for a login page
+function get_login_page ()
+{
+    global $logging;
+    global $result;
+
+    $logging->trace("getting login");
+
+    $html_str = "";
+    $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
+    $html_str .= "        <div id=\"page_title\">Please login</div>\n\n";
+    $html_str .= "        <div id=\"login_pane\">\n\n";
+    $html_str .= "            <table id=\"login_overview\" align=\"center\" border=\"0\" cellspacing=\"2\">\n";
+    $html_str .= "                <tbody>\n";
+    $html_str .= "                    <tr>\n";
+    $html_str .= "                        <td align=\"right\">name</td>\n";
+    $html_str .= "                        <td align=\"left\"><input size=\"16\" maxlength=\"16\" id=\"user_name\" type=\"text\"></td>\n";
+    $html_str .= "                    </tr>\n";
+    $html_str .= "                    <tr>\n";
+    $html_str .= "                        <td align=\"right\">password</td>\n";
+    $html_str .= "                        <td align=\"left\"><input size=\"16\" maxlength=\"16\" id=\"password\" type=\"password\"></td>\n";
+    $html_str .= "                    </tr>\n";
+    $html_str .= "                    <tr>\n";
+    $html_str .= "                        <td align=\"center\" colspan=\"2\"><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_login(document.getElementById('user_name').value, document.getElementById('password').value)\">login</a></td>\n";
+    $html_str .= "                    </tr>\n";
+    $html_str .= "                </tbody>\n";
+    $html_str .= "            </table> <!-- login_overview -->\n\n";
+    $html_str .= "        </div> <!-- login_pane -->\n\n";
+    $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
+
+    $result->set_result_str($html_str);    
+
+    $logging->trace("got login (size=".strlen($result->get_result_str()).")");
+    return;
+}
+
+# TODO add error handling
+# login a user
+# string user_name: user to login
+# string password: password lo login user_name
+function login ($user_name, $password)
+{
+    global $user;
+    global $logging;
+    global $result;
+
+    $logging->trace("login (user_name=".$user_name.")");
+    
+    if ($user->login($user_name, $password))
+    {    
+        $logging->trace("logged in");
+        get_portal_page();
+    }    
+
+    return;
 }
 
 # logout a user

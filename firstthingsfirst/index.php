@@ -85,6 +85,7 @@ if (!$user->is_login())
 <!--[if IE]>
 <link rel="stylesheet" href="css/standard_ie.css">
 <![endif]-->
+<link rel="stylesheet" href="css/standard_login.css">
 <link rel="stylesheet" href="css/standard_list.css">
 <link rel="stylesheet" href="css/standard_portal.css">
 <link rel="stylesheet" href="css/standard_listbuilder.css">

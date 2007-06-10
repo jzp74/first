@@ -28,6 +28,29 @@ function handle_action ()
     
     $logging->debug("handle action: ".$action." (ld=".$ld.", rd=".$rd.", wr=".$wr.")");
     
+    # check if read permission is required
+    if ($rd)
+    {
+        # check if user is logged in and has read permission
+        if (!$user->is_login() || !$user->get_read())
+        {
+            action_get_login_page();
+            return;
+        }
+    }
+    
+    # check if write permission is required
+    if ($wr)
+    {
+        # check if user is logged in and has write permission
+        if (!$user->is_login() || !$user->get_write())
+        {
+            action_get_login_page();
+            return;
+        }
+    }
+    
+    # check if complete page needs to be reloaded
     if ($ld)
     {
         $page_title = $user->get_page_title();

@@ -97,6 +97,7 @@ function get_listbuilder_page ()
     $definition = array($field_types[0], "id", "", $field_types[3], "", "");
     
     $html_str = "";
+    $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
     $html_str .= "        <div id=\"page_title\">Configure a new list</div>\n\n";
     $html_str .= "        <div id=\"login_status\">user: </div>\n\n";
     $html_str .= "        <div id=\"listbuilder_general_settings_title\">General settings</div>\n\n";        

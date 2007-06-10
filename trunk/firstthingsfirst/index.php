@@ -78,23 +78,24 @@ if (!$user->is_login())
 <html>
 
 <head>
-    <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
     
-    <title><?php echo $tasklist_portal_title ?></title>
-    <link rel="stylesheet" href="css/standard.css">
-    <link rel="stylesheet" href="css/standard_list.css">
-    <link rel="stylesheet" href="css/standard_portal.css">
-    <link rel="stylesheet" href="css/standard_listbuilder.css">
+<title><?php echo $tasklist_portal_title ?></title>
+<link rel="stylesheet" href="css/standard.css">
+<!--[if IE]>
+<link rel="stylesheet" href="css/standard_ie.css">
+<![endif]-->
+<link rel="stylesheet" href="css/standard_list.css">
+<link rel="stylesheet" href="css/standard_portal.css">
+<link rel="stylesheet" href="css/standard_listbuilder.css">
 
-    <?php $xajax->printJavascript("xajax"); ?>
-
+<?php $xajax->printJavascript("xajax"); ?>
 </head>
 
 <body>
-    
+<div id="outer_body">
+            
     <div id="left_margin"></div>    
-
-    <div id="right_margin"></div>    
 
     <div id="upper_margin"></div>    
     
@@ -102,14 +103,17 @@ if (!$user->is_login())
 
     <div id="main_body">
 
-        <script language="javaScript">xajax_action_get_portal_page()</script>            
+        <script language="javaScript">xajax_action_get_portal_page()</script>
 
     </div> <!-- main_body -->
+
+    <div id="right_margin"></div>    
 
     <div id="footer">...</div>
 
     <div id="lower_margin"></div>
 
+</div> <!-- outer_body -->
 </body>
 
 <html>

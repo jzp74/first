@@ -10,13 +10,13 @@
     }
 
 /*  defines the html overall style of a page */
-html {
+html, body {
     height: 100%;
     background-color: rgb(255, 255, 255);
     }
 
 /*  defines the body  */
-body {
+#outer_body {
     min-height: 100%;
     position: relative;
     margin: 0px 12px 0px 12px;
@@ -33,24 +33,12 @@ body {
     background-color: rgb(157, 181, 222);
     }
     
-/*  defines the innermost right margin */
-#right_margin {
-    position: absolute;
-    min-height: 100%;
-    width: 6px;
-    top: 0px;
-    right: 0px;
-    background-color: rgb(157, 181, 222);
-    }
-
 /*  defines the colored margin at the bottom of the page */
 #upper_margin {
     height: 16px;
     width: 100%;
     top: 0px;
     position: absolute;
-    display: block;
-    float: none;
     background-color: rgb(255, 255, 255);
     z-index: 20;
     }    
@@ -59,8 +47,6 @@ body {
 #header {
     width: 100%;
     position: absolute;
-    display: block;
-    float: none;
     top: 16px;
     padding: 4px 0px 4px 0px;
     background-color: rgb(157, 181, 222);
@@ -86,7 +72,6 @@ body {
 /*  container for all page contents */
 #main_body {
     margin: 0px 6px 0px 6px;
-    position: relative;
     z-index: 10;
     }    
 
@@ -120,6 +105,16 @@ body {
 
 #login_status a:hover { 
     text-decoration: underline;
+    }
+
+/*  defines the innermost right margin */
+#right_margin {
+    position: absolute;
+    min-height: 100%;
+    width: 6px;
+    top: 0px;
+    right: 0px;
+    background-color: rgb(157, 181, 222);
     }
 
 /*  defines the footer of a page */

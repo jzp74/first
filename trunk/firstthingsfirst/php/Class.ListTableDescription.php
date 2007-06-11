@@ -7,6 +7,7 @@
 # ListTableDescription defines
 define("LISTTABLEDESCRIPTION_TABLE_NAME", "_listtabledescriptions");
 define("LISTTABLEDESCRIPTION_DATETIME_FORMAT", "%Y-%m-%d %H:%M:%S");
+define("LISTTABLEDESCRIPTION_FIELD_PREFIX", "user_defined_field_");
 
 # Class definition
 class ListTableDescription

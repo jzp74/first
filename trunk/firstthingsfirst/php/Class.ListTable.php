@@ -83,12 +83,18 @@ class ListTable
         return $str;
     }
     
-    # return database fieldname
-    function _get_db_field_name ($field_name)
+    # return fieldname for given database fieldname
+    function _get_field_name ($db_field_name)
     {
-        return "_".$field_name;
+        return substr(str_replace("__", " ", $db_field_name), 1);
     }
     
+    # return database fieldname for given fieldname
+    function _get_db_field_name ($field_name)
+    {
+        return "_".str_replace(" ", "__", $field_name);
+    }
+
     # check if given date string complies with predifined date format
     function _check_date ($date_string)
     {
@@ -126,9 +132,11 @@ class ListTable
         $name_values = array();
         $definition = $this->_list_table_description->get_definition();
         
-        foreach ($this->field_names as $field_name)
-            if ($definition[$field_name][1])
-                array_push($name_values, $this->_get_db_field_name($field_name)."='".$table_row[$this->_get_db_field_name($field_name)]."'");
+        foreach ($this->db_field_names as $db_field_name)
+        {            
+            if ($definition[$db_field_name][1])
+                array_push($name_values, $db_field_name."='".$table_row[$db_field_name]."'");
+        }
         return implode($name_values, " and ");
     }
     
@@ -139,9 +147,11 @@ class ListTable
         $val_str = "";
         $definition = $this->_list_table_description->get_definition();
         
-        foreach ($this->field_names as $field_name)
-            if ($definition[$field_name][1])
-                $val_str .= "_".$table_row[$this->_get_db_field_name($field_name)];
+        foreach ($this->db_field_names as $db_field_name)
+        {
+            if ($definition[$db_field_name][1])
+                $val_str .= "_".$table_row[$db_field_name];
+        }
         return $val_str;
     }
 
@@ -202,16 +212,17 @@ class ListTable
     {
         #$this->_log->debug("setting ListTable");
 
+        $this->field_names = array();
+
         if ($this->_list_table_description->is_valid())
         {
             $this->table_name = "_".strtolower(str_replace(" ", "_", $this->_list_table_description->get_title()));
-            $this->field_names = array_keys($this->_list_table_description->get_definition());
-            $this->db_field_names = array();
-            foreach ($this->field_names as $field_name)
-                array_push($this->db_field_names, $this->_get_db_field_name($field_name));
+            $this->db_field_names = array_keys($this->_list_table_description->get_definition());
+            foreach ($this->db_field_names as $db_field_name)
+                array_push($this->field_names, $this->_get_field_name($db_field_name));
             $this->total_pages = 1;
             $this->current_page = 1;
-
+            
             #$this->_log->info("set ListTable (table_name=".$this->table_name.")");
         }
         else
@@ -264,11 +275,12 @@ class ListTable
         $this->_log->debug("creating TableList (table=".$this->table_name.")");
         $query = "CREATE TABLE ".$this->table_name."(";
         $key_string = "";
-        foreach ($this->field_names as $field_name)
+        foreach ($this->db_field_names as $db_field_name)
         {
-            $db_field_name = $this->_get_db_field_name($field_name);
+            $field_name = $this->_get_field_name($db_field_name);
             $definition = $this->_list_table_description->get_definition();
-            $field_definition = $definition[$field_name];
+            $field_definition = $definition[$db_field_name];
+            $this->_log->debug("found field (name=".$field_name." def=".$field_definition.")");
             $query .= $db_field_name." ".$tasklist_field_descriptions[$field_definition[0]][0].", ";
         
             # check if field is part of key
@@ -447,7 +459,7 @@ class ListTable
         foreach ($keys as $array_key)
         {
             $value = $name_values[$array_key];
-            array_push($names, $this->_get_db_field_name($array_key));
+            array_push($names, $array_key);
             
             if (stristr($definition[$array_key][0], "date"))
             {
@@ -511,10 +523,10 @@ class ListTable
                     return FALSE;
                 }
                 else
-                    array_push($name_values_array, $this->_get_db_field_name($array_key)."='".$result."'");
+                    array_push($name_values_array, $array_key."='".$result."'");
             }
             else
-                array_push($name_values_array, $this->_get_db_field_name($array_key)."='".$value."'");
+                array_push($name_values_array, $array_key."='".$value."'");
         }
 
         $query = "UPDATE ".$this->table_name." SET ".implode($name_values_array, ", ");

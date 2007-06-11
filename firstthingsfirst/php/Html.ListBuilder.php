@@ -125,9 +125,9 @@ function get_listbuilder_page ()
     $html_str .= "        </div> <!-- listbuiler_definition_pane -->\n\n";
     $html_str .= "        <div id=\"action_pane\">\n\n";
     $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
-    $html_str .= "                <p><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_add_listbuilder_row(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'))\">add field</a>\n";
-    $html_str .= "                &nbsp;".get_select("add_select", "add_it", "")."\n";
-    $html_str .= "                &nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_create_list(document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value, xajax.getFormValues('database_definition_form'))\">add a list</a>\n";
+    $html_str .= "                <p>&nbsp;".get_select("add_select", "add_it", "")."\n";
+    $html_str .= "                <a xhref=\"javascript:void(0);\" onclick=\"xajax_action_add_listbuilder_row(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'))\">add field</a>\n";
+    $html_str .= "                &nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_create_list(document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value, xajax.getFormValues('database_definition_form'))\">create this list</a>\n";
     $html_str .= "                &nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_get_portal_page()\">back</a></p>\n";
     $html_str .= "            </div> <!-- action_bar -->\n\n";    
     $html_str .= "        </div> <!-- action_pane -->\n\n";           
@@ -403,11 +403,16 @@ function create_list ($title, $description, $definition)
 
     for ($position = 0; $position < (count($tmp_definition) / 3); $position += 1)
     {
+        $field_name = "_".str_replace(" ", "__", $tmp_definition[($position * 3) + 1]);
+        $field_type = $tmp_definition[$position * 3];
+        $field_options = $tmp_definition[($position * 3) + 2];
+        $logging->debug("found field (name=".$field_name." type=".$field_type." options=".$field_options.")");
+        
         # only the first column is part of the key
         if ($position == 0)
-            $new_definition[$tmp_definition[($position * 3) + 1]] = array($tmp_definition[$position * 3], 1, $tmp_definition[($position * 3) + 2]);
+            $new_definition[$field_name] = array($field_type, 1, $field_options);
         else
-            $new_definition[$tmp_definition[($position * 3) + 1]] = array($tmp_definition[$position * 3], 0, $tmp_definition[($position * 3) + 2]);
+            $new_definition[$field_name] = array($field_type, 0, $field_options);
     }
 
     $list_table_description->set_title($title);

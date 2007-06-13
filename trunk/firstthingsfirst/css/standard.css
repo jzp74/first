@@ -29,7 +29,6 @@ html, body {
     min-height: 100%;
     width: 6px;
     top: 0px;
-    left: 0px;
     background-color: rgb(157, 181, 222);
     }
     
@@ -38,6 +37,7 @@ html, body {
     height: 16px;
     width: 100%;
     top: 0px;
+    left: 0px;
     position: absolute;
     background-color: rgb(255, 255, 255);
     z-index: 20;
@@ -48,6 +48,7 @@ html, body {
     width: 100%;
     position: absolute;
     top: 16px;
+    left: 0px;
     padding: 4px 0px 4px 0px;
     background-color: rgb(157, 181, 222);
     color: rgb(255, 255, 255);
@@ -121,6 +122,7 @@ html, body {
 #footer {
     width: 100%;
     bottom: 24px;
+    left: 0px;
     position: absolute;
     padding: 4px 0px 4px 0px;
     background-color: rgb(157, 181, 222);
@@ -136,6 +138,7 @@ html, body {
     height: 16px;
     width: 100%;
     bottom: 0px;
+    left: 0px;
     position: absolute;
     padding: 4px 0px 4px 0px;
     background-color: rgb(255, 255, 255);
@@ -154,14 +157,18 @@ html, body {
     }
 
 /*  defines the pane that contains the action bar */
-#action_pane {
-    margin: 12px 10px 12px 10px;
+#action_pane {    
+    position: relative;
+    float: left;
+    padding: 12px 10px 6px 10px;
     color: rgb(0, 0, 102);
     }
 
 /*  defines the action bar that contains a number of actions (hrefs) */
 #action_bar {
-    padding: 2px 2px 2px 2px;
+    position: relative;
+    float: left;
+    margin: 2px 2px 2px 2px;
     background-color: rgb(208, 239, 208);
     text-align: left;
     font-family: verdana;

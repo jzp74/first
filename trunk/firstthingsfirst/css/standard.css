@@ -62,8 +62,7 @@ html, body {
 /*  this style is used only to define upper margin 
     font characteristics should be equal to those of #header */
 #hidden_upper_margin {
-    margin: 0px 0px 16px 0px;
-    padding: 4px 0px 4px 0px;
+    padding: 4px 0px 20px 0px;
     font-family: verdana;
     font-size: x-small;
     font-weight: normal;
@@ -148,8 +147,7 @@ html, body {
 /*  this style is used only to define lower margin 
     font characteristics should be equal to those of #footer */
 #hidden_lower_margin {
-    margin: 0px 0px 16px 0px;
-    padding: 4px 0px 4px 0px;
+    padding: 4px 0px 20px 0px;
     font-family: verdana;
     font-size: small;
     font-weight: normal;
@@ -157,18 +155,16 @@ html, body {
     }
 
 /*  defines the pane that contains the action bar */
-#action_pane {    
-    position: relative;
-    float: left;
-    padding: 12px 10px 6px 10px;
+#action_pane {
+    display: block;
+    float: none;
+    padding: 14px 12px 8px 12px;
     color: rgb(0, 0, 102);
     }
 
 /*  defines the action bar that contains a number of actions (hrefs) */
 #action_bar {
-    position: relative;
-    float: left;
-    margin: 2px 2px 2px 2px;
+    float: none;
     background-color: rgb(208, 239, 208);
     text-align: left;
     font-family: verdana;
@@ -201,3 +197,7 @@ html, body {
     text-align: left;
     }    
 
+#clear_margin {
+    clear: both;
+    visibility: hidden;
+    }

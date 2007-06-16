@@ -82,13 +82,13 @@ if (!$user->is_login())
     
 <title><?php echo $tasklist_portal_title ?></title>
 <link rel="stylesheet" href="css/standard.css">
-<!--[if IE]>
-<link rel="stylesheet" href="css/standard_ie.css">
-<![endif]-->
 <link rel="stylesheet" href="css/standard_login.css">
 <link rel="stylesheet" href="css/standard_list.css">
 <link rel="stylesheet" href="css/standard_portal.css">
 <link rel="stylesheet" href="css/standard_listbuilder.css">
+<!--[if IE]>
+<link rel="stylesheet" href="css/standard_ie.css">
+<![endif]-->
 
 <?php $xajax->printJavascript("xajax"); ?>
 </head>
@@ -97,6 +97,8 @@ if (!$user->is_login())
 <div id="outer_body">
             
     <div id="left_margin"></div>    
+
+    <div id="right_margin"></div>    
 
     <div id="upper_margin"></div>    
     
@@ -107,8 +109,6 @@ if (!$user->is_login())
         <script language="javaScript">xajax_action_get_portal_page()</script>
 
     </div> <!-- main_body -->
-
-    <div id="right_margin"></div>    
 
     <div id="footer">...</div>
 

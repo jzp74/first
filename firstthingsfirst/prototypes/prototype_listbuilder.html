@@ -5,13 +5,13 @@
 <head>
 <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Tasklist</title>
 <link rel="stylesheet" href="../css/standard.css">
-<!--[if IE]>
-<link rel="stylesheet" href="../css/standard_ie.css">
-<![endif]-->
 <link rel="stylesheet" href="../css/standard_login.css">
 <link rel="stylesheet" href="../css/standard_list.css">
 <link rel="stylesheet" href="../css/standard_portal.css">
 <link rel="stylesheet" href="../css/standard_listbuilder.css">
+<!--[if IE]>
+<link rel="stylesheet" href="../css/standard_ie.css">
+<![endif]-->
 </head>
 
 <body>
@@ -34,7 +34,7 @@
         <div id="login_status">user: somebody&nbsp;&nbsp;<a xhref="javascript:void(0);" onclick="xajax_action_logout()">logout</a>&nbsp;&nbsp;</div>
 
         <div id="listbuilder_general_settings_title">General settings</div>
-            
+                        
         <div id="listbuilder_general_settings_pane">
 
             <table id="listbuilder_general_settings" align="left" border="0" cellspacing="2">
@@ -42,10 +42,12 @@
                     <tr>
                         <td>Title of this list</td>
                         <td><input size="20" maxlength="100" id="listbuilder_list_title" type="text"></td>
+                        <td width="30%">&nbsp;</div>
                     </tr>
                     <tr>
                         <td>Short description of this list</td>
                         <td><textarea cols="40" rows="4" id="listbuilder_list_description"></textarea></td>
+                        <td width="30%">&nbsp;</div>
                     </tr>
                 </tbody>
             </table> <!-- listbuilder_general_settings -->
@@ -158,7 +160,7 @@
             </form> <!-- database_definition_form -->
             
         </div> <!-- listbuiler_definition_pane -->
-        
+
         <div id="action_pane">
         
             <div id="action_bar">

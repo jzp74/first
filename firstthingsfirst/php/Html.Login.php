@@ -95,6 +95,24 @@ function login ($user_name, $password)
 
     $logging->trace("login (user_name=".$user_name.")");
     
+    if (strlen($user_name) == 0)
+    {
+        $logging->warn("no user_name given");
+        $result->set_error_str("please enter a username");
+        $result->set_error_element("user_name_id");
+        
+        return;
+    }
+    
+    if (strlen($password) == 0)
+    {
+        $logging->warn("no password given");
+        $result->set_error_str("please enter a password");
+        $result->set_error_element("password_id");
+        
+        return;
+    }
+
     if ($user->login($user_name, $password))
     {    
         $logging->trace("logged in");
@@ -105,6 +123,8 @@ function login ($user_name, $password)
         $logging->warn("user could not log in");
         $result->set_error_str("name/password combination incorrect<br>please enter correct name and password");
         $result->set_error_element("password_id");
+        
+        return;
     }
 
     return;

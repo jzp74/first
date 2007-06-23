@@ -287,7 +287,7 @@ class User
                 return TRUE;
             }
             
-            $this->_log->error("passwords do not match (name=".$name."), user is not logged in");
+            $this->_log->warn("passwords do not match (name=".$name."), user is not logged in");
         }
         
         return FALSE;

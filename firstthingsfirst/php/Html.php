@@ -8,8 +8,7 @@
 # this function can have up to 4 arguments
 # the last argument must contain the id of the target field
 # TODO better handling of multiple arguments
-# TODO add login
-# TODO add permission check
+# TODO ensure error messages are displayed only once
 function handle_action ()
 {
     global $result;
@@ -35,7 +34,7 @@ function handle_action ()
         if (!$user->is_login() || !$user->get_read())
         {
             action_get_login_page();
-            return;
+            return FALSE;
         }
     }
     
@@ -46,7 +45,7 @@ function handle_action ()
         if (!$user->is_login() || !$user->get_write())
         {
             action_get_login_page();
-            return;
+            return FALSE;
         }
     }
     
@@ -59,8 +58,7 @@ function handle_action ()
     }
     $result->reset();
 
-    #check permissions here
-
+    # call the action funtion
     if (func_num_args() == 1)
     {
         $target = func_get_arg(0);
@@ -92,13 +90,21 @@ function handle_action ()
     #check if an error is set
     if ($result->get_error_str())
     {
-        $logging->error("function: ".$action." returned an error");
+        $error_element = $result->get_error_element();
+        $error_str = $result->get_error_str();
+        
+        $logging->warn("function: ".$action." returned an error");
+        $response->addRemove("error_message");
+        $response->addAppend($error_element, "innerHTML", "<p id=\"error_message\" style=\"color: red;\"><em>".$error_str."</em></p>");
+        
         return FALSE;
     }
     
     $logging->debug("paste ".strlen($result->get_result_str())." chars in target id: ".$target);
 
     $response->addAssign($target, "innerHTML", $result->get_result_str());
+    
+    return TRUE;
 }
 
 # set given html in the footer

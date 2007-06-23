@@ -2,7 +2,7 @@ Tasklist version 0.2
 
 Browser compatibility
 This version has been tested on the following browsers:
- - Internet Explorer 6
+ - Internet Explorer 7
  - Firefox 2.0
 
 Installation requirements
@@ -13,6 +13,8 @@ You need to install the following software:
 
 This version has been tested on:
  - Windows XP SP-2
-
+ - Apache 2.0.55
+ - MySQL 5.0.19
+ - php-5.2.0
 
  

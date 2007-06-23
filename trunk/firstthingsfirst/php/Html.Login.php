@@ -26,9 +26,11 @@ function action_login ($user_name, $password)
     global $response;
     
     $user->set_action(ACTION_LOGIN);
-    handle_action($user_name, $password, "main_body");
-    $response->addAssign("login_status", "innerHTML", get_login_status());
-    set_footer("&nbsp;");
+    if (handle_action($user_name, $password, "main_body"))
+    {
+        $response->addAssign("login_status", "innerHTML", get_login_status());
+        set_footer("&nbsp;");
+    }
     return $response;
 }
 
@@ -61,11 +63,11 @@ function get_login_page ()
     $html_str .= "                <tbody>\n";
     $html_str .= "                    <tr>\n";
     $html_str .= "                        <td align=\"right\">name</td>\n";
-    $html_str .= "                        <td align=\"left\"><input size=\"16\" maxlength=\"16\" id=\"user_name\" type=\"text\"></td>\n";
+    $html_str .= "                        <td  id=\"user_name_id\" align=\"left\"><input size=\"16\" maxlength=\"16\" id=\"user_name\" type=\"text\"></td>\n";
     $html_str .= "                    </tr>\n";
     $html_str .= "                    <tr>\n";
     $html_str .= "                        <td align=\"right\">password</td>\n";
-    $html_str .= "                        <td align=\"left\"><input size=\"16\" maxlength=\"16\" id=\"password\" type=\"password\"></td>\n";
+    $html_str .= "                        <td id=\"password_id\" align=\"left\"><input size=\"16\" maxlength=\"16\" id=\"password\" type=\"password\"></td>\n";
     $html_str .= "                    </tr>\n";
     $html_str .= "                    <tr>\n";
     $html_str .= "                        <td align=\"center\" colspan=\"2\"><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_login(document.getElementById('user_name').value, document.getElementById('password').value)\">login</a></td>\n";
@@ -97,7 +99,13 @@ function login ($user_name, $password)
     {    
         $logging->trace("logged in");
         get_portal_page();
-    }    
+    }
+    else
+    {
+        $logging->warn("user could not log in");
+        $result->set_error_str("name/password combination incorrect<br>please enter correct name and password");
+        $result->set_error_element("password_id");
+    }
 
     return;
 }

@@ -13,9 +13,11 @@ function action_get_listbuilder_page ()
     global $response;
 
     $user->set_action(ACTION_GET_LISTBUILDER_PAGE);
-    handle_action("main_body");
-    $response->addAssign("login_status", "innerHTML", get_login_status());
-    set_footer("&nbsp;");
+    if (handle_action("main_body"))
+    {
+        $response->addAssign("login_status", "innerHTML", get_login_status());
+        set_footer("&nbsp;");
+    }
     return $response;
 }
 

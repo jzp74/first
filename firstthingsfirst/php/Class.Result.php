@@ -5,6 +5,9 @@ class Result
 {
     # error string
     protected $error_str;
+
+    # element id that should display the error
+    protected $error_element;
     
     # result string
     protected $result_str;
@@ -39,6 +42,12 @@ class Result
     }
     
     # getter
+    function get_error_element ()
+    {
+        return $this->error_element;
+    }
+
+    # getter
     function get_result_str ()
     {
         return $this->result_str;
@@ -51,10 +60,16 @@ class Result
         return $this->array_str;
     }
 
-    # setter (append to error string)
+    # setter
     function set_error_str ($str)
     {
-        $this->error_str .= $str;
+        $this->error_str = $str;
+    }
+    
+    # setter
+    function set_error_element ($str)
+    {
+        $this->error_element = $str;
     }
     
     # setter (append to result string)
@@ -73,6 +88,7 @@ class Result
     function reset ()
     {
         $this->error_str = "";
+        $this->error_element = "";
         $this->result_str = "";
         $this->array_str = "";
     }

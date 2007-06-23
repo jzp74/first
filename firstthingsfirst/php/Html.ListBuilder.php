@@ -105,14 +105,14 @@ function get_listbuilder_page ()
     $html_str .= "            <table id=\"listbuilder_general_settings\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
     $html_str .= "                <tbody>\n";
     $html_str .= "                    <tr>\n";
-    $html_str .= "                        <td>Title of this list</td>\n";
+    $html_str .= "                        <td>Title&nbsp;of&nbsp;this&nbsp;list</td>\n";
     $html_str .= "                        <td><input size=\"20\" maxlength=\"100\" id=\"listbuilder_list_title\" type=\"text\"></td>\n";
-    $html_str .= "                        <td width=\"30%\">&nbsp;</div>\n";
+    $html_str .= "                        <td width=\"90%\">&nbsp;</div>\n";
     $html_str .= "                    </tr>\n";
     $html_str .= "                    <tr>\n";
-    $html_str .= "                        <td>Short description of this list</td>\n";
+    $html_str .= "                        <td>Short&nbsp;description&nbsp;of&nbsp;this&nbsp;list</td>\n";
     $html_str .= "                        <td><textarea cols=\"40\" rows=\"4\" id=\"listbuilder_list_description\"></textarea></td>\n";
-    $html_str .= "                        <td width=\"30%\">&nbsp;</div>\n";
+    $html_str .= "                        <td width=\"90%\">&nbsp;</div>\n";
     $html_str .= "                    </tr>\n";
     $html_str .= "                </tbody>\n";
     $html_str .= "            </table> <!-- listbuilder_general_settings -->\n\n";

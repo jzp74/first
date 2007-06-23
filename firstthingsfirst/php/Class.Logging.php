@@ -11,7 +11,8 @@ define("LOGGING_OFF", 0);
 define("LOGGING_TRACE", 1);
 define("LOGGING_DEBUG", 2);
 define("LOGGING_INFO", 3);
-define("LOGGING_ERROR", 4);
+define("LOGGING_WARN", 4);
+define("LOGGING_ERROR", 5);
 define("LOGGING_NAME", "tasklist.log");
 
 # Class definition
@@ -112,6 +113,14 @@ class Logging
     {
         if ($this->level > 0 && (LOGGING_INFO >= $this->level))
             $this->_log ("info", $str);
+    }
+
+    # write given string as warn message to logfile
+    # logging setting can be modified in globals.php
+    function warn ($str)
+    {
+        if ($this->level > 0 && (LOGGING_WARN >= $this->level))
+            $this->_log ("WARN", $str);
     }
 
     # write given string as info message to logfile

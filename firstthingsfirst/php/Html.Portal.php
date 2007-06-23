@@ -89,9 +89,8 @@ function get_list_tables ()
     # add table row for each list
     foreach($list_table_descriptions as $list_table_description)
     {
-        $html_str .= "                    <tr>\n";
-        $html_str .= "                        <td><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_get_list_page('";
-        $html_str .= $list_table_description[0]."')\">".$list_table_description[0]."</a></td>\n";
+        $html_str .= "                    <tr onclick=\"xajax_action_get_list_page('".$list_table_description[0]."')\">\n";
+        $html_str .= "                        <td>".$list_table_description[0]."</td>\n";
         $html_str .= "                        <td><em>".$list_table_description[1]."</td>\n";
         $html_str .= "                    </tr>\n";
     }

@@ -33,7 +33,7 @@
     }
 
 #list_contents tr {
-    background-color: rgb(250, 230, 230);
+    background-color: rgb(250, 216, 216);
     }
     
 #list_contents th {
@@ -46,7 +46,7 @@
     }
 
 #list_contents tbody tr:hover {
-    background-color: rgb(250, 210, 210);
+    background-color: rgb(250, 230, 230);
     }
     
 #list_contents a, #list_contents a:link, #list_contents a:visited {

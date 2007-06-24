@@ -1,11 +1,20 @@
 Tasklist version 0.2
 
-Browser compatibility
+1 INTRODUCTION
+Tasklist bla bla
+
+2 OTHER SOFTWARE USED
+xajax (version 0.2.5)
+   See: http://www.xajaxproject.org/
+json (version unknown version)
+   See: http://pear.php.net/pepr/pepr-proposal-show.php?id=198
+
+3 BROWSER COMPATIBILITY
 This version has been tested on the following browsers:
  - Internet Explorer 7
  - Firefox 2.0
 
-Installation requirements
+4 INSTALLATION REQUIREMENTS
 You need to install the following software:
  - Apache
  - MySQL
@@ -17,4 +26,3 @@ This version has been tested on:
  - MySQL 5.0.19
  - php-5.2.0
 
- 

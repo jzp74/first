@@ -13,6 +13,8 @@ require_once("localsettings.php");
 require_once("php/external/JSON.php");
 require_once("xajax/xajax.inc.php");
 
+require_once("php/Utilities.php");
+
 require_once("php/Class.Logging.php");
 require_once("php/Class.Result.php");
 require_once("php/Class.Database.php");

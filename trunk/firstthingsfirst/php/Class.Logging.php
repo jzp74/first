@@ -58,7 +58,7 @@ class Logging
         error_log($the_time." [".$tp."] ".$filename.":".$line." [".$func."] ".$str."\n", 3, $this->name);        
     }
 
-    # log given array as a debug or info line
+    # log given array
     # array should not contain arrays
     # debug log line is standard
     function log_array ($the_array, $the_array_name="Array", $level=LOGGING_DEBUG)
@@ -78,17 +78,13 @@ class Logging
         else
             $log_str .= "<empty>";
         $log_str .= ")";
-        
-        if ($level == LOGGING_DEBUG)
-        {
-            if (($this->level > 0) && (LOGGING_DEBUG >= $this->level))
-                $this->_log ("debug", $log_str);
-        }
-        else if ($level == LOGGING_INFO)
-        {
-            if ($this->level > 0 && (LOGGING_INFO >= $this->level))
-                $this->_log ("info", $log_str);
-        }
+                
+        if ($level == LOGGING_TRACE)
+            $this->trace($log_str);
+        else if ($level == LOGGING_DEBUG)
+            $this->debug($log_str);
+        else # level INFO
+            $this->info($log_str);
     }
 
     # write given string as TRACE message to logfile

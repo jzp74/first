@@ -8,7 +8,6 @@
 # this function can have up to 4 arguments
 # the last argument must contain the id of the target field
 # TODO better handling of multiple arguments
-# TODO ensure error messages are displayed only once
 function handle_action ()
 {
     global $result;

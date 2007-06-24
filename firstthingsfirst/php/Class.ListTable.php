@@ -98,36 +98,6 @@ class ListTable
         return "_".str_replace(" ", "__", $field_name);
     }
 
-    # check if given date string complies with predifined date format
-    function _check_date ($date_string)
-    {
-        global $tasklist_date_string;
-        
-        $this->_log->trace("checking date (date_string=".$date_string.")");
-    
-        if ($tasklist_date_string == DATE_FORMAT_US)
-        {
-            $date_parts = explode("-", $date_string);
-            $month = intval($date_parts[0]);
-            $day = intval($date_parts[1]);
-            $year = intval($date_parts[2]);
-        }
-        else
-        {
-            $date_parts = explode("-", $date_string);
-            $day = intval($date_parts[0]);
-            $month = intval($date_parts[1]);
-            $year = intval($date_parts[2]);
-        }
-    
-        if (!checkdate($month, $day, $year))
-            return "ERROR";
-        if ($year < 1900)
-            return "ERROR";
-    
-        return sprintf("%04d-%02d-%02d", $year, $month, $day);
-    }
-
     function _get_key_string ($table_row)
     {
         global $tasklist_table_definition;
@@ -493,7 +463,7 @@ class ListTable
             
             if (stristr($definition[$array_key][0], "date"))
             {
-                $result = $this->_check_date($value);
+                $result = check_date($value);
                 if ($result == "ERROR")
                 {
                     $this->_log->error("given date string is not correct (".$value.")");
@@ -549,7 +519,7 @@ class ListTable
             
             if (stristr($definition[$array_key][0], "date"))
             {
-                $result = $this->_check_date($value);
+                $result = check_date($value);
                 if ($result == "ERROR")
                 {
                     $this->_log->error("given date string is not correct (".$value.")");

@@ -2,12 +2,12 @@
  xajax PHP Class Library
  The easiest way to develop asynchronous Ajax applications with PHP
 
- Version 0.2.4 (stable release)
+ Version 0.2.5 (stable release)
  README Text File
 
  ------------------------------------------------------
  | Release Notes:                                     |
- | http://wiki.xajaxproject.org/0.2.4_Release_Notes   |
+ | http://wiki.xajaxproject.org/0.2.5_Release_Notes   |
  |                                                    |
  | Lead Developers:                                   |
  | Jared White (jared@intuitivefuture.com)            |
@@ -16,7 +16,7 @@
  ------------------------------------------------------
 ====================================================================
 
- :: To find out what's changed since the 0.2.3 release of xajax, ::
+ :: To find out what's changed since the 0.2.4 release of xajax, ::
  :: view the Release Notes in the link above.                    ::
 
 1. Introduction

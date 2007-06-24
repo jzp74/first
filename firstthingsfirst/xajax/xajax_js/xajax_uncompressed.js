@@ -1,15 +1,15 @@
-/* xajax Javascript library :: version 0.2.4 */
-
-Array.prototype.containsValue = function(valueToCheck)
-{
-	for (var i=0;i<this.length;i++) {
-		if (this[i] == valueToCheck) return true;
-	}
-	return false;
-}
+/* xajax Javascript library :: version 0.2.5 */
 
 function Xajax()
 {
+	this.arrayContainsValue = function(array, valueToCheck)
+	{
+		for (i in array) {
+			if (array[i] == valueToCheck) return true;
+		}
+		return false;
+	};
+
 	this.DebugMessage = function(text)
 	{
 		if (text.length > 1000) text = text.substr(0,1000)+"...\n[long response]\n...";
@@ -18,10 +18,12 @@ function Xajax()
 				this.debugWindow = window.open('about:blank', 'xajax-debug', 'width=800,height=600,scrollbars=1,resizable,status');
 				this.debugWindow.document.write('<html><head><title>Xajax debug output</title></head><body><h2>Xajax debug output</h2><div id="debugTag"></div></body></html>');
 			}
-			text = text.replace(/&/g, "&amp;")
-			text = text.replace(/</g, "&lt;")
-			text = text.replace(/>/g, "&gt;")
 			debugTag = this.debugWindow.document.getElementById('debugTag');
+			if (!debugTag)
+				throw new Error();
+			text = text.replace(/&/g, "&amp;");
+			text = text.replace(/</g, "&lt;");
+			text = text.replace(/>/g, "&gt;");
 			debugTag.innerHTML = ('<b>'+(new Date()).toString()+'</b>: ' + text + '<hr/>') + debugTag.innerHTML;
 		} catch (e) {
 			alert("Xajax Debug:\n " + text);
@@ -44,17 +46,20 @@ function Xajax()
 			try
 			{
 				req=new ActiveXObject("Msxml2.XMLHTTP");
+				XMLHttpRequest = function(){return new ActiveXObject("Msxml2.XMLHTTP");}
 			}
 			catch (e)
 			{
 				try
 				{
 					req=new ActiveXObject("Microsoft.XMLHTTP");
+					XMLHttpRequest = function(){return new ActiveXObject("Microsoft.XMLHTTP");}
 				}
 				catch (e2)
 				{
 					try {
 						req=new ActiveXObject("Msxml2.XMLHTTP.4.0");
+						XMLHttpRequest = function(){return new ActiveXObject("Msxml2.XMLHTTP.4.0");}
 					}
 					catch (e3)
 					{
@@ -127,25 +132,39 @@ function Xajax()
 			sEvent = this.stripOnPrefix(sEvent);
 			eval("this.$('"+sElementId+"').addEventListener('"+sEvent+"',"+sFunctionName+",false);");
 		}
+		else if (window.attachEvent)
+		{
+			sAltEvent = this.addOnPrefix(sEvent);
+			if (eval("this.$('"+sElementId+"').attachEvent('"+sAltEvent+"',"+sFunctionName+");"))
+				window.attachEvent('onunload', 
+					eval("function(){xajax.$('"+sElementId+"').detachEvent('"+sAltEvent+"',"+sFunctionName+");}"));
+		}
 		else
 		{
 			sAltEvent = this.addOnPrefix(sEvent);
-			eval("this.$('"+sElementId+"').attachEvent('"+sAltEvent+"',"+sFunctionName+",false);");
+			eval("this.$('"+sElementId+"')."+sAltEvent+" = "+sFunctionName);
 		}
 	}
 	
 	// xajax.removeHandler removes an event handler from an element
 	this.removeHandler = function(sElementId, sEvent, sFunctionName)
 	{
-		if (window.addEventListener)
+		if (window.removeEventListener)
 		{
 			sEvent = this.stripOnPrefix(sEvent);
 			eval("this.$('"+sElementId+"').removeEventListener('"+sEvent+"',"+sFunctionName+",false);");
 		}
+		else if (window.detachEvent)
+		{
+			sAltEvent = this.addOnPrefix(sEvent);
+			try {
+				eval("this.$('"+sElementId+"').detachEvent('"+sAltEvent+"',"+sFunctionName+");");
+			} catch (ignore) {}
+		}
 		else
 		{
 			sAltEvent = this.addOnPrefix(sEvent);
-			eval("this.$('"+sElementId+"').detachEvent('"+sAltEvent+"',"+sFunctionName+",false);");
+			eval("this.$('"+sElementId+"')."+sAltEvent+" = null");
 		}
 	}
 	
@@ -288,7 +307,7 @@ function Xajax()
 		else
 			objForm = frm;
 		var sXml = "<xjxquery><q>";
-		if (objForm && objForm.tagName == 'FORM')
+		if (objForm && objForm.tagName.toUpperCase() == 'FORM')
 		{
 			var formElements = objForm.elements;
 			for( var i=0; i < formElements.length; i++)
@@ -364,8 +383,10 @@ function Xajax()
 
 	// unserializes data structure from xajaxResponse::_buildObjXml()
 	this._nodeToObject = function(node) {
+		if (!node)
+			return '';
 		// parentNode here is weird, have to tune
-		if (node.nodeName == '#cdata-section') {
+		if (node.nodeName == '#cdata-section' || node.nodeName == '#text') {
 			var data = "";
 			for (var j=0; j<node.parentNode.childNodes.length; j++) {
 				data += node.parentNode.childNodes[j].data;
@@ -492,7 +513,7 @@ function Xajax()
 				}
 			}
 			else {
-				if (xajax.responseErrorsForAlert.containsValue(r.status)) {
+				if (xajax.arrayContainsValue(xajax.responseErrorsForAlert, r.status)) {
 					var errorString = "Error: the server returned the following HTTP status: " + r.status;
 					errorString += "\nReceived:\n" + r.responseText;
 					alert(errorString);
@@ -607,7 +628,7 @@ function Xajax()
 						type = xml.childNodes[i].attributes[j].value;
 					}
 				}
-				if (xml.childNodes[i].childNodes.length > 1 && xml.childNodes[i].firstChild.nodeName == "#cdata-section")
+				if (xml.childNodes[i].childNodes.length > 1 && (xml.childNodes[i].firstChild.nodeName == "#cdata-section" || xml.childNodes[i].firstChild.nodeName == '#text'))
 				{
 					data = "";
 					for (var j=0; j<xml.childNodes[i].childNodes.length; j++)
@@ -623,7 +644,7 @@ function Xajax()
 				{
 					for (var j=0; j<xml.childNodes[i].childNodes.length; j++)
 					{
-						if (xml.childNodes[i].childNodes[j].childNodes.length > 1 && xml.childNodes[i].childNodes[j].firstChild.nodeName == "#cdata-section")
+						if (xml.childNodes[i].childNodes[j].childNodes.length > 1 && (xml.childNodes[i].childNodes[j].firstChild.nodeName == "#cdata-section" || xml.childNodes[i].childNodes[j].firstChild.nodeName == "#text"))
 						{
 							var internalData = "";
 							for (var k=0; k<xml.childNodes[i].childNodes[j].childNodes.length;k++)

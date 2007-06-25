@@ -241,7 +241,7 @@ class ListTable
                 {
                     $this->_log->error("could not drop table");
                     $this->_log->error("database error: ".$this->_database->get_error());
-                    $this->error_str = "database problem, please try again";
+                    $this->error_str = DATABASE_PROBLEM;
                     return FALSE;
                 }
             }
@@ -277,7 +277,7 @@ class ListTable
         {
             $this->_log->error("could not create table");
             $this->_log->error("database error: ".$this->_database->get_error());
-            $this->error_str = "database problem, please try again";
+            $this->error_str = DATABASE_PROBLEM;
             return FALSE;
         }
         
@@ -299,7 +299,7 @@ class ListTable
         if (!$this->_database->table_exists($this->table_name))
         {
             $this->_log->error("TableList does not exist in database");
-            $this->error_str = "database problem, please try again";
+            $this->error_str = DATABASE_PROBLEM;
             return array();
         }
 
@@ -348,7 +348,7 @@ class ListTable
         {
             $this->_log->error("could not get number of ListTable entries from database");
             $this->_log->error("database error: ".$this->_database->get_error());
-            $this->error_str = "database problem, please try again";
+            $this->error_str = DATABASE_PROBLEM;
             return array();
         }
         
@@ -375,7 +375,7 @@ class ListTable
         {
             $this->_log->error("could not read ListTable rows from table");
             $this->_log->error("database error: ".$this->_database->get_error());
-            $this->error_str = "database problem, please try again";
+            $this->error_str = DATABASE_PROBLEM;
             return array();
         }
 
@@ -396,7 +396,7 @@ class ListTable
         if (!$this->_database->table_exists($this->table_name))
         {
             $this->_log->error("TableList does not exist in database");
-            $this->error_str = "database problem, please try again";
+            $this->error_str = DATABASE_PROBLEM;
             return array();
         }
 
@@ -413,7 +413,7 @@ class ListTable
         {
             $this->_log->error("could not read ListTable row from table");
             $this->_log->error("database error: ".$this->_database->get_error());
-            $this->error_str = "database problem, please try again";
+            $this->error_str = DATABASE_PROBLEM;
             return array();
         }
     }
@@ -430,7 +430,7 @@ class ListTable
         {
             $this->_log->error("could not drop table");
             $this->_log->error("database error: ".$this->_database->get_error());
-            $this->error_str = "database problem, please try again";
+            $this->error_str = DATABASE_PROBLEM;
             return FALSE;
         }
 
@@ -452,7 +452,7 @@ class ListTable
         if (!$this->_database->table_exists($this->table_name))
         {
             $this->_log->error("TableList does not exist in database");
-            $this->error_str = "database problem, please try again";
+            $this->error_str = DATABASE_PROBLEM;
             return FALSE;
         }
 
@@ -467,7 +467,7 @@ class ListTable
                 if ($result == "ERROR")
                 {
                     $this->_log->error("given date string is not correct (".$value.")");
-                    $this->error_str = "date format incorrect";
+                    $this->error_str = DATE_WRONG_FORMAT;
                     return FALSE;
                 }
                 else
@@ -485,7 +485,7 @@ class ListTable
         {
             $this->_log->error("could not add entry to ListTable");
             $this->_log->error("database error: ".$this->_database->get_error());
-            $this->error_str = "database problem, please try again";
+            $this->error_str = DATABASE_PROBLEM;
             return FALSE;
         }
 
@@ -509,7 +509,7 @@ class ListTable
         if (!$this->_database->table_exists($this->table_name))
         {
             $this->_log->error("TableList does not exist in database");
-            $this->error_str = "database problem, please try again";
+            $this->error_str = DATABASE_PROBLEM;
             return FALSE;
         }
         
@@ -541,7 +541,7 @@ class ListTable
         {
             $this->_log->error("could not update entry of ListTable (key_string=".$key_string.")");
             $this->_log->error("database error: ".$this->_database->get_error());
-            $this->error_str = "database problem, please try again";
+            $this->error_str = DATABASE_PROBLEM;
             return FALSE;
         }
 
@@ -561,7 +561,7 @@ class ListTable
         if (!$this->_database->table_exists($this->table_name))
         {
             $this->_log->error("TableList does not exist in database");
-            $this->error_str = "database problem, please try again";
+            $this->error_str = DATABASE_PROBLEM;
             return FALSE;
         }
 
@@ -572,7 +572,7 @@ class ListTable
         {
             $this->_log->error("could not delete entry to ListTable");
             $this->_log->error("database error: ".$this->_database->get_error());
-            $this->error_str = "database problem, please try again";
+            $this->error_str = DATABASE_PROBLEM;
             return FALSE;
         }
 

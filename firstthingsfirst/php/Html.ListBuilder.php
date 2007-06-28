@@ -203,7 +203,7 @@ function get_field_definition_table ($definition)
     $html_str .= "                            <th>".LABEL_FIELDNAME."</th>\n";
     $html_str .= "                            <th>".LABEL_OPTIONS."</th>\n";
     $html_str .= "                            <th>".LABEL_COMMENT."</th>\n";
-    $html_str .= "                            <th colspan=\"3\">".LABEL_ACTIONS."</th>\n";
+    $html_str .= "                            <th colspan=\"3\">".LABEL_ACTION."</th>\n";
     $html_str .= "                        </tr>\n";
     $html_str .= "                    </thead>\n";
     $html_str .= "                    <tbody>\n";

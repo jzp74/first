@@ -15,7 +15,9 @@ require_once("xajax/xajax.inc.php");
 
 require_once("php/Utilities.php");
 
+require_once("php/Text.Buttons.php");
 require_once("php/Text.Errors.php");
+require_once("php/Text.Labels.php");
 
 require_once("php/Class.Logging.php");
 require_once("php/Class.Result.php");

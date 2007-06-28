@@ -100,26 +100,26 @@ function get_listbuilder_page ()
     
     $html_str = "";
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
-    $html_str .= "        <div id=\"page_title\">Configure a new list</div>\n\n";
-    $html_str .= "        <div id=\"login_status\">user: </div>\n\n";
-    $html_str .= "        <div id=\"listbuilder_general_settings_title\">General settings</div>\n\n";        
+    $html_str .= "        <div id=\"page_title\">".LABEL_CONFIGURE_NEW_LIST."</div>\n\n";
+    $html_str .= "        <div id=\"login_status\">&nbsp;</div>\n\n";
+    $html_str .= "        <div id=\"listbuilder_general_settings_title\">".LABEL_GENERAL_SETTINGS."</div>\n\n";        
     $html_str .= "        <div id=\"listbuilder_general_settings_pane\">\n\n";
     $html_str .= "            <table id=\"listbuilder_general_settings\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
     $html_str .= "                <tbody>\n";
     $html_str .= "                    <tr>\n";
-    $html_str .= "                        <td>Title&nbsp;of&nbsp;this&nbsp;list</td>\n";
+    $html_str .= "                        <td>".LABEL_TITLE_OF_THIS_LIST."</td>\n";
     $html_str .= "                        <td><input size=\"20\" maxlength=\"100\" id=\"listbuilder_list_title\" type=\"text\"></td>\n";
     $html_str .= "                        <td width=\"90%\">&nbsp;</div>\n";
     $html_str .= "                    </tr>\n";
     $html_str .= "                    <tr>\n";
-    $html_str .= "                        <td>Short&nbsp;description&nbsp;of&nbsp;this&nbsp;list</td>\n";
+    $html_str .= "                        <td>".LABEL_SHORT_DESCRIPTION_OF_THIS_LIST."</td>\n";
     $html_str .= "                        <td><textarea cols=\"40\" rows=\"4\" id=\"listbuilder_list_description\"></textarea></td>\n";
     $html_str .= "                        <td width=\"90%\">&nbsp;</div>\n";
     $html_str .= "                    </tr>\n";
     $html_str .= "                </tbody>\n";
     $html_str .= "            </table> <!-- listbuilder_general_settings -->\n\n";
     $html_str .= "        </div> <!-- listbuilder_general_settings_pane -->\n\n";
-    $html_str .= "        <div id=\"listbuilder_definition_title\">Define table fields</div>\n\n";
+    $html_str .= "        <div id=\"listbuilder_definition_title\">".LABEL_DEFINE_TABLE_FIELDS."</div>\n\n";
     $html_str .= "        <div id=\"listbuilder_definition_pane\">\n\n";
 
     $result->set_result_str($html_str);    
@@ -130,9 +130,9 @@ function get_listbuilder_page ()
     $html_str .= "        <div id=\"action_pane\">\n\n";
     $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
     $html_str .= "                <p>&nbsp;".get_select("add_select", "add_it", "")."\n";
-    $html_str .= "                <a xhref=\"javascript:void(0);\" onclick=\"xajax_action_add_listbuilder_row(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'))\">add field</a>\n";
-    $html_str .= "                &nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_create_list(document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value, xajax.getFormValues('database_definition_form'))\">create this list</a>\n";
-    $html_str .= "                &nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_get_portal_page()\">back</a></p>\n";
+    $html_str .= "                <a xhref=\"javascript:void(0);\" onclick=\"xajax_action_add_listbuilder_row(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'))\">".BUTTON_ADD_FIELD."</a>\n";
+    $html_str .= "                &nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_create_list(document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value, xajax.getFormValues('database_definition_form'))\">".BUTTON_CREATE_LIST."</a>\n";
+    $html_str .= "                &nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_get_portal_page()\">".BUTTON_BACK."</a></p>\n";
     $html_str .= "            </div> <!-- action_bar -->\n\n";    
     $html_str .= "        </div> <!-- action_pane -->\n\n";           
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
@@ -199,11 +199,11 @@ function get_field_definition_table ($definition)
     $html_str .= "                <table id=\"listbuilder_definition\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
     $html_str .= "                    <thead>\n";
     $html_str .= "                        <tr>\n";
-    $html_str .= "                            <th>Fieldtype</th>\n";
-    $html_str .= "                            <th>Fieldname</th>\n";
-    $html_str .= "                            <th>Options</th>\n";
-    $html_str .= "                            <th>Comment</th>\n";
-    $html_str .= "                            <th colspan=\"3\">Action</th>\n";
+    $html_str .= "                            <th>".LABEL_FIELDTYPE."</th>\n";
+    $html_str .= "                            <th>".LABEL_FIELDNAME."</th>\n";
+    $html_str .= "                            <th>".LABEL_OPTIONS."</th>\n";
+    $html_str .= "                            <th>".LABEL_COMMENT."</th>\n";
+    $html_str .= "                            <th colspan=\"3\">".LABEL_ACTIONS."</th>\n";
     $html_str .= "                        </tr>\n";
     $html_str .= "                    </thead>\n";
     $html_str .= "                    <tbody>\n";
@@ -237,29 +237,29 @@ function get_field_definition_table ($definition)
 
         # the fourth column - remarks
         if ($row == 0)
-            $html_str .= "                            <td><em>This field cannot be changed</em></td>\n";
+            $html_str .= "                            <td><em>".LABEL_FIELD_CANNOT_BE_CHANGED."</em></td>\n";
         else if ($definition[$position_type] == "selection")
-            $html_str .= "                            <td><em>Specify '|' seperated options for this selection field.<br>For instance: 'dog|cat|sheep'</em></td>\n";
+            $html_str .= "                            <td><em>".LABEL_OPTIONS_EXAMPLE."</em></td>\n";
         else
             $html_str .= "                            <td>&nbsp</td>\n";
         
         # the fifth column - up
         if ($row > 1)
-            $html_str .= "                            <td width=\"1%\"><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_move_listbuilder_row(".$row.", 'up', xajax.getFormValues('database_definition_form'))\">&nbsp;up&nbsp;</a></td>\n";
+            $html_str .= "                            <td width=\"1%\"><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_move_listbuilder_row(".$row.", 'up', xajax.getFormValues('database_definition_form'))\">".BUTTON_UP."</a></td>\n";
         else
-            $html_str .= "                            <td width=\"1%\"><p style=\"visibility: hidden;\">&nbsp;up&nbsp;</p></td>\n";
+            $html_str .= "                            <td width=\"1%\"><p style=\"visibility: hidden;\">".BUTTON_UP."</p></td>\n";
         
         # the sixth column - down
         if ($row > 0 && $row < ((count($definition) / 3) - 1))
-            $html_str .= "                            <td width=\"1%\"><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_move_listbuilder_row(".$row.", 'down', xajax.getFormValues('database_definition_form'))\">down</a></td>\n";
+            $html_str .= "                            <td width=\"1%\"><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_move_listbuilder_row(".$row.", 'down', xajax.getFormValues('database_definition_form'))\">".BUTTON_DOWN."</a></td>\n";
         else
-            $html_str .= "                            <td width=\"1%\"><p style=\"visibility: hidden;\">down</p></td>\n";
+            $html_str .= "                            <td width=\"1%\"><p style=\"visibility: hidden;\">".BUTTON_DOWN."</p></td>\n";
         
         # the seventh column - delete
         if ($row > 0)
-            $html_str .= "                            <td width=\"1%\"><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_del_listbuilder_row(".$row.", xajax.getFormValues('database_definition_form'))\">delete</a></td>\n";
+            $html_str .= "                            <td width=\"1%\"><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_del_listbuilder_row(".$row.", xajax.getFormValues('database_definition_form'))\">".BUTTON_DELETE."</a></td>\n";
         else
-            $html_str .= "                            <td width=\"1%\"><p style=\"visibility: hidden;\">delete</p></td>\n";
+            $html_str .= "                            <td width=\"1%\"><p style=\"visibility: hidden;\">".BUTTON_DELETE."</p></td>\n";
     
         $html_str .= "                        </tr>\n";
     }
@@ -433,6 +433,5 @@ function create_list ($title, $description, $definition)
 
     return;
 }
-
 
 ?>

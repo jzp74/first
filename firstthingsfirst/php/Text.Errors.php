@@ -1,11 +1,14 @@
 <?php
 
 
-#TODO replace all error messages
-#TODO create all error messages here
+# This file contains all error messages
 
-define("DATE_WRONG_FORMAT", "date format incorrect");
 
-define("DATABASE_PROBLEM", "database problem, please try again");
+# field check errors
+define("ERROR_DATE_WRONG_FORMAT", "date format incorrect");
+define("ERROR_NO_VALUE_GIVEN", "please enter a value for this field");
+
+# database errors
+define("ERROR_DATABASE_PROBLEM", "database problem, please try again");
 
 ?>

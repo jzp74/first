@@ -4,8 +4,6 @@
 # Log messages of varies levels can be added to the logfile
 
 
-# TODO redefine logging statements (debug -> trace)
-
 # Logging defines
 define("LOGGING_OFF", 0);
 define("LOGGING_TRACE", 1);

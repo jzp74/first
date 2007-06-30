@@ -6,6 +6,7 @@
 
 # Class definition
 # TODO remove all attributes that are stored in User
+# TODO improve use of trace/debug logging
 class ListTable
 {
     # name of the table in which entries of this ListTable are stored
@@ -461,7 +462,7 @@ class ListTable
             $value = $name_values[$array_key];
             array_push($names, $array_key);
             
-            if (stristr($definition[$array_key][0], "date"))
+            if (stristr($definition[$array_key][0], "DATE"))
             {
                 $result = check_date($value);
                 if ($result == "ERROR")
@@ -517,7 +518,7 @@ class ListTable
         {
             $value = $name_values[$array_key];
             
-            if (stristr($definition[$array_key][0], "date"))
+            if (stristr($definition[$array_key][0], "DATE"))
             {
                 $result = check_date($value);
                 if ($result == "ERROR")

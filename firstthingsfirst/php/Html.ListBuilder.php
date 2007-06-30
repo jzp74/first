@@ -2,6 +2,7 @@
 
 
 # This file contains all php code that is used to generate listbuilder html
+# TODO add explicit info logging for all actions
 
 
 # wrapper function to generate html for the listbuilder page
@@ -108,13 +109,13 @@ function get_listbuilder_page ()
     $html_str .= "                <tbody>\n";
     $html_str .= "                    <tr>\n";
     $html_str .= "                        <td>".LABEL_TITLE_OF_THIS_LIST."</td>\n";
-    $html_str .= "                        <td><input size=\"20\" maxlength=\"100\" id=\"listbuilder_list_title\" type=\"text\"></td>\n";
-    $html_str .= "                        <td width=\"90%\">&nbsp;</div>\n";
+    $html_str .= "                        <td id=\"listbuilder_list_title_id\"><input size=\"20\" maxlength=\"100\" id=\"listbuilder_list_title\" type=\"text\"></td>\n";
+    $html_str .= "                        <td width=\"90%\">&nbsp;</td>\n";
     $html_str .= "                    </tr>\n";
     $html_str .= "                    <tr>\n";
     $html_str .= "                        <td>".LABEL_SHORT_DESCRIPTION_OF_THIS_LIST."</td>\n";
-    $html_str .= "                        <td><textarea cols=\"40\" rows=\"4\" id=\"listbuilder_list_description\"></textarea></td>\n";
-    $html_str .= "                        <td width=\"90%\">&nbsp;</div>\n";
+    $html_str .= "                        <td id=\"listbuilder_list_description_id\"><textarea cols=\"40\" rows=\"4\" id=\"listbuilder_list_description\"></textarea></td>\n";
+    $html_str .= "                        <td width=\"90%\">&nbsp;</td>\n";
     $html_str .= "                    </tr>\n";
     $html_str .= "                </tbody>\n";
     $html_str .= "            </table> <!-- listbuilder_general_settings -->\n\n";
@@ -168,7 +169,7 @@ function get_select ($id, $name, $selection)
         $html_str .= "                                <option value=\"".$field_type."\"";
         if ($field_type == $selection)
             $html_str .= " selected";
-        $html_str .= ">".$field_type."</option>\n";
+        $html_str .= ">".constant($field_type)."</option>\n";
     }
     $html_str .= "                            </select>";
     
@@ -190,7 +191,7 @@ function get_field_definition_table ($definition)
     $logging->trace("getting field definition table");
     $logging->log_array($definition, "definition");
 
-    $input_html_name = "<input type=text size=10 maxlength=10 class=\"input_box\"";
+    $input_html_name = "<input type=text size=16 maxlength=16 class=\"input_box\"";
     $input_html_value = "<input type=text size=20 maxlength=100 class=\"input_box\"";
     $input_html_value_invisible = "<input style=\"visibility: hidden;\" type=text size=20 maxlength=100";
     $html_str = "";    
@@ -219,26 +220,26 @@ function get_field_definition_table ($definition)
 
         # the first column - type
         if ($row == 0)
-            $html_str .= "                            <td>".$input_html_name." name=\"row_".$row."_1\" readonly value=\"autonumber\"></td>\n";
+            $html_str .= "                            <td>".$input_html_name." name=\"row_".$row."_1\" readonly value=\"automatic number\"></td>\n";
         else
             $html_str .= "                            <td>".get_select("", "row_".$row."_1", $definition[$position_type])."</td>\n";
         
         # the second column - name
-        $html_str .= "                            <td>".$input_html_value." name=\"row_".$row."_2\" ";
+        $html_str .= "                            <td id=\"row_".$row."_2\">".$input_html_value." name=\"row_".$row."_2\" ";
         if ($row == 0)
             $html_str .="readonly ";
         $html_str .= "value=\"".$definition[$position_name]."\"></td>\n";
 
         # the third column - options
-        if ($definition[$position_type] == "selection")
-            $html_str .= "                            <td>".$input_html_value." name=\"row_".$row."_3\" value=\"".$definition[$position_options]."\"></td>\n";
+        if ($definition[$position_type] == "LABEL_DEFINITION_SELECTION")
+            $html_str .= "                            <td id=\"row_".$row."_3\">".$input_html_value." name=\"row_".$row."_3\" value=\"".$definition[$position_options]."\"></td>\n";
         else
-            $html_str .= "                            <td>".$input_html_value_invisible." name=\"row_".$row."_3\" value=\"\"></td>\n";
+            $html_str .= "                            <td id=\"row_".$row."_3\">".$input_html_value_invisible." name=\"row_".$row."_3\" value=\"\"></td>\n";
 
         # the fourth column - remarks
         if ($row == 0)
             $html_str .= "                            <td><em>".LABEL_FIELD_CANNOT_BE_CHANGED."</em></td>\n";
-        else if ($definition[$position_type] == "selection")
+        else if ($definition[$position_type] == "LABEL_DEFINITION_SELECTION")
             $html_str .= "                            <td><em>".LABEL_OPTIONS_EXAMPLE."</em></td>\n";
         else
             $html_str .= "                            <td>&nbsp</td>\n";
@@ -392,26 +393,70 @@ function refresh_listbuilder ($definition)
 # string title: title of the new list
 # string description: description of the new list
 # array definition: defintion of current list that is being build
-# TODO add checks and errors
 function create_list ($title, $description, $definition)
 {
     global $logging;
+    global $result;
     global $list_table_description;
     global $list_table;
 
     # get rid of keynames
-    $tmp_definition = array_values($definition);
+    $definition_values = array_values($definition);
+    $definition_keys = array_keys($definition);
     $new_definition = array();
 
     $logging->trace("create list (title=".$title.", desc=".$description.")");
-
-    for ($position = 0; $position < (count($tmp_definition) / 3); $position += 1)
+    
+    # check if title has been given
+    if (strlen($title) == 0)
     {
-        $field_name = "_".str_replace(" ", "__", $tmp_definition[($position * 3) + 1]);
-        $field_type = $tmp_definition[$position * 3];
-        $field_options = $tmp_definition[($position * 3) + 2];
+        $logging->warn("no title given");
+        $result->set_error_str(ERROR_NO_TITLE_GIVEN);
+        $result->set_error_element("listbuilder_list_title_id");
+        
+        return;
+    }
+    
+    # check if description has been given
+    if (strlen($description) == 0)
+    {
+        $logging->warn("no description given");
+        $result->set_error_str(ERROR_NO_DESCRIPTION_GIVEN);
+        $result->set_error_element("listbuilder_list_description_id");
+        
+        return;
+    }
+
+    for ($position = 0; $position < (count($definition_values) / 3); $position += 1)
+    {
+        $field_name = "_".str_replace(" ", "__", $definition_values[($position * 3) + 1]);
+        if ($position == 0)
+            $field_type = "LABEL_DEFINITION_AUTO_NUMBER";
+        else
+            $field_type = $definition_values[$position * 3];
+        $field_options = $definition_values[($position * 3) + 2];
         $logging->debug("found field (name=".$field_name." type=".$field_type." options=".$field_options.")");
         
+        # check if field name has been given
+        if (strlen($definition_values[($position * 3) + 1]) == 0)
+        {
+            $logging->warn("no field name given");
+            $result->set_error_str(ERROR_NO_FIELD_NAME_GIVEN);
+            $result->set_error_element($definition_keys[($position * 3) + 1]);
+        
+            return;
+        }
+        
+        # check if options string has been given, only when field is of type LABEL_DEFINITION_SELECTION
+        if ($field_type == "LABEL_DEFINITION_SELECTION" && strlen($definition_values[($position * 3) + 2]) == 0)
+        {
+            $logging->warn("no options given");
+            $result->set_error_str(ERROR_NO_FIELD_OPTIONS_GIVEN);
+            $result->set_error_element($definition_keys[($position * 3) + 2]);
+        
+            return;
+        }
+
         # only the first column is part of the key
         if ($position == 0)
             $new_definition[$field_name] = array($field_type, 1, $field_options);

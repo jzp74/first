@@ -59,36 +59,35 @@ $tasklist_action_descriptions = array(
     ACTION_CREATE_LIST          => array(0, 1, 1)
 );
 
-# TODO all field_names should be defined
 # this array contains all supported field types
 # this array is of the following structure
 #   field_name => (database_definition, html_definition)
 $tasklist_field_descriptions = array(
-    "number"      => array(
+    "LABEL_DEFINITION_NUMBER"       => array(
         "int not null",
         "input type=text size=10 maxlength=10 class=\"input_box\""
     ),
-    "autonumber"  => array(
+    "LABEL_DEFINITION_AUTO_NUMBER"  => array(
         "int not null auto_increment",
         "input type=text size=10 maxlength=10 readonly class=\"input_box\""
     ),
-    "date"        => array(
+    "LABEL_DEFINITION_DATE"         => array(
         "date",
         "input type=text size=10 maxlength=10 class=\"input_box\""
     ),
-    "autodate"    => array(
+    "LABEL_DEFINITION_AUTO_DATE"    => array(
         "date",
         "input type=text size=10 maxlength=10 readonly class=\"input_box\""
     ),
-    "textline"    => array(
+    "LABEL_DEFINITION_TEXT_LINE"    => array(
         "tinytext not null",
         "input type=text size=20 class=\"input_box\""
     ),
-    "textfield"   => array(
+    "LABEL_DEFINITION_TEXT_FIELD"   => array(
         "mediumtext not null",
         "textarea cols=40 rows=4 class=\"input_box\""
     ),
-    "selection"      => array(
+    "LABEL_DEFINITION_SELECTION"    => array(
         "tinytext not null",
         "select class=\"selection_box\""
     )

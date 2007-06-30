@@ -2,6 +2,7 @@
 
 
 # This file contains all php code that is used to generate login html
+# TODO add explicit info logging for all actions
 
 
 # wrapper function to generate html for the login page
@@ -97,7 +98,7 @@ function login ($user_name, $password)
     if (strlen($user_name) == 0)
     {
         $logging->warn("no user_name given");
-        $result->set_error_str(ERROR_NO_NAME_GIVEN);
+        $result->set_error_str(ERROR_NO_USER_NAME_GIVEN);
         $result->set_error_element("user_name_id");
         
         return;

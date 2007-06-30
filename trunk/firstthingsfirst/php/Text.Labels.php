@@ -31,8 +31,14 @@ define("LABEL_OPTIONS_EXAMPLE", "Specify '|' seperated options for this selectio
 
 # Html.Login.php
 define("LABEL_PLEASE_LOGIN", "Please login");
-define("LABEL_NAME", "name");
+define("LABEL_USER_NAME", "name");
 define("LABEL_PASSWORD", "password");
+define("LABEL_USER", "user");
 
+# Html.Portal.php
+define("LABEL_LIST_NAME", "name");
+define("LABEL_LIST_DESCRIPTION", "description");
+define("LABEL_NONE", "none");
+define("LABEL_NO_LISTST_DEFINED", "no lists defined yet!");
 
 ?>

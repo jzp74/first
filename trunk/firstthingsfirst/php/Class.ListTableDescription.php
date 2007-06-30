@@ -10,6 +10,7 @@ define("LISTTABLEDESCRIPTION_DATETIME_FORMAT", "%Y-%m-%d %H:%M:%S");
 define("LISTTABLEDESCRIPTION_FIELD_PREFIX", "user_defined_field_");
 
 # Class definition
+# TODO improve use of trace/debug logging
 class ListTableDescription
 {
     # id of this list
@@ -317,7 +318,6 @@ class ListTableDescription
     # insert/update ListTableDescription in databas
     # TODO exception handling for this function
     # TODO do something with double titles: "database error: Duplicate entry"
-    # TODO use real User instead of unknown 
     function write ()
     {
         $query = "";

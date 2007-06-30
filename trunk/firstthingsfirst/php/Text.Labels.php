@@ -11,6 +11,15 @@ define("LABEL_AT", "at");
 define("LABEL_LAST_MODIFICATION_BY", "last modification by");
 define("LABEL", "");
 
+# field definitions
+define("LABEL_DEFINITION_NUMBER", "number");
+define("LABEL_DEFINITION_AUTO_NUMBER", "automatic number");
+define("LABEL_DEFINITION_DATE", "date");
+define("LABEL_DEFINITION_AUTO_DATE", "automatic date");
+define("LABEL_DEFINITION_TEXT_LINE", "text line");
+define("LABEL_DEFINITION_TEXT_FIELD", "text field");
+define("LABEL_DEFINITION_SELECTION", "selection box");
+
 # Html.List labels
 define("LABEL_PAGE", "page");
 define("LABEL_OF", "of");

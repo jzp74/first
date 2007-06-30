@@ -2,6 +2,7 @@
 
 
 # This file contains all php code that is used to generate portal html
+# TODO add explicit info logging for all actions
 
 
 # wrapper function to generate portal html

@@ -1,6 +1,7 @@
 <?php
 
 # This class takes care of all database access
+# TODO improve use of trace/debug logging
 class Database
 {
     # name of the host

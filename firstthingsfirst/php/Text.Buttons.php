@@ -23,4 +23,7 @@ define("BUTTON_CREATE_LIST", "create this list");
 define("BUTTON_LOGIN", "login");
 define("BUTTON_LOGOUT", "logout");
 
+# Html.Portal buttons
+define("BUTTON_CREATE_NEW_LIST", "create a new list");
+
 ?>

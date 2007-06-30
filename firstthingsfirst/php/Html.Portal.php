@@ -36,7 +36,7 @@ function get_portal_page ()
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
     $html_str .= "        <div id=\"page_title\">".$tasklist_portal_title."</div>\n\n";
     $html_str .= "        <div id=\"portal_explanation\"><em>".$tasklist_portal_intro_text."</em></div>\n\n";
-    $html_str .= "        <div id=\"login_status\">user: </div>\n\n";
+    $html_str .= "        <div id=\"login_status\">&nbsp;</div>\n\n";
     $html_str .= "        <div id=\"portal_overview_pane\">\n\n";
 
     $result->set_result_str($html_str);    
@@ -46,7 +46,7 @@ function get_portal_page ()
     $html_str .= "        </div> <!-- portal_overview_pane -->\n\n";
     $html_str .= "        <div id=\"action_pane\">\n\n";
     $html_str .= "            <div id=\"action_bar\">\n";
-    $html_str .= "                <p><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_get_listbuilder_page()\">add a list</a></p>\n";
+    $html_str .= "                <p><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_get_listbuilder_page()\">".BUTTON_CREATE_NEW_LIST."</a></p>\n";
     $html_str .= "            </div> <!-- action_bar -->\n\n";    
     $html_str .= "        </div> <!-- action_pane -->\n\n";           
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
@@ -82,8 +82,8 @@ function get_list_tables ()
     # create the table header
     $html_str .= "                <thead>\n";
     $html_str .= "                    <tr>\n";
-    $html_str .= "                        <th>name</th>\n";
-    $html_str .= "                        <th>description</th>\n";
+    $html_str .= "                        <th>".LABEL_LIST_NAME."</th>\n";
+    $html_str .= "                        <th>".LABEL_LIST_DESCRIPTION."</th>\n";
     $html_str .= "                    </tr>\n";
     $html_str .= "                </thead>\n";
     $html_str .= "                <tbody>\n";
@@ -99,8 +99,8 @@ function get_list_tables ()
     if (!count($list_table_descriptions))
     {
         $html_str .= "                    <tr>\n";
-        $html_str .= "                        <td>none</td>\n";
-        $html_str .= "                        <td><em>no lists defined yet!</em></td>\n";
+        $html_str .= "                        <td>".LABEL_NONE."</td>\n";
+        $html_str .= "                        <td><em>".LABEL_NO_LISTST_DEFINED."</em></td>\n";
         $html_str .= "                    </tr>\n";
     }    
     

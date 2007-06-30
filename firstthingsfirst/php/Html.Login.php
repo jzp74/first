@@ -62,7 +62,7 @@ function get_login_page ()
     $html_str .= "            <table id=\"login_overview\" align=\"center\" border=\"0\" cellspacing=\"2\">\n";
     $html_str .= "                <tbody>\n";
     $html_str .= "                    <tr>\n";
-    $html_str .= "                        <td align=\"right\">".LABEL_NAME."</td>\n";
+    $html_str .= "                        <td align=\"right\">".LABEL_USER_NAME."</td>\n";
     $html_str .= "                        <td  id=\"user_name_id\" align=\"left\"><input size=\"16\" maxlength=\"16\" id=\"user_name\" type=\"text\"></td>\n";
     $html_str .= "                    </tr>\n";
     $html_str .= "                    <tr>\n";
@@ -158,7 +158,7 @@ function get_login_status ()
     
     $html_str = "";
     
-    $html_str .= "user: ";
+    $html_str .= LABEL_USER.": ";
     if ($user->is_login())
     {        
         $logging->debug("user: ".$user->get_name()." is logged in");
@@ -168,7 +168,7 @@ function get_login_status ()
     else
     {
         $logging->debug("no user is logged in");
-        $html_str .= "-";
+        $html_str .= LABEL_MINUS;
         $html_str .= "&nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_get_login_page()\">".BUTTON_LOGIN."</a>&nbsp;&nbsp;";
     }
         

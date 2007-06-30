@@ -19,4 +19,8 @@ define("BUTTON_ADD_ROW", "add row");
 define("BUTTON_ADD_FIELD", "add field");
 define("BUTTON_CREATE_LIST", "create this list");
     
+# Html.Login buttons
+define("BUTTON_LOGIN", "login");
+define("BUTTON_LOGOUT", "logout");
+
 ?>

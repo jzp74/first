@@ -29,4 +29,10 @@ define("LABEL_ACTION", "action");
 define("LABEL_FIELD_CANNOT_BE_CHANGED", "This field cannot be changed");
 define("LABEL_OPTIONS_EXAMPLE", "Specify '|' seperated options for this selection field.<br>For instance: 'dog|cat|sheep'");
 
+# Html.Login.php
+define("LABEL_PLEASE_LOGIN", "Please login");
+define("LABEL_NAME", "name");
+define("LABEL_PASSWORD", "password");
+
+
 ?>

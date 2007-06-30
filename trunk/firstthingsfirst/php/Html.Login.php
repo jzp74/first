@@ -57,20 +57,20 @@ function get_login_page ()
 
     $html_str = "";
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
-    $html_str .= "        <div id=\"page_title\">Please login</div>\n\n";
+    $html_str .= "        <div id=\"page_title\">".LABEL_PLEASE_LOGIN."</div>\n\n";
     $html_str .= "        <div id=\"login_pane\">\n\n";
     $html_str .= "            <table id=\"login_overview\" align=\"center\" border=\"0\" cellspacing=\"2\">\n";
     $html_str .= "                <tbody>\n";
     $html_str .= "                    <tr>\n";
-    $html_str .= "                        <td align=\"right\">name</td>\n";
+    $html_str .= "                        <td align=\"right\">".LABEL_NAME."</td>\n";
     $html_str .= "                        <td  id=\"user_name_id\" align=\"left\"><input size=\"16\" maxlength=\"16\" id=\"user_name\" type=\"text\"></td>\n";
     $html_str .= "                    </tr>\n";
     $html_str .= "                    <tr>\n";
-    $html_str .= "                        <td align=\"right\">password</td>\n";
+    $html_str .= "                        <td align=\"right\">".LABEL_PASSWORD."</td>\n";
     $html_str .= "                        <td id=\"password_id\" align=\"left\"><input size=\"16\" maxlength=\"16\" id=\"password\" type=\"password\"></td>\n";
     $html_str .= "                    </tr>\n";
     $html_str .= "                    <tr>\n";
-    $html_str .= "                        <td align=\"center\" colspan=\"2\"><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_login(document.getElementById('user_name').value, document.getElementById('password').value)\">login</a></td>\n";
+    $html_str .= "                        <td align=\"center\" colspan=\"2\"><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_login(document.getElementById('user_name').value, document.getElementById('password').value)\">".BUTTON_LOGIN."</a></td>\n";
     $html_str .= "                    </tr>\n";
     $html_str .= "                </tbody>\n";
     $html_str .= "            </table> <!-- login_overview -->\n\n";
@@ -83,7 +83,6 @@ function get_login_page ()
     return;
 }
 
-# TODO add error handling
 # login a user
 # string user_name: user to login
 # string password: password lo login user_name
@@ -98,7 +97,7 @@ function login ($user_name, $password)
     if (strlen($user_name) == 0)
     {
         $logging->warn("no user_name given");
-        $result->set_error_str("please enter a username");
+        $result->set_error_str(ERROR_NO_NAME_GIVEN);
         $result->set_error_element("user_name_id");
         
         return;
@@ -107,7 +106,7 @@ function login ($user_name, $password)
     if (strlen($password) == 0)
     {
         $logging->warn("no password given");
-        $result->set_error_str("please enter a password");
+        $result->set_error_str(ERROR_NO_PASSWORD_GIVEN);
         $result->set_error_element("password_id");
         
         return;
@@ -121,7 +120,7 @@ function login ($user_name, $password)
     else
     {
         $logging->warn("user could not log in");
-        $result->set_error_str("name/password combination incorrect<br>please enter correct name and password");
+        $result->set_error_str(ERROR_INCORRECT_NAME_PASSWORD);
         $result->set_error_element("password_id");
         
         return;
@@ -164,13 +163,13 @@ function get_login_status ()
     {        
         $logging->debug("user: ".$user->get_name()." is logged in");
         $html_str .= $user->get_name();
-        $html_str .= "&nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_logout()\">logout</a>&nbsp;&nbsp;";
+        $html_str .= "&nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_logout()\">".BUTTON_LOGOUT."</a>&nbsp;&nbsp;";
     }
     else
     {
         $logging->debug("no user is logged in");
         $html_str .= "-";
-        $html_str .= "&nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_get_login_page()\">login</a>&nbsp;&nbsp;";
+        $html_str .= "&nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_get_login_page()\">".BUTTON_LOGIN."</a>&nbsp;&nbsp;";
     }
         
     $logging->trace("get login_status (size=".strlen($html_str).")");

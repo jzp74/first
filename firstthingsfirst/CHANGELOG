@@ -2,6 +2,7 @@ Version 0.3
  - Added error handling
  - Added complete login functionality
  - New version of xajax (verison 0.2.5)
+ - Created 'defines' for all field types
 
 Version 0.2
  - Added compatability for IE7

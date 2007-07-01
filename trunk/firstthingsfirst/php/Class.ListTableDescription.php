@@ -6,7 +6,6 @@
 
 # ListTableDescription defines
 define("LISTTABLEDESCRIPTION_TABLE_NAME", "_listtabledescriptions");
-define("LISTTABLEDESCRIPTION_DATETIME_FORMAT", "%Y-%m-%d %H:%M:%S");
 define("LISTTABLEDESCRIPTION_FIELD_PREFIX", "user_defined_field_");
 
 # Class definition
@@ -231,7 +230,7 @@ class ListTableDescription
     # setter
     function set_modified ()
     {
-        $this->modified = strftime(LISTTABLEDESCRIPTION_DATETIME_FORMAT);
+        $this->modified = strftime(DB_DATETIME_FORMAT);
     }
 
     # setter
@@ -341,9 +340,9 @@ class ListTableDescription
             $query .= "\"".$this->description."\", ";
             $query .= "\"".$this->definition."\", ";
             $query .= "\"".$this->_user->get_name()."\", ";
-            $query .= "\"".strftime(LISTTABLEDESCRIPTION_DATETIME_FORMAT)."\", ";
+            $query .= "\"".strftime(DB_DATETIME_FORMAT)."\", ";
             $query .= "\"".$this->_user->get_name()."\", ";
-            $query .= "\"".strftime(LISTTABLEDESCRIPTION_DATETIME_FORMAT)."\")";
+            $query .= "\"".strftime(DB_DATETIME_FORMAT)."\")";
         }
         else
         {

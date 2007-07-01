@@ -8,6 +8,7 @@ define("DATE_FORMAT_EU", "%d-%m-%Y");
 
 # format in which a date is stored in database
 define("DB_DATE_FORMAT", "%Y-%m-%d");
+define("DB_DATETIME_FORMAT", "%Y-%m-%d %H:%M:%S");
 
 # define all possible user actions
 # each define is the actual name of a function

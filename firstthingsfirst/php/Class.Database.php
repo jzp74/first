@@ -42,7 +42,7 @@ class Database
         $this->user = $tasklist_db_user;
         $this->passwd = $tasklist_db_passwd;
         $this->database = $tasklist_db_db;
-        $this->error = "";
+        $this->error_str = "";
 
         $this->_log->trace("constructed new Database object");        
     }
@@ -81,15 +81,13 @@ class Database
     # array is empty in case of an error and in case the query yields no results
     function query ($query)
     {   
-        $this->error = "";
-
         if (!$this->connect())
             return array();
     
         $this->_log->debug("query db: ".$query);
     
         $result = mysql_query($query);
-        $this->error = mysql_error();
+        $this->error_str = mysql_error();
         mysql_close();
     
         #$this->_log->debug("db connection closed");

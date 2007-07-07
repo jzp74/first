@@ -6,6 +6,7 @@
 
 # ListTableDescription defines
 define("LISTTABLEDESCRIPTION_TABLE_NAME", "_listtabledescriptions");
+define("LISTTABLEDESCRIPTION_KEY_FIELD_NAME", "_id");
 define("LISTTABLEDESCRIPTION_FIELD_PREFIX", "user_defined_field_");
 
 # Class definition
@@ -38,9 +39,13 @@ class ListTableDescription
 
     # array containing the definition of this List
     # this array is of the following structure:
-    #   field_name => (field_type, field_is_key, field_options)
+    #   field_name => (field_type, field_options)
     # it is stored in this object as a json string
+    # TODO keys are always _id fields
     protected $definition;
+
+    # error string, contains last known error
+    protected $error_str;
 
     # reference to global database object
     protected $_database;
@@ -68,11 +73,11 @@ class ListTableDescription
         global $list_table;
         
         # set global references for this object
-        $this->_json = $json;
-        $this->_log = $logging;
-        $this->_database = $database;
-        $this->_user = $user;
-        $this->_list_table = $list_table;
+        $this->_json =& $json;
+        $this->_log =& $logging;
+        $this->_database =& $database;
+        $this->_user =& $user;
+        $this->_list_table =& $list_table;
 
         # set attributes to standard values
         $this->reset();
@@ -89,64 +94,7 @@ class ListTableDescription
         $str .= "description=\"".$this->description."\"";
         return $str;
     }
-        
-    # create the database table that contains all ListTableDescriptions
-    # TODO exception handling for this function
-    # TODO ensure title and group cannot be given names > 100 chars
-    function _create_table ()
-    {
-        $this->_log->debug("create table in database for ListTableDescriptions");
-        
-        $query = "CREATE TABLE ".LISTTABLEDESCRIPTION_TABLE_NAME." (";
-        $query .= "_id INT NOT NULL AUTO_INCREMENT, ";
-        $query .= "_title VARCHAR(100) NOT NULL, ";
-        $query .= "_group VARCHAR(100) NOT NULL, ";
-        $query .= "_description MEDIUMTEXT NOT NULL, ";
-        $query .= "_definition MEDIUMTEXT NOT NULL, ";
-        $query .= "_creator VARCHAR(20) NOT NULL, ";
-        $query .= "_created DATETIME NOT NULL, ";
-        $query .= "_modifier VARCHAR(20) NOT NULL, ";
-        $query .= "_modified DATETIME NOT NULL, ";
-        $query .= "PRIMARY KEY (_id), ";
-        $query .= "UNIQUE KEY _title (_title))";
-
-        $result = $this->_database->query($query);
-        if ($result == FALSE)
-        {
-            $this->_log->error("could not create table in database for ListTableDescriptions");
-            $this->_log->error("database error: ".$this->_database->get_error());
-            return FALSE;
-        }
-        
-        $this->_log->info("created table: ".LISTTABLEDESCRIPTION_TABLE_NAME);
-        return TRUE;
-    }
-    
-    # returns true if this ListTableDescription exists in database
-    function _exists ()
-    {
-        $this->_log->debug("checking if current ListTableDescription exists in database");
-
-        if ($this->_database->table_exists(LISTTABLEDESCRIPTION_TABLE_NAME))
-        {
-            $query = "SELECT _title FROM ".LISTTABLEDESCRIPTION_TABLE_NAME;
-            $result = $this->_database->query($query);
-            if ($result == FALSE)
-                return FALSE;
-            else
-            {
-                while ($row = $this->_database->fetch($result))
-                {
-                    if ($row[0] == $this->title)
-                        return TRUE;
-                }
-                return FALSE;
-            }
-        }
-        else
-            return FALSE;
-    }
-
+            
     # getter
     function get_id ()
     {
@@ -203,6 +151,12 @@ class ListTableDescription
         return (array)$this->_json->decode(html_entity_decode($this->definition), ENT_QUOTES);
     }
 
+    # getter
+    function get_error_str ()
+    {
+        return $this->error_str;
+    }
+
     # setter
     function set_title ($title)
     {
@@ -248,6 +202,7 @@ class ListTableDescription
         $this->group = "none";
         $this->description = "nothing";
         $this->definition = "";
+        $this->error_str = "";
     }
     
     # check if this ListTableDescription is valid
@@ -259,25 +214,49 @@ class ListTableDescription
         return FALSE;
     }
     
-    # check if this ListTableDescription already exists
-    function exists ()
+    # create the database table that contains all ListTableDescriptions
+    # TODO exception handling for this function
+    # TODO ensure title and group cannot be given names > 100 chars
+    function create ()
     {
-        if (read($this->title))
+        $this->_log->debug("create table in database for ListTableDescriptions");
+        
+        $query = "CREATE TABLE ".LISTTABLEDESCRIPTION_TABLE_NAME." (";
+        $query .= "_id INT NOT NULL AUTO_INCREMENT, ";
+        $query .= "_title VARCHAR(100) NOT NULL, ";
+        $query .= "_group VARCHAR(100) NOT NULL, ";
+        $query .= "_description MEDIUMTEXT NOT NULL, ";
+        $query .= "_definition MEDIUMTEXT NOT NULL, ";
+        $query .= "_creator VARCHAR(20) NOT NULL, ";
+        $query .= "_created DATETIME NOT NULL, ";
+        $query .= "_modifier VARCHAR(20) NOT NULL, ";
+        $query .= "_modified DATETIME NOT NULL, ";
+        $query .= "PRIMARY KEY (_id), ";
+        $query .= "UNIQUE KEY _title (_title))";
+
+        $result = $this->_database->query($query);
+        if ($result == FALSE)
         {
-            $this->_log->debug("ListTableDescription already exists (title=".$this->title.")");
-            return TRUE;
+            $this->_log->error("could not create table in database for ListTableDescriptions");
+            $this->_log->error("database error: ".$this->_database->get_error_str());
+            return FALSE;
         }
-        return FALSE;
+        
+        $this->_log->info("created table: ".LISTTABLEDESCRIPTION_TABLE_NAME);
+        return TRUE;
     }
-    
+
     # read ListTableDescription from database with given title
-    function read ($title)
+    # call set function of list_table
+    function select ($title)
     {
         $this->_log->debug("read ListTableDescription (title=".$title.") from database");
         
         if (!$this->_database->table_exists(LISTTABLEDESCRIPTION_TABLE_NAME))
         {
             $this->_log->error("table: ".LISTTABLEDESCRIPTION_TABLE_NAME." does not exist");
+            $this->error_str = ERROR_DATABASE_PROBLEM;
+            
             return FALSE;
         }
             
@@ -303,8 +282,11 @@ class ListTableDescription
             # TODO this must be solved differently
             $this->_user->set_page_title($this->title);
                 
-            #$this->_log->debug($this->_json->encode($this->get_definition()));    
             $this->_log->info("read ListTableDescription (title=\"".$this->title."\")");
+            
+            # initialise list_table
+            $this->_list_table->set();
+            
             return TRUE;
         }
         else
@@ -314,75 +296,110 @@ class ListTableDescription
         }
     }
     
-    # insert/update ListTableDescription in databas
-    # TODO exception handling for this function
+    # insert ListTableDescription in database
+    # call create function of list_table
     # TODO do something with double titles: "database error: Duplicate entry"
-    function write ()
+    function insert ()
     {
         $query = "";
         
-        $this->_log->debug("write current ListTableDescription to database");
+        $this->_log->debug("insert current ListTableDescription");
         
         # create table if it does not yet exists
         if (!$this->_database->table_exists(LISTTABLEDESCRIPTION_TABLE_NAME))
-            $this->_create_table();
+            $this->create();
         
-        # we assume that this ListTableDescription does not exist in database when id is not set
-        if ($this->id == -1)
+        $query .= "INSERT INTO ".LISTTABLEDESCRIPTION_TABLE_NAME." VALUES (";
+        $query .= "0, ";
+        $query .= "\"".$this->title."\", ";
+        $query .= "\"".$this->group."\", ";
+        $query .= "\"".$this->description."\", ";
+        $query .= "\"".$this->definition."\", ";
+        $query .= "\"".$this->_user->get_name()."\", ";
+        $query .= "\"".strftime(DB_DATETIME_FORMAT)."\", ";
+        $query .= "\"".$this->_user->get_name()."\", ";
+        $query .= "\"".strftime(DB_DATETIME_FORMAT)."\")";
+        
+        $result = $this->_database->insertion_query($query);
+        if ($result == FALSE)
         {
-            # insert ListTableDescription in database            
-            $this->_log->debug("insert current ListTableDescription to database");
+            $this->_log->error("could not insert ListTableDescription");
+            $this->_log->error("database error: ".$this->_database->get_error_str());
+            $this->error_str = ERROR_DATABASE_PROBLEM;
             
-            $query .= "INSERT INTO ".LISTTABLEDESCRIPTION_TABLE_NAME." VALUES (";
-            $query .= "0, ";
-            $query .= "\"".$this->title."\", ";
-            $query .= "\"".$this->group."\", ";
-            $query .= "\"".$this->description."\", ";
-            $query .= "\"".$this->definition."\", ";
-            $query .= "\"".$this->_user->get_name()."\", ";
-            $query .= "\"".strftime(DB_DATETIME_FORMAT)."\", ";
-            $query .= "\"".$this->_user->get_name()."\", ";
-            $query .= "\"".strftime(DB_DATETIME_FORMAT)."\")";
+            return FALSE;
         }
-        else
+        
+        $this->_list_table->set();
+        $result = $this->_list_table->create();
+        if ($result == FALSE)
         {
-            # update modifier and modified attributes
-            $this->set_modifier();
-            $this->set_modified();
+            $this->_log->error("could not create ListTable");
+            $this->error_str = $this->get_error_str();
             
-            # update ListTableDescription in database
-            $this->_log->debug("update current ListTableDescription to database");
+            # remove this ListTableDescription from database because creation of ListTable failed
+            $this->delete();
             
-            $query .= "UPDATE ".LISTTABLEDESCRIPTION_TABLE_NAME." SET ";
-            $query .= "_title=\"".$this->title."\", ";
-            $query .= "_group=\"".$this->group."\", ";
-            $query .= "_description=\"".$this->description."\", ";
-            $query .= "_definition=\"".$this->definition."\", ";
-            $query .= "_modifier=\"".$this->get_modifier()."\", ";
-            $query .= "_modified=\"".$this->get_modified()."\" ";
-            $query .= "WHERE _id=\"".$this->id."\"";
+            return FALSE;
         }
+        
+        $this->_log->info("inserted ListTableDescription (title=".$this->title.")");
+        
+        return TRUE;
+    }
+
+    # update ListTableDescription in database
+    function update ()
+    {
+        $query = "";
+        
+        $this->_log->debug("update current ListTableDescription in database");
+        
+        if (!$this->_database->table_exists(LISTTABLEDESCRIPTION_TABLE_NAME))
+        {
+            $this->_log->error("table: ".LISTTABLEDESCRIPTION_TABLE_NAME." does not exist");
+            $this->error_str = ERROR_DATABASE_PROBLEM;
+            
+            return FALSE;
+        }
+            
+        # update modifier and modified attributes
+        $this->set_modifier();
+        $this->set_modified();
+                       
+        $query .= "UPDATE ".LISTTABLEDESCRIPTION_TABLE_NAME." SET ";
+        $query .= "_title=\"".$this->title."\", ";
+        $query .= "_group=\"".$this->group."\", ";
+        $query .= "_description=\"".$this->description."\", ";
+        $query .= "_definition=\"".$this->definition."\", ";
+        $query .= "_modifier=\"".$this->get_modifier()."\", ";
+        $query .= "_modified=\"".$this->get_modified()."\" ";
+        $query .= "WHERE _id=\"".$this->id."\"";
         
         $result = $this->_database->query($query);
         if ($result == FALSE)
         {
-            $this->_log->error("could not write ListTableDescription to database");
-            $this->_log->error("database error: ".$this->_database->get_error());
+            $this->_log->error("could not update ListTableDescription in database");
+            $this->_log->error("database error: ".$this->_database->get_error_str());
+            $this->error_str = ERROR_DATABASE_PROBLEM;
+            
             return FALSE;
         }
         
-        $this->_log->info("wrote ListTableDescription (title=\"".$this->title."\")");
+        $this->_log->info("updated ListTableDescription (title=".$this->title.")");
+        
         return TRUE;
     }
 
     # delete this ListTableDescription from database
+    # delete ListTable from database
+    # delete all ListTableItemRemarks from database
+    # TODO delete all ListTableItemRemarks
     function delete ()
     {
-        $this->_log->debug("delete ListTableDescription from database");
+        $this->_log->trace("delete ListTableDescription from database (title=".$this->title.")");
         
-        $title = $this->title;
-        
-        if ($this->_exists())
+        if ($this->_database->table_exists(LISTTABLEDESCRIPTION_TABLE_NAME))
         {
             $query = "DELETE FROM ".LISTTABLEDESCRIPTION_TABLE_NAME." WHERE _title=\"".$this->title."\"";
             
@@ -390,11 +407,23 @@ class ListTableDescription
             if ($result == FALSE)
             {
                 $this->_log->error("could not delete ListTableDescription from database");
-                $this->_log->error("database error: ".$this->_database->get_error());
+                $this->_log->error("database error: ".$this->_database->get_error_str());
+                $this->error_str = ERROR_DATABASE_PROBLEM;
+        
                 return FALSE;
             }
             
-            $this->_log->info("deleted ListTableDescription (title=\"".$title."\")");
+            $this->_list_table->set();
+            $result = $this->_list_table->drop();
+            if ($result == FALSE)
+            {
+                $this->_log->error("could not delete ListTable");
+                $this->error_str = $this->get_error_str();
+                
+                return FALSE;
+            }
+                        
+            $this->_log->debug("deleted ListTableDescription (title=".$this->title.")");
             return TRUE;
         }
         else

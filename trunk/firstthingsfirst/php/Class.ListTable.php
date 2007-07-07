@@ -7,6 +7,7 @@
 # Class definition
 # TODO remove all attributes that are stored in User
 # TODO improve use of trace/debug logging
+# TODO add creator, created, modifier, modified fields to records
 class ListTable
 {
     # name of the table in which entries of this ListTable are stored
@@ -34,7 +35,7 @@ class ListTable
     # current page
     protected $current_page;
     
-    # error string
+    # error string, contains last known error
     protected $error_str;
 
     # reference to global json object
@@ -49,8 +50,14 @@ class ListTable
     # reference to global database object
     protected $_database;
     
+    # reference to global user object
+    protected $_user;
+    
     # reference to global list_table_description object
     protected $_list_table_description;
+
+    # reference to global list_table_description object
+    protected $_list_table_item_remarks;
 
     # set attributes of this object when it is constructed
     function __construct ()
@@ -62,14 +69,16 @@ class ListTable
         global $database;
         global $user;
         global $list_table_description;
-
+        global $list_table_item_remarks;
+        
         # set global references for this object
-        $this->_json = $json;
-        $this->_result = $result;
-        $this->_log = $logging;
-        $this->_database = $database;
-        $this->_user = $user;
-        $this->_list_table_description = $list_table_description;
+        $this->_json =& $json;
+        $this->_result =& $result;
+        $this->_log =& $logging;
+        $this->_database =& $database;
+        $this->_user =& $user;
+        $this->_list_table_description =& $list_table_description;
+        $this->_list_table_item_remarks =& $list_table_item_remarks;
 
         # copy attributes from given ListTableDescription only when a valid ListTableDescription has been given
         $this->set();
@@ -84,6 +93,7 @@ class ListTable
         $str .= "field_names[0]=\"".$this->field_names[0]."\", ";
         $str .= "order_by_field=\"".$this->get_order_by_field()."\", ";
         $str .= "order_ascending=\"".$this->get_order_ascending()."\", ";
+        
         return $str;
     }
     
@@ -99,34 +109,32 @@ class ListTable
         return "_".str_replace(" ", "__", $field_name);
     }
 
+    # return the key_string (_id="some_unique_number")
     function _get_key_string ($table_row)
     {
-        global $tasklist_table_definition;
-
-        $name_values = array();
-        $definition = $this->_list_table_description->get_definition();
-        
         foreach ($this->db_field_names as $db_field_name)
         {            
-            if ($definition[$db_field_name][1])
-                array_push($name_values, $db_field_name."='".$table_row[$db_field_name]."'");
+            if ($db_field_name == LISTTABLEDESCRIPTION_KEY_FIELD_NAME)
+                return LISTTABLEDESCRIPTION_KEY_FIELD_NAME."'".$table_row[$db_field_name]."'";
         }
-        return implode($name_values, " and ");
+        return LISTTABLEDESCRIPTION_KEY_FIELD_NAME."='-1'";
     }
     
+    # return the value of the key field
     function _get_key_values_string ($table_row)
-    {
-        global $tasklist_table_definition;
-
-        $val_str = "";
-        $definition = $this->_list_table_description->get_definition();
-        
+    {        
         foreach ($this->db_field_names as $db_field_name)
-        {
-            if ($definition[$db_field_name][1])
-                $val_str .= "_".$table_row[$db_field_name];
+        {            
+            if ($db_field_name == LISTTABLEDESCRIPTION_KEY_FIELD_NAME)
+                return "_".$table_row[$db_field_name];
         }
-        return $val_str;
+        return LISTTABLEDESCRIPTION_KEY_FIELD_NAME."='-1'";
+    }
+
+    # getter
+    function get_table_name ()
+    {
+        return $this->table_name;
     }
 
     # getter
@@ -185,12 +193,15 @@ class ListTable
         $this->db_field_names = array();
         $this->total_pages = 1;
         $this->current_page = 1;
+        $this->error_str = "";
     }
 
     # set attributes to match with given ListTableDescription
+    # set ListTableItemRemarks
+    # TODO error handling
     function set ()
     {
-        #$this->_log->debug("setting ListTable");
+        $this->_log->trace("setting ListTable");
 
         $this->field_names = array();
 
@@ -203,7 +214,9 @@ class ListTable
             $this->total_pages = 1;
             $this->current_page = 1;
             
-            #$this->_log->info("set ListTable (table_name=".$this->table_name.")");
+            $this->_list_table_item_remarks->set();
+            
+            $this->_log->trace("set ListTable (table_name=".$this->table_name.")");
         }
         else
             $this->reset();
@@ -213,15 +226,8 @@ class ListTable
     function is_valid ()
     {
         if ($this->table_name != "_empty" && count($this->field_names))
-            return TRUE;        
-        return FALSE;
-    }
-
-    # check if this ListTable instance already exists in the database
-    function exists ()
-    {
-        if ($this->_database->table_exists($this->table_name))
             return TRUE;
+        
         return FALSE;
     }
     
@@ -231,7 +237,7 @@ class ListTable
     {
         global $tasklist_field_descriptions;
         
-        if ($this->exists())
+        if ($this->_database->table_exists($this->table_name))
         {
             if ($force)
             {
@@ -241,48 +247,44 @@ class ListTable
                 if ($result == FALSE)
                 {
                     $this->_log->error("could not drop table");
-                    $this->_log->error("database error: ".$this->_database->get_error());
+                    $this->_log->error("database error: ".$this->_database->get_error_str());
                     $this->error_str = ERROR_DATABASE_PROBLEM;
+                    
                     return FALSE;
                 }
             }
             else
             {
                 $this->_log->debug("table (table=".$this->table_name.") already exists and (force=FALSE)");
+                
                 return TRUE;
             }
         }
 
         $this->_log->debug("creating TableList (table=".$this->table_name.")");
         $query = "CREATE TABLE ".$this->table_name."(";
-        $key_string = "";
         foreach ($this->db_field_names as $db_field_name)
         {
             $field_name = $this->_get_field_name($db_field_name);
             $definition = $this->_list_table_description->get_definition();
             $field_definition = $definition[$db_field_name];
             $this->_log->debug("found field (name=".$field_name." def=".$field_definition.")");
-            $query .= $db_field_name." ".$tasklist_field_descriptions[$field_definition[0]][0].", ";
-        
-            # check if field is part of key
-            if ($field_definition[1] == 1)
-            {   
-                if (strlen($key_string))
-                    $key_string .= ",";         
-                $key_string .= $db_field_name;
-            }
+            $query .= $db_field_name." ".$tasklist_field_descriptions[$field_definition[0]][0].", ";        
         }
-        $query .= "PRIMARY KEY (".$key_string."))";
+
+        $query .= "PRIMARY KEY (".LISTTABLEDESCRIPTION_KEY_FIELD_NAME."))";
         $result = $this->_database->query($query);
         if ($result == FALSE)
         {
             $this->_log->error("could not create table");
-            $this->_log->error("database error: ".$this->_database->get_error());
+            $this->_log->error("database error: ".$this->_database->get_error_str());
             $this->error_str = ERROR_DATABASE_PROBLEM;
+            
             return FALSE;
         }
         
         $this->_log->info("created TableList (table=".$this->table_name.")");
+        
         return TRUE;
     }
 
@@ -348,8 +350,9 @@ class ListTable
         else 
         {
             $this->_log->error("could not get number of ListTable entries from database");
-            $this->_log->error("database error: ".$this->_database->get_error());
+            $this->_log->error("database error: ".$this->_database->get_error_str());
             $this->error_str = ERROR_DATABASE_PROBLEM;
+            
             return array();
         }
         
@@ -375,8 +378,9 @@ class ListTable
         else 
         {
             $this->_log->error("could not read ListTable rows from table");
-            $this->_log->error("database error: ".$this->_database->get_error());
+            $this->_log->error("database error: ".$this->_database->get_error_str());
             $this->error_str = ERROR_DATABASE_PROBLEM;
+            
             return array();
         }
 
@@ -408,35 +412,17 @@ class ListTable
         {
             $row = $this->_database->fetch($result);
             $this->_log->info("read ListTable row");
+            
             return $row;
         }
         else
         {
             $this->_log->error("could not read ListTable row from table");
-            $this->_log->error("database error: ".$this->_database->get_error());
+            $this->_log->error("database error: ".$this->_database->get_error_str());
             $this->error_str = ERROR_DATABASE_PROBLEM;
+            
             return array();
         }
-    }
-
-    # delete ListTable from database
-    function drop ()
-    {
-        $this->_log->debug("dropping ListTable");
-
-        $query = "DROP TABLE ".$this->table_name;
-        $result = $this->_database->query($query);
-
-        if ($result == FALSE)
-        {
-            $this->_log->error("could not drop table");
-            $this->_log->error("database error: ".$this->_database->get_error());
-            $this->error_str = ERROR_DATABASE_PROBLEM;
-            return FALSE;
-        }
-
-        $this->_log->info("dropped ListTable");
-        return TRUE;
     }
     
     # add a row to database
@@ -446,6 +432,7 @@ class ListTable
         $values = array();
         $keys = array_keys($name_values);
         $definition = $this->_list_table_description->get_definition();
+        $remarks_array = array();
         
         $this->_log->debug("add entry to ListTable");
         $this->_log->log_array($name_values, "name_values");
@@ -454,6 +441,7 @@ class ListTable
         {
             $this->_log->error("TableList does not exist in database");
             $this->error_str = ERROR_DATABASE_PROBLEM;
+            
             return FALSE;
         }
 
@@ -469,10 +457,27 @@ class ListTable
                 {
                     $this->_log->error("given date string is not correct (".$value.")");
                     $this->error_str = ERROR_DATE_WRONG_FORMAT;
+                    
                     return FALSE;
                 }
                 else
                     array_push($values, "'".$result."'");
+            }
+            else if ($definition[$array_key][0] == "LABEL_DEFINITION_REMARKS_FIELD")
+            {
+                $this->_log->trace("found remark (field=".$array_key.", value=".$value.")");
+                
+                if (strlen($value) == 0)
+                {
+                    $this->_log->trace("no initial remark given (field=".$array_key.")");
+                    array_push($values, 0);
+                }
+                else
+                {
+                    $this->_log->trace("found initial remark (field=".$array_key.")");
+                    array_push($values, 1);
+                    array_push($remarks_array, array($array_key, $value));
+                }
             }
             else
                 array_push($values, "'".$value."'");
@@ -480,20 +485,25 @@ class ListTable
 
         $query = "INSERT INTO ".$this->table_name." (".implode($names, ", ").") ";
         $query .= "VALUES (".implode($values, ", ").")";
-        $result = $this->_database->query($query);
-
+        $result = $this->_database->insertion_query($query);
         if ($result == FALSE)
         {
             $this->_log->error("could not add entry to ListTable");
-            $this->_log->error("database error: ".$this->_database->get_error());
+            $this->_log->error("database error: ".$this->_database->get_error_str());
             $this->error_str = ERROR_DATABASE_PROBLEM;
+            
             return FALSE;
         }
-
+        
+        # insert remarks
+        foreach ($remarks_array as $remark_array)
+            $this->_list_table_item_remarks->insert($result, $remark_array[0], $remark_array[1]);
+                
         # update list table description (date modified)
-        $this->_list_table_description->write();
+        $this->_list_table_description->update();
 
         $this->_log->info("added entry to ListTable");
+        
         return TRUE;
     }
 
@@ -505,12 +515,13 @@ class ListTable
         $definition = $this->_list_table_description->get_definition();
 
         $this->_log->debug("update entry of ListTable (key_string=".$key_string.")");
-        $this->_log->log_array($name_values, "name_values");
+        $this->_log->log_array($name_values, "name_values");        
         
         if (!$this->_database->table_exists($this->table_name))
         {
             $this->_log->error("TableList does not exist in database");
             $this->error_str = ERROR_DATABASE_PROBLEM;
+            
             return FALSE;
         }
         
@@ -525,6 +536,7 @@ class ListTable
                 {
                     $this->_log->error("given date string is not correct (".$value.")");
                     $this->error_str = ERROR_DATE_WRONG_FORMAT;
+                    
                     return FALSE;
                 }
                 else
@@ -537,25 +549,27 @@ class ListTable
         $query = "UPDATE ".$this->table_name." SET ".implode($name_values_array, ", ");
         $query .= " WHERE ".$key_string;
         $result = $this->_database->query($query);
-
         if ($result == FALSE)
         {
             $this->_log->error("could not update entry of ListTable (key_string=".$key_string.")");
-            $this->_log->error("database error: ".$this->_database->get_error());
+            $this->_log->error("database error: ".$this->_database->get_error_str());
             $this->error_str = ERROR_DATABASE_PROBLEM;
+            
             return FALSE;
         }
 
         # update list table description (date modified)
-        $this->_list_table_description->write();
+        $this->_list_table_description->update();
 
         $this->_log->info("updated entry of ListTable");
+        
         return TRUE;
     }
 
-    function del ($key_string)
+    function delete ($key_string)
     {
         $definition = $this->_list_table_description->get_definition();
+        $field_names = $this->get_field_names();
         
         $this->_log->debug("delete entry from ListTable (key_string=".$key_string.")");
 
@@ -563,8 +577,17 @@ class ListTable
         {
             $this->_log->error("TableList does not exist in database");
             $this->error_str = ERROR_DATABASE_PROBLEM;
+            
             return FALSE;
         }
+
+        # select row from database to see if it really exists
+        $name_values = $this->select_row($key_string);
+        if (count($name_values) == 0)
+            return FALSE;
+
+        # delete all remarks for this row
+        $this->_list_table_item_remarks->delete($name_values[LISTTABLEDESCRIPTION_KEY_FIELD_NAME]);
 
         $query = "DELETE FROM ".$this->table_name." WHERE ".$key_string;
         $result = $this->_database->query($query);
@@ -572,15 +595,47 @@ class ListTable
         if ($result == FALSE)
         {
             $this->_log->error("could not delete entry to ListTable");
-            $this->_log->error("database error: ".$this->_database->get_error());
+            $this->_log->error("database error: ".$this->_database->get_error_str());
             $this->error_str = ERROR_DATABASE_PROBLEM;
+            
             return FALSE;
         }
 
         # update list table description (date modified)
-        $this->_list_table_description->write();
+        $this->_list_table_description->update();
 
         $this->_log->info("deleted entry to ListTable");
+        
+        return TRUE;
+    }
+    
+    function drop ()
+    {
+        $this->_log->debug("drop ListTable (table_name=".$this->table_name.")");
+        
+        if (!$this->_database->table_exists($this->table_name))
+        {
+            $this->_log->error("TableList does not exist in database");
+            $this->error_str = ERROR_DATABASE_PROBLEM;
+            return FALSE;
+        }
+
+        # delete all remarks for this list_table
+        $this->_list_table_item_remarks->delete();
+
+        $query = "DROP TABLE ".$this->table_name;
+        $result = $this->_database->query($query);
+        if ($result == FALSE)
+        {
+            $this->_log->error("could not drop ListTable");
+            $this->_log->error("database error: ".$this->_database->get_error_str());
+            $this->error_str = ERROR_DATABASE_PROBLEM;
+            
+            return FALSE;
+        }
+
+        $this->_log->info("dropped ListTable");
+        
         return TRUE;
     }
 }

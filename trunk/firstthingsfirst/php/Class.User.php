@@ -31,8 +31,8 @@ class User
         global $database;
         
         # set global references for this object
-        $this->_log = $logging;
-        $this->_database = $database;
+        $this->_log =& $logging;
+        $this->_database =& $database;
         
         # start a session
         session_cache_limiter('private, must-revalidate');
@@ -335,7 +335,7 @@ class User
             $this->_create_table();
 
         $query = "INSERT INTO ".USER_TABLE_NAME." VALUES (0, \"".$name."\", \"".$password."\", ".$r.", ".$w.", 0)";
-        $result = $this->_database->query($query);
+        $result = $this->_database->insertion_query($query);
         if ($result == FALSE)
         {
             $this->_log->error("could not add user (name=".$name.")");

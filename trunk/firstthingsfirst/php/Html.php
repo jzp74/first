@@ -52,8 +52,7 @@ function handle_action ()
     if ($ld)
     {
         $page_title = $user->get_page_title();
-        $list_table_description->read($page_title);
-        $list_table->set();
+        $list_table_description->select($page_title);
     }
     $result->reset();
 

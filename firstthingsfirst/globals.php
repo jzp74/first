@@ -64,31 +64,35 @@ $tasklist_action_descriptions = array(
 # this array is of the following structure
 #   field_name => (database_definition, html_definition)
 $tasklist_field_descriptions = array(
-    "LABEL_DEFINITION_NUMBER"       => array(
+    "LABEL_DEFINITION_NUMBER"        => array(
         "int not null",
         "input type=text size=10 maxlength=10 class=\"input_box\""
     ),
-    "LABEL_DEFINITION_AUTO_NUMBER"  => array(
+    "LABEL_DEFINITION_AUTO_NUMBER"   => array(
         "int not null auto_increment",
         "input type=text size=10 maxlength=10 readonly class=\"input_box\""
     ),
-    "LABEL_DEFINITION_DATE"         => array(
+    "LABEL_DEFINITION_DATE"          => array(
         "date",
         "input type=text size=10 maxlength=10 class=\"input_box\""
     ),
-    "LABEL_DEFINITION_AUTO_DATE"    => array(
+    "LABEL_DEFINITION_AUTO_DATE"     => array(
         "date",
         "input type=text size=10 maxlength=10 readonly class=\"input_box\""
     ),
-    "LABEL_DEFINITION_TEXT_LINE"    => array(
+    "LABEL_DEFINITION_TEXT_LINE"     => array(
         "tinytext not null",
         "input type=text size=20 class=\"input_box\""
     ),
-    "LABEL_DEFINITION_TEXT_FIELD"   => array(
+    "LABEL_DEFINITION_TEXT_FIELD"    => array(
         "mediumtext not null",
         "textarea cols=40 rows=4 class=\"input_box\""
     ),
-    "LABEL_DEFINITION_SELECTION"    => array(
+    "LABEL_DEFINITION_REMARKS_FIELD" => array(
+        "int not null",
+        "table class=\"remarks_table\""
+    ),
+    "LABEL_DEFINITION_SELECTION"     => array(
         "tinytext not null",
         "select class=\"selection_box\""
     )

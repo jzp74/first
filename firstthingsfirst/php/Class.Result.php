@@ -24,8 +24,8 @@ class Result
         global $logging;
         
         # set global references for this object
-        $this->_json = $json;
-        $this->_log = $logging;
+        $this->_json =& $json;
+        $this->_log =& $logging;
 
         $this->reset();
         

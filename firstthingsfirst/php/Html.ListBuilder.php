@@ -393,6 +393,7 @@ function refresh_listbuilder ($definition)
 # string title: title of the new list
 # string description: description of the new list
 # array definition: defintion of current list that is being build
+# TODO add error checking for actual creation of list
 function create_list ($title, $description, $definition)
 {
     global $logging;
@@ -468,9 +469,7 @@ function create_list ($title, $description, $definition)
     $list_table_description->set_group("none");
     $list_table_description->set_description($description);
     $list_table_description->set_definition($new_definition);
-    $list_table_description->write();
-    $list_table->set();
-    $list_table->create();
+    $list_table_description->insert();
     
     $logging->trace("created list");
 

@@ -38,10 +38,10 @@ class Database
         global $tasklist_db_db;
 
         # set attributes to standard values
-        $this->host = $tasklist_db_host;
-        $this->user = $tasklist_db_user;
-        $this->passwd = $tasklist_db_passwd;
-        $this->database = $tasklist_db_db;
+        $this->host =& $tasklist_db_host;
+        $this->user =& $tasklist_db_user;
+        $this->passwd =& $tasklist_db_passwd;
+        $this->database =& $tasklist_db_db;
         $this->error_str = "";
 
         $this->_log->trace("constructed new Database object");        
@@ -62,17 +62,17 @@ class Database
         if (!$db_link)
         {
             $this->_log->error("could connect to database (host=".$this->host.", user=".$this->user.")");
-            return 0;
+            return FALSE;
         }
-        $succes = mysql_select_db($this->database);
+        $succes = mysql_select_db($this->database, $db_link);
         if (!$succes)
         {
             $this->_log->error("could connect select database: ".$this->database);
-            return 0;
+            return FALSE;
         }
     
         #$this->_log->debug("db connection opened");
-        return 1;
+        return $db_link;
     }
 
     # TODO add support for queries with ' and " chars
@@ -81,19 +81,42 @@ class Database
     # array is empty in case of an error and in case the query yields no results
     function query ($query)
     {   
-        if (!$this->connect())
-            return array();
+        $db_link = $this->connect();
+        if (!db_link)
+            return FALSE;
     
         $this->_log->debug("query db: ".$query);
     
-        $result = mysql_query($query);
-        $this->error_str = mysql_error();
-        mysql_close();
-    
-        #$this->_log->debug("db connection closed");
+        $result = mysql_query($query, $db_link);
+        $this->error_str = mysql_error($db_link);
+        mysql_close($db_link);
     
         return $result;
     }
+    
+    # send given insert query to given database table and return the id of this insert
+    function insertion_query ($query)
+    {
+        $db_link = $this->connect();
+        if (!db_link)
+            return FALSE;
+     
+        $this->_log->debug("insert query db: ".$query);
+    
+        $result = mysql_query($query, $db_link);
+        
+        if (result != FALSE)
+        {
+            $result = mysql_insert_id($db_link);
+            $this->_log->debug("insert id: ".$result);
+        }
+        
+        $this->error_str = mysql_error($db_link);
+        mysql_close($db_link);
+    
+        return $result;
+    }
+        
     
     # get the next row from database
     # this function only works after the query function has been called

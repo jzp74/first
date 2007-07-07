@@ -18,6 +18,7 @@ define("LABEL_DEFINITION_DATE", "date");
 define("LABEL_DEFINITION_AUTO_DATE", "automatic date");
 define("LABEL_DEFINITION_TEXT_LINE", "text line");
 define("LABEL_DEFINITION_TEXT_FIELD", "text field");
+define("LABEL_DEFINITION_REMARKS_FIELD", "remarks field");
 define("LABEL_DEFINITION_SELECTION", "selection box");
 
 # Html.List labels

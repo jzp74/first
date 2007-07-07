@@ -16,8 +16,8 @@ class Database
     # name of the database
     protected $database;
     
-    # last known error
-    protected $error;
+    # error string, contains last known error
+    protected $error_str;
     
     # reference to global logging object
     protected $_log;
@@ -45,6 +45,12 @@ class Database
         $this->error = "";
 
         $this->_log->trace("constructed new Database object");        
+    }
+
+    # getter
+    function get_error_str ()
+    {
+        return $this->error_str;
     }
 
     # connect to database
@@ -116,12 +122,6 @@ class Database
                 return TRUE;
         }
         return FALSE;
-    }
-    
-    # return last known error string
-    function get_error ()
-    {
-        return $this->error;
     }
 }
 

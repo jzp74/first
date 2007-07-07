@@ -84,7 +84,7 @@ class User
         if ($result == FALSE)
         {
             $this->_log->error("could not create table in database for User");
-            $this->_log->error("database error: ".$this->_database->get_error());
+            $this->_log->error("database error: ".$this->_database->get_error_str());
             return FALSE;
         }
         
@@ -281,7 +281,7 @@ class User
                 if ($result == FALSE)
                 {
                     $this->_log->error("could not update _times_login (name=".$name.")");
-                    $this->_log->error("database error: ".$this->_database->get_error());
+                    $this->_log->error("database error: ".$this->_database->get_error_str());
                 }
                 
                 $this->_log->info("user logged in (name=".$name.")");
@@ -339,7 +339,7 @@ class User
         if ($result == FALSE)
         {
             $this->_log->error("could not add user (name=".$name.")");
-            $this->_log->error("database error: ".$this->_database->get_error());
+            $this->_log->error("database error: ".$this->_database->get_error_str());
             return FALSE;
         }
         

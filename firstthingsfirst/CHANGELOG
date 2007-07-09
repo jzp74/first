@@ -3,6 +3,7 @@ Version 0.3
  - Added complete login functionality
  - New version of xajax (verison 0.2.5)
  - Created 'defines' for all field types
+ - Added new field type (remarks field)
 
 Version 0.2
  - Added compatability for IE7

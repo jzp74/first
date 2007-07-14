@@ -5,7 +5,7 @@
 
 
 # ListTableDescription defines
-define("LISTTABLEDESCRIPTION_TABLE_NAME", "_listtabledescriptions");
+define("LISTTABLEDESCRIPTION_TABLE_NAME", "listtabledescription");
 define("LISTTABLEDESCRIPTION_KEY_FIELD_NAME", "_id");
 define("LISTTABLEDESCRIPTION_FIELD_PREFIX", "user_defined_field_");
 

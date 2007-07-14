@@ -4,6 +4,11 @@
 # It is assumed that ListTableDescription.php is required in the main file
 
 
+# ListTableItemRemarks defines
+define("LISTTABLE_TABLE_NAME_PREFIX", "listtable_");
+define("LISTTABLELISTTABLE_EMPTY", "_LISTTABLE_EMPTY__");
+
+
 # Class definition
 # TODO remove all attributes that are stored in User
 # TODO improve use of trace/debug logging
@@ -194,7 +199,7 @@ class ListTable
     # reset attributes to standard values
     function reset ()
     {
-        $this->table_name = "_empty";
+        $this->table_name = LISTTABLE_EMPTY;
         $this->field_names = array();
         $this->db_field_names = array();
         $this->total_pages = 1;
@@ -213,7 +218,7 @@ class ListTable
 
         if ($this->_list_table_description->is_valid())
         {
-            $this->table_name = "_".strtolower(str_replace(" ", "_", $this->_list_table_description->get_title()));
+            $this->table_name = LISTTABLE_TABLE_NAME_PREFIX.strtolower(str_replace(" ", "_", $this->_list_table_description->get_title()));
             $this->db_field_names = array_keys($this->_list_table_description->get_definition());
             foreach ($this->db_field_names as $db_field_name)
                 array_push($this->field_names, $this->_get_field_name($db_field_name));
@@ -231,7 +236,7 @@ class ListTable
     # check if this ListTable is valid
     function is_valid ()
     {
-        if ($this->table_name != "_empty" && count($this->field_names))
+        if ($this->table_name != LISTTABLE_EMPTY && count($this->field_names))
             return TRUE;
         
         return FALSE;

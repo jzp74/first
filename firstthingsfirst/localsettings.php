@@ -20,8 +20,8 @@ $firstthingsfirst_list_page_entries = 10;
     
 # database settings
 $firstthingsfirst_db_host = "127.0.0.1";
-$firstthingsfirst_db_user = "tasklist";
-$firstthingsfirst_db_passwd = "tasklist";
-$firstthingsfirst_db_db = "tasklist";
+$firstthingsfirst_db_user = "firstthingsfirst";
+$firstthingsfirst_db_passwd = "firstthingsfirst";
+$firstthingsfirst_db_db = "firstthingsfirst";
 
 ?>

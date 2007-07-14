@@ -44,7 +44,7 @@ $list_table_item_remarks = new EmptyClass();
 
 # create global objects
 $json = new Services_JSON();
-$logging = new Logging(LOGGING_TRACE);
+$logging = new Logging(LOGGING_TRACE, "firstthingsfirst.log");
 $result = new Result();
 $database = new Database();
 $user = new User();

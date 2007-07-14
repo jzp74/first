@@ -11,7 +11,7 @@ define("LOGGING_DEBUG", 2);
 define("LOGGING_INFO", 3);
 define("LOGGING_WARN", 4);
 define("LOGGING_ERROR", 5);
-define("LOGGING_NAME", "tasklist.log");
+define("LOGGING_NAME", "logfile.log");
 
 # Class definition
 class Logging
@@ -23,12 +23,12 @@ class Logging
     protected $name;
     
     # set attributes of this object when it is constructed
-    function __construct ($level = LOGGING_TRACE, $name = LOGGING_NAME)
+    function __construct ($level = LOGGING_INFO, $name = LOGGING_NAME)
     {
         # globals defined in localsetting.php
-        global $tasklist_full_pathname;
+        global $firstthingsfirst_full_pathname;
         
-        $this->name = $tasklist_full_pathname."/".$name;
+        $this->name = $firstthingsfirst_full_pathname."/".$name;
         $this->level = $level;
     }
         

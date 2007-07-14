@@ -241,7 +241,7 @@ class ListTable
     # remove database table is it already exists and force=TRUE
     function create ($force = FALSE)
     {
-        global $tasklist_field_descriptions;
+        global $firstthingsfirst_field_descriptions;
         
         if ($this->_database->table_exists($this->table_name))
         {
@@ -275,7 +275,7 @@ class ListTable
             $definition = $this->_list_table_description->get_definition();
             $field_definition = $definition[$db_field_name];
             $this->_log->debug("found field (name=".$field_name." def=".$field_definition.")");
-            $query .= $db_field_name." ".$tasklist_field_descriptions[$field_definition[0]][0].", ";        
+            $query .= $db_field_name." ".$firstthingsfirst_field_descriptions[$field_definition[0]][0].", ";        
         }
 
         $query .= "PRIMARY KEY (".LISTTABLEDESCRIPTION_KEY_FIELD_NAME."))";
@@ -301,7 +301,7 @@ class ListTable
     # TODO store current page in User. Use current page if page is set to -1
     function select ($order_by_field, $page)
     {
-        global $tasklist_list_page_entries;
+        global $firstthingsfirst_list_page_entries;
 
         $definition = $this->_list_table_description->get_definition();
         $db_field_names = $this->get_db_field_names();
@@ -351,8 +351,8 @@ class ListTable
         if ($result != FALSE)
         {
             $total_pages_array = $this->_database->fetch($result);
-            $this->total_pages = floor($total_pages_array[0]/$tasklist_list_page_entries);
-            if (($total_pages_array[0]%$tasklist_list_page_entries) != 0)
+            $this->total_pages = floor($total_pages_array[0]/$firstthingsfirst_list_page_entries);
+            if (($total_pages_array[0]%$firstthingsfirst_list_page_entries) != 0)
                 $this->total_pages  += 1;
             $this->_log->debug("total_pages=".$this->total_pages);
         }
@@ -375,8 +375,8 @@ class ListTable
             $query .= " ASC";
         else
             $query .= " DESC";
-        $limit_from = ($page - 1) * $tasklist_list_page_entries;
-        $query .= " LIMIT ".$limit_from.", ".$tasklist_list_page_entries;
+        $limit_from = ($page - 1) * $firstthingsfirst_list_page_entries;
+        $query .= " LIMIT ".$limit_from.", ".$firstthingsfirst_list_page_entries;
 
         $result = $this->_database->query($query);
         if ($result != FALSE)

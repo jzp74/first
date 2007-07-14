@@ -15,14 +15,14 @@ function handle_action ()
     global $logging;
     global $list_table_description;
     global $list_table;
-    global $tasklist_action_descriptions;
+    global $firstthingsfirst_action_descriptions;
     global $response;
     
     # action descriptions
     $action = $user->get_action();
-    $ld = $tasklist_action_descriptions[$action][0];
-    $rd = $tasklist_action_descriptions[$action][1];
-    $wr = $tasklist_action_descriptions[$action][2];
+    $ld = $firstthingsfirst_action_descriptions[$action][0];
+    $rd = $firstthingsfirst_action_descriptions[$action][1];
+    $wr = $firstthingsfirst_action_descriptions[$action][2];
     
     $logging->debug("handle action: ".$action." (ld=".$ld.", rd=".$rd.", wr=".$wr.")");
     

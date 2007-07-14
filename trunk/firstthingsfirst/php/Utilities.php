@@ -6,12 +6,12 @@
 # check if given date string complies with predifined date format
 function check_date ($date_string)
 {
-    global $tasklist_date_string;
+    global $firstthingsfirst_date_string;
     global $logging;
     
     $logging->trace("checking date (date_string=".$date_string.")");
 
-    if ($tasklist_date_string == DATE_FORMAT_US)
+    if ($firstthingsfirst_date_string == DATE_FORMAT_US)
     {
         $date_parts = explode("/", $date_string);
         $month = intval($date_parts[0]);

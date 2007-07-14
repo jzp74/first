@@ -25,9 +25,9 @@ function action_get_portal_page ()
 # return the html for a complete portal page
 function get_portal_page ()
 {
-    global $tasklist_portal_title;
-    global $tasklist_portal_intro_text;
-    global $tasklist_portal_address;
+    global $firstthingsfirst_portal_title;
+    global $firstthingsfirst_portal_intro_text;
+    global $firstthingsfirst_portal_address;
     global $logging;
     global $result;
 
@@ -35,8 +35,8 @@ function get_portal_page ()
 
     $html_str = "";
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
-    $html_str .= "        <div id=\"page_title\">".$tasklist_portal_title."</div>\n\n";
-    $html_str .= "        <div id=\"portal_explanation\"><em>".$tasklist_portal_intro_text."</em></div>\n\n";
+    $html_str .= "        <div id=\"page_title\">".$firstthingsfirst_portal_title."</div>\n\n";
+    $html_str .= "        <div id=\"portal_explanation\"><em>".$firstthingsfirst_portal_intro_text."</em></div>\n\n";
     $html_str .= "        <div id=\"login_status\">&nbsp;</div>\n\n";
     $html_str .= "        <div id=\"portal_overview_pane\">\n\n";
 
@@ -61,7 +61,7 @@ function get_portal_page ()
 # return the html for an overview of all ListTables contained in database
 function get_list_tables ()
 {
-    global $tasklist_portal_address;
+    global $firstthingsfirst_portal_address;
     global $logging;
     global $result;
     global $database;

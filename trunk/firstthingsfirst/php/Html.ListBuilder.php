@@ -92,11 +92,11 @@ function get_listbuilder_page ()
 {
     global $logging;
     global $result;    
-    global $tasklist_field_descriptions;
+    global $firstthingsfirst_field_descriptions;
 
     $logging->trace("getting list_builer");
     
-    $field_types = array_keys($tasklist_field_descriptions);
+    $field_types = array_keys($firstthingsfirst_field_descriptions);
     $definition = array($field_types[0], "id", "", $field_types[3], "", "");
     
     $html_str = "";
@@ -150,10 +150,10 @@ function get_listbuilder_page ()
 # set selection to given selection string
 function get_select ($id, $name, $selection)
 {
-    global $tasklist_field_descriptions;
+    global $firstthingsfirst_field_descriptions;
     global $logging;
     
-    $field_types = array_keys($tasklist_field_descriptions);
+    $field_types = array_keys($firstthingsfirst_field_descriptions);
 
     $logging->trace("getting select (id=".$id.", name=".$name.", selection=".$selection.")");
 

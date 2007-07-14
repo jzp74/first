@@ -96,7 +96,7 @@ if (!$user->is_login())
 <head>
 <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
     
-<title><?php echo $tasklist_portal_title ?></title>
+<title><?php echo $firstthingsfirst_portal_title ?></title>
 <link rel="stylesheet" href="css/standard.css">
 <link rel="stylesheet" href="css/standard_login.css">
 <link rel="stylesheet" href="css/standard_list.css">

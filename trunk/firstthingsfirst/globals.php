@@ -1,6 +1,6 @@
 <?php
 
-# This file contains global tasklist settings
+# This file contains global firstthingsfirst settings
 
 # date format defines
 define("DATE_FORMAT_US", "%m/%d/%Y");
@@ -41,7 +41,7 @@ define("ACTION_CREATE_LIST", "create_list");
 # this array contains a description for each action
 # this array is of the following structure
 #   action => (load_list, rd_perm_required, wr_perm_required)
-$tasklist_action_descriptions = array(
+$firstthingsfirst_action_descriptions = array(
     ACTION_GET_PORTAL_PAGE      => array(0, 1, 0),
     ACTION_GET_LOGIN_PAGE       => array(0, 0, 0),
     ACTION_LOGIN                => array(0, 0, 0),
@@ -63,7 +63,7 @@ $tasklist_action_descriptions = array(
 # this array contains all supported field types
 # this array is of the following structure
 #   field_name => (database_definition, html_definition)
-$tasklist_field_descriptions = array(
+$firstthingsfirst_field_descriptions = array(
     "LABEL_DEFINITION_NUMBER"        => array(
         "int not null",
         "input type=text size=10 maxlength=10 class=\"input_box\""

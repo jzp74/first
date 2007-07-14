@@ -115,7 +115,7 @@ class ListTable
         foreach ($this->db_field_names as $db_field_name)
         {            
             if ($db_field_name == LISTTABLEDESCRIPTION_KEY_FIELD_NAME)
-                return LISTTABLEDESCRIPTION_KEY_FIELD_NAME."'".$table_row[$db_field_name]."'";
+                return LISTTABLEDESCRIPTION_KEY_FIELD_NAME."='".$table_row[$db_field_name]."'";
         }
         return LISTTABLEDESCRIPTION_KEY_FIELD_NAME."='-1'";
     }
@@ -382,24 +382,7 @@ class ListTable
         if ($result != FALSE)
         {
             while ($row = $this->_database->fetch($result))
-            {
-                foreach($db_field_names as $db_field_name)
-                {
-                    if ($definition[$db_field_name][0] == LABEL_DEFINITION_REMARKS_FIELD && $row[$db_field_name] > 0)
-                    {
-                        $this->_log->trace("getting remarks (field=".$db_field_name.")");
-                        $result = $this->_list_table_item_remarks->select($row[LISTTABLEDESCRIPTION_KEY_FIELD_NAME], $db_field_name);
-                        if (count($result) == 0 || count($result) != $row[$db_field_name])
-                        {
-                            $this->_log->warn("unexpected number of remarks found");
-                            $row[$db_field_name] = $result;
-                        }
-                        else
-                            $row[$db_field_name] = $result;
-                    }
-                }                
                 array_push($rows, $row);
-            }
         }
         else 
         {
@@ -409,19 +392,51 @@ class ListTable
             
             return array();
         }
+        
+        # get field names of remark fields
+        $remark_fields_array = array();        
+        foreach($db_field_names as $db_field_name)
+        {
+            if ($definition[$db_field_name][0] == "LABEL_DEFINITION_REMARKS_FIELD")
+                array_push($remark_fields_array, $db_field_name);
+        }
+        $this->_log->log_array($remark_fields_array, "remark_fields");
+
+        # get remarks 
+        $rows_with_remarks = array();       
+        foreach($rows as $row)
+        {
+            $this->_log->debug("getting remarks for row (id=".$row[LISTTABLEDESCRIPTION_KEY_FIELD_NAME].")");
+            foreach($remark_fields_array as $remark_field)
+            {
+                if ($row[$remark_field] > 0)
+                {
+                    $this->_log->trace("getting remarks (field=".$remark_field.")");
+                    $result = $this->_list_table_item_remarks->select($row[LISTTABLEDESCRIPTION_KEY_FIELD_NAME], $remark_field);
+                    if (count($result) == 0 || count($result) != $row[$remark_field])
+                    {
+                        $this->_log->warn("unexpected number of remarks found");
+                        $row[$remark_field] = $result;
+                    }
+                    else
+                        $row[$remark_field] = $result;
+                }
+                else
+                    $row[$remark_field] = array();
+            }
+            array_push($rows_with_remarks, $row);
+        }
 
         $this->current_page = $page;
 
         $this->_log->info("read ListTable (from=".$limit_from.")");
     
-        return $rows;
+        return $rows_with_remarks;
     }
     
     # return array containing one row from this ListTable
     function select_row ($key_string)
     {
-        global $tasklist_list_page_entries;
-
         $definition = $this->_list_table_description->get_definition();
         $db_field_names = $this->get_db_field_names();
 
@@ -444,7 +459,8 @@ class ListTable
             {
                 foreach($db_field_names as $db_field_name)
                 {
-                    if ($definition[$db_field_name][0] == LABEL_DEFINITION_REMARKS_FIELD && $row[$db_field_name] > 0)
+                    $this->_log->trace("field=".$db_field_name.", def=".$definition[$db_field_name][0].", val=".$row[$db_field_name].")");
+                    if ($definition[$db_field_name][0] == "LABEL_DEFINITION_REMARKS_FIELD" && $row[$db_field_name] > 0)
                     {
                         $this->_log->trace("getting remarks (field=".$db_field_name.")");
                         $result = $this->_list_table_item_remarks->select($row[LISTTABLEDESCRIPTION_KEY_FIELD_NAME], $db_field_name);
@@ -601,7 +617,7 @@ class ListTable
                 else
                     array_push($name_values_array, $array_key."='".$result."'");
             }
-            else if ($definition[$array_key][0] == LABEL_DEFINITION_REMARKS_FIELD)
+            else if ($definition[$array_key][0] == "LABEL_DEFINITION_REMARKS_FIELD")
                 $this->_log_debug("found remarks field");
             else
                 array_push($name_values_array, $array_key."='".$value."'");

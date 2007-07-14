@@ -34,6 +34,14 @@ require_once("php/Html.List.php");
 require_once("php/Html.ListBuilder.php");
 
 
+# needed to initialise several classes
+class EmptyClass {}
+
+
+# dummy initialisations
+$list_table = new EmptyClass();
+$list_table_item_remarks = new EmptyClass();
+
 # create global objects
 $json = new Services_JSON();
 $logging = new Logging(LOGGING_TRACE);
@@ -42,6 +50,7 @@ $database = new Database();
 $user = new User();
 $list_table_description = new ListTableDescription();
 $list_table = new ListTable();
+$list_table_item_remarks = new ListTableItemRemarks();
 $response = new xajaxResponse();
 
 

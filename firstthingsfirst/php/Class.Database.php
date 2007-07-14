@@ -32,16 +32,16 @@ class Database
         $this->_log = $logging;
 
         # globals defined in localsettings.php
-        global $tasklist_db_host;
-        global $tasklist_db_user;
-        global $tasklist_db_passwd;
-        global $tasklist_db_db;
+        global $firstthingsfirst_db_host;
+        global $firstthingsfirst_db_user;
+        global $firstthingsfirst_db_passwd;
+        global $firstthingsfirst_db_db;
 
         # set attributes to standard values
-        $this->host =& $tasklist_db_host;
-        $this->user =& $tasklist_db_user;
-        $this->passwd =& $tasklist_db_passwd;
-        $this->database =& $tasklist_db_db;
+        $this->host =& $firstthingsfirst_db_host;
+        $this->user =& $firstthingsfirst_db_user;
+        $this->passwd =& $firstthingsfirst_db_passwd;
+        $this->database =& $firstthingsfirst_db_db;
         $this->error_str = "";
 
         $this->_log->trace("constructed new Database object");        

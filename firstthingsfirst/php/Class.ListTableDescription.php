@@ -176,6 +176,18 @@ class ListTableDescription
     }
 
     # setter
+    function set_creator ()
+    {
+        $this->creator = $this->_user->get_name();
+    }
+
+    # setter
+    function set_created ()
+    {
+        $this->created = strftime(DB_DATETIME_FORMAT);
+    }
+
+    # setter
     function set_modifier ()
     {
         $this->modifier = $this->_user->get_name();
@@ -222,15 +234,15 @@ class ListTableDescription
         $this->_log->debug("create table in database for ListTableDescriptions");
         
         $query = "CREATE TABLE ".LISTTABLEDESCRIPTION_TABLE_NAME." (";
-        $query .= DB_ID_FIELD_NAME."INT NOT NULL AUTO_INCREMENT, ";
+        $query .= DB_ID_FIELD_NAME." INT NOT NULL AUTO_INCREMENT, ";
         $query .= "_title VARCHAR(100) NOT NULL, ";
         $query .= "_group VARCHAR(100) NOT NULL, ";
         $query .= "_description MEDIUMTEXT NOT NULL, ";
         $query .= "_definition MEDIUMTEXT NOT NULL, ";
         $query .= DB_CREATOR_FIELD_NAME." VARCHAR(20) NOT NULL, ";
         $query .= DB_CREATED_FIELD_NAME." DATETIME NOT NULL, ";
-        $query .= DB_MODIFIED_FIELD_NAME." VARCHAR(20) NOT NULL, ";
-        $query .= DB_MODIFIER_FIELD_NAME." DATETIME NOT NULL, ";
+        $query .= DB_MODIFIER_FIELD_NAME." VARCHAR(20) NOT NULL, ";
+        $query .= DB_MODIFIED_FIELD_NAME." DATETIME NOT NULL, ";
         $query .= "PRIMARY KEY (".DB_ID_FIELD_NAME."), ";
         $query .= "UNIQUE KEY _title (_title))";
 
@@ -310,16 +322,22 @@ class ListTableDescription
         if (!$this->_database->table_exists(LISTTABLEDESCRIPTION_TABLE_NAME))
             $this->create();
         
+        # set creator, created, modifier and modified attributes
+        $this->set_creator();
+        $this->set_created();
+        $this->set_modifier();
+        $this->set_modified();
+
         $query .= "INSERT INTO ".LISTTABLEDESCRIPTION_TABLE_NAME." VALUES (";
         $query .= "0, ";
         $query .= "\"".$this->title."\", ";
         $query .= "\"".$this->group."\", ";
         $query .= "\"".$this->description."\", ";
         $query .= "\"".$this->definition."\", ";
-        $query .= "\"".$this->_user->get_name()."\", ";
-        $query .= "\"".strftime(DB_DATETIME_FORMAT)."\", ";
-        $query .= "\"".$this->_user->get_name()."\", ";
-        $query .= "\"".strftime(DB_DATETIME_FORMAT)."\")";
+        $query .= "\"".$this->creator."\", ";
+        $query .= "\"".$this->created."\", ";
+        $query .= "\"".$this->modifier."\", ";
+        $query .= "\"".$this->modified."\")";
         
         $result = $this->_database->insertion_query($query);
         if ($result == FALSE)
@@ -373,8 +391,8 @@ class ListTableDescription
         $query .= "_group=\"".$this->group."\", ";
         $query .= "_description=\"".$this->description."\", ";
         $query .= "_definition=\"".$this->definition."\", ";
-        $query .= DB_MODIFIER_FIELD_NAME."=\"".$this->get_modifier()."\", ";
-        $query .= DB_MODIFIED_FIELD_NAME."=\"".$this->get_modified()."\" ";
+        $query .= DB_MODIFIER_FIELD_NAME."=\"".$this->modifier."\", ";
+        $query .= DB_MODIFIED_FIELD_NAME."=\"".$this->modified."\" ";
         $query .= "WHERE ".DB_ID_FIELD_NAME."=\"".$this->id."\"";
         
         $result = $this->_database->query($query);

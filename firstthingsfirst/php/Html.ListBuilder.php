@@ -431,17 +431,10 @@ function create_list ($title, $description, $definition)
     for ($position = 0; $position < (count($definition_values) / 3); $position += 1)
     {
         if ($position == 0)
-        {
-            # the first field is always the key field
             $field_type = "LABEL_DEFINITION_AUTO_NUMBER";
-            $field_name = DB_ID_FIELD_NAME;
-        }
         else
-        {
-            # the other fields are user defined
             $field_type = $definition_values[$position * 3];
-            $field_name = LISTTABLEDESCRIPTION_FIELD_PREFIX.str_replace(" ", "__", $definition_values[($position * 3) + 1]);
-        }
+        $field_name = $list_table->_get_db_field_name($definition_values[($position * 3) + 1]);
         $field_options = $definition_values[($position * 3) + 2];
         $logging->debug("found field (name=".$field_name." type=".$field_type." options=".$field_options.")");
         

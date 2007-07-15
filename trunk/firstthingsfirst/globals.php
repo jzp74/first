@@ -10,6 +10,14 @@ define("DATE_FORMAT_EU", "%d-%m-%Y");
 define("DB_DATE_FORMAT", "%Y-%m-%d");
 define("DB_DATETIME_FORMAT", "%Y-%m-%d %H:%M:%S");
 
+# other database definitions
+define("DB_CREATOR_FIELD_NAME", "_creator");
+define("DB_CREATED_FIELD_NAME", "_created");
+define("DB_MODIFIER_FIELD_NAME", "_modifier");
+define("DB_MODIFIED_FIELD_NAME", "_modified");
+define("DB_ID_FIELD_NAME", "_id");
+define("DB_ARCHIVED_FIELD_NAME", "_archived");
+
 # define all possible user actions
 # each define is the actual name of a function
 

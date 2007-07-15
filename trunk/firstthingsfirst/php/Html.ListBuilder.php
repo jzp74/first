@@ -430,11 +430,18 @@ function create_list ($title, $description, $definition)
 
     for ($position = 0; $position < (count($definition_values) / 3); $position += 1)
     {
-        $field_name = "_".str_replace(" ", "__", $definition_values[($position * 3) + 1]);
         if ($position == 0)
+        {
+            # the first field is always the key field
             $field_type = "LABEL_DEFINITION_AUTO_NUMBER";
+            $field_name = DB_ID_FIELD_NAME;
+        }
         else
+        {
+            # the other fields are user defined
             $field_type = $definition_values[$position * 3];
+            $field_name = LISTTABLEDESCRIPTION_FIELD_PREFIX.str_replace(" ", "__", $definition_values[($position * 3) + 1]);
+        }
         $field_options = $definition_values[($position * 3) + 2];
         $logging->debug("found field (name=".$field_name." type=".$field_type." options=".$field_options.")");
         
@@ -464,7 +471,7 @@ function create_list ($title, $description, $definition)
         else
             $new_definition[$field_name] = array($field_type, 0, $field_options);
     }
-
+    
     $list_table_description->set_title($title);
     $list_table_description->set_group("none");
     $list_table_description->set_description($description);

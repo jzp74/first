@@ -6,8 +6,7 @@
 
 # ListTableDescription defines
 define("LISTTABLEDESCRIPTION_TABLE_NAME", "listtabledescription");
-define("LISTTABLEDESCRIPTION_KEY_FIELD_NAME", "_id");
-define("LISTTABLEDESCRIPTION_FIELD_PREFIX", "user_defined_field_");
+define("LISTTABLEDESCRIPTION_FIELD_PREFIX", "_user_defined_");
 
 # Class definition
 # TODO improve use of trace/debug logging
@@ -41,7 +40,8 @@ class ListTableDescription
     # this array is of the following structure:
     #   field_name => (field_type, field_options)
     # it is stored in this object as a json string
-    # TODO keys are always _id fields
+    # only user defined fields and the _id field are stored in this array
+    # TODO field names should be stored here (not db field names)
     protected $definition;
 
     # error string, contains last known error
@@ -222,16 +222,16 @@ class ListTableDescription
         $this->_log->debug("create table in database for ListTableDescriptions");
         
         $query = "CREATE TABLE ".LISTTABLEDESCRIPTION_TABLE_NAME." (";
-        $query .= "_id INT NOT NULL AUTO_INCREMENT, ";
+        $query .= DB_ID_FIELD_NAME."INT NOT NULL AUTO_INCREMENT, ";
         $query .= "_title VARCHAR(100) NOT NULL, ";
         $query .= "_group VARCHAR(100) NOT NULL, ";
         $query .= "_description MEDIUMTEXT NOT NULL, ";
         $query .= "_definition MEDIUMTEXT NOT NULL, ";
-        $query .= "_creator VARCHAR(20) NOT NULL, ";
-        $query .= "_created DATETIME NOT NULL, ";
-        $query .= "_modifier VARCHAR(20) NOT NULL, ";
-        $query .= "_modified DATETIME NOT NULL, ";
-        $query .= "PRIMARY KEY (_id), ";
+        $query .= DB_CREATOR_FIELD_NAME." VARCHAR(20) NOT NULL, ";
+        $query .= DB_CREATED_FIELD_NAME." DATETIME NOT NULL, ";
+        $query .= DB_MODIFIED_FIELD_NAME." VARCHAR(20) NOT NULL, ";
+        $query .= DB_MODIFIER_FIELD_NAME." DATETIME NOT NULL, ";
+        $query .= "PRIMARY KEY (".DB_ID_FIELD_NAME."), ";
         $query .= "UNIQUE KEY _title (_title))";
 
         $result = $this->_database->query($query);
@@ -261,8 +261,9 @@ class ListTableDescription
         }
             
         $this->reset();
-        $query = "SELECT _id, _title, _group, _description, _definition, ";
-        $query .= "_creator, _created, _modifier, _modified FROM ".LISTTABLEDESCRIPTION_TABLE_NAME;
+        $query = "SELECT ".DB_ID_FIELD_NAME.", _title, _group, _description, _definition, ";
+        $query .= DB_CREATOR_FIELD_NAME.", ".DB_CREATED_FIELD_NAME.", ".DB_MODIFIER_FIELD_NAME.", ";
+        $query .= DB_MODIFIED_FIELD_NAME." FROM ".LISTTABLEDESCRIPTION_TABLE_NAME;
         $query .= " WHERE _title=\"".$title."\"";
         $result = $this->_database->query($query);
         $row = $this->_database->fetch($result);
@@ -372,9 +373,9 @@ class ListTableDescription
         $query .= "_group=\"".$this->group."\", ";
         $query .= "_description=\"".$this->description."\", ";
         $query .= "_definition=\"".$this->definition."\", ";
-        $query .= "_modifier=\"".$this->get_modifier()."\", ";
-        $query .= "_modified=\"".$this->get_modified()."\" ";
-        $query .= "WHERE _id=\"".$this->id."\"";
+        $query .= DB_MODIFIER_FIELD_NAME."=\"".$this->get_modifier()."\", ";
+        $query .= DB_MODIFIED_FIELD_NAME."=\"".$this->get_modified()."\" ";
+        $query .= "WHERE ".DB_ID_FIELD_NAME."=\"".$this->id."\"";
         
         $result = $this->_database->query($query);
         if ($result == FALSE)

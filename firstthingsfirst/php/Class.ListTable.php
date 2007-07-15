@@ -105,13 +105,17 @@ class ListTable
     # return fieldname for given database fieldname
     function _get_field_name ($db_field_name)
     {
-        return substr(str_replace("__", " ", $db_field_name), 1);
+        if ((strlen($db_field_name) > strlen(LISTTABLEDESCRIPTION_FIELD_PREFIX)) &&
+            (substr_compare($db_field_name, LISTTABLEDESCRIPTION_FIELD_PREFIX, 0, strlen(LISTTABLEDESCRIPTION_FIELD_PREFIX)) == 0))
+            return str_replace("__", " ", substr($db_field_name, strlen(LISTTABLEDESCRIPTION_FIELD_PREFIX)));
+        else
+            return substr($db_field_name, 1);
     }
     
     # return database fieldname for given fieldname
     function _get_db_field_name ($field_name)
     {
-        return "_".str_replace(" ", "__", $field_name);
+        return LISTTABLEDESCRIPTION_FIELD_PREFIX.str_replace(" ", "__", $field_name);
     }
 
     # return the key_string (_id="some_unique_number")
@@ -119,10 +123,10 @@ class ListTable
     {
         foreach ($this->db_field_names as $db_field_name)
         {            
-            if ($db_field_name == LISTTABLEDESCRIPTION_KEY_FIELD_NAME)
-                return LISTTABLEDESCRIPTION_KEY_FIELD_NAME."='".$table_row[$db_field_name]."'";
+            if ($db_field_name == DB_ID_FIELD_NAME)
+                return DB_ID_FIELD_NAME."='".$table_row[$db_field_name]."'";
         }
-        return LISTTABLEDESCRIPTION_KEY_FIELD_NAME."='-1'";
+        return DB_ID_FIELD_NAME."='-1'";
     }
     
     # return the value of the key field
@@ -130,10 +134,10 @@ class ListTable
     {        
         foreach ($this->db_field_names as $db_field_name)
         {            
-            if ($db_field_name == LISTTABLEDESCRIPTION_KEY_FIELD_NAME)
+            if ($db_field_name == DB_ID_FIELD_NAME)
                 return "_".$table_row[$db_field_name];
         }
-        return LISTTABLEDESCRIPTION_KEY_FIELD_NAME."='-1'";
+        return DB_ID_FIELD_NAME."='-1'";
     }
 
     # getter
@@ -282,8 +286,12 @@ class ListTable
             $this->_log->debug("found field (name=".$field_name." def=".$field_definition.")");
             $query .= $db_field_name." ".$firstthingsfirst_field_descriptions[$field_definition[0]][0].", ";        
         }
+        
+        # add hidden fields
+        # TODO add creator, created, modifier and modified fields
+        $query .= DB_ARCHIVED_FIELD_NAME." ".$firstthingsfirst_field_descriptions["LABEL_DEFINITION_NUMBER"][0].", ";
 
-        $query .= "PRIMARY KEY (".LISTTABLEDESCRIPTION_KEY_FIELD_NAME."))";
+        $query .= "PRIMARY KEY (".DB_ID_FIELD_NAME."))";
         $result = $this->_database->query($query);
         if ($result == FALSE)
         {
@@ -411,13 +419,13 @@ class ListTable
         $rows_with_remarks = array();       
         foreach($rows as $row)
         {
-            $this->_log->debug("getting remarks for row (id=".$row[LISTTABLEDESCRIPTION_KEY_FIELD_NAME].")");
+            $this->_log->debug("getting remarks for row (id=".$row[DB_ID_FIELD_NAME].")");
             foreach($remark_fields_array as $remark_field)
             {
                 if ($row[$remark_field] > 0)
                 {
                     $this->_log->trace("getting remarks (field=".$remark_field.")");
-                    $result = $this->_list_table_item_remarks->select($row[LISTTABLEDESCRIPTION_KEY_FIELD_NAME], $remark_field);
+                    $result = $this->_list_table_item_remarks->select($row[DB_ID_FIELD_NAME], $remark_field);
                     if (count($result) == 0 || count($result) != $row[$remark_field])
                     {
                         $this->_log->warn("unexpected number of remarks found");
@@ -468,7 +476,7 @@ class ListTable
                     if ($definition[$db_field_name][0] == "LABEL_DEFINITION_REMARKS_FIELD" && $row[$db_field_name] > 0)
                     {
                         $this->_log->trace("getting remarks (field=".$db_field_name.")");
-                        $result = $this->_list_table_item_remarks->select($row[LISTTABLEDESCRIPTION_KEY_FIELD_NAME], $db_field_name);
+                        $result = $this->_list_table_item_remarks->select($row[DB_ID_FIELD_NAME], $db_field_name);
                         if (count($result) == 0 || count($result) != $row[$db_field_name])
                         {
                             $this->_log->warn("unexpected number of remarks found");
@@ -669,7 +677,7 @@ class ListTable
             return FALSE;
 
         # delete all remarks for this row
-        $this->_list_table_item_remarks->delete($name_values[LISTTABLEDESCRIPTION_KEY_FIELD_NAME]);
+        $this->_list_table_item_remarks->delete($name_values[DB_ID_FIELD_NAME]);
 
         $query = "DELETE FROM ".$this->table_name." WHERE ".$key_string;
         $result = $this->_database->query($query);

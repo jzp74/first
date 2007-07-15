@@ -115,29 +115,23 @@ class ListTable
     # return database fieldname for given fieldname
     function _get_db_field_name ($field_name)
     {
-        return LISTTABLEDESCRIPTION_FIELD_PREFIX.str_replace(" ", "__", $field_name);
+        # this is somewhat of a hack
+        if ($field_name == "id")
+            return DB_ID_FIELD_NAME;
+        else
+            return LISTTABLEDESCRIPTION_FIELD_PREFIX.str_replace(" ", "__", $field_name);
     }
 
     # return the key_string (_id="some_unique_number")
     function _get_key_string ($table_row)
     {
-        foreach ($this->db_field_names as $db_field_name)
-        {            
-            if ($db_field_name == DB_ID_FIELD_NAME)
-                return DB_ID_FIELD_NAME."='".$table_row[$db_field_name]."'";
-        }
-        return DB_ID_FIELD_NAME."='-1'";
+        return DB_ID_FIELD_NAME."='".$table_row[DB_ID_FIELD_NAME]."'";
     }
     
     # return the value of the key field
     function _get_key_values_string ($table_row)
     {        
-        foreach ($this->db_field_names as $db_field_name)
-        {            
-            if ($db_field_name == DB_ID_FIELD_NAME)
-                return "_".$table_row[$db_field_name];
-        }
-        return DB_ID_FIELD_NAME."='-1'";
+        return "_".$table_row[DB_ID_FIELD_NAME];
     }
 
     # getter
@@ -283,13 +277,16 @@ class ListTable
             $field_name = $this->_get_field_name($db_field_name);
             $definition = $this->_list_table_description->get_definition();
             $field_definition = $definition[$db_field_name];
-            $this->_log->debug("found field (name=".$field_name." def=".$field_definition.")");
+            $this->_log->debug("found field (name=".$field_name." def=".$field_definition[0].")");
             $query .= $db_field_name." ".$firstthingsfirst_field_descriptions[$field_definition[0]][0].", ";        
         }
         
         # add hidden fields
-        # TODO add creator, created, modifier and modified fields
         $query .= DB_ARCHIVED_FIELD_NAME." ".$firstthingsfirst_field_descriptions["LABEL_DEFINITION_NUMBER"][0].", ";
+        $query .= DB_CREATOR_FIELD_NAME." VARCHAR(20) NOT NULL, ";
+        $query .= DB_CREATED_FIELD_NAME." DATETIME NOT NULL, ";
+        $query .= DB_MODIFIER_FIELD_NAME." VARCHAR(20) NOT NULL, ";
+        $query .= DB_MODIFIED_FIELD_NAME." DATETIME NOT NULL, ";
 
         $query .= "PRIMARY KEY (".DB_ID_FIELD_NAME."))";
         $result = $this->_database->query($query);
@@ -512,7 +509,6 @@ class ListTable
     # add a row to database
     function insert ($name_values)
     {
-        $names = array();
         $values = array();
         $keys = array_keys($name_values);
         $definition = $this->_list_table_description->get_definition();
@@ -533,7 +529,6 @@ class ListTable
         {
             $value = $name_values[$array_key];
             $remarks_array = array();
-            array_push($names, $array_key);
             
             if (stristr($definition[$array_key][0], "DATE"))
             {
@@ -569,9 +564,14 @@ class ListTable
             else
                 array_push($values, "'".$value."'");
         }
-
-        $query = "INSERT INTO ".$this->table_name." (".implode($names, ", ").") ";
-        $query .= "VALUES (".implode($values, ", ").")";
+        
+        $query = "INSERT INTO ".$this->table_name." VALUES (0, ".implode($values, ", ");
+        $query .= ", 1, "; # new entries are not archived
+        $query .= "\"".$this->_user->get_name()."\", ";
+        $query .= "\"".strftime(DB_DATETIME_FORMAT)."\", ";
+        $query .= "\"".$this->_user->get_name()."\", ";
+        $query .= "\"".strftime(DB_DATETIME_FORMAT)."\")";
+        
         $result = $this->_database->insertion_query($query);
         if ($result == FALSE)
         {
@@ -637,6 +637,8 @@ class ListTable
         }
 
         $query = "UPDATE ".$this->table_name." SET ".implode($name_values_array, ", ");
+        $query .= ", ".DB_MODIFIER_FIELD_NAME."=\"".$this->_user->get_name()."\", ";
+        $query .= DB_MODIFIED_FIELD_NAME."=\"".strftime(DB_DATETIME_FORMAT)."\"";
         $query .= " WHERE ".$key_string;
         $result = $this->_database->query($query);
         if ($result == FALSE)

@@ -10,6 +10,7 @@ define("LISTTABLEDESCRIPTION_FIELD_PREFIX", "_user_defined_");
 
 # Class definition
 # TODO improve use of trace/debug logging
+# TODO remove group field
 class ListTableDescription
 {
     # id of this list
@@ -412,8 +413,8 @@ class ListTableDescription
 
     # delete this ListTableDescription from database
     # delete ListTable from database
-    # delete all ListTableItemRemarks from database
-    # TODO delete all ListTableItemRemarks
+    # delete all ListTableItemNotes from database
+    # TODO delete all ListTableItemNotes
     function delete ()
     {
         $this->_log->trace("delete ListTableDescription from database (title=".$this->title.")");

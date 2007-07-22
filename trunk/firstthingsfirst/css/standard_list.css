@@ -116,11 +116,26 @@
     vertical-align: top;
     }
 
+#list_row_contents td p {
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 6px 0px;
+    vertical-align: top;
+    }
+
+#list_row_contents td div {
+    margin: 0px 0px 0px 0px;
+    padding: 6px 0px 0px 0px;
+    vertical-align: top;
+    }
+
 #list_row_contents select { 
     padding: 1px 1px 3px 0px;
     background-color: rgb(255, 255, 255);
     border: 1px solid rgb(208, 239, 208);
     text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
     }
 
 #list_row_contents input { 
@@ -128,5 +143,22 @@
     background-color: rgb(255, 255, 255);
     border: 1px solid rgb(208, 239, 208);
     text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
     }
 
+#list_row_contents textarea { 
+    padding: 1px 5px 3px 5px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(208, 239, 208);
+    text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    }
+
+/* defines an invisible and collapsed style */
+.invisible_collapsed {
+    display: none;
+    }

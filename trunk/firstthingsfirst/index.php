@@ -25,12 +25,13 @@ require_once("php/Class.Database.php");
 require_once("php/Class.User.php");
 require_once("php/Class.ListTableDescription.php");
 require_once("php/Class.ListTable.php");
-require_once("php/Class.ListTableItemRemarks.php");
+require_once("php/Class.ListTableItemNotes.php");
 
 require_once("php/Html.php");
 require_once("php/Html.Login.php");
 require_once("php/Html.Portal.php");
-require_once("php/Html.List.php");
+require_once("php/Html.ListTable.php");
+require_once("php/Html.ListTableItemNotes.php");
 require_once("php/Html.ListBuilder.php");
 
 
@@ -50,7 +51,7 @@ $database = new Database();
 $user = new User();
 $list_table_description = new ListTableDescription();
 $list_table = new ListTable();
-$list_table_item_remarks = new ListTableItemRemarks();
+$list_table_item_notes = new ListTableItemNotes();
 $response = new xajaxResponse();
 
 

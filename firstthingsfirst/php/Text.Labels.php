@@ -18,12 +18,17 @@ define("LABEL_DEFINITION_DATE", "date");
 define("LABEL_DEFINITION_AUTO_DATE", "automatic date");
 define("LABEL_DEFINITION_TEXT_LINE", "text line");
 define("LABEL_DEFINITION_TEXT_FIELD", "text field");
-define("LABEL_DEFINITION_REMARKS_FIELD", "remarks field");
+define("LABEL_DEFINITION_NOTES_FIELD", "notes field");
 define("LABEL_DEFINITION_SELECTION", "selection box");
 
-# Html.List labels
+# Html.ListTable labels
 define("LABEL_PAGE", "page");
 define("LABEL_OF", "of");
+
+# Html.ListTableItemNote labels
+define("LABEL_PREVIOUS_NOTE", "previous note");
+define("LABEL_NEXT_NOTE", "next note");
+define("LABEL_NEW_NOTE", "new note");
 
 # Html.ListBuilder labels
 define("LABEL_CONFIGURE_NEW_LIST", "Configure a new list");

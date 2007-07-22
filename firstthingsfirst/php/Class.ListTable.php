@@ -4,7 +4,7 @@
 # It is assumed that ListTableDescription.php is required in the main file
 
 
-# ListTableItemRemarks defines
+# ListTableItemNotes defines
 define("LISTTABLE_TABLE_NAME_PREFIX", "listtable_");
 define("LISTTABLELISTTABLE_EMPTY", "_LISTTABLE_EMPTY__");
 
@@ -62,7 +62,7 @@ class ListTable
     protected $_list_table_description;
 
     # reference to global list_table_description object
-    protected $_list_table_item_remarks;
+    protected $_list_table_item_notes;
 
     # set attributes of this object when it is constructed
     function __construct ()
@@ -74,7 +74,7 @@ class ListTable
         global $database;
         global $user;
         global $list_table_description;
-        global $list_table_item_remarks;
+        global $list_table_item_notes;
         
         # set global references for this object
         $this->_json =& $json;
@@ -83,7 +83,7 @@ class ListTable
         $this->_database =& $database;
         $this->_user =& $user;
         $this->_list_table_description =& $list_table_description;
-        $this->_list_table_item_remarks =& $list_table_item_remarks;
+        $this->_list_table_item_notes =& $list_table_item_notes;
 
         # copy attributes from given ListTableDescription only when a valid ListTableDescription has been given
         $this->set();
@@ -206,7 +206,7 @@ class ListTable
     }
 
     # set attributes to match with given ListTableDescription
-    # set ListTableItemRemarks
+    # set ListTableItemNotes
     # TODO error handling
     function set ()
     {
@@ -223,7 +223,7 @@ class ListTable
             $this->total_pages = 1;
             $this->current_page = 1;
             
-            $this->_list_table_item_remarks->set();
+            $this->_list_table_item_notes->set();
             
             $this->_log->trace("set ListTable (table_name=".$this->table_name.")");
         }
@@ -403,45 +403,45 @@ class ListTable
             return array();
         }
         
-        # get field names of remark fields
-        $remark_fields_array = array();        
+        # get field names of note fields
+        $note_fields_array = array();        
         foreach($db_field_names as $db_field_name)
         {
-            if ($definition[$db_field_name][0] == "LABEL_DEFINITION_REMARKS_FIELD")
-                array_push($remark_fields_array, $db_field_name);
+            if ($definition[$db_field_name][0] == "LABEL_DEFINITION_NOTES_FIELD")
+                array_push($note_fields_array, $db_field_name);
         }
-        $this->_log->log_array($remark_fields_array, "remark_fields");
+        $this->_log->log_array($note_fields_array, "note_fields");
 
-        # get remarks 
-        $rows_with_remarks = array();       
+        # get notes 
+        $rows_with_notes = array();       
         foreach($rows as $row)
         {
-            $this->_log->debug("getting remarks for row (id=".$row[DB_ID_FIELD_NAME].")");
-            foreach($remark_fields_array as $remark_field)
+            $this->_log->debug("getting notes for row (id=".$row[DB_ID_FIELD_NAME].")");
+            foreach($note_fields_array as $note_field)
             {
-                if ($row[$remark_field] > 0)
+                if ($row[$note_field] > 0)
                 {
-                    $this->_log->trace("getting remarks (field=".$remark_field.")");
-                    $result = $this->_list_table_item_remarks->select($row[DB_ID_FIELD_NAME], $remark_field);
-                    if (count($result) == 0 || count($result) != $row[$remark_field])
+                    $this->_log->trace("getting notes (field=".$note_field.")");
+                    $result = $this->_list_table_item_notes->select($row[DB_ID_FIELD_NAME], $note_field);
+                    if (count($result) == 0 || count($result) != $row[$note_field])
                     {
-                        $this->_log->warn("unexpected number of remarks found");
-                        $row[$remark_field] = $result;
+                        $this->_log->warn("unexpected number of notes found");
+                        $row[$note_field] = $result;
                     }
                     else
-                        $row[$remark_field] = $result;
+                        $row[$note_field] = $result;
                 }
                 else
-                    $row[$remark_field] = array();
+                    $row[$note_field] = array();
             }
-            array_push($rows_with_remarks, $row);
+            array_push($rows_with_notes, $row);
         }
 
         $this->current_page = $page;
 
         $this->_log->info("read ListTable (from=".$limit_from.")");
     
-        return $rows_with_remarks;
+        return $rows_with_notes;
     }
     
     # return array containing one row from this ListTable
@@ -470,17 +470,22 @@ class ListTable
                 foreach($db_field_names as $db_field_name)
                 {
                     $this->_log->trace("field=".$db_field_name.", def=".$definition[$db_field_name][0].", val=".$row[$db_field_name].")");
-                    if ($definition[$db_field_name][0] == "LABEL_DEFINITION_REMARKS_FIELD" && $row[$db_field_name] > 0)
+                    if ($definition[$db_field_name][0] == "LABEL_DEFINITION_NOTES_FIELD")
                     {
-                        $this->_log->trace("getting remarks (field=".$db_field_name.")");
-                        $result = $this->_list_table_item_remarks->select($row[DB_ID_FIELD_NAME], $db_field_name);
-                        if (count($result) == 0 || count($result) != $row[$db_field_name])
+                        if ($row[$db_field_name] > 0)
                         {
-                            $this->_log->warn("unexpected number of remarks found");
-                            $row[$db_field_name] = $result;
+                            $this->_log->trace("getting notes (field=".$db_field_name.")");
+                            $result = $this->_list_table_item_notes->select($row[DB_ID_FIELD_NAME], $db_field_name);
+                            if (count($result) == 0 || count($result) != $row[$db_field_name])
+                            {
+                                $this->_log->warn("unexpected number of notes found");
+                                $row[$db_field_name] = $result;
+                            }
+                            else
+                                $row[$db_field_name] = $result;
                         }
                         else
-                            $row[$db_field_name] = $result;
+                            $row[$db_field_name] = array();
                     }
                 }
                 $this->_log->info("read ListTable row");
@@ -512,7 +517,7 @@ class ListTable
         $values = array();
         $keys = array_keys($name_values);
         $definition = $this->_list_table_description->get_definition();
-        $all_remarks_array = array();
+        $all_notes_array = array();
         
         $this->_log->debug("add entry to ListTable");
         $this->_log->log_array($name_values, "name_values");
@@ -528,7 +533,7 @@ class ListTable
         foreach ($keys as $array_key)
         {
             $value = $name_values[$array_key];
-            $remarks_array = array();
+            $notes_array = array();
             
             if (stristr($definition[$array_key][0], "DATE"))
             {
@@ -543,23 +548,19 @@ class ListTable
                 else
                     array_push($values, "'".$result."'");
             }
-            else if ($definition[$array_key][0] == "LABEL_DEFINITION_REMARKS_FIELD")
+            else if ($definition[$array_key][0] == "LABEL_DEFINITION_NOTES_FIELD")
             {
-                $this->_log->debug("found remark array (field=".$array_key.")");
-                
-                foreach ($value as $remark)
+                foreach ($value as $note)
                 {
-                    if ($remark[1] == "")
-                        $this->_log->trace("found an empty remark");
+                    if ($note[1] == "")
+                        $this->_log->warn("found an empty note (field=".$array_key.")");
                     else
                     {
-                        $this->_log->trace("found remark");                    
-                        array_push($remarks_array, array($array_key, $remark[1]));
+                        array_push($notes_array, array($array_key, $note[1]));
                     }
                 }
-                $this->_log->debug("found ".count($remarks_array)." remarks");
-                array_push($values, count($remarks_array));
-                array_push($all_remarks_array, $remarks_array);
+                array_push($values, count($notes_array));
+                array_push($all_notes_array, $notes_array);
             }
             else
                 array_push($values, "'".$value."'");
@@ -582,10 +583,10 @@ class ListTable
             return FALSE;
         }
         
-        # insert remarks
-        foreach ($all_remarks_array as $remarks_array)
-            foreach ($remarks_array as $remark_array)
-                $this->_list_table_item_remarks->insert($result, $remark_array[0], $remark_array[1]);
+        # insert notes
+        foreach ($all_notes_array as $notes_array)
+            foreach ($notes_array as $note_array)
+                $this->_list_table_item_notes->insert($result, $note_array[0], $note_array[1]);
                 
         # update list table description (date modified)
         $this->_list_table_description->update();
@@ -630,8 +631,8 @@ class ListTable
                 else
                     array_push($name_values_array, $array_key."='".$result."'");
             }
-            else if ($definition[$array_key][0] == "LABEL_DEFINITION_REMARKS_FIELD")
-                $this->_log_debug("found remarks field");
+            else if ($definition[$array_key][0] == "LABEL_DEFINITION_NOTES_FIELD")
+                $this->_log_debug("found notes field");
             else
                 array_push($name_values_array, $array_key."='".$value."'");
         }
@@ -678,8 +679,8 @@ class ListTable
         if (count($name_values) == 0)
             return FALSE;
 
-        # delete all remarks for this row
-        $this->_list_table_item_remarks->delete($name_values[DB_ID_FIELD_NAME]);
+        # delete all notes for this row
+        $this->_list_table_item_notes->delete($name_values[DB_ID_FIELD_NAME]);
 
         $query = "DELETE FROM ".$this->table_name." WHERE ".$key_string;
         $result = $this->_database->query($query);
@@ -712,10 +713,10 @@ class ListTable
             return FALSE;
         }
 
-        # delete all remarks for this list_table
-        if (!$this->_list_table_item_remarks->delete())
+        # delete all notes for this list_table
+        if (!$this->_list_table_item_notes->delete())
         {
-            $this->error_str = $this->_list_table_item_remarks->get_error_str();
+            $this->error_str = $this->_list_table_item_notes->get_error_str();
             
             return FALSE;
         }

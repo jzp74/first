@@ -18,6 +18,10 @@ define("DB_MODIFIED_FIELD_NAME", "_modified");
 define("DB_ID_FIELD_NAME", "_id");
 define("DB_ARCHIVED_FIELD_NAME", "_archived");
 
+# general separator
+define("GENERAL_SEPARATOR", "***");
+
+
 # define all possible user actions
 # each define is the actual name of a function
 
@@ -74,35 +78,35 @@ $firstthingsfirst_action_descriptions = array(
 $firstthingsfirst_field_descriptions = array(
     "LABEL_DEFINITION_NUMBER"        => array(
         "int not null",
-        "input type=text size=10 maxlength=10 class=\"input_box\""
+        "input type=text size=10 maxlength=10"
     ),
     "LABEL_DEFINITION_AUTO_NUMBER"   => array(
         "int not null auto_increment",
-        "input type=text size=10 maxlength=10 readonly class=\"input_box\""
+        "input type=text size=10 maxlength=10 readonly"
     ),
     "LABEL_DEFINITION_DATE"          => array(
         "date",
-        "input type=text size=10 maxlength=10 class=\"input_box\""
+        "input type=text size=10 maxlength=10"
     ),
     "LABEL_DEFINITION_AUTO_DATE"     => array(
         "date",
-        "input type=text size=10 maxlength=10 readonly class=\"input_box\""
+        "input type=text size=10 maxlength=10 readonly"
     ),
     "LABEL_DEFINITION_TEXT_LINE"     => array(
         "tinytext not null",
-        "input type=text size=20 class=\"input_box\""
+        "input type=text size=40"
     ),
     "LABEL_DEFINITION_TEXT_FIELD"    => array(
         "mediumtext not null",
-        "textarea cols=40 rows=4 class=\"input_box\""
+        "textarea cols=40 rows=3"
     ),
-    "LABEL_DEFINITION_REMARKS_FIELD" => array(
+    "LABEL_DEFINITION_NOTES_FIELD" => array(
         "int not null",
-        "table class=\"remarks_table\""
+        ""
     ),
     "LABEL_DEFINITION_SELECTION"     => array(
         "tinytext not null",
-        "select class=\"selection_box\""
+        "select"
     )
 );
 

@@ -10,7 +10,6 @@ define("LISTTABLEDESCRIPTION_FIELD_PREFIX", "_user_defined_");
 
 # Class definition
 # TODO improve use of trace/debug logging
-# TODO remove group field
 class ListTableDescription
 {
     # id of this list
@@ -19,9 +18,6 @@ class ListTableDescription
     # title of this list
     protected $title;
 
-    # group this list belongs in
-    protected $group;
-    
     # description of this List
     protected $description;
     
@@ -91,7 +87,6 @@ class ListTableDescription
     {
         $str = "ListTableDescription: id=\"".$this->id."\", ";
         $str .= "title=\"".$this->title."\", ";
-        $str .= "group=\"".$this->group."\", ";
         $str .= "description=\"".$this->description."\"";
         return $str;
     }
@@ -106,12 +101,6 @@ class ListTableDescription
     function get_title ()
     {
         return $this->title;
-    }
-
-    # getter
-    function get_group ()
-    {
-        return $this->group;
     }
 
     # getter
@@ -165,12 +154,6 @@ class ListTableDescription
     }
     
     # setter
-    function set_group ($group)
-    {
-        $this->group = $group;
-    }
-
-    # setter
     function set_description ($description)
     {
         $this->description = $description;
@@ -212,7 +195,6 @@ class ListTableDescription
     {
         $this->id = -1;
         $this->title = "empty";
-        $this->group = "none";
         $this->description = "nothing";
         $this->definition = "";
         $this->error_str = "";
@@ -229,7 +211,7 @@ class ListTableDescription
     
     # create the database table that contains all ListTableDescriptions
     # TODO exception handling for this function
-    # TODO ensure title and group cannot be given names > 100 chars
+    # TODO ensure title cannot be given names > 100 chars
     function create ()
     {
         $this->_log->debug("create table in database for ListTableDescriptions");
@@ -237,7 +219,6 @@ class ListTableDescription
         $query = "CREATE TABLE ".LISTTABLEDESCRIPTION_TABLE_NAME." (";
         $query .= DB_ID_FIELD_NAME." INT NOT NULL AUTO_INCREMENT, ";
         $query .= "_title VARCHAR(100) NOT NULL, ";
-        $query .= "_group VARCHAR(100) NOT NULL, ";
         $query .= "_description MEDIUMTEXT NOT NULL, ";
         $query .= "_definition MEDIUMTEXT NOT NULL, ";
         $query .= DB_CREATOR_FIELD_NAME." VARCHAR(20) NOT NULL, ";
@@ -274,7 +255,7 @@ class ListTableDescription
         }
             
         $this->reset();
-        $query = "SELECT ".DB_ID_FIELD_NAME.", _title, _group, _description, _definition, ";
+        $query = "SELECT ".DB_ID_FIELD_NAME.", _title, _description, _definition, ";
         $query .= DB_CREATOR_FIELD_NAME.", ".DB_CREATED_FIELD_NAME.", ".DB_MODIFIER_FIELD_NAME.", ";
         $query .= DB_MODIFIED_FIELD_NAME." FROM ".LISTTABLEDESCRIPTION_TABLE_NAME;
         $query .= " WHERE _title=\"".$title."\"";
@@ -284,13 +265,12 @@ class ListTableDescription
         {
             $this->id = $row[0];
             $this->title = $row[1];
-            $this->group = $row[2];
-            $this->description = $row[3];
-            $this->definition = $row[4];
-            $this->creator = $row[5];
-            $this->created = $row[6];
-            $this->modifier = $row[7];
-            $this->modified = $row[8];
+            $this->description = $row[2];
+            $this->definition = $row[3];
+            $this->creator = $row[4];
+            $this->created = $row[5];
+            $this->modifier = $row[6];
+            $this->modified = $row[7];
             
             # also set page_title of User
             # TODO this must be solved differently
@@ -332,7 +312,6 @@ class ListTableDescription
         $query .= "INSERT INTO ".LISTTABLEDESCRIPTION_TABLE_NAME." VALUES (";
         $query .= "0, ";
         $query .= "\"".$this->title."\", ";
-        $query .= "\"".$this->group."\", ";
         $query .= "\"".$this->description."\", ";
         $query .= "\"".$this->definition."\", ";
         $query .= "\"".$this->creator."\", ";
@@ -389,7 +368,6 @@ class ListTableDescription
                        
         $query .= "UPDATE ".LISTTABLEDESCRIPTION_TABLE_NAME." SET ";
         $query .= "_title=\"".$this->title."\", ";
-        $query .= "_group=\"".$this->group."\", ";
         $query .= "_description=\"".$this->description."\", ";
         $query .= "_definition=\"".$this->definition."\", ";
         $query .= DB_MODIFIER_FIELD_NAME."=\"".$this->modifier."\", ";

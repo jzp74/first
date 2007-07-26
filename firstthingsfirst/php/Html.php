@@ -8,6 +8,7 @@
 # this function can have up to 4 arguments
 # the last argument must contain the id of the target field
 # TODO better handling of multiple arguments
+# TODO treat login functions differently
 function handle_action ()
 {
     global $result;

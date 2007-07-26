@@ -466,7 +466,6 @@ function create_list ($title, $description, $definition)
     }
     
     $list_table_description->set_title($title);
-    $list_table_description->set_group("none");
     $list_table_description->set_description($description);
     $list_table_description->set_definition($new_definition);
     $list_table_description->insert();

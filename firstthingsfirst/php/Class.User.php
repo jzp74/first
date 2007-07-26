@@ -12,6 +12,7 @@ define("USER_NAME_RESET_VALUE", "_");
 
 # Class definition
 # TODO improve use of trace/debug logging
+# TODO add user created, last login date/time
 class User
 {
     # representing the list_table the user is currently using

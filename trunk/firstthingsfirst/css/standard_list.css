@@ -49,16 +49,6 @@
     background-color: rgb(250, 230, 230);
     }
     
-#list_contents a, #list_contents a:link, #list_contents a:visited {
-    color: rgb(60, 60, 175);
-    text-decoration: none;
-    font-weight: bold;
-    }
-
-#list_contents a:hover { 
-    text-decoration: underline;
-    }
-
 /*  defines list pages below the list contents */
 #list_pages_bottom {
     display: inline-block;
@@ -70,20 +60,6 @@
     font-weight: normal;
     }
     
-#list_pages_bottom a, #list_pages_bottom a:link, #list_pages_bottom a:visited {
-    color: rgb(60, 60, 175);
-    text-align: center;
-    font-family: verdana;
-    font-size: small;
-    font-weight: normal;
-    text-decoration: none;
-    font-weight: bold;
-    }
-
-#list_pages_bottom a:hover {
-    text-decoration: underline;
-    }
-
 /*  defines pane that contains list row contents */
 #list_row_contens_pane {
     display: inline-block;

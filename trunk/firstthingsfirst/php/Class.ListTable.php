@@ -599,9 +599,10 @@ class ListTable
     # update a row in database
     function update ($key_string, $name_values)
     {
-        $name_values_array = array();
+        $values = array();
         $keys = array_keys($name_values);
         $definition = $this->_list_table_description->get_definition();
+        $all_notes_array = array();
 
         $this->_log->debug("update entry of ListTable (key_string=".$key_string.")");
         $this->_log->log_array($name_values, "name_values");        
@@ -617,6 +618,7 @@ class ListTable
         foreach ($keys as $array_key)
         {
             $value = $name_values[$array_key];
+            $notes_array = array();
             
             if (stristr($definition[$array_key][0], "DATE"))
             {
@@ -629,15 +631,27 @@ class ListTable
                     return FALSE;
                 }
                 else
-                    array_push($name_values_array, $array_key."='".$result."'");
+                    array_push($values, $array_key."='".$result."'");
             }
             else if ($definition[$array_key][0] == "LABEL_DEFINITION_NOTES_FIELD")
-                $this->_log_debug("found notes field");
+            {
+                foreach ($value as $note)
+                {
+                    if ($note[1] == "")
+                        $this->_log->warn("found an empty note (field=".$array_key.")");
+                    else
+                    {
+                        array_push($notes_array, array($array_key, $note[0], $note[1]));
+                    }
+                }
+                array_push($values, $array_key."=".count($notes_array));
+                array_push($all_notes_array, $notes_array);
+            }
             else
-                array_push($name_values_array, $array_key."='".$value."'");
+                array_push($values, $array_key."='".$value."'");
         }
-
-        $query = "UPDATE ".$this->table_name." SET ".implode($name_values_array, ", ");
+        
+        $query = "UPDATE ".$this->table_name." SET ".implode($values, ", ");
         $query .= ", ".DB_MODIFIER_FIELD_NAME."=\"".$this->_user->get_name()."\", ";
         $query .= DB_MODIFIED_FIELD_NAME."=\"".strftime(DB_DATETIME_FORMAT)."\"";
         $query .= " WHERE ".$key_string;
@@ -649,6 +663,37 @@ class ListTable
             $this->error_str = ERROR_DATABASE_PROBLEM;
             
             return FALSE;
+        }
+        
+        # get the id of this row
+        $query = "SELECT ".DB_ID_FIELD_NAME." FROM ".$this->table_name." WHERE ".$key_string;
+        $result = $this->_database->query($query);
+        if ($result == FALSE)
+        {
+            $this->_log->error("could not get id of ListTable (key_string=".$key_string.")");
+            $this->_log->error("database error: ".$this->_database->get_error_str());
+            $this->error_str = ERROR_DATABASE_PROBLEM;
+            
+            return FALSE;
+        }
+        $row_id = $this->_database->fetch($result);
+                
+        # insert new notes and update existing notes
+        foreach ($all_notes_array as $notes_array)
+        {
+            foreach ($notes_array as $note_array)
+            {
+                if ($note_array[1] == 0)
+                {
+                    $this->_log->debug("found a new note");
+                    $this->_list_table_item_notes->insert($row_id[0], $note_array[0], $note_array[2]);
+                }
+                else
+                {
+                    $this->_log->debug("update existing note");
+                    $this->_list_table_item_notes->update($row_id[0], $note_array[0], $note_array[1], $note_array[2]);
+                }
+            }
         }
 
         # update list table description (date modified)

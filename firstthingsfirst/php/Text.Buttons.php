@@ -19,6 +19,11 @@ define("BUTTON_ADD_ROW", "add row");
 define("BUTTON_ADD_FIELD", "add field");
 define("BUTTON_CREATE_LIST", "create this list");
     
+# Html.ListTableItemNote labels
+define("BUTTON_PREVIOUS_NOTE", "previous note");
+define("BUTTON_NEXT_NOTE", "next note");
+define("BUTTON_ADD_NOTE", "add note");
+
 # Html.Login buttons
 define("BUTTON_LOGIN", "login");
 define("BUTTON_LOGOUT", "logout");

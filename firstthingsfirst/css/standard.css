@@ -20,6 +20,11 @@ a:hover {
     text-decoration: underline;
     }
 
+/* defines an invisible and collapsed style */
+.invisible_collapsed {
+    display: none;
+    }
+
 /*  defines the html overall style of a page */
 html, body {
     height: 100%;

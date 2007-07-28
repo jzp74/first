@@ -192,7 +192,7 @@ class ListTableItemNotes
     # insert a note
     function insert ($list_table_item_id, $list_table_item_field, $note)
     {
-        $this->_log->trace("insert ListTableItemNotes");
+        $this->_log->trace("insert ListTableItemNotes (list_table_item_id=".$list_table_item_id.", list_table_item_field=".$list_table_item_field.")");
         
         if (!$this->is_valid())
         {
@@ -234,11 +234,9 @@ class ListTableItemNotes
     }
     
     # update a note
-    # note_array: array is of the following type:
-    #   array(number, note)
-    function update ($list_table_item_id, $list_table_item_field, $note_array)
+    function update ($list_table_item_id, $list_table_item_field, $note_id, $note)
     {
-        $this->_log->trace("update ListTableItemNotes");
+        $this->_log->trace("update ListTableItemNotes (list_table_item_id=".$list_table_item_id.", list_table_item_field=".$list_table_item_field.")");
         
         if (!$this->_database->table_exists(LISTTABLEITEMRENOTES_TABLE_NAME))
         {
@@ -261,10 +259,10 @@ class ListTableItemNotes
         $query .= "_list_table_description_id=\"".$this->list_table_description_id."\", ";
         $query .= "_list_table_item_id=\"".$list_table_item_id."\", ";
         $query .= "_list_table_item_field=\"".$list_table_item_field."\", ";
-        $query .= "_note=\"".$note_array[1]."\", ";
+        $query .= "_note=\"".$note."\", ";
         $query .= DB_MODIFIER_FIELD_NAME."=\"".$this->_user->get_name()."\", ";
         $query .= DB_MODIFIED_FIELD_NAME."=\"".strftime(DB_DATETIME_FORMAT)."\"";
-        $query .= " WHERE ".DB_ID_FIELD_NAME."=".$note_array[0];
+        $query .= " WHERE ".DB_ID_FIELD_NAME."=".$note_id;
 
         $result = $this->_database->query($query);
         if ($result == FALSE)

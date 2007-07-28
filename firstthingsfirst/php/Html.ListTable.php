@@ -374,7 +374,7 @@ function get_list_row ($key_string)
                 }
                 else if ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
                 {
-                    $html_str .= get_list_row_notes($field_name, $row[$db_field_name]);
+                    $html_str .= get_list_row_notes($db_field_name, $row[$db_field_name], FALSE);
                 }
                 else
                     $html_str .= " value=\"".$row[$db_field_name]."\"";
@@ -386,7 +386,7 @@ function get_list_row ($key_string)
                 elseif ($field_type == "LABEL_DEFINITION_TEXT_FIELD")
                     $html_str .= "></textarea";
                 elseif ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
-                    $html_str .= "pietje                                    </table";
+                    $html_str .= get_list_row_notes($db_field_name, $row[$db_field_name], TRUE);
                 elseif ($field_type == "LABEL_DEFINITION_SELECTION")
                 {
                     $html_str .= ">";
@@ -440,10 +440,51 @@ function update_list_row ($key_string, $form_values)
     global $list_table;
     
     $html_str = "";
+    $name_keys = array_keys($form_values);
+    $new_form_values = array();
     
     $logging->trace("updating list_row (key_string=".$key_string.")");
     
-    $list_table->update($key_string, $form_values);
+    foreach ($name_keys as $name_key)
+    {
+        $value_array = explode(GENERAL_SEPARATOR, $name_key);
+        $db_field_name = $value_array[0];
+        $field_type = $value_array[1];
+        $field_number = $value_array[2];
+        
+        $logging->trace("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
+        
+        if ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
+        {
+            $new_note_array = array($field_number, $form_values[$name_key]);
+    
+            if (array_key_exists($db_field_name, $new_form_values))
+            {
+                $logging->debug("add next note (field=".$db_field_name.")");
+                $notes_array = $new_form_values[$db_field_name];
+                array_push($notes_array, $new_note_array);
+                $new_form_values[$db_field_name] = $notes_array;
+            }
+            else
+            {
+                $logging->debug("add first note (field=".$db_field_name.")");
+                $new_form_values[$db_field_name] = array($new_note_array);
+            }
+        }
+        else
+            $new_form_values[$db_field_name] = $form_values[$name_key];
+    }
+    
+    # display error when insertion returns false
+    # TODO determine what the best place is to diplay error
+    if (!$list_table->update($key_string, $new_form_values))
+    {
+        $logging->warn("insert returns false (".$last_name_key.")");
+        $result->set_error_str($list_table->get_error_str());
+        $result->set_error_element(end($name_keys));
+        
+        return;
+    }
     
     $html_str .= get_action_bar("");
     $result->set_result_str($html_str);    
@@ -481,30 +522,31 @@ function add_list_row ($form_values)
         }
 
         $value_array = explode(GENERAL_SEPARATOR, $name_key);
-        $field_name = $value_array[0];
+        $db_field_name = $value_array[0];
         $field_type = $value_array[1];
         $field_number = $value_array[2];
         
-        $logging->trace("field (name=".$field_name.", type=".$field_type.", number=".$field_number.")");
+        $logging->trace("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
         
         if ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
         {
             $new_note_array = array($field_number, $form_values[$name_key]);
             
-            if (array_key_exists($field_name, $new_form_values))
+            if (array_key_exists($db_field_name, $new_form_values))
             {
-                $notes_array = $new_form_values[$field_name];
+                $notes_array = $new_form_values[$db_field_name];
                 array_push($notes_array, $new_note_array);
-                $new_form_values[$field_name] = $notes_array;
+                $new_form_values[$db_field_name] = $notes_array;
             }
             else
-                $new_form_values[$field_name] = array($new_note_array);
+                $new_form_values[$db_field_name] = array($new_note_array);
         }
         else
-            $new_form_values[$field_name] = $form_values[$name_key];
+            $new_form_values[$db_field_name] = $form_values[$name_key];
     }
     
     # display error when insertion returns false
+    # TODO determine what the best place is to diplay error
     if (!$list_table->insert($new_form_values))
     {
         $logging->warn("insert returns false (".$last_name_key.")");

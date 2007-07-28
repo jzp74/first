@@ -26,8 +26,6 @@ define("LABEL_PAGE", "page");
 define("LABEL_OF", "of");
 
 # Html.ListTableItemNote labels
-define("LABEL_PREVIOUS_NOTE", "previous note");
-define("LABEL_NEXT_NOTE", "next note");
 define("LABEL_NEW_NOTE", "new note");
 
 # Html.ListBuilder labels

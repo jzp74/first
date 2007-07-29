@@ -177,4 +177,20 @@ function get_login_status ()
 
     return $html_str;
 }
+
+# set login status
+function set_login_status ()
+{
+    global $logging;
+    global $response;
+    
+    $logging->trace("setting login status");
+        
+    $response->addAssign("login_status", "innerHTML", get_login_status());
+
+    $logging->trace("set login status");
+
+    return;
+}
+
 ?>

@@ -48,16 +48,16 @@ define("ACTION_PREVIOUS_NOTE", "get_previous_note");
 define("ACTION_ADD_NOTE", "add_note");
 
 # listbuilder actions
-define("ACTION_GET_LISTBUILDER_PAGE", "get_listbuilder_page");
-define("ACTION_ADD_LISTBUILDER_ROW", "add_listbuilder_row");
-define("ACTION_MOVE_LISTBUILDER_ROW", "move_listbuilder_row");
-define("ACTION_DEL_LISTBUILDER_ROW", "del_listbuilder_row");
-define("ACTION_REFRESH_LISTBUILDER", "refresh_listbuilder");
-define("ACTION_CREATE_LIST", "create_list");
+define("ACTION_GET_LISTBUILDER_PAGE", "action_get_listbuilder_page");
+define("ACTION_ADD_LISTBUILDER_ROW", "action_add_listbuilder_row");
+define("ACTION_MOVE_LISTBUILDER_ROW", "action_move_listbuilder_row");
+define("ACTION_DEL_LISTBUILDER_ROW", "action_del_listbuilder_row");
+define("ACTION_REFRESH_LISTBUILDER", "action_refresh_listbuilder");
+define("ACTION_CREATE_LIST", "action_create_list");
 
 # this array contains a description for each action
 # this array is of the following structure
-#   action => (load_list, rd_perm_required, wr_perm_required)
+#   action => (load_list, can_read, can_write)
 $firstthingsfirst_action_descriptions = array(
     ACTION_GET_PORTAL_PAGE      => array(0, 1, 0),
     ACTION_GET_LOGIN_PAGE       => array(0, 0, 0),

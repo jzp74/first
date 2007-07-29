@@ -339,7 +339,7 @@ function get_list_row ($key_string)
         # only add non auto_increment field types
         if (!stristr($firstthingsfirst_field_descriptions[$field_type][0], "auto_increment"))
         {
-            $html_str .= "                                <tr>\n";
+            $html_str .= "                                <tr id=\"".$db_field_name."\">\n";
             $html_str .= "                                    <th>".$field_name."</th>\n";
             
             if ($field_type != "LABEL_DEFINITION_NOTES_FIELD")
@@ -374,7 +374,7 @@ function get_list_row ($key_string)
                 }
                 else if ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
                 {
-                    $html_str .= get_list_row_notes($db_field_name, $row[$db_field_name], FALSE);
+                    $html_str .= get_list_row_notes($db_field_name, $row[$db_field_name]);
                 }
                 else
                     $html_str .= " value=\"".$row[$db_field_name]."\"";
@@ -386,7 +386,7 @@ function get_list_row ($key_string)
                 elseif ($field_type == "LABEL_DEFINITION_TEXT_FIELD")
                     $html_str .= "></textarea";
                 elseif ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
-                    $html_str .= get_list_row_notes($db_field_name, $row[$db_field_name], TRUE);
+                    $html_str .= get_list_row_notes($db_field_name, $row[$db_field_name]);
                 elseif ($field_type == "LABEL_DEFINITION_SELECTION")
                 {
                     $html_str .= ">";

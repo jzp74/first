@@ -64,16 +64,15 @@ function action_add_note ($db_field_name, $this_id)
     
     $logging->debug("ACTION: add note");
 
-    # add a new note to existing list of notes
-    $note_html_str = get_list_row_note($db_field_name, 0, $this_id, -1, array());
-    $response->addAppend($db_field_name, "innerHTML", $note_html_str."                                ");
-    
     # change the link of this_id from 'add' to 'next'
     $next_html_str = get_button("xajax_action_get_next_note('".$this_td_id."', '".$next_td_id."')", BUTTON_NEXT_NOTE);
     $response->addAssign($db_field_name."_0_next", "innerHTML", $next_html_str);
 
-    # hide this note (only new note is now visible)
+    # hide this note
     $response->addAssign($this_td_id, "className", "invisible_collapsed");
+
+    # show the new note
+    $response->addAssign($next_td_id, "className", "");
 
     $logging->trace("added note");
 
@@ -116,9 +115,15 @@ function get_list_row_notes ($db_field_name, $notes_array)
         $html_str .= get_list_row_note($db_field_name, $note_array[DB_ID_FIELD_NAME], $previous_id, $next_id, $note_array);
     }
     
-    # add the new note when there are no notes
+    # add a visible new note when there are no other notes
     if (count($notes_array) == 0)
         $html_str .= get_list_row_note($db_field_name, 0, -1, -1, array());
+    # add an invisible new note (IE hack because IE doesn't allow appending to tables)
+    else
+    {
+        $last_note_array = end($notes_array);
+        $html_str .= get_list_row_note($db_field_name, 0, $last_note_array[DB_ID_FIELD_NAME], -1, array());
+    }
     
     $logging->trace("got list_row_notes");
     
@@ -139,8 +144,8 @@ function get_list_row_note ($db_field_name, $this_id, $previous_id, $next_id, $n
     global $logging;
 
     $html_str = "";
-    # display the note when this is a new note when this is the last note
-    if (($this_id == 0) || ($next_id == 0))
+    # display the note when this is a new note or when this is the last note
+    if ((($this_id == 0) && ($last_id == -1)) || ($next_id == 0))
         $class_name = "";
     else
         $class_name = "invisible_collapsed";

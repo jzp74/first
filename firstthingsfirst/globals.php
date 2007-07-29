@@ -43,8 +43,8 @@ define("ACTION_DEL_LIST_ROW", "del_list_row");
 define("ACTION_CANCEL_LIST_ACTION", "cancel_list_action");
 
 # list note actions
-define("ACTION_NEXT_NOTE", "next_note");
-define("ACTION_PREVIOUS_NOTE", "previous_note");
+define("ACTION_NEXT_NOTE", "get_next_note");
+define("ACTION_PREVIOUS_NOTE", "get_previous_note");
 define("ACTION_ADD_NOTE", "add_note");
 
 # listbuilder actions

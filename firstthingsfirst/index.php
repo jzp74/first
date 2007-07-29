@@ -76,8 +76,8 @@ $xajax->registerFunction("action_del_list_row");
 $xajax->registerFunction("action_cancel_list_action");
 
 # register list note actions
-$xajax->registerFunction("action_previous_note");
-$xajax->registerFunction("action_next_note");
+$xajax->registerFunction("action_get_previous_note");
+$xajax->registerFunction("action_get_next_note");
 $xajax->registerFunction("action_add_note");
 
 # register listbuilder actions

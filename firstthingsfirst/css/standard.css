@@ -9,7 +9,7 @@
     z-index: 10;
     }
 
-/*  define style for ALL links */
+/*  define style for ALL links (aka buttons) */
 a, a:link, a:visited {
     color: rgb(60, 60, 175);
     text-decoration: none;
@@ -20,7 +20,14 @@ a:hover {
     text-decoration: underline;
     }
 
-/* defines an invisible and collapsed style */
+/*  defines an inactive button */
+.inactive_button {
+    color: rgb(120, 120, 120);
+    text-decoration: none;
+    font-weight: bold;
+    }
+
+/*  defines an invisible and collapsed style */
 .invisible_collapsed {
     display: none;
     }
@@ -181,7 +188,7 @@ html, body {
     padding: 4px 0px 4px 0px;
     }
 
-#action_bar p span {
+#action_bar p span span {
     padding: 4px 2px 4px 2px;
     background-color: rgb(238, 246, 238);
     }

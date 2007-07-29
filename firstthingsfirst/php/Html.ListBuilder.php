@@ -131,9 +131,9 @@ function get_listbuilder_page ()
     $html_str .= "        <div id=\"action_pane\">\n\n";
     $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
     $html_str .= "                <p>&nbsp;".get_select("add_select", "add_it", "")."\n";
-    $html_str .= "                <a xhref=\"javascript:void(0);\" onclick=\"xajax_action_add_listbuilder_row(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'))\">".BUTTON_ADD_FIELD."</a>\n";
-    $html_str .= "                &nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_create_list(document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value, xajax.getFormValues('database_definition_form'))\">".BUTTON_CREATE_LIST."</a>\n";
-    $html_str .= "                &nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_get_portal_page()\">".BUTTON_BACK."</a></p>\n";
+    $html_str .= "                ".get_button("xajax_action_add_listbuilder_row(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'))", BUTTON_ADD_FIELD)."\n";
+    $html_str .= "                &nbsp;&nbsp;".get_button("xajax_action_create_list(document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value, xajax.getFormValues('database_definition_form'))", BUTTON_CREATE_LIST)."\n";
+    $html_str .= "                &nbsp;&nbsp;".get_button("xajax_action_get_portal_page()", BUTTON_BACK)."</p>\n";
     $html_str .= "            </div> <!-- action_bar -->\n\n";    
     $html_str .= "        </div> <!-- action_pane -->\n\n";           
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
@@ -246,19 +246,19 @@ function get_field_definition_table ($definition)
         
         # the fifth column - up
         if ($row > 1)
-            $html_str .= "                            <td width=\"1%\"><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_move_listbuilder_row(".$row.", 'up', xajax.getFormValues('database_definition_form'))\">".BUTTON_UP."</a></td>\n";
+            $html_str .= "                            <td width=\"1%\">".get_button("xajax_action_move_listbuilder_row(".$row.", 'up', xajax.getFormValues('database_definition_form'))", BUTTON_UP)."</td>\n";
         else
             $html_str .= "                            <td width=\"1%\"><p style=\"visibility: hidden;\">".BUTTON_UP."</p></td>\n";
         
         # the sixth column - down
         if ($row > 0 && $row < ((count($definition) / 3) - 1))
-            $html_str .= "                            <td width=\"1%\"><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_move_listbuilder_row(".$row.", 'down', xajax.getFormValues('database_definition_form'))\">".BUTTON_DOWN."</a></td>\n";
+            $html_str .= "                            <td width=\"1%\">".get_button("xajax_action_move_listbuilder_row(".$row.", 'down', xajax.getFormValues('database_definition_form'))", BUTTON_DOWN)."</td>\n";
         else
             $html_str .= "                            <td width=\"1%\"><p style=\"visibility: hidden;\">".BUTTON_DOWN."</p></td>\n";
         
         # the seventh column - delete
         if ($row > 0)
-            $html_str .= "                            <td width=\"1%\"><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_del_listbuilder_row(".$row.", xajax.getFormValues('database_definition_form'))\">".BUTTON_DELETE."</a></td>\n";
+            $html_str .= "                            <td width=\"1%\">".get_button("xajax_action_del_listbuilder_row(".$row.", xajax.getFormValues('database_definition_form'))", BUTTON_DELETE)."</td>\n";
         else
             $html_str .= "                            <td width=\"1%\"><p style=\"visibility: hidden;\">".BUTTON_DELETE."</p></td>\n";
     

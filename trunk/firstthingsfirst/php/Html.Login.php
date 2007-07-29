@@ -71,7 +71,7 @@ function get_login_page ()
     $html_str .= "                        <td id=\"password_id\" align=\"left\"><input size=\"16\" maxlength=\"16\" id=\"password\" type=\"password\"></td>\n";
     $html_str .= "                    </tr>\n";
     $html_str .= "                    <tr>\n";
-    $html_str .= "                        <td align=\"center\" colspan=\"2\"><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_login(document.getElementById('user_name').value, document.getElementById('password').value)\">".BUTTON_LOGIN."</a></td>\n";
+    $html_str .= "                        <td align=\"center\" colspan=\"2\">".get_button("xajax_action_login(document.getElementById('user_name').value, document.getElementById('password').value)", BUTTON_LOGIN)."</td>\n";
     $html_str .= "                    </tr>\n";
     $html_str .= "                </tbody>\n";
     $html_str .= "            </table> <!-- login_overview -->\n\n";
@@ -164,13 +164,13 @@ function get_login_status ()
     {        
         $logging->debug("user: ".$user->get_name()." is logged in");
         $html_str .= $user->get_name();
-        $html_str .= "&nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_logout()\">".BUTTON_LOGOUT."</a>&nbsp;&nbsp;";
+        $html_str .= "&nbsp;&nbsp;".get_button("xajax_action_logout()", BUTTON_LOGOUT)."&nbsp;&nbsp;";
     }
     else
     {
         $logging->debug("no user is logged in");
         $html_str .= LABEL_MINUS;
-        $html_str .= "&nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_get_login_page()\">".BUTTON_LOGIN."</a>&nbsp;&nbsp;";
+        $html_str .= "&nbsp;&nbsp;".get_button("xajax_action_get_login_page()", BUTTON_LOGIN)."&nbsp;&nbsp;";
     }
         
     $logging->trace("get login_status (size=".strlen($html_str).")");

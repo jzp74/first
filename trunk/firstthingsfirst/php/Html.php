@@ -111,15 +111,30 @@ function handle_action ()
     return TRUE;
 }
 
+# get html for an active button
+# string func_str: contains the complete js function name and all its parameters
+# string name_str: contains the name of the button
+function get_button ($func_str, $name_str)
+{
+    return "<a xhref=\"javascript:void(0);\" onclick=\"".$func_str."\">".$name_str."</a>";
+}
+
+# get html for an inactive button
+# string name_str: contains the name of the button
+function get_inactive_button ($name_str)
+{
+    return "<span class=\"inactive_button\">".$name_str."</span>";
+}
+
 # set given html in the footer
-function set_footer ($html)
+function set_footer ($html_str)
 {
     global $logging;
     global $response;
     
     $logging->trace("setting footer");
         
-    $response->addAssign("footer", "innerHTML", $html);
+    $response->addAssign("footer", "innerHTML", $html_str);
 
     $logging->trace("set footer");
 

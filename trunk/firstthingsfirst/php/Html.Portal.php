@@ -47,7 +47,7 @@ function get_portal_page ()
     $html_str .= "        </div> <!-- portal_overview_pane -->\n\n";
     $html_str .= "        <div id=\"action_pane\">\n\n";
     $html_str .= "            <div id=\"action_bar\">\n";
-    $html_str .= "                <p><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_get_listbuilder_page()\">".BUTTON_CREATE_NEW_LIST."</a></p>\n";
+    $html_str .= "                <p>".get_button("xajax_action_get_listbuilder_page()", BUTTON_CREATE_NEW_LIST)."</p>\n";
     $html_str .= "            </div> <!-- action_bar -->\n\n";    
     $html_str .= "        </div> <!-- action_pane -->\n\n";           
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";

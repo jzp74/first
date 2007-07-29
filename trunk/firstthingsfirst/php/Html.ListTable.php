@@ -192,7 +192,7 @@ function get_list_content ($order_by_field, $page_number)
     $html_str .= "                <thead>\n";
     $html_str .= "                    <tr>\n";
     foreach ($field_names as $field_name)
-        $html_str .= "                        <th><a xhref=\"javascript:void(0);\" onclick=\"xajax_action_get_list_content('".$field_name."', ".$current_page.")\">".$field_name."</a></th>\n";
+        $html_str .= "                        <th>".get_button("xajax_action_get_list_content('".$field_name."', ".$current_page.")", $field_name)."</th>\n";
     $html_str .= "                        <th>&nbsp</th>\n";
     $html_str .= "                    </tr>\n";
     $html_str .= "                </thead>\n";
@@ -246,7 +246,7 @@ function get_list_content ($order_by_field, $page_number)
         }
         
         # add the delete link
-        $html_str .= "                        <td width=\"1%\" onclick=\"xajax_action_del_list_row(&quot;".$key_string."&quot;)\"><a xhref=\"javascript:void(0);\">".BUTTON_DELETE."</a></td>\n";
+        $html_str .= "                        <td width=\"1%\" onclick=\"xajax_action_del_list_row(&quot;".$key_string."&quot;)\">".get_button("", BUTTON_DELETE)."</td>\n";
         $html_str .= "                    </tr>\n";
         $row_number += 1;
     }
@@ -277,13 +277,13 @@ function get_list_content ($order_by_field, $page_number)
             if ($cnt == $current_page)
                 $html_str .= " <strong>".$cnt."</strong>";
             else
-                $html_str .= " <a xhref=\"javascript:void(0);\" onclick=\"xajax_action_get_list_content('', ".$cnt.")\">".$cnt."</a>";
+                $html_str .= " ".get_button("xajax_action_get_list_content('', ".$cnt.")", $cnt);
         }
     
         if ($current_page == $total_pages)
             $html_str .= "  <strong>".$total_pages."</strong>";
         else
-            $html_str .= "  <a xhref=\"javascript:void(0);\" onclick=\"xajax_action_get_list_content('', ".$total_pages.")\">".$total_pages."</a>";
+            $html_str .= "  ".get_button("xajax_action_get_list_content('', ".$total_pages.")", $total_pages);
     }
     
     $html_str .= "</div>\n\n";
@@ -409,11 +409,11 @@ function get_list_row ($key_string)
     $html_str .= "                                    <td colspan=2>";
 
     if (!strlen($key_string))
-        $html_str .= "<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_add_list_row(xajax.getFormValues('row_form'))\">".BUTTON_ADD."</a>";
+        $html_str .= get_button("xajax_action_add_list_row(xajax.getFormValues('row_form'))", BUTTON_ADD);
     else
-        $html_str .= "<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_update_list_row(&quot;".$key_string."&quot;, xajax.getFormValues('row_form'))\">commit</a>";
+        $html_str .= get_button("xajax_action_update_list_row(&quot;".$key_string."&quot;, xajax.getFormValues('row_form'))", BUTTON_COMMIT);
 
-    $html_str .= "&nbsp;&nbsp;<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_cancel_list_action ()\">".BUTTON_CANCEL."</a>";
+    $html_str .= "&nbsp;&nbsp;".get_button("xajax_action_cancel_list_action ()", BUTTON_CANCEL);
     $html_str .= "</td>\n";
     $html_str .= "                                </tr>\n";
 
@@ -612,16 +612,16 @@ function get_action_bar ($action)
     $html_str .= "\n\n               <p>";
 
     if ($action == "edit")
-        $html_str .= "<span><strong>edit row</strong></span>&nbsp;&nbsp;";
+        $html_str .= "<span>".get_inactive_button(BUTTON_EDIT_ROW)."</span>&nbsp;&nbsp;";
     else
-        $html_str .= "<strong>edit row</strong>&nbsp;&nbsp;";
+        $html_str .= get_inactive_button(BUTTON_EDIT_ROW)."&nbsp;&nbsp;";
 
     if ($action == "add")
-        $html_str .= "<span><strong>add row</strong></span>&nbsp;&nbsp";
+        $html_str .= "<span>".get_inactive_button(BUTTON_ADD_ROW)."</span>&nbsp;&nbsp";
     else
-        $html_str .= "<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_get_list_row('')\">".BUTTON_ADD_ROW."</a>&nbsp;&nbsp;";
+        $html_str .= get_button("xajax_action_get_list_row('')", BUTTON_ADD_ROW)."&nbsp;&nbsp;";
     
-    $html_str .= "<a xhref=\"javascript:void(0);\" onclick=\"xajax_action_get_portal_page()\">".BUTTON_BACK."</a></p>\n\n";
+    $html_str .= get_button("xajax_action_get_portal_page()", BUTTON_BACK)."</p>\n\n";
 
     $logging->trace("got action bar (size=".strlen($html_str).")");
     return $html_str;

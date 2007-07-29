@@ -9,6 +9,7 @@
 # the last argument must contain the id of the target field
 # TODO better handling of multiple arguments
 # TODO treat login functions differently
+# TODO rewrite this whole function, this function should not actively change the dom
 function handle_action ()
 {
     global $result;
@@ -99,9 +100,13 @@ function handle_action ()
         return FALSE;
     }
     
-    $logging->debug("paste ".strlen($result->get_result_str())." chars in target id: ".$target);
-
-    $response->addAssign($target, "innerHTML", $result->get_result_str());
+    if ($target != "")
+    {
+        $logging->debug("paste ".strlen($result->get_result_str())." chars in target id: ".$target);
+        $response->addAssign($target, "innerHTML", $result->get_result_str());
+    }
+    else
+        $logging->debug("no pasting this time");
     
     return TRUE;
 }

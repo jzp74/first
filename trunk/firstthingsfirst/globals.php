@@ -42,7 +42,7 @@ define("ACTION_ADD_LIST_ROW", "add_list_row");
 define("ACTION_DEL_LIST_ROW", "del_list_row");
 define("ACTION_CANCEL_LIST_ACTION", "cancel_list_action");
 
-# list notes actions
+# list note actions
 define("ACTION_NEXT_NOTE", "next_note");
 define("ACTION_PREVIOUS_NOTE", "previous_note");
 define("ACTION_ADD_NOTE", "add_note");
@@ -69,6 +69,9 @@ $firstthingsfirst_action_descriptions = array(
     ACTION_UPDATE_LIST_ROW      => array(1, 1, 1),
     ACTION_ADD_LIST_ROW         => array(1, 1, 1),
     ACTION_DEL_LIST_ROW         => array(1, 1, 1),
+    ACTION_NEXT_NOTE            => array(1, 1, 1),
+    ACTION_PREVIOUS_NOTE        => array(1, 1, 1),
+    ACTION_ADD_NOTE             => array(1, 1, 1),
     ACTION_GET_LISTBUILDER_PAGE => array(0, 1, 1),
     ACTION_ADD_LISTBUILDER_ROW  => array(0, 1, 1),
     ACTION_MOVE_LISTBUILDER_ROW => array(0, 1, 1),

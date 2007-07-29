@@ -5,100 +5,26 @@
 # TODO add explicit info logging for all actions
 
 
-# wrapper function to generate html for the listbuilder page
+# get get html for the listbuilder page
 # this function is registered in xajax
-# see get_listbuilder_page function for details
 function action_get_listbuilder_page ()
-{
-    global $user;
-    global $response;
-
-    $user->set_action(ACTION_GET_LISTBUILDER_PAGE);
-    if (handle_action("main_body"))
-    {
-        $response->addAssign("login_status", "innerHTML", get_login_status());
-        set_footer("&nbsp;");
-    }
-    return $response;
-}
-
-# wrapper function to add a listbuilder row
-# this function is registered in xajax
-# see add_listbuilder_row function for details
-function action_add_listbuilder_row ($field_type, $definition)
-{
-    global $user;
-    global $response;
-    
-    $user->set_action(ACTION_ADD_LISTBUILDER_ROW);
-    handle_action($field_type, $definition, "listbuilder_definition_pane");
-    return $response;
-}
-
-# wrapper function to move a listbuilder row up or down
-# this function is registered in xajax
-# see move_listbuilder_row function for details
-function action_move_listbuilder_row ($row_number, $direction, $definition)
-{
-    global $user;
-    global $response;
-    
-    $user->set_action(ACTION_MOVE_LISTBUILDER_ROW);
-    handle_action($row_number, $direction, $definition, "listbuilder_definition_pane");
-    return $response;
-}
-
-# wrapper function to delete a listbuilder row
-# this function is registered in xajax
-# see del_listbuilder_row function for details
-function action_del_listbuilder_row ($row_number, $definition)
-{
-    global $user;
-    global $response;
-    
-    $user->set_action(ACTION_DEL_LISTBUILDER_ROW);
-    handle_action($row_number, $definition, "listbuilder_definition_pane");
-    return $response;
-}
-
-# wrapper function to refresh a listbuilder
-# this function is registered in xajax
-# see refresh_listbuilder function for details
-function action_refresh_listbuilder ($definition)
-{
-    global $user;
-    global $response;
-    
-    $user->set_action(ACTION_REFRESH_LISTBUILDER);
-    handle_action($definition, "listbuilder_definition_pane");
-    return $response;
-}
-
-# wrapper function to create a new list
-# this function is registered in xajax
-# see create_list function for details
-function action_create_list ($title, $description, $definition)
-{
-    global $user;
-    global $response;
-    
-    $user->set_action(ACTION_CREATE_LIST);
-    handle_action($title, $description, $definition, "main_body");
-    return $response;
-}
-
-# return the html for a complete list page
-function get_listbuilder_page ()
 {
     global $logging;
     global $result;    
+    global $user;
+    global $response;
     global $firstthingsfirst_field_descriptions;
-
-    $logging->trace("getting list_builer");
     
     $field_types = array_keys($firstthingsfirst_field_descriptions);
     $definition = array($field_types[0], "id", "", $field_types[3], "", "");
+
+    $logging->info("ACTION: get listbuilder page");
+
+    $user->set_action(ACTION_GET_LISTBUILDER_PAGE);
     
+    if (!check_preconditions())
+        return $response;
+            
     $html_str = "";
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
     $html_str .= "        <div id=\"page_title\">".LABEL_CONFIGURE_NEW_LIST."</div>\n\n";
@@ -140,7 +66,275 @@ function get_listbuilder_page ()
     
     $result->set_result_str($html_str);   
     
-    $logging->trace("got list_builer (size=".strlen($result->get_result_str()).")");
+    if (!check_postconditions())
+        return $reponse;
+    
+    $logging->trace("pasting ".strlen($result->get_result_str())." chars to main_body");
+    $response->addAssign("main_body", "innerHTML", $result->get_result_str());
+
+    set_login_status();
+    set_footer("&nbsp;");
+    
+    $logging->trace("got listbuilder page");
+
+    return $response;
+}
+
+# add a listbuilder row
+# this function is registered in xajax
+# string field_type: type of field to add
+# array definition: defintion of current list that is being build
+function action_add_listbuilder_row ($field_type, $definition)
+{
+    global $logging;
+    global $result;    
+    global $user;
+    global $response;
+    
+    $new_row = array($field_type, "", "");
+    # get rid of keynames
+    $new_definition = array_merge(array_values($definition), $new_row);
+
+    $logging->info("ACTION: add listbuilder row (field_type=".$field_type.")");
+
+    $user->set_action(ACTION_GET_LISTBUILDER_PAGE);
+    
+    if (!check_preconditions())
+        return $response;
+
+    get_field_definition_table($new_definition);
+    
+    if (!check_postconditions())
+        return $reponse;
+    
+    $logging->trace("pasting ".strlen($result->get_result_str())." chars to listbuilder_definition_pane");
+    $response->addAssign("listbuilder_definition_pane", "innerHTML", $result->get_result_str());
+
+    return $response;
+}
+
+# move a listbuilder row up or down
+# this function is registered in xajax
+# see move_listbuilder_row function for details
+# int row_number: number of the row that needs to be moved
+# string direction: direction to move row ("up" or "down")
+# array definition: defintion of current list that is being build
+function action_move_listbuilder_row ($row_number, $direction, $definition)
+{
+    global $logging;
+    global $result;    
+    global $user;
+    global $response;
+    
+    $backup_definition = array();
+    # get rid of keynames
+    $new_definition = array_values($definition);
+
+    $logging->info("ACTION: move listbuilder row (row_number=".$field_type.", $direction=".$direction.")");
+
+    $user->set_action(ACTION_MOVE_LISTBUILDER_ROW);
+    
+    if (!check_preconditions())
+        return $response;
+
+    # store values of given row number
+    for ($position = 0; $position < 3; $position += 1)
+    {
+        $definition_position = ($row_number * 3) + $position;
+        array_push($backup_definition, $new_definition[$definition_position]);
+    }
+
+    # copy values from given row number to previous or next row (up or down)
+    # copy previously stored values to given row number
+    if ($direction == "up")
+    {
+        $position_from = $row_number * 3;
+        $position_to = ($row_number - 1) * 3;
+    }
+    else
+    {
+        $position_from = $row_number * 3;
+        $position_to = ($row_number + 1) * 3;
+    }
+    
+    for ($position = 0; $position < 3; $position += 1)
+    {
+        $new_definition[$position_from + $position] = $new_definition[$position_to + $position];
+        $new_definition[$position_to + $position] = $backup_definition[$position];
+    }
+            
+    get_field_definition_table($new_definition);
+    
+    if (!check_postconditions())
+        return $reponse;
+    
+    $logging->trace("pasting ".strlen($result->get_result_str())." chars to listbuilder_definition_pane");
+    $response->addAssign("listbuilder_definition_pane", "innerHTML", $result->get_result_str());
+
+    return $response;
+}
+
+# delete a listbuilder row
+# this function is registered in xajax
+# int row_number: number of the row that needs to be deleted
+# array definition: defintion of current list that is being build
+function action_del_listbuilder_row ($row_number, $definition)
+{
+    global $logging;
+    global $result;    
+    global $user;
+    global $response;
+    
+    # get rid of keynames
+    $backup_definition = array_values($definition);
+    $new_definition = array();
+
+    $logging->info("ACTION: delete listbuilder row (row=".$row_number.")");
+
+    $user->set_action(ACTION_DEL_LISTBUILDER_ROW);
+    
+    if (!check_preconditions())
+        return $response;
+    
+    for ($position = 0; $position < count($backup_definition); $position += 1)
+    {
+        # only copy the value for row numbers other than given row number
+        if ($position < ($row_number * 3) || $position >= (($row_number + 1) * 3))
+            array_push($new_definition, $backup_definition[$position]);
+    }
+
+    get_field_definition_table($new_definition);
+
+    if (!check_postconditions())
+        return $reponse;
+    
+    $logging->trace("pasting ".strlen($result->get_result_str())." chars to listbuilder_definition_pane");
+    $response->addAssign("listbuilder_definition_pane", "innerHTML", $result->get_result_str());
+
+    return $response;
+}
+
+# refresh a listbuilder
+# this function is registered in xajax
+# this function is called when user changes the field_type of a particular row
+# array definition: defintion of current list that is being build
+function action_refresh_listbuilder ($definition)
+{
+    global $logging;
+    global $result;    
+    global $user;
+    global $response;
+    
+    $logging->info("ACTION: refresh listbuilder");
+
+    $user->set_action(ACTION_REFRESH_LISTBUILDER);
+    
+    if (!check_preconditions())
+        return $response;
+
+    get_field_definition_table(array_values($definition));
+
+    if (!check_postconditions())
+        return $reponse;
+    
+    $logging->trace("pasting ".strlen($result->get_result_str())." chars to listbuilder_definition_pane");
+    $response->addAssign("listbuilder_definition_pane", "innerHTML", $result->get_result_str());
+
+    return $response;
+}
+
+# create a new list and get the portal page
+# this function is registered in xajax
+# string title: title of the new list
+# string description: description of the new list
+# array definition: defintion of current list that is being build
+# TODO add error checking for actual creation of list
+function action_create_list ($title, $description, $definition)
+{
+    global $logging;
+    global $result;
+    global $user;
+    global $list_table_description;
+    global $list_table;
+    
+    # get rid of keynames
+    $definition_values = array_values($definition);
+    $definition_keys = array_keys($definition);
+    $new_definition = array();
+
+    $logging->info("ACTION: create list (title=".$title.")");
+
+    $user->set_action(ACTION_CREATE_LIST);
+    
+    if (!check_preconditions())
+        return $response;
+    
+    # check if title has been given
+    if (strlen($title) == 0)
+    {
+        $logging->warn("no title given");
+        $result->set_error_str(ERROR_NO_TITLE_GIVEN);
+        $result->set_error_element("listbuilder_list_title_id");
+        
+        return;
+    }
+    
+    # check if description has been given
+    if (strlen($description) == 0)
+    {
+        $logging->warn("no description given");
+        $result->set_error_str(ERROR_NO_DESCRIPTION_GIVEN);
+        $result->set_error_element("listbuilder_list_description_id");
+        
+        return;
+    }
+
+    for ($position = 0; $position < (count($definition_values) / 3); $position += 1)
+    {
+        if ($position == 0)
+            $field_type = "LABEL_DEFINITION_AUTO_NUMBER";
+        else
+            $field_type = $definition_values[$position * 3];
+        $field_name = $list_table->_get_db_field_name($definition_values[($position * 3) + 1]);
+        $field_options = $definition_values[($position * 3) + 2];
+        $logging->debug("found field (name=".$field_name." type=".$field_type." options=".$field_options.")");
+        
+        # check if field name has been given
+        if (strlen($definition_values[($position * 3) + 1]) == 0)
+        {
+            $logging->warn("no field name given");
+            $result->set_error_str(ERROR_NO_FIELD_NAME_GIVEN);
+            $result->set_error_element($definition_keys[($position * 3) + 1]);
+        
+            return;
+        }
+        
+        # check if options string has been given, only when field is of type LABEL_DEFINITION_SELECTION
+        if ($field_type == "LABEL_DEFINITION_SELECTION" && strlen($definition_values[($position * 3) + 2]) == 0)
+        {
+            $logging->warn("no options given");
+            $result->set_error_str(ERROR_NO_FIELD_OPTIONS_GIVEN);
+            $result->set_error_element($definition_keys[($position * 3) + 2]);
+        
+            return;
+        }
+
+        # only the first column is part of the key
+        if ($position == 0)
+            $new_definition[$field_name] = array($field_type, 1, $field_options);
+        else
+            $new_definition[$field_name] = array($field_type, 0, $field_options);
+    }
+    
+    $list_table_description->set_title($title);
+    $list_table_description->set_description($description);
+    $list_table_description->set_definition($new_definition);
+    $list_table_description->insert();
+    
+    $logging->trace("created list");
+
+    get_portal_page();
+
     return;
 }
 
@@ -272,208 +466,6 @@ function get_field_definition_table ($definition)
     $result->set_result_str($html_str);   
     
     $logging->trace("got field definition table (size=".strlen($html_str).")");
-    return;
-}
-
-# add a listbuilder row
-# string field_type: type of field to add
-# array definition: defintion of current list that is being build
-function add_listbuilder_row ($field_type, $definition)
-{
-    global $logging;
-    global $result;
-
-    $logging->trace("add listbuilder row (field_type=".$field_type.")");
-
-    $new_row = array($field_type, "", "");
-    # get rid of keynames
-    $new_definition = array_merge(array_values($definition), $new_row);
-
-    get_field_definition_table($new_definition);
-    
-    $logging->trace("added listbuilder row (size=".strlen($result->get_result_str()).")");
-    
-    return;
-}
-
-# move a listbuilder row up or down
-# int row_number: number of the row that needs to be moved
-# string direction: direction to move row ("up" or "down")
-# array definition: defintion of current list that is being build
-function move_listbuilder_row ($row_number, $direction, $definition)
-{
-    global $logging;
-    global $result;
-
-    $backup_definition = array();
-    # get rid of keynames
-    $new_definition = array_values($definition);
-
-    $logging->trace("move listbuilder row (row=".$row_number.", direction=".$direction.")");
-
-    # store values of given row number
-    for ($position = 0; $position < 3; $position += 1)
-    {
-        $definition_position = ($row_number * 3) + $position;
-        array_push($backup_definition, $new_definition[$definition_position]);
-    }
-
-    # copy values from given row number to previous or next row (up or down)
-    # copy previously stored values to given row number
-    if ($direction == "up")
-    {
-        $position_from = $row_number * 3;
-        $position_to = ($row_number - 1) * 3;
-    }
-    else
-    {
-        $position_from = $row_number * 3;
-        $position_to = ($row_number + 1) * 3;
-    }
-    
-    for ($position = 0; $position < 3; $position += 1)
-    {
-        $new_definition[$position_from + $position] = $new_definition[$position_to + $position];
-        $new_definition[$position_to + $position] = $backup_definition[$position];
-    }
-            
-    get_field_definition_table($new_definition);
-    
-    $logging->trace("moved listbuilder row (size=".strlen($result->get_result_str()).")");
-    
-    return;
-}
-
-# delete a listbuilder row
-# int row_number: number of the row that needs to be deleted
-# array definition: defintion of current list that is being build
-function del_listbuilder_row ($row_number, $definition)
-{
-    global $logging;
-    global $result;
-
-    # get rid of keynames
-    $backup_definition = array_values($definition);
-    $new_definition = array();
-    
-    $logging->trace("delete listbuilder row (row=".$row_number.")");
-
-    for ($position = 0; $position < count($backup_definition); $position += 1)
-    {
-        # only copy the value for row numbers other than given row number
-        if ($position < ($row_number * 3) || $position >= (($row_number + 1) * 3))
-            array_push($new_definition, $backup_definition[$position]);
-    }
-
-    get_field_definition_table($new_definition);
-
-    $logging->trace("deleted listbuilder row (size=".strlen($result->get_result_str()).")");
-
-    return;
-}
-
-# refresh a listbuilder
-# this function is called when user changes the field_type of a particular row
-# array definition: defintion of current list that is being build
-function refresh_listbuilder ($definition)
-{
-    global $logging;
-    global $result;
-
-    $logging->trace("refresh listbuilder");
-
-    get_field_definition_table(array_values($definition));
-
-    $logging->trace("refreshed listbuilder");
-
-    return;
-}
-
-# create a new list and get the portal page
-# string title: title of the new list
-# string description: description of the new list
-# array definition: defintion of current list that is being build
-# TODO add error checking for actual creation of list
-function create_list ($title, $description, $definition)
-{
-    global $logging;
-    global $result;
-    global $list_table_description;
-    global $list_table;
-
-    # get rid of keynames
-    $definition_values = array_values($definition);
-    $definition_keys = array_keys($definition);
-    $new_definition = array();
-
-    $logging->trace("create list (title=".$title.", desc=".$description.")");
-    
-    # check if title has been given
-    if (strlen($title) == 0)
-    {
-        $logging->warn("no title given");
-        $result->set_error_str(ERROR_NO_TITLE_GIVEN);
-        $result->set_error_element("listbuilder_list_title_id");
-        
-        return;
-    }
-    
-    # check if description has been given
-    if (strlen($description) == 0)
-    {
-        $logging->warn("no description given");
-        $result->set_error_str(ERROR_NO_DESCRIPTION_GIVEN);
-        $result->set_error_element("listbuilder_list_description_id");
-        
-        return;
-    }
-
-    for ($position = 0; $position < (count($definition_values) / 3); $position += 1)
-    {
-        if ($position == 0)
-            $field_type = "LABEL_DEFINITION_AUTO_NUMBER";
-        else
-            $field_type = $definition_values[$position * 3];
-        $field_name = $list_table->_get_db_field_name($definition_values[($position * 3) + 1]);
-        $field_options = $definition_values[($position * 3) + 2];
-        $logging->debug("found field (name=".$field_name." type=".$field_type." options=".$field_options.")");
-        
-        # check if field name has been given
-        if (strlen($definition_values[($position * 3) + 1]) == 0)
-        {
-            $logging->warn("no field name given");
-            $result->set_error_str(ERROR_NO_FIELD_NAME_GIVEN);
-            $result->set_error_element($definition_keys[($position * 3) + 1]);
-        
-            return;
-        }
-        
-        # check if options string has been given, only when field is of type LABEL_DEFINITION_SELECTION
-        if ($field_type == "LABEL_DEFINITION_SELECTION" && strlen($definition_values[($position * 3) + 2]) == 0)
-        {
-            $logging->warn("no options given");
-            $result->set_error_str(ERROR_NO_FIELD_OPTIONS_GIVEN);
-            $result->set_error_element($definition_keys[($position * 3) + 2]);
-        
-            return;
-        }
-
-        # only the first column is part of the key
-        if ($position == 0)
-            $new_definition[$field_name] = array($field_type, 1, $field_options);
-        else
-            $new_definition[$field_name] = array($field_type, 0, $field_options);
-    }
-    
-    $list_table_description->set_title($title);
-    $list_table_description->set_description($description);
-    $list_table_description->set_definition($new_definition);
-    $list_table_description->insert();
-    
-    $logging->trace("created list");
-
-    get_portal_page();
-
     return;
 }
 

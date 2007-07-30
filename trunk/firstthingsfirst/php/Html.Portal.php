@@ -5,34 +5,25 @@
 # TODO add explicit info logging for all actions
 
 
-# wrapper function to generate portal html
+# set the html for a complete portal page
 # this function is registered in xajax
-# see get_portal_page function for details
 function action_get_portal_page ()
 {
+    global $logging;
+    global $result;    
     global $user;
     global $response;
-
-    $user->set_action(ACTION_GET_PORTAL_PAGE);
-    if (handle_action("main_body"))
-    {
-        $response->addAssign("login_status", "innerHTML", get_login_status());
-        set_footer("&nbsp;");
-    }
-    return $response;
-}
-
-# return the html for a complete portal page
-function get_portal_page ()
-{
     global $firstthingsfirst_portal_title;
     global $firstthingsfirst_portal_intro_text;
     global $firstthingsfirst_portal_address;
-    global $logging;
-    global $result;
 
-    $logging->trace("getting portal");
+    $logging->info("ACTION: get portal page");
 
+    $user->set_action(ACTION_GET_PORTAL_PAGE);
+    
+    if (!check_preconditions())
+        return $response;
+    
     $html_str = "";
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
     $html_str .= "        <div id=\"page_title\">".$firstthingsfirst_portal_title."</div>\n\n";
@@ -54,8 +45,18 @@ function get_portal_page ()
 
     $result->set_result_str($html_str);    
 
-    $logging->trace("got portal (size=".strlen($result->get_result_str()).")");
-    return;
+    if (!check_postconditions())
+        return $reponse;
+    
+    $logging->trace("pasting ".strlen($result->get_result_str())." chars to main_body");
+    $response->addAssign("main_body", "innerHTML", $result->get_result_str());
+
+    set_login_status();
+    set_footer("&nbsp;");
+
+    $logging->trace("got portal page");
+
+    return $response;
 }
 
 # return the html for an overview of all ListTables contained in database

@@ -5,7 +5,7 @@
 # TODO add explicit info logging for all actions
 
 
-# get get html for the listbuilder page
+# set the html for the listbuilder page
 # this function is registered in xajax
 function action_get_listbuilder_page ()
 {
@@ -252,8 +252,9 @@ function action_refresh_listbuilder ($definition)
 function action_create_list ($title, $description, $definition)
 {
     global $logging;
-    global $result;
+    global $result;    
     global $user;
+    global $response;
     global $list_table_description;
     global $list_table;
     
@@ -333,9 +334,9 @@ function action_create_list ($title, $description, $definition)
     
     $logging->trace("created list");
 
-    get_portal_page();
+    action_get_portal_page();
 
-    return;
+    return $response;
 }
 
 # return the html for a select box

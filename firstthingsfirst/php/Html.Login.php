@@ -5,57 +5,22 @@
 # TODO add explicit info logging for all actions
 
 
-# wrapper function to generate html for the login page
+# set the html for a login page
 # this function is registered in xajax
-# see get_login_page function for details
 function action_get_login_page ()
 {
+    global $logging;
+    global $result;    
     global $user;
     global $response;
+
+    $logging->info("ACTION: get login page");
 
     $user->set_action(ACTION_GET_LOGIN_PAGE);
-    handle_action("main_body");
-    return $response;
-}
 
-# wrapper function to login
-# this function is registered in xajax
-# see login function for details
-function action_login ($user_name, $password)
-{
-    global $user;
-    global $response;
+    if (!check_preconditions())
+        return $response;
     
-    $user->set_action(ACTION_LOGIN);
-    if (handle_action($user_name, $password, "main_body"))
-    {
-        $response->addAssign("login_status", "innerHTML", get_login_status());
-        set_footer("&nbsp;");
-    }
-    return $response;
-}
-
-# wrapper function to logout
-# this function is registered in xajax
-# see logout function for details
-function action_logout ()
-{
-    global $user;
-    global $response;
-    
-    $user->set_action(ACTION_LOGOUT);
-    handle_action("login_status");
-    return $response;
-}
-
-# return the html for a login page
-function get_login_page ()
-{
-    global $logging;
-    global $result;
-
-    $logging->trace("getting login");
-
     $html_str = "";
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
     $html_str .= "        <div id=\"page_title\">".LABEL_PLEASE_LOGIN."</div>\n\n";
@@ -80,21 +45,33 @@ function get_login_page ()
 
     $result->set_result_str($html_str);    
 
-    $logging->trace("got login (size=".strlen($result->get_result_str()).")");
-    return;
+    if (!check_postconditions())
+        return $reponse;
+    
+    $logging->trace("pasting ".strlen($result->get_result_str())." chars to main_body");
+    $response->addAssign("main_body", "innerHTML", $result->get_result_str());
+
+    return $response;
 }
 
 # login a user
+# this function is registered in xajax
 # string user_name: user to login
 # string password: password lo login user_name
-function login ($user_name, $password)
+function action_login ($user_name, $password)
 {
-    global $user;
     global $logging;
-    global $result;
-
-    $logging->trace("login (user_name=".$user_name.")");
+    global $result;    
+    global $user;
+    global $response;
     
+    $logging->info("ACTION: login (user_name=".$user_name.")");
+
+    $user->set_action(ACTION_LOGIN);
+    
+    if (!check_preconditions())
+        return $response;
+        
     if (strlen($user_name) == 0)
     {
         $logging->warn("no user_name given");
@@ -116,7 +93,7 @@ function login ($user_name, $password)
     if ($user->login($user_name, $password))
     {    
         $logging->trace("logged in");
-        get_portal_page();
+        action_get_portal_page();
     }
     else
     {
@@ -127,26 +104,32 @@ function login ($user_name, $password)
         return;
     }
 
-    return;
+    return $response;
 }
-
+    
 # logout a user
-function logout()
+# this function is registered in xajax
+function action_logout ()
 {
-    global $user;
     global $logging;
-    global $result;
-
-    $logging->trace("logout");
+    global $result;    
+    global $user;
+    global $response;
     
+    $logging->info("ACTION: logout");
+
+    if (!check_preconditions())
+        return $response;
+
+    $user->set_action(ACTION_LOGOUT);
+
     $user->logout();
-    $html_str = get_login_status();
+    set_login_status();
 
-    $logging->trace("logged out (size=".strlen($html_str).")");
+    if (!check_postconditions())
+        return $reponse;
     
-    $result->set_result_str($html_str);    
-
-    return;
+    return $response;
 }
 
 # generate html to display the login status of a user

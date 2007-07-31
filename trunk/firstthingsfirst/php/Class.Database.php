@@ -1,6 +1,12 @@
 <?php
 
 # This class takes care of all database access
+
+# make sure firstthingsfirst_db_table_prefix ends with an '_' char
+if ((substr($firstthingsfirst_db_table_prefix, -1, 1) != "_") && (strlen($firstthingsfirst_db_table_prefix) > 0))
+    $firstthingsfirst_db_table_prefix = $firstthingsfirst_db_table_prefix."_";
+
+# Class definition
 # TODO improve use of trace/debug logging
 class Database
 {
@@ -35,13 +41,13 @@ class Database
         global $firstthingsfirst_db_host;
         global $firstthingsfirst_db_user;
         global $firstthingsfirst_db_passwd;
-        global $firstthingsfirst_db_db;
+        global $firstthingsfirst_db_schema;
 
         # set attributes to standard values
         $this->host =& $firstthingsfirst_db_host;
         $this->user =& $firstthingsfirst_db_user;
         $this->passwd =& $firstthingsfirst_db_passwd;
-        $this->database =& $firstthingsfirst_db_db;
+        $this->database =& $firstthingsfirst_db_schema;
         $this->error_str = "";
 
         $this->_log->trace("constructed new Database object");        

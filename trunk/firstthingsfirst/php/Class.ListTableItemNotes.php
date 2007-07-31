@@ -6,7 +6,7 @@
 
 
 # ListTableItemNotes defines
-define("LISTTABLEITEMRENOTES_TABLE_NAME", "listtableitemnote");
+define("LISTTABLEITEMRENOTES_TABLE_NAME", $firstthingsfirst_db_table_prefix."listtableitemnote");
 
 
 # Class definition

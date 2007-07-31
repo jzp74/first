@@ -5,7 +5,7 @@
 
 
 # User defines
-define("USER_TABLE_NAME", "user");
+define("USER_TABLE_NAME", $firstthingsfirst_db_table_prefix."user");
 define("USER_ID_RESET_VALUE", -1);
 define("USER_NAME_RESET_VALUE", "_");
 

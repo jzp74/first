@@ -5,7 +5,7 @@
 
 
 # ListTableDescription defines
-define("LISTTABLEDESCRIPTION_TABLE_NAME", "listtabledescription");
+define("LISTTABLEDESCRIPTION_TABLE_NAME", $firstthingsfirst_db_table_prefix."listtabledescription");
 define("LISTTABLEDESCRIPTION_FIELD_PREFIX", "_user_defined_");
 
 # Class definition

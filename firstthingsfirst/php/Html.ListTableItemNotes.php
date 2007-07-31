@@ -145,7 +145,7 @@ function get_list_row_note ($db_field_name, $this_id, $previous_id, $next_id, $n
 
     $html_str = "";
     # display the note when this is a new note or when this is the last note
-    if ((($this_id == 0) && ($last_id == -1)) || ($next_id == 0))
+    if ((($this_id == 0) && ($previous_id == -1)) || ($next_id == 0))
         $class_name = "";
     else
         $class_name = "invisible_collapsed";

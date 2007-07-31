@@ -14,7 +14,7 @@ function action_get_login_page ()
     global $user;
     global $response;
 
-    $logging->info("ACTION: get login page");
+    $logging->info("ACTION: get login page ".$firstthingsfirst_db_table_prefix[strlen($firstthingsfirst_db_table_prefix) - 1]);
 
     $user->set_action(ACTION_GET_LOGIN_PAGE);
 
@@ -138,10 +138,10 @@ function get_login_status ()
     global $user;
     global $logging;
     
-    $logging->trace("getting login_status");
-    
     $html_str = "";
-    
+
+    $logging->trace("getting login_status");
+        
     $html_str .= LABEL_USER.": ";
     if ($user->is_login())
     {        

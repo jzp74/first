@@ -5,149 +5,57 @@
 # TODO add explicit info logging for all actions
 
 
-# wrapper function to generate html for a complete list page
+# return the html for a complete list page
 # this function is registered in xajax
-# see get_list_page function for details
 function action_get_list_page ($page_title)
 {
-    global $user;
-    global $response;
-    
-    $user->set_action(ACTION_GET_LIST_PAGE);
-    $user->set_page_title($page_title);
-    if (handle_action("main_body"))
-    {
-        $response->addAssign("login_status", "innerHTML", get_login_status());
-        set_footer(get_list_footer());
-    }
-    return $response;
-}
-
-# wrapper function to generate html only for the content of current list
-# this function is registered in xajax
-# see get_list_content function for details
-function action_get_list_content ($order_by_field, $page)
-{
-    global $user;
-    global $response;
-    
-    $user->set_action(ACTION_GET_LIST_CONTENT);
-    handle_action($order_by_field, $page, "list_content_pane");
-    return $response;
-}
-
-# wrapper function to generate html only for one specified row
-# this function is registered in xajax
-# see get_list_row function for details
-function action_get_list_row ($key_string)
-{
-    global $user;
-    global $response;
-    
-    $user->set_action(ACTION_GET_LIST_ROW);
-    handle_action($key_string, "action_bar");
-    return $response;
-}
-
-# wrapper function to update a row of current list
-# this function is registered in xajax
-# see update_list_row function for details
-function action_update_list_row ($key_string, $form_values)
-{
-    global $user;
-    global $response;
-    
-    $user->set_action(ACTION_UPDATE_LIST_ROW);
-    if (handle_action($key_string, $form_values, "action_bar"))
-    {
-        $user->set_action(ACTION_GET_LIST_CONTENT);
-        handle_action("", 0, "list_content_pane");
-        set_footer(get_list_footer());
-    }
-    return $response;
-}
-
-# wrapper function to add a row to current list
-# this function is registered in xajax
-# see add_list_row function for details
-function action_add_list_row ($form_values)
-{
-    global $user;
-    global $response;
-    
-    $user->set_action(ACTION_ADD_LIST_ROW);
-    if (handle_action($form_values, "action_bar"))
-    {
-        $user->set_action(ACTION_GET_LIST_CONTENT);
-        handle_action("", 0, "list_content_pane");
-        set_footer(get_list_footer());
-    }
-    return $response;
-}
-
-# wrapper function to delete a row from current list
-# this function is registered in xajax
-# see del_list_action function for details
-function action_del_list_row ($key_string)
-{
-    global $user;
-    global $response;
-    
-    $user->set_action(ACTION_DEL_LIST_ROW);
-    if (handle_action($key_string, "list_content_pane"))
-    {
-        set_footer(get_list_footer());
-    }
-    return $response;
-}
-
-# wrapper function to cancel current list action
-# this function is registered in xajax
-# see cancel_list_action function for details
-function action_cancel_list_action ()
-{
-    global $user;
-    global $response;
-    
-    $user->set_action(ACTION_CANCEL_LIST_ACTION);
-    handle_action($form_values, "action_bar");    
-    return $response;
-}
-
-# return the html for a complete list page
-function get_list_page ()
-{
     global $logging;
-    global $result;
+    global $result;    
+    global $user;
+    global $response;
     global $list_table_description;
-
-    $logging->trace("getting list");
     
     $html_str = "";
+
+    $logging->info("ACTION: get list page (list_title=".$list_title.")");
+
+    $user->set_action(ACTION_GET_LIST_PAGE);
+    $user->set_page_title($page_title);
+
+    if (!check_preconditions())
+        return $response;
+    
+    # set the right list_table_description
+    $list_table_description->select($user->get_page_title());
 
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
     $html_str .= "        <div id=\"page_title\">".$list_table_description->get_title()."</div>\n\n";
     $html_str .= "        <div id=\"login_status\">&nbsp;</div>\n\n";
     $html_str .= "        <div id=\"list_content_pane\">\n\n";
-
-    $result->set_result_str($html_str);    
-    get_list_content("", 0);
-
-    $html_str = "";        
     $html_str .= "        </div> <!-- list_content_pane -->\n\n";
     $html_str .= "        <div id=\"action_pane\">\n\n";
     $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
-    
-    $html_str .= get_action_bar("");
-    
     $html_str .= "            </div> <!-- action_bar -->\n\n";
     $html_str .= "        </div> <!-- action_pane -->\n\n";           
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
 
     $result->set_result_str($html_str);    
+    
+    if (!check_postconditions())
+        return $reponse;
+    
+    $logging->trace("pasting ".strlen($result->get_result_str())." chars to main_body");
+    $response->addAssign("main_body", "innerHTML", $result->get_result_str());
 
-    $logging->trace("got portal (size=".strlen($result->get_result_str()).")");
-    return;
+    # set list content
+    action_get_list_content ("", 0);
+    
+    # set login status, action bar and footer
+    set_login_status();
+    set_action_bar(get_action_bar(""));
+    set_footer(get_list_footer());
+
+    return $response;
 }
 
 # generate html only for the content of current list
@@ -156,20 +64,31 @@ function get_list_page ()
 # this table represents the contents of the database
 # TODO the same page should reload after delete or add row
 # order by given field
+# this function is registered in xajax
 # string order_by_field: name of field by which this list needs to be ordered
 # int page_number: number of page to be shown (show first page when 0 is given)
-function get_list_content ($order_by_field, $page_number)
+function action_get_list_content ($order_by_field, $page)
 {
-    global $firstthingsfirst_date_string;
     global $logging;
-    global $result;
+    global $result;    
+    global $user;
+    global $response;
     global $list_table_description;
     global $list_table;
+    global $firstthingsfirst_date_string;
     
     $html_str = "";
     
-    $logging->trace("getting list_content (order_by_field=".$order_by_field.", page_number=".$page_number.")");
-        
+    $logging->info("ACTION: get list content ($order_by_field=".$order_by_field.", page=".$page.")");
+
+    $user->set_action(ACTION_GET_LIST_CONTENT);
+
+    if (!check_preconditions())
+        return $response;
+
+    # set the right list_table_description
+    $list_table_description->select($user->get_page_title());
+
     # we'll first get the necessary data from database
     $definition = $list_table_description->get_definition();
     $field_names = $list_table->get_field_names();
@@ -290,26 +209,42 @@ function get_list_content ($order_by_field, $page_number)
     
     $result->set_result_str($html_str);    
 
-    $logging->trace("got list_content (size=".strlen($html_str).")");
-    return;
+    if (!check_postconditions())
+        return $reponse;
+    
+    $logging->trace("pasting ".strlen($result->get_result_str())." chars to list_content_pane");
+    $response->addAssign("list_content_pane", "innerHTML", $result->get_result_str());
+
+    return $response;
 }
 
 # generate html only for one specified row
 # this function is called when user edits or adds a row
+# this function is registered in xajax
 # string key_string: comma separated name value pares
-function get_list_row ($key_string)
+function action_get_list_row ($key_string)
 {
-    global $firstthingsfirst_field_descriptions;
-    global $firstthingsfirst_date_string;
     global $logging;
-    global $result;
+    global $result;    
+    global $user;
+    global $response;
     global $list_table_description;
     global $list_table;
+    global $firstthingsfirst_field_descriptions;
+    global $firstthingsfirst_date_string;
     
     $html_str = "";
     
-    $logging->trace("getting list_row (key_string=".$key_string.")");
-    
+    $logging->info("ACTION: get list row (key_string=".$key_string.")");
+
+    $user->set_action(ACTION_GET_LIST_ROW);
+
+    if (!check_preconditions())
+        return $response;
+
+    # set the right list_table_description
+    $list_table_description->select($user->get_page_title());
+
     if (strlen($key_string))
         $row = $list_table->select_row($key_string);
     $field_names = $list_table->get_field_names();
@@ -425,26 +360,39 @@ function get_list_row ($key_string)
     
     $result->set_result_str($html_str);    
 
-    $logging->trace("got list_row (size=".strlen($html_str).")");
-        
-    return;
+    $logging->trace("pasting ".strlen($result->get_result_str())." chars to action_bar");
+    $response->addAssign("action_bar", "innerHTML", $result->get_result_str());
+
+    return $response;
 }
 
 # update a row from current list
+# this function is registered in xajax
 # string key_string: comma separated name value pares
 # array form_values: new row as an array of name value pairs
-function update_list_row ($key_string, $form_values)
+function action_update_list_row ($key_string, $form_values)
 {
     global $logging;
-    global $result;
+    global $result;    
+    global $user;
+    global $response;
+    global $list_table_description;
     global $list_table;
     
     $html_str = "";
     $name_keys = array_keys($form_values);
     $new_form_values = array();
     
-    $logging->trace("updating list_row (key_string=".$key_string.")");
-    
+    $logging->info("ACTION: update list row (key_string=".$key_string.")");
+
+    $user->set_action(ACTION_UPDATE_LIST_ROW);
+
+    if (!check_preconditions())
+        return $response;
+
+    # set the right list_table_description
+    $list_table_description->select($user->get_page_title());
+
     foreach ($name_keys as $name_key)
     {
         $value_array = explode(GENERAL_SEPARATOR, $name_key);
@@ -489,26 +437,43 @@ function update_list_row ($key_string, $form_values)
     $html_str .= get_action_bar("");
     $result->set_result_str($html_str);    
 
-    $logging->trace("updated list_row (size=".strlen($html_str).")");
-    return;
+    $logging->trace("pasting ".strlen($result->get_result_str())." chars to action_bar");
+    $response->addAssign("action_bar", "innerHTML", $result->get_result_str());
+
+    # refresh list and footer
+    action_get_list_content("", 0);
+    set_footer(get_list_footer());
+
+    return $response;
 }
 
-# TODO more field checking (number field should only contain numbers)
 # add a row to current list
+# this function is registered in xajax
+# TODO more field checking (number field should only contain numbers)
 # array form_values: new row as an array of name value pairs
-function add_list_row ($form_values)
+function action_add_list_row ($form_values)
 {
     global $logging;
-    global $result;
-    global $list_table;
+    global $result;    
+    global $user;
+    global $response;
     global $list_table_description;
+    global $list_table;
     
     $html_str = "";
     $name_keys = array_keys($form_values);
     $new_form_values = array();
     
-    $logging->trace("adding list_row");
-    
+    $logging->info("ACTION: add list row");
+
+    $user->set_action(ACTION_ADD_LIST_ROW);
+
+    if (!check_preconditions())
+        return $response;
+
+    # set the right list_table_description
+    $list_table_description->select($user->get_page_title());
+
     foreach ($name_keys as $name_key)
     {
         #first check if any value has been given
@@ -559,44 +524,75 @@ function add_list_row ($form_values)
     $html_str .= get_action_bar("");
     $result->set_result_str($html_str);    
 
-    $logging->trace("added list_row (size=".strlen($html_str).")");
-    return;
+    $logging->trace("pasting ".strlen($result->get_result_str())." chars to action_bar");
+    $response->addAssign("action_bar", "innerHTML", $result->get_result_str());
+
+    # refresh list and footer
+    action_get_list_content("", 0);
+    set_footer(get_list_footer());
+
+    return $response;
 }
 
 # delete a row to current list
+# this function is registered in xajax
 # string key_string: comma separated name value pares
-function del_list_row ($key_string)
+function action_del_list_row ($key_string)
 {
     global $logging;
-    global $result;
+    global $result;    
+    global $user;
+    global $response;
+    global $list_table_description;
     global $list_table;
     
-    $logging->trace("deleting list_row (key_string=".$key_string.")");
-    
+    $logging->info("ACTION: delete list row (key_string=".$key_string.")");
+
+    $user->set_action(ACTION_DEL_LIST_ROW);
+
+    if (!check_preconditions())
+        return $response;
+
+    # set the right list_table_description
+    $list_table_description->select($user->get_page_title());
+
     $list_table->delete($key_string);    
 
-    $logging->trace("deleted list_row");
-    
-    get_list_content('', 0);
-    
-    return;
+    $logging->trace("pasting ".strlen($result->get_result_str())." chars to list_content_pane");
+    $response->addAssign("list_content_pane", "innerHTML", $result->get_result_str());
+
+    # refresh list and footer
+    action_get_list_content("", 0);
+    set_footer(get_list_footer());
+
+    return $response;
 }
 
 # cancel current list action and substitute current html with new html
-function cancel_list_action ()
+# this function is registered in xajax
+function action_cancel_list_action ()
 {
     global $logging;
-    global $result;
+    global $result;    
+    global $user;
+    global $response;
     
     $html_str = "";
-    
-    $logging->trace("cancel list action");
-    
+
+    $logging->info("ACTION: cancel list action");
+
+    $user->set_action(ACTION_CANCEL_LIST_ACTION);
+
+    if (!check_preconditions())
+        return $response;
+
     $html_str .= get_action_bar("");
     $result->set_result_str($html_str);    
 
-    $logging->trace("cancelled list action (size=".strlen($html_str).")");
-    return;
+    $logging->trace("pasting ".strlen($result->get_result_str())." chars to action_bar");
+    $response->addAssign("action_bar", "innerHTML", $result->get_result_str());
+
+    return $response;
 }
 
 # return html for the action bar
@@ -624,6 +620,7 @@ function get_action_bar ($action)
     $html_str .= get_button("xajax_action_get_portal_page()", BUTTON_BACK)."</p>\n\n";
 
     $logging->trace("got action bar (size=".strlen($html_str).")");
+    
     return $html_str;
 }
 
@@ -642,7 +639,7 @@ function get_list_footer ()
     $html_str .= "</strong>, ".LABEL_LAST_MODIFICATION_BY." <strong>".$list_table_description->get_modifier();
     $html_str .= "</strong> ".LABEL_AT." <strong>".$list_table_description->get_modified()."</strong>";
         
-    $logging->trace("get list_footer (size=".strlen($html_str).")");
+    $logging->trace("got list_footer (size=".strlen($html_str).")");
 
     return $html_str;
 }

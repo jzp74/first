@@ -5,7 +5,7 @@
 
 
 # ListTableItemNotes defines
-define("LISTTABLE_TABLE_NAME_PREFIX", "listtable_");
+define("LISTTABLE_TABLE_NAME_PREFIX", $firstthingsfirst_db_table_prefix."listtable_");
 define("LISTTABLELISTTABLE_EMPTY", "_LISTTABLE_EMPTY__");
 
 

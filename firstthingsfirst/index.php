@@ -125,11 +125,7 @@ if (!$user->is_login())
 
     <div id="main_body">
 
-        <div id="hidden_upper_margin">&nbsp</div>
-
         <script language="javaScript">xajax_action_get_portal_page()</script>
-
-    	<div id="hidden_lower_margin">&nbsp;</div>
 
     </div> <!-- main_body -->
 

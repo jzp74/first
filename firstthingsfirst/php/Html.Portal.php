@@ -25,8 +25,7 @@ function action_get_portal_page ()
         return $response;
     
     $html_str = "";
-    $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
-    $html_str .= "        <div id=\"page_title\">".$firstthingsfirst_portal_title."</div>\n\n";
+    $html_str .= "\n\n        <div id=\"page_title\">".$firstthingsfirst_portal_title."</div>\n\n";
     $html_str .= "        <div id=\"portal_explanation\"><em>".$firstthingsfirst_portal_intro_text."</em></div>\n\n";
     $html_str .= "        <div id=\"login_status\">&nbsp;</div>\n\n";
     $html_str .= "        <div id=\"portal_overview_pane\">\n\n";
@@ -41,7 +40,6 @@ function action_get_portal_page ()
     $html_str .= "                <p>".get_button("xajax_action_get_listbuilder_page()", BUTTON_CREATE_NEW_LIST)."</p>\n";
     $html_str .= "            </div> <!-- action_bar -->\n\n";    
     $html_str .= "        </div> <!-- action_pane -->\n\n";           
-    $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
 
     $result->set_result_str($html_str);    
 

@@ -120,7 +120,7 @@ function set_footer ($html_str)
     
     $logging->trace("setting footer");
         
-    $response->addAssign("footer", "innerHTML", $html_str);
+    $response->addAssign("footer_text", "innerHTML", $html_str);
 
     $logging->trace("set footer");
 

@@ -108,35 +108,41 @@ if (!$user->is_login())
 <link rel="stylesheet" href="css/standard_list.css">
 <link rel="stylesheet" href="css/standard_portal.css">
 <link rel="stylesheet" href="css/standard_listbuilder.css">
-<!--[if IE]>
-<link rel="stylesheet" href="css/standard_ie.css">
-<![endif]-->
 
 <?php $xajax->printJavascript("xajax"); ?>
 </head>
 
 <body>
-<div id="outer_body">
-            
-    <div id="left_margin"></div>    
+<div id="upper_margin"></div>
 
-    <div id="right_margin"></div>    
-
-    <div id="upper_margin"></div>    
+<div id="header">
+    <div id="header_left_margin">&nbsp</div>
+    <div id="header_right_margin">&nbsp</div>
+    <?php echo "<div id=\"header_text\">&nbsp;&nbsp;".file_get_contents("VERSION")."    </div>\n" ?>
+</div> <!-- header -->
     
-    <?php echo "<div id=\"header\">&nbsp;&nbsp;".file_get_contents("VERSION")."    </div>\n" ?>
+<div id="outer_body">
 
     <div id="main_body">
 
+        <div id="hidden_upper_margin">&nbsp</div>
+
         <script language="javaScript">xajax_action_get_portal_page()</script>
+
+    	<div id="hidden_lower_margin">&nbsp;</div>
 
     </div> <!-- main_body -->
 
-    <div id="footer">...</div>
-
-    <div id="lower_margin"></div>
-
 </div> <!-- outer_body -->
+
+<div id="footer">
+    <div id="footer_left_margin">&nbsp</div>
+    <div id="footer_right_margin">&nbsp</div>
+    <div id="footer_text">...</div>
+</div> <!-- footer -->
+
+<div id="lower_margin"></div>
+        
 </body>
 
 <html>

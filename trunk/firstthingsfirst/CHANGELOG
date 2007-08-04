@@ -2,9 +2,9 @@ Version 0.3
  - Added error handling
  - Added complete login functionality
  - New version of xajax (verison 0.2.5)
- - Created 'defines' for all field types
  - Added new field type (notes field)
  - Database table prefixing is possible
+ - fixed major IE bug
 
 Version 0.2
  - Added compatability for IE7

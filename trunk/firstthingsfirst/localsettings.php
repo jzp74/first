@@ -16,7 +16,7 @@ $firstthingsfirst_full_pathname = "e:///sites/firstthingsfirst";
 $firstthingsfirst_date_string = DATE_FORMAT_EU;
 
 # maximum numbers of entries per page
-$firstthingsfirst_list_page_entries = 10;
+$firstthingsfirst_list_page_entries = 20;
     
 # database table prefix
 # define a prefix that is unique for this firstthingsfirst instance

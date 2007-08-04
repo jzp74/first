@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+
+<head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+<title>Tasklist</title>
+<link rel="stylesheet" href="../css/standard.css">
+<link rel="stylesheet" href="../css/standard_login.css">
+<link rel="stylesheet" href="../css/standard_list.css">
+<link rel="stylesheet" href="../css/standard_portal.css">
+<link rel="stylesheet" href="../css/standard_listbuilder.css">
+<!--[if IE]>
+<link rel="stylesheet" href="../css/standard_ie.css">
+<![endif]-->
+</head>
+
+<body>
+<div id="outer_body">
+    
+    <div id="left_margin"></div>    
+
+    <div id="right_margin"></div>
+
+    <div id="upper_margin"></div>    
+
+    <div id="header">&nbsp;&nbsp;Tasklist version: 0.1</div>
+
+    <div id="main_body">
+
+        <div id="hidden_upper_margin">something to fill space</div>
+
+        <div id="page_title">Tasklist Portal</div>
+
+        <div id="portal_explanation"><em>Welcome to the FirstThingsFirst portal. Please select a list or create a new one</em></div>
+
+        <div id="login_status">user: somebody&nbsp;&nbsp;<a xhref="javascript:void(0);" onclick="xajax_action_logout()">logout</a>&nbsp;&nbsp;</div>
+
+        <div id="portal_overview_pane">
+
+            <table id="portal_overview" align="left" border="0" cellspacing="2">
+                <thead>
+                    <tr>
+                        <th>name</th>
+                        <th>description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr onclick="xajax_action_get_list_page('test')">
+                        <td>test</td>
+                        <td><em>some test</em></td>
+                    </tr>
+                    <tr onclick="xajax_action_get_list_page('todo')">
+                        <td>todo</td>
+                        <td><em>things to do</em></td>
+                    </tr>
+                </tbody>
+            </table> <!-- portal_overview -->
+            
+        </div> <!-- portal_overview_pane -->
+
+        <div id="action_pane">
+
+            <div id="action_bar">
+                <p><a xhref="javascript:void(0);" onclick="xajax_action_get_listbuilder_page()">add a list</a></p>    
+            </div> <!-- action_bar -->
+    
+        </div> <!-- action_pane -->
+           
+        <div id="hidden_lower_margin">something to fill space</div>    
+    
+    </div> <!-- main_body -->
+
+    <div id="footer">&nbsp;</div>
+
+    <div id="lower_margin"></div>
+
+</div> <!-- outer_body -->
+</body>
+
+<html>

@@ -1,0 +1,220 @@
+/* This stylesheet contains all shared styles */
+
+
+/*  defines shared settings for all styles */
+* {
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    border: none;
+    z-index: 10;
+    }
+
+/*  define style for ALL links (aka buttons) */
+a, a:link, a:visited {
+    color: rgb(60, 60, 175);
+    text-decoration: none;
+    font-weight: bold;
+    }
+
+a:hover { 
+    text-decoration: underline;
+    }
+
+/*  defines an inactive button */
+.inactive_button {
+    color: rgb(120, 120, 120);
+    text-decoration: none;
+    font-weight: bold;
+    }
+
+/*  defines an invisible and collapsed style */
+.invisible_collapsed {
+    display: none;
+    }
+
+/*  defines the html overall style of a page */
+html, body {
+	height: 100%;
+    background-color: rgb(255, 255, 255);
+    }
+
+/*  defines the white margin at the top of the page, above the header */
+#upper_margin {
+    width: 100%;
+    position: absolute;
+    height: 18px;
+    top: 0px;
+    left: 0px;
+    background-color: rgb(255, 255, 255);
+    z-index: 20;
+    }    
+
+/*  defines the header of all pages which only contains the software name and version */
+#header {
+    width: 100%;
+    position: absolute;
+    top: 18px;
+    left: 0px;
+    background-color: rgb(157, 181, 222);
+    color: rgb(255, 255, 255);
+    text-align: left;
+    font-family: verdana;
+    font-size: x-small;
+    font-weight: normal;
+    z-index: 20;
+    }
+    
+/* defines the white margins on both side of the header */
+#header_left_margin, #header_right_margin {
+    width: 16px;
+    padding: 4px 0px 4px 0px;
+    background-color: rgb(255, 255, 255);
+    z-index: 30;
+    }
+    
+#header_left_margin {
+    float: left;
+    }
+
+#header_right_margin {
+    float: right;
+    }
+
+#header_text {
+    float: left;
+    padding: 4px 0px 4px 6px;
+}    
+
+/*  defines the body which has borders on both sides and stretches to the bottom of the page */
+#outer_body {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0px 16px -38px 16px;
+    background-color: rgb(255, 255, 255);
+    border-left: 6px solid rgb(157, 181, 222);
+    border-right: 6px solid rgb(157, 181, 222);
+    }    
+
+/*  this style is used only to prevent content to disappear under the header
+    the height of this style is the combined height of #header and #upper_margin */
+#hidden_upper_margin {
+    width: 100%;
+    padding: 22px 0px 4px 0px;
+    visibility: hidden;
+    font-family: verdana;
+    font-size: x-small;
+    font-weight: normal;
+    }
+
+/*  container for all page contents */
+#main_body {
+    }
+
+/*  defines the title of a page */    
+#page_title {
+    padding: 4px 0px 4px 0px;
+    background-color: rgb(157, 181, 222);
+    color: rgb(255, 255, 255);
+    font-family: arial black;    
+    font-size: x-large;
+    font-weight: bold;
+    text-align: center;
+    }
+
+/*  defines the login status of a user */    
+#login_status {
+    padding: 4px 0px 4px 0px;
+    background-color: rgb(157, 181, 222);
+    color: rgb(255, 255, 255);
+    text-align: right;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    }
+
+/*  this style is used only to prevent content to disappear under the footer
+    the height of this style is the combined height of #footer and #lower_margin */
+#hidden_lower_margin {
+    width: 100%;
+    height: 38px;
+    visibility: hidden;
+    }
+    
+/*  defines the footer of all pages */
+#footer {
+    height: 20px;
+    background-color: rgb(157, 181, 222);
+    color: rgb(255, 255, 255);
+    text-align: center;
+    font-family: verdana;
+    font-size: 12px;
+    font-weight: normal;
+    }
+
+/* defines the white margins on both side of the footer */
+#footer_left_margin, #footer_right_margin {
+    width: 16px;
+    height: 20px;
+    background-color: rgb(255, 255, 255);
+    z-index: 30;
+    }
+    
+#footer_left_margin {
+    float: left;
+    }
+
+#footer_right_margin {
+    float: right;
+    }
+
+#footer_text {
+    padding: 2px 0px 0px 0px;
+}    
+    
+/*  defines the white margin at the bottom of the page */
+#lower_margin {
+    height: 18px;
+    background-color: rgb(255, 255, 255);
+    }
+
+/*  defines the pane that contains the action bar */
+#action_pane {
+    display: block;
+    float: none;
+    padding: 14px 12px 8px 12px;
+    color: rgb(0, 0, 102);
+    }
+
+/*  defines the action bar that contains a number of actions (hrefs) */
+#action_bar {
+    float: none;
+    background-color: rgb(208, 239, 208);
+    text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    }
+    
+#action_bar p {
+    padding: 4px 0px 4px 0px;
+    }
+
+#action_bar p span span {
+    padding: 4px 2px 4px 2px;
+    background-color: rgb(238, 246, 238);
+    }
+
+#action_bar select { 
+    padding: 1px 1px 3px 0px;
+    background-color: rgb(255, 255, 255);
+    text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    }    
+
+#clear_margin {
+    clear: both;
+    visibility: hidden;
+    }

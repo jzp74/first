@@ -102,6 +102,20 @@ class ListTable
         return $str;
     }
     
+    # check if date complies with format YYYY-MM-DD
+    function _check_date ($date_str)
+    {
+        $date_parts = explode("-", $date_str);
+        $year = intval($date_parts[0]);
+        $month = intval($date_parts[1]);
+        $day = intval($date_parts[2]);
+        
+        if (!checkdate($month, $day, $year))
+            return FALSE;
+        
+        return TRUE;
+    }
+    
     # return fieldname for given database fieldname
     function _get_field_name ($db_field_name)
     {
@@ -282,7 +296,7 @@ class ListTable
         }
         
         # add hidden fields
-        $query .= DB_ARCHIVED_FIELD_NAME." ".$firstthingsfirst_field_descriptions["LABEL_DEFINITION_NUMBER"][0].", ";
+        $query .= DB_ARCHIVED_FIELD_NAME." TINYINT , ";
         $query .= DB_CREATOR_FIELD_NAME." VARCHAR(20) NOT NULL, ";
         $query .= DB_CREATED_FIELD_NAME." DATETIME NOT NULL, ";
         $query .= DB_MODIFIER_FIELD_NAME." VARCHAR(20) NOT NULL, ";
@@ -309,14 +323,14 @@ class ListTable
     # needs to be ordered (ascending or descending)
     # take first field of $field_names if $order_by_field is left empty and no session data is set
     # TODO store current page in User. Use current page if page is set to -1
-    function select ($order_by_field, $page)
+    function select ($order_by_field, $page, $archived)
     {
         global $firstthingsfirst_list_page_entries;
 
         $definition = $this->_list_table_description->get_definition();
         $db_field_names = $this->get_db_field_names();
 
-        $this->_log->debug("read ListTable (order_by_field=".$order_by_field.", page=".$page.")");
+        $this->_log->debug("read ListTable (order_by_field=".$order_by_field.", page=".$page.", archived=".$archived.")");
 
         if (!$this->_database->table_exists($this->table_name))
         {
@@ -356,7 +370,9 @@ class ListTable
         }
     
         # get the number of entries
-        $query = "SELECT COUNT(*) FROM ".$this->table_name;
+        $query = "SELECT COUNT(*) FROM ".$this->table_name." WHERE ".DB_ARCHIVED_FIELD_NAME."=0";
+        if ($archived)
+            $query = "SELECT COUNT(*) FROM ".$this->table_name." WHERE ".DB_ARCHIVED_FIELD_NAME."=1";
         $result = $this->_database->query($query);
         if ($result != FALSE)
         {
@@ -379,7 +395,9 @@ class ListTable
             $page = $this->current_page;
             
         $rows = array();
-        $query = "SELECT ".implode($this->db_field_names, ", ")." FROM ".$this->table_name;
+        $query = "SELECT ".implode($this->db_field_names, ", ")." FROM ".$this->table_name." WHERE ".DB_ARCHIVED_FIELD_NAME."=0";
+        if ($archived)
+            $query = "SELECT ".implode($this->db_field_names, ", ")." FROM ".$this->table_name." WHERE ".DB_ARCHIVED_FIELD_NAME."=1";
         $query .= " ORDER BY ".$order_by_field;
         if ($this->get_order_ascending())
             $query .= " ASC";
@@ -537,8 +555,7 @@ class ListTable
             
             if (stristr($definition[$array_key][0], "DATE"))
             {
-                $result = check_date($value);
-                if ($result == "ERROR")
+                if (!$this->_check_date($value))
                 {
                     $this->_log->error("given date string is not correct (".$value.")");
                     $this->error_str = ERROR_DATE_WRONG_FORMAT;
@@ -546,7 +563,7 @@ class ListTable
                     return FALSE;
                 }
                 else
-                    array_push($values, "'".$result."'");
+                    array_push($values, "'".$value."'");
             }
             else if ($definition[$array_key][0] == "LABEL_DEFINITION_NOTES_FIELD")
             {
@@ -567,7 +584,7 @@ class ListTable
         }
         
         $query = "INSERT INTO ".$this->table_name." VALUES (0, ".implode($values, ", ");
-        $query .= ", 1, "; # new entries are not archived
+        $query .= ", 0, "; # new entries are not archived
         $query .= "\"".$this->_user->get_name()."\", ";
         $query .= "\"".strftime(DB_DATETIME_FORMAT)."\", ";
         $query .= "\"".$this->_user->get_name()."\", ";
@@ -622,8 +639,7 @@ class ListTable
             
             if (stristr($definition[$array_key][0], "DATE"))
             {
-                $result = check_date($value);
-                if ($result == "ERROR")
+                if (!$this->_check_date($value))
                 {
                     $this->_log->error("given date string is not correct (".$value.")");
                     $this->error_str = ERROR_DATE_WRONG_FORMAT;
@@ -631,7 +647,7 @@ class ListTable
                     return FALSE;
                 }
                 else
-                    array_push($values, $array_key."='".$result."'");
+                    array_push($values, $array_key."='".$value."'");
             }
             else if ($definition[$array_key][0] == "LABEL_DEFINITION_NOTES_FIELD")
             {
@@ -704,6 +720,50 @@ class ListTable
         return TRUE;
     }
 
+    # archive a row from database
+    function archive ($key_string)
+    {
+        $definition = $this->_list_table_description->get_definition();
+        $field_names = $this->get_field_names();
+        
+        $this->_log->debug("archive entry from ListTable (key_string=".$key_string.")");
+
+        if (!$this->_database->table_exists($this->table_name))
+        {
+            $this->_log->error("TableList does not exist in database");
+            $this->error_str = ERROR_DATABASE_PROBLEM;
+            
+            return FALSE;
+        }
+
+        # select row from database to see if it really exists
+        $name_values = $this->select_row($key_string);
+        if (count($name_values) == 0)
+        {
+            $this->_log->error("entry does not exist in TableList");
+            $this->error_str = ERROR_DATABASE_PROBLEM;
+            
+            return FALSE;
+        }
+        
+        $query = "UPDATE ".$this->table_name." SET ".DB_ARCHIVED_FIELD_NAME."=1 WHERE ".$key_string;
+        $result = $this->_database->query($query);
+
+        if ($result == FALSE)
+        {
+            $this->_log->error("could not archive entry from ListTable");
+            $this->_log->error("database error: ".$this->_database->get_error_str());
+            $this->error_str = ERROR_DATABASE_PROBLEM;
+            
+            return FALSE;
+        }
+
+        $this->_log->info("archived entry from ListTable");
+        
+        return TRUE;
+    }
+
+    # delete a row from database
     function delete ($key_string)
     {
         $definition = $this->_list_table_description->get_definition();
@@ -722,7 +782,12 @@ class ListTable
         # select row from database to see if it really exists
         $name_values = $this->select_row($key_string);
         if (count($name_values) == 0)
+        {
+            $this->_log->error("entry does not exist in TableList");
+            $this->error_str = ERROR_DATABASE_PROBLEM;
+            
             return FALSE;
+        }
 
         # delete all notes for this row
         $this->_list_table_item_notes->delete($name_values[DB_ID_FIELD_NAME]);

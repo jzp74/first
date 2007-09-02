@@ -92,7 +92,7 @@ function action_get_list_content ($order_by_field, $page)
     # we'll first get the necessary data from database
     $definition = $list_table_description->get_definition();
     $field_names = $list_table->get_field_names();
-    $rows = $list_table->select($order_by_field, $page_number);
+    $rows = $list_table->select($order_by_field, $page_number, 0);
     
     # use the params that have been set by _list_table->select()
     $total_pages = $list_table->get_total_pages();
@@ -165,7 +165,7 @@ function action_get_list_content ($order_by_field, $page)
         }
         
         # add the delete link
-        $html_str .= "                        <td width=\"1%\" onclick=\"xajax_action_del_list_row(&quot;".$key_string."&quot;)\">".get_button("", BUTTON_DELETE)."</td>\n";
+        $html_str .= "                        <td width=\"1%\" onclick=\"xajax_action_archive_list_row(&quot;".$key_string."&quot;)\">".get_button("", BUTTON_ARCHIVE)."</td>\n";
         $html_str .= "                    </tr>\n";
         $row_number += 1;
     }
@@ -279,7 +279,8 @@ function action_get_list_row ($key_string)
             
             if ($field_type != "LABEL_DEFINITION_NOTES_FIELD")
             {
-                $html_str .= "                                    <td id=\"".$db_field_name."\"><".$firstthingsfirst_field_descriptions[$field_type][1];
+                $html_str .= "                                    <td id=\"".$db_field_name.GENERAL_SEPARATOR.$field_type.GENERAL_SEPARATOR."0";
+                $html_str .= "\"><".$firstthingsfirst_field_descriptions[$field_type][1];
                 # create a name tag
                 $html_str .= " name=".$db_field_name.GENERAL_SEPARATOR.$field_type.GENERAL_SEPARATOR."0";
             }
@@ -459,6 +460,7 @@ function action_add_list_row ($form_values)
     global $response;
     global $list_table_description;
     global $list_table;
+    global $firstthingsfirst_field_descriptions;
     
     $html_str = "";
     $name_keys = array_keys($form_values);
@@ -476,23 +478,54 @@ function action_add_list_row ($form_values)
 
     foreach ($name_keys as $name_key)
     {
-        #first check if any value has been given
-        if (strlen($form_values[$name_key]) == 0)
-        {
-            $logging->warn("field ".$name_key." is empty");
-            $result->set_error_str(ERROR_NO_FIELD_VALUE_GIVEN);
-            $result->set_error_element($name_key);
-        
-            return;
-        }
-
         $value_array = explode(GENERAL_SEPARATOR, $name_key);
         $db_field_name = $value_array[0];
         $field_type = $value_array[1];
         $field_number = $value_array[2];
+        $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][2]);
         
         $logging->trace("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
         
+        # set new value to the old value
+        $new_form_value = $form_values[$name_key];
+
+        # check field values
+        foreach ($check_functions as $check_function)
+        {            
+            if ($check_function == "is_not_empty")
+            {
+                $new_form_value = is_not_empty($name_key, $form_values[$name_key]);
+                if ($new_form_value == "<-FALSE->")
+                {
+                    set_error_message($name_key, ERROR_NO_FIELD_VALUE_GIVEN);
+
+                    return $response;
+                }
+            }
+            else if ($check_function == "is_number")
+            {
+                $new_form_value = is_number($name_key, $form_values[$name_key]);
+                if ($new_form_value == "<-FALSE->")
+                {
+                    set_error_message($name_key, ERROR_NO_NUMBER_GIVEN);
+
+                    return $response;
+                }
+            }
+            else if ($check_function == "is_date")
+            {
+                $new_form_value = is_date($name_key, $form_values[$name_key]);
+                if ($new_form_value == "<-FALSE->")
+                {
+                    set_error_message($name_key, ERROR_DATE_WRONG_FORMAT);
+
+                    return $response;
+                }
+            }
+            else if (strlen($check_function))
+                $logging->trace("unknown check function (function=".$check_function.", $field_type=".$field_type.")"); 
+        }   
+
         if ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
         {
             $new_note_array = array($field_number, $form_values[$name_key]);
@@ -507,7 +540,7 @@ function action_add_list_row ($form_values)
                 $new_form_values[$db_field_name] = array($new_note_array);
         }
         else
-            $new_form_values[$db_field_name] = $form_values[$name_key];
+            $new_form_values[$db_field_name] = $new_form_value;            
     }
     
     # display error when insertion returns false
@@ -518,7 +551,8 @@ function action_add_list_row ($form_values)
         $result->set_error_str($list_table->get_error_str());
         $result->set_error_element(end($name_keys));
         
-        return;
+        if (!check_postconditions())
+            return $response;
     }
     
     $html_str .= get_action_bar("");
@@ -534,7 +568,41 @@ function action_add_list_row ($form_values)
     return $response;
 }
 
-# delete a row to current list
+# archive a row from current list
+# this function is registered in xajax
+# string key_string: comma separated name value pares
+function action_archive_list_row ($key_string)
+{
+    global $logging;
+    global $result;    
+    global $user;
+    global $response;
+    global $list_table_description;
+    global $list_table;
+    
+    $logging->info("ACTION: archive list row (key_string=".$key_string.")");
+
+    $user->set_action(ACTION_ARCHIVE_LIST_ROW);
+
+    if (!check_preconditions())
+        return $response;
+
+    # set the right list_table_description
+    $list_table_description->select($user->get_page_title());
+
+    $list_table->archive($key_string);    
+
+    $logging->trace("pasting ".strlen($result->get_result_str())." chars to list_content_pane");
+    $response->addAssign("list_content_pane", "innerHTML", $result->get_result_str());
+
+    # refresh list and footer
+    action_get_list_content("", 0);
+    set_footer(get_list_footer());
+
+    return $response;
+}
+
+# delete a row from current list
 # this function is registered in xajax
 # string key_string: comma separated name value pares
 function action_del_list_row ($key_string)

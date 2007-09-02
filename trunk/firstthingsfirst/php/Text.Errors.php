@@ -5,7 +5,8 @@
 
 
 # field check errors
-define("ERROR_DATE_WRONG_FORMAT", "date format incorrect");
+define("ERROR_DATE_WRONG_FORMAT", "please provide a correct date format");
+define("ERROR_NO_NUMBER_GIVEN", "please enter a number in this field");
 define("ERROR_NO_FIELD_VALUE_GIVEN", "please enter a value for this field");
 define("ERROR_NO_FIELD_NAME_GIVEN", "please enter a value for this field");
 define("ERROR_NO_FIELD_OPTIONS_GIVEN", "please specify options");

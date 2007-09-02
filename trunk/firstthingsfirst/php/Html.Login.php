@@ -15,11 +15,6 @@ function action_get_login_page ()
     global $response;
 
     $logging->info("ACTION: get login page ".$firstthingsfirst_db_table_prefix[strlen($firstthingsfirst_db_table_prefix) - 1]);
-
-    $user->set_action(ACTION_GET_LOGIN_PAGE);
-
-    if (!check_preconditions())
-        return $response;
     
     $html_str = "";
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
@@ -45,9 +40,6 @@ function action_get_login_page ()
 
     $result->set_result_str($html_str);    
 
-    if (!check_postconditions())
-        return $reponse;
-    
     $logging->trace("pasting ".strlen($result->get_result_str())." chars to main_body");
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
 
@@ -67,27 +59,20 @@ function action_login ($user_name, $password)
     
     $logging->info("ACTION: login (user_name=".$user_name.")");
 
-    $user->set_action(ACTION_LOGIN);
-    
-    if (!check_preconditions())
-        return $response;
-        
     if (strlen($user_name) == 0)
     {
         $logging->warn("no user_name given");
-        $result->set_error_str(ERROR_NO_USER_NAME_GIVEN);
-        $result->set_error_element("user_name_id");
-        
-        return;
+        set_error_message("user_name_id", ERROR_NO_USER_NAME_GIVEN);
+
+        return $response;
     }
     
     if (strlen($password) == 0)
     {
         $logging->warn("no password given");
-        $result->set_error_str(ERROR_NO_PASSWORD_GIVEN);
-        $result->set_error_element("password_id");
-        
-        return;
+        set_error_message("password_id", ERROR_NO_PASSWORD_GIVEN);
+
+        return $response;        
     }
 
     if ($user->login($user_name, $password))
@@ -98,12 +83,12 @@ function action_login ($user_name, $password)
     else
     {
         $logging->warn("user could not log in");
-        $result->set_error_str(ERROR_INCORRECT_NAME_PASSWORD);
-        $result->set_error_element("password_id");
-        
-        return;
+        set_error_message("password_id", ERROR_INCORRECT_NAME_PASSWORD);
     }
 
+    if (!check_postconditions())
+        return $reponse;
+    
     return $response;
 }
     
@@ -117,11 +102,6 @@ function action_logout ()
     global $response;
     
     $logging->info("ACTION: logout");
-
-    if (!check_preconditions())
-        return $response;
-
-    $user->set_action(ACTION_LOGOUT);
 
     $user->logout();
     set_login_status();

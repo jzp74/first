@@ -72,6 +72,7 @@ $xajax->registerFunction("action_get_list_content");
 $xajax->registerFunction("action_get_list_row");
 $xajax->registerFunction("action_update_list_row");
 $xajax->registerFunction("action_add_list_row");
+$xajax->registerFunction("action_archive_list_row");
 $xajax->registerFunction("action_del_list_row");
 $xajax->registerFunction("action_cancel_list_action");
 

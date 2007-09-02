@@ -50,7 +50,7 @@ function check_preconditions ()
     return TRUE;
 }
 
-# check if any error has been set
+# check if an error has been set
 function check_postconditions ()
 {
     global $logging;
@@ -67,17 +67,28 @@ function check_postconditions ()
     {
         $error_element = $result->get_error_element();
         $error_str = $result->get_error_str();
-        
-        $logging->warn("function: ".$action." returned an error");
-        $response->addRemove("error_message");
-        $response->addAppend($error_element, "innerHTML", "<p id=\"error_message\" style=\"color: red;\"><em>".$error_str."</em></p>");
-        
+        set_error_message($error_element, $error_str);
+                
         return FALSE;
     }
     
     $logging->trace("checked postconditions: ".$action);
 
     return TRUE;
+}
+
+# set error message
+function set_error_message ($error_element, $error_str)
+{
+    global $logging;
+    global $response;
+    
+    $logging->debug("set error (element=".$error_element.")");
+    
+    $response->addRemove("error_message");
+    $response->addAppend($error_element, "innerHTML", "<p id=\"error_message\" style=\"color: red;\"><em>".$error_str."</em></p>");
+    
+    $logging->debug("set error message (element=".$error_element.")");        
 }
 
 # get html for an active button

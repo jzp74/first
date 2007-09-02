@@ -39,6 +39,7 @@ define("ACTION_GET_LIST_CONTENT", "get_list_content");
 define("ACTION_GET_LIST_ROW", "get_list_row");
 define("ACTION_UPDATE_LIST_ROW", "update_list_row");
 define("ACTION_ADD_LIST_ROW", "add_list_row");
+define("ACTION_ARCHIVE_LIST_ROW", "archive_list_row");
 define("ACTION_DEL_LIST_ROW", "del_list_row");
 define("ACTION_CANCEL_LIST_ACTION", "cancel_list_action");
 
@@ -68,6 +69,7 @@ $firstthingsfirst_action_descriptions = array(
     ACTION_GET_LIST_ROW         => array(1, 1, 1),
     ACTION_UPDATE_LIST_ROW      => array(1, 1, 1),
     ACTION_ADD_LIST_ROW         => array(1, 1, 1),
+    ACTION_ARCHIVE_LIST_ROW     => array(1, 1, 1),
     ACTION_DEL_LIST_ROW         => array(1, 1, 1),
     ACTION_NEXT_NOTE            => array(1, 1, 1),
     ACTION_PREVIOUS_NOTE        => array(1, 1, 1),
@@ -82,39 +84,47 @@ $firstthingsfirst_action_descriptions = array(
 
 # this array contains all supported field types
 # this array is of the following structure
-#   field_name => (database_definition, html_definition)
+#   field_name => (database_definition, html_definition, input check)
 $firstthingsfirst_field_descriptions = array(
     "LABEL_DEFINITION_NUMBER"        => array(
         "int not null",
-        "input type=text size=10 maxlength=10"
+        "input type=text size=10 maxlength=10",
+        "is_number"
     ),
     "LABEL_DEFINITION_AUTO_NUMBER"   => array(
         "int not null auto_increment",
-        "input type=text size=10 maxlength=10 readonly"
+        "input type=text size=10 maxlength=10 readonly",
+        "is_number"
     ),
     "LABEL_DEFINITION_DATE"          => array(
         "date",
-        "input type=text size=10 maxlength=10"
+        "input type=text size=10 maxlength=10",
+        "is_not_empty is_date"
     ),
     "LABEL_DEFINITION_AUTO_DATE"     => array(
         "date",
-        "input type=text size=10 maxlength=10 readonly"
+        "input type=text size=10 maxlength=10 readonly",
+        "is_date"
     ),
     "LABEL_DEFINITION_TEXT_LINE"     => array(
         "tinytext not null",
-        "input type=text size=40"
+        "input type=text size=40",
+        "",
     ),
     "LABEL_DEFINITION_TEXT_FIELD"    => array(
         "mediumtext not null",
-        "textarea cols=40 rows=3"
+        "textarea cols=40 rows=3",
+        ""
     ),
     "LABEL_DEFINITION_NOTES_FIELD" => array(
         "int not null",
+        "",
         ""
     ),
     "LABEL_DEFINITION_SELECTION"     => array(
         "tinytext not null",
-        "select"
+        "select",
+        ""
     )
 );
 

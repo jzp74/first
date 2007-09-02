@@ -5,6 +5,7 @@
 
 
 # shared buttons
+define("BUTTON_ARCHIVE", "archive");
 define("BUTTON_DELETE", "delete");
 define("BUTTON_ADD", "add");
 define("BUTTON_CANCEL", "cancel");

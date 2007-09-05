@@ -5,6 +5,18 @@
 # TODO add explicit info logging for all actions
 
 
+# action definitions
+# no action definitions required for login functions
+
+# action permissions
+# no action permissions required for login functions
+
+# action registrations
+$xajax->registerFunction("action_get_login_page");
+$xajax->registerFunction("action_login");
+$xajax->registerFunction("action_logout");                                        
+
+
 # set the html for a login page
 # this function is registered in xajax
 function action_get_login_page ()

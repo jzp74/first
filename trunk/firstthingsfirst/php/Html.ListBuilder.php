@@ -5,6 +5,31 @@
 # TODO add explicit info logging for all actions
 
 
+# action definitions
+define("ACTION_GET_LISTBUILDER_PAGE", "action_get_listbuilder_page");
+define("ACTION_ADD_LISTBUILDER_ROW", "action_add_listbuilder_row");
+define("ACTION_MOVE_LISTBUILDER_ROW", "action_move_listbuilder_row");
+define("ACTION_DEL_LISTBUILDER_ROW", "action_del_listbuilder_row");
+define("ACTION_REFRESH_LISTBUILDER", "action_refresh_listbuilder");
+define("ACTION_CREATE_LIST", "action_create_list");
+
+# action permissions
+$firstthingsfirst_action_description[ACTION_GET_LISTBUILDER_PAGE] = array(PERMISSION_CAN_VIEW, PERMISSION_CAN_EDIT);
+$firstthingsfirst_action_description[ACTION_ADD_LISTBUILDER_ROW] = array(PERMISSION_CAN_VIEW, PERMISSION_CAN_EDIT);
+$firstthingsfirst_action_description[ACTION_MOVE_LISTBUILDER_ROW] = array(PERMISSION_CAN_VIEW, PERMISSION_CAN_EDIT);
+$firstthingsfirst_action_description[ACTION_DEL_LISTBUILDER_ROW] = array(PERMISSION_CAN_VIEW, PERMISSION_CAN_EDIT);
+$firstthingsfirst_action_description[ACTION_REFRESH_LISTBUILDER] = array(PERMISSION_CAN_VIEW, PERMISSION_CAN_EDIT);
+$firstthingsfirst_action_description[ACTION_CREATE_LIST] = array(PERMISSION_CAN_VIEW, PERMISSION_CAN_EDIT);
+
+# action registrations
+$xajax->registerFunction("action_get_listbuilder_page");
+$xajax->registerFunction("action_add_listbuilder_row");
+$xajax->registerFunction("action_move_listbuilder_row");
+$xajax->registerFunction("action_del_listbuilder_row");
+$xajax->registerFunction("action_refresh_listbuilder");
+$xajax->registerFunction("action_create_list");
+
+
 # set the html for the listbuilder page
 # this function is registered in xajax
 function action_get_listbuilder_page ()

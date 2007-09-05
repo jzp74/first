@@ -5,6 +5,16 @@
 # TODO add explicit info logging for all actions
 
 
+# action definitions
+define("ACTION_GET_PORTAL_PAGE", "get_portal_page");
+
+# action permissions
+$firstthingsfirst_action_description[ACTION_GET_PORTAL_PAGE] = array(PERMISSION_CAN_VIEW, PERMISSION_CANNOT_EDIT);
+
+# action registrations
+$xajax->registerFunction("action_get_portal_page");
+
+
 # set the html for a complete portal page
 # this function is registered in xajax
 function action_get_portal_page ()

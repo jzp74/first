@@ -14,9 +14,8 @@ function check_preconditions ()
     
     # action descriptions
     $action = $user->get_action();
-    $load_list = $firstthingsfirst_action_descriptions[$action][0];
-    $can_read = $firstthingsfirst_action_descriptions[$action][1];
-    $can_write = $firstthingsfirst_action_descriptions[$action][2];
+    $can_read = $firstthingsfirst_action_descriptions[$action][0];
+    $can_write = $firstthingsfirst_action_descriptions[$action][1];
     
     $logging->debug("check preconditions: ".$action." (load_list=".$load_list.", can_read=".$can_read.", can_write=".$can_write.")");
     

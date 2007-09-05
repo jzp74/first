@@ -27,6 +27,9 @@ require_once("php/Class.ListTableDescription.php");
 require_once("php/Class.ListTable.php");
 require_once("php/Class.ListTableItemNotes.php");
 
+# Initialize xajax
+$xajax = new xajax();
+
 require_once("php/Html.php");
 require_once("php/Html.Login.php");
 require_once("php/Html.Portal.php");
@@ -54,41 +57,7 @@ $list_table = new ListTable();
 $list_table_item_notes = new ListTableItemNotes();
 $response = new xajaxResponse();
 
-
-# Initialize xajax
-$xajax = new xajax();
-
-# register portal actions
-$xajax->registerFunction("action_get_portal_page");
-
-# register login actions
-$xajax->registerFunction("action_get_login_page");
-$xajax->registerFunction("action_login");
-$xajax->registerFunction("action_logout");
-
-# register list actions
-$xajax->registerFunction("action_get_list_page");
-$xajax->registerFunction("action_get_list_content");
-$xajax->registerFunction("action_get_list_row");
-$xajax->registerFunction("action_update_list_row");
-$xajax->registerFunction("action_add_list_row");
-$xajax->registerFunction("action_archive_list_row");
-$xajax->registerFunction("action_del_list_row");
-$xajax->registerFunction("action_cancel_list_action");
-
-# register list note actions
-$xajax->registerFunction("action_get_previous_note");
-$xajax->registerFunction("action_get_next_note");
-$xajax->registerFunction("action_add_note");
-
-# register listbuilder actions
-$xajax->registerFunction("action_get_listbuilder_page");
-$xajax->registerFunction("action_add_listbuilder_row");
-$xajax->registerFunction("action_move_listbuilder_row");
-$xajax->registerFunction("action_del_listbuilder_row");
-$xajax->registerFunction("action_refresh_listbuilder");
-$xajax->registerFunction("action_create_list");
-
+# start ajax interactions
 $xajax->processRequests();
 
 # TODO remove this temporary hack

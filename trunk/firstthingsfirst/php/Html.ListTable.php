@@ -5,6 +5,36 @@
 # TODO add explicit info logging for all actions
 
 
+# action definitions
+define("ACTION_GET_LIST_PAGE", "get_list_page");
+define("ACTION_GET_LIST_CONTENT", "get_list_content");
+define("ACTION_GET_LIST_ROW", "get_list_row");
+define("ACTION_UPDATE_LIST_ROW", "update_list_row");
+define("ACTION_ADD_LIST_ROW", "add_list_row");
+define("ACTION_ARCHIVE_LIST_ROW", "archive_list_row");
+define("ACTION_DEL_LIST_ROW", "del_list_row");
+define("ACTION_CANCEL_LIST_ACTION", "cancel_list_action");
+
+# action permissions
+$firstthingsfirst_action_description[ACTION_GET_LIST_PAGE] = array(PERMISSION_CAN_VIEW, PERMISSION_CANNOT_EDIT);
+$firstthingsfirst_action_description[ACTION_GET_LIST_CONTENT] = array(PERMISSION_CAN_VIEW, PERMISSION_CANNOT_EDIT);
+$firstthingsfirst_action_description[ACTION_GET_LIST_ROW] = array(PERMISSION_CAN_VIEW, PERMISSION_CAN_EDIT);
+$firstthingsfirst_action_description[ACTION_UPDATE_LIST_ROW] = array(PERMISSION_CAN_VIEW, PERMISSION_CAN_EDIT);
+$firstthingsfirst_action_description[ACTION_ADD_LIST_ROW] = array(PERMISSION_CAN_VIEW, PERMISSION_CAN_EDIT);
+$firstthingsfirst_action_description[ACTION_ARCHIVE_LIST_ROW] = array(PERMISSION_CAN_VIEW, PERMISSION_CAN_EDIT);
+$firstthingsfirst_action_description[ACTION_DEL_LIST_ROW] = array(PERMISSION_CAN_VIEW, PERMISSION_CAN_EDIT);
+
+# action registrations
+$xajax->registerFunction("action_get_list_page");
+$xajax->registerFunction("action_get_list_content");
+$xajax->registerFunction("action_get_list_row");
+$xajax->registerFunction("action_update_list_row");
+$xajax->registerFunction("action_add_list_row");
+$xajax->registerFunction("action_archive_list_row");
+$xajax->registerFunction("action_del_list_row");
+$xajax->registerFunction("action_cancel_list_action");
+
+
 # return the html for a complete list page
 # this function is registered in xajax
 function action_get_list_page ($page_title)

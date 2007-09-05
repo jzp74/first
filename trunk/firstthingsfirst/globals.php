@@ -21,66 +21,11 @@ define("DB_ARCHIVED_FIELD_NAME", "_archived");
 # general separator
 define("GENERAL_SEPARATOR", "***");
 
-
-# define all possible user actions
-# each define is the actual name of a function
-
-# portal actions
-define("ACTION_GET_PORTAL_PAGE", "get_portal_page");
-
-# login actions
-define("ACTION_GET_LOGIN_PAGE", "get_login_page");
-define("ACTION_LOGIN", "login");
-define("ACTION_LOGOUT", "logout");
-
-# list actions
-define("ACTION_GET_LIST_PAGE", "get_list_page");
-define("ACTION_GET_LIST_CONTENT", "get_list_content");
-define("ACTION_GET_LIST_ROW", "get_list_row");
-define("ACTION_UPDATE_LIST_ROW", "update_list_row");
-define("ACTION_ADD_LIST_ROW", "add_list_row");
-define("ACTION_ARCHIVE_LIST_ROW", "archive_list_row");
-define("ACTION_DEL_LIST_ROW", "del_list_row");
-define("ACTION_CANCEL_LIST_ACTION", "cancel_list_action");
-
-# list note actions
-define("ACTION_NEXT_NOTE", "get_next_note");
-define("ACTION_PREVIOUS_NOTE", "get_previous_note");
-define("ACTION_ADD_NOTE", "add_note");
-
-# listbuilder actions
-define("ACTION_GET_LISTBUILDER_PAGE", "action_get_listbuilder_page");
-define("ACTION_ADD_LISTBUILDER_ROW", "action_add_listbuilder_row");
-define("ACTION_MOVE_LISTBUILDER_ROW", "action_move_listbuilder_row");
-define("ACTION_DEL_LISTBUILDER_ROW", "action_del_listbuilder_row");
-define("ACTION_REFRESH_LISTBUILDER", "action_refresh_listbuilder");
-define("ACTION_CREATE_LIST", "action_create_list");
-
-# this array contains a description for each action
-# this array is of the following structure
-#   action => (load_list, can_read, can_write)
-$firstthingsfirst_action_descriptions = array(
-    ACTION_GET_PORTAL_PAGE      => array(0, 1, 0),
-    ACTION_GET_LOGIN_PAGE       => array(0, 0, 0),
-    ACTION_LOGIN                => array(0, 0, 0),
-    ACTION_LOGOUT               => array(0, 0, 0),
-    ACTION_GET_LIST_PAGE        => array(1, 1, 0),
-    ACTION_GET_LIST_CONTENT     => array(1, 1, 0),
-    ACTION_GET_LIST_ROW         => array(1, 1, 1),
-    ACTION_UPDATE_LIST_ROW      => array(1, 1, 1),
-    ACTION_ADD_LIST_ROW         => array(1, 1, 1),
-    ACTION_ARCHIVE_LIST_ROW     => array(1, 1, 1),
-    ACTION_DEL_LIST_ROW         => array(1, 1, 1),
-    ACTION_NEXT_NOTE            => array(1, 1, 1),
-    ACTION_PREVIOUS_NOTE        => array(1, 1, 1),
-    ACTION_ADD_NOTE             => array(1, 1, 1),
-    ACTION_GET_LISTBUILDER_PAGE => array(0, 1, 1),
-    ACTION_ADD_LISTBUILDER_ROW  => array(0, 1, 1),
-    ACTION_MOVE_LISTBUILDER_ROW => array(0, 1, 1),
-    ACTION_DEL_LISTBUILDER_ROW  => array(0, 1, 1),
-    ACTION_REFRESH_LISTBUILDER  => array(0, 1, 1),
-    ACTION_CREATE_LIST          => array(0, 1, 1)
-);
+# user permissions
+define("PERMISSION_CAN_VIEW", 1);
+define("PERMISSION_CANNOT_VIEW", 0);
+define("PERMISSION_CAN_EDIT", 1);
+define("PERMISSION_CANNOT_VIEW", 0);
 
 # this array contains all supported field types
 # this array is of the following structure

@@ -21,6 +21,9 @@ define("DB_ARCHIVED_FIELD_NAME", "_archived");
 # general separator
 define("GENERAL_SEPARATOR", "***");
 
+# a false return string
+define("FALSE_RETURN_STRING", "<<FaLsE>>");
+
 # user permissions
 define("PERMISSION_CAN_VIEW", 1);
 define("PERMISSION_CANNOT_VIEW", 0);

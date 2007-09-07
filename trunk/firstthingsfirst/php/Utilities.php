@@ -15,7 +15,7 @@ function is_not_empty ($field_name, $str)
     {
         $logging->warn($field_name." is empty");
         
-        return "<-FALSE->";
+        return FALSE_RETURN_STRING;
     }
     
     return $str;
@@ -44,23 +44,43 @@ function is_date ($field_name, $str)
 
     if ($firstthingsfirst_date_string == DATE_FORMAT_US)
     {
+        # proces us date
         $date_parts = explode("/", $str);
+        if (!count($date_parts) == 3)
+            return FALSE_RETURN_STRING;
+        
         $month = intval($date_parts[0]);
         $day = intval($date_parts[1]);
         $year = intval($date_parts[2]);
+        $logging->debug("found us date (DD-MM-YYYY): ".$day."-".$month."-".$year);
     }
     else
     {
+        # proces european date
         $date_parts = explode("-", $str);
+        if (count($date_parts) == 2)
+            $year = idate("Y");
+        else if (count($date_parts) == 3)
+            $year = intval($date_parts[2]);
+        else
+            return FALSE_RETURN_STRING;
+        
         $day = intval($date_parts[0]);
         $month = intval($date_parts[1]);
-        $year = intval($date_parts[2]);
+        $logging->debug("found eu date (DD-MM-YYYY): ".$day."-".$month."-".$year);
     }
 
+    # rewrite 2 digit year
+    if ($year < 100)
+    {
+        $century = (int)(idate("Y") / 100);
+        $logging->debug("found century: ".$century);
+        $year = ($century * 100) + $year;
+    }
+    
+    $logging->debug("checking date (DD-MM-YYYY): ".$day."-".$month."-".$year);
     if (!checkdate($month, $day, $year))
-        return "<-FALSE->";
-    if ($year < 1900)
-        return "<-FALSE->";
+        return FALSE_RETURN_STRING;
  
     return sprintf("%04d-%02d-%02d", $year, $month, $day);
 }

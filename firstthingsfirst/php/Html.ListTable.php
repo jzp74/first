@@ -525,7 +525,7 @@ function action_add_list_row ($form_values)
             if ($check_function == "is_not_empty")
             {
                 $new_form_value = is_not_empty($name_key, $form_values[$name_key]);
-                if ($new_form_value == "<-FALSE->")
+                if ($new_form_value == FALSE_RETURN_STRING)
                 {
                     set_error_message($name_key, ERROR_NO_FIELD_VALUE_GIVEN);
 
@@ -535,7 +535,7 @@ function action_add_list_row ($form_values)
             else if ($check_function == "is_number")
             {
                 $new_form_value = is_number($name_key, $form_values[$name_key]);
-                if ($new_form_value == "<-FALSE->")
+                if ($new_form_value == FALSE_RETURN_STRING)
                 {
                     set_error_message($name_key, ERROR_NO_NUMBER_GIVEN);
 
@@ -545,7 +545,7 @@ function action_add_list_row ($form_values)
             else if ($check_function == "is_date")
             {
                 $new_form_value = is_date($name_key, $form_values[$name_key]);
-                if ($new_form_value == "<-FALSE->")
+                if ($new_form_value == FALSE_RETURN_STRING)
                 {
                     set_error_message($name_key, ERROR_DATE_WRONG_FORMAT);
 

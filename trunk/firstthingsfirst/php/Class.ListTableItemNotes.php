@@ -173,7 +173,10 @@ class ListTableItemNotes
         if ($result != FALSE)
         {
             while ($row = $this->_database->fetch($result))
+            {
+                $row['_note'] = html_entity_decode($row['_note'], ENT_QUOTES);
                 array_push($rows, $row);
+            }
         }
         else 
         {
@@ -212,7 +215,7 @@ class ListTableItemNotes
         $query .= "\"".$this->list_table_description_id."\", ";
         $query .= "\"".$list_table_item_id."\", ";
         $query .= "\"".$list_table_item_field."\", ";
-        $query .= "\"".$note."\", ";
+        $query .= "\"".htmlentities($note, ENT_QUOTES)."\", ";
         $query .= "\"".$this->_user->get_name()."\", ";
         $query .= "\"".strftime(DB_DATETIME_FORMAT)."\", ";
         $query .= "\"".$this->_user->get_name()."\", ";
@@ -259,7 +262,7 @@ class ListTableItemNotes
         $query .= "_list_table_description_id=\"".$this->list_table_description_id."\", ";
         $query .= "_list_table_item_id=\"".$list_table_item_id."\", ";
         $query .= "_list_table_item_field=\"".$list_table_item_field."\", ";
-        $query .= "_note=\"".$note."\", ";
+        $query .= "_note=\"".htmlentities($note, ENT_QUOTES)."\", ";
         $query .= DB_MODIFIER_FIELD_NAME."=\"".$this->_user->get_name()."\", ";
         $query .= DB_MODIFIED_FIELD_NAME."=\"".strftime(DB_DATETIME_FORMAT)."\"";
         $query .= " WHERE ".DB_ID_FIELD_NAME."=".$note_id;

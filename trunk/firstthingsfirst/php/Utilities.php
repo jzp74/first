@@ -4,7 +4,7 @@
 
 
 # check if given string is not empty
-# return "<-FALSE->" when string is empty
+# return FALSE when string is empty
 function is_not_empty ($field_name, $str)
 {
     global $logging;
@@ -22,7 +22,7 @@ function is_not_empty ($field_name, $str)
 }
 
 # check if given string is a number
-# return "<-FALSE->" when string is not a number
+# return FALSE when string is not a number
 # TODO write and test this function
 function is_number ($field_name, $str)
 {
@@ -33,8 +33,20 @@ function is_number ($field_name, $str)
     return $str;
 }
 
+# check if given string is a well formed string
+# return FALSE when string is not a number
+# TODO write and test this function
+function is_well_formed_string ($field_name, $str)
+{
+    global $logging;
+
+    $logging->trace("is_well_formed (field_name=".$field_name.", str=".$str.")");
+    
+    return $str;
+}
+
 # check if given string complies with predifined date format
-# return "<-FALSE->" when string doesn't comply
+# return FALSE when string doesn't comply
 function is_date ($field_name, $str)
 {
     global $firstthingsfirst_date_string;

@@ -26,6 +26,10 @@ class ListTable
     # values in this array are derived from $field_names field
     protected $db_field_names;
     
+    # array containing the database field names of type text
+    # values in this array are derived from $field_names field
+    protected $db_text_field_names;    
+    
     # field name by which this ListTable needs to be ordered
     # value of this attribute is stored in User 
     #protected $order_by_field;
@@ -167,6 +171,12 @@ class ListTable
     }
 
     # getter
+    function get_db_text_field_names ()
+    {
+        return $this->db_text_field_names;
+    }
+
+    # getter
     function get_order_by_field ()
     {
         return $this->_user->get_list_order_by_field();
@@ -214,6 +224,7 @@ class ListTable
         $this->table_name = LISTTABLE_EMPTY;
         $this->field_names = array();
         $this->db_field_names = array();
+        $this->db_text_field_names = array();
         $this->total_pages = 1;
         $this->current_page = 1;
         $this->error_str = "";
@@ -224,16 +235,28 @@ class ListTable
     # TODO error handling
     function set ()
     {
+        global $firstthingsfirst_field_descriptions;
+        
         $this->_log->trace("setting ListTable");
 
         $this->field_names = array();
+        $this->db_text_field_names = array();        
+        $definition = $this->_list_table_description->get_definition();
 
         if ($this->_list_table_description->is_valid())
         {
             $this->table_name = LISTTABLE_TABLE_NAME_PREFIX.strtolower(str_replace(" ", "_", $this->_list_table_description->get_title()));
             $this->db_field_names = array_keys($this->_list_table_description->get_definition());
             foreach ($this->db_field_names as $db_field_name)
+            {
                 array_push($this->field_names, $this->_get_field_name($db_field_name));
+                
+                # get the text fields
+                $field_type = $definition[$db_field_name][0];
+                if (stristr($firstthingsfirst_field_descriptions[$field_type][0], "text"))
+                    array_push($this->db_text_field_names, $db_field_name);
+            }
+            
             $this->total_pages = 1;
             $this->current_page = 1;
             
@@ -325,6 +348,7 @@ class ListTable
     # TODO store current page in User. Use current page if page is set to -1
     function select ($order_by_field, $page, $archived)
     {
+        global $firstthingsfirst_field_descriptions;
         global $firstthingsfirst_list_page_entries;
 
         $definition = $this->_list_table_description->get_definition();
@@ -410,7 +434,12 @@ class ListTable
         if ($result != FALSE)
         {
             while ($row = $this->_database->fetch($result))
+            {
+                # decode text field
+                foreach ($this->db_text_field_names as $text_field_name)
+                    $row[$text_field_name] = html_entity_decode($row[$text_field_name], ENT_QUOTES);
                 array_push($rows, $row);
+            }
         }
         else 
         {
@@ -485,6 +514,11 @@ class ListTable
             $row = $this->_database->fetch($result);
             if (count($row))
             {
+                # decode text field
+                foreach ($this->db_text_field_names as $text_field_name)
+                    $row[$text_field_name] = html_entity_decode($row[$text_field_name], ENT_QUOTES);
+                
+                # get notes
                 foreach($db_field_names as $db_field_name)
                 {
                     $this->_log->trace("field=".$db_field_name.", def=".$definition[$db_field_name][0].", val=".$row[$db_field_name].")");
@@ -553,11 +587,18 @@ class ListTable
             $value = $name_values[$array_key];
             $notes_array = array();
             
+            # encode text field
+            foreach ($this->db_text_field_names as $text_field_name)
+            {
+                if ($array_key == $text_field_name)
+                    $value = htmlentities($value, ENT_QUOTES);
+            }
+            
             if (stristr($definition[$array_key][0], "DATE"))
             {
                 if (!$this->_check_date($value))
                 {
-                    $this->_log->error("given date string is not correct (".$value.")");
+                    $this->_log->error("given date string is incorrect (".$value.")");
                     $this->error_str = ERROR_DATE_WRONG_FORMAT;
                     
                     return FALSE;
@@ -637,6 +678,13 @@ class ListTable
             $value = $name_values[$array_key];
             $notes_array = array();
             
+            # encode text field
+            foreach ($this->db_text_field_names as $text_field_name)
+            {
+                if ($array_key == $text_field_name)
+                    $value = htmlentities($value, ENT_QUOTES);
+            }
+
             if (stristr($definition[$array_key][0], "DATE"))
             {
                 if (!$this->_check_date($value))

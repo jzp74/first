@@ -106,7 +106,7 @@ class ListTableDescription
     # getter
     function get_description ()
     {
-        return $this->description;
+        return $this->html_entity_decode($this->description, ENT_QUOTES);
     }
 
     # getter
@@ -156,7 +156,7 @@ class ListTableDescription
     # setter
     function set_description ($description)
     {
-        $this->description = $description;
+        $this->description = htmlentities($description, ENT_QUOTES);
     }
 
     # setter

@@ -301,6 +301,9 @@ function action_get_list_row ($key_string)
         $logging->debug("row (name=".$field_name." db_name=".$db_field_name." type=".$field_type.")");
         $field_options = $definition[$db_field_name][2];
         
+        # replace all " chars with \"
+        $row[$db_field_name] = str_replace('"', '&quot', $row[$db_field_name]);
+        
         # only add non auto_increment field types
         if (!stristr($firstthingsfirst_field_descriptions[$field_type][0], "auto_increment"))
         {
@@ -409,6 +412,7 @@ function action_update_list_row ($key_string, $form_values)
     global $response;
     global $list_table_description;
     global $list_table;
+    global $firstthingsfirst_field_descriptions;
     
     $html_str = "";
     $name_keys = array_keys($form_values);
@@ -430,9 +434,50 @@ function action_update_list_row ($key_string, $form_values)
         $db_field_name = $value_array[0];
         $field_type = $value_array[1];
         $field_number = $value_array[2];
+        $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][2]);
         
         $logging->trace("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
         
+        # set new value to the old value
+        $new_form_value = $form_values[$name_key];
+
+        # check field values
+        foreach ($check_functions as $check_function)
+        {            
+            if ($check_function == "is_not_empty")
+            {
+                $new_form_value = is_not_empty($name_key, $form_values[$name_key]);
+                if ($new_form_value == FALSE_RETURN_STRING)
+                {
+                    set_error_message($name_key, ERROR_NO_FIELD_VALUE_GIVEN);
+
+                    return $response;
+                }
+            }
+            else if ($check_function == "is_number")
+            {
+                $new_form_value = is_number($name_key, $form_values[$name_key]);
+                if ($new_form_value == FALSE_RETURN_STRING)
+                {
+                    set_error_message($name_key, ERROR_NO_NUMBER_GIVEN);
+
+                    return $response;
+                }
+            }
+            else if ($check_function == "is_date")
+            {
+                $new_form_value = is_date($name_key, $form_values[$name_key]);
+                if ($new_form_value == FALSE_RETURN_STRING)
+                {
+                    set_error_message($name_key, ERROR_DATE_WRONG_FORMAT);
+
+                    return $response;
+                }
+            }
+            else if (strlen($check_function))
+                $logging->trace("unknown check function (function=".$check_function.", $field_type=".$field_type.")"); 
+        }   
+
         if ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
         {
             $new_note_array = array($field_number, $form_values[$name_key]);
@@ -451,7 +496,7 @@ function action_update_list_row ($key_string, $form_values)
             }
         }
         else
-            $new_form_values[$db_field_name] = $form_values[$name_key];
+            $new_form_values[$db_field_name] = $new_form_value;
     }
     
     # display error when insertion returns false

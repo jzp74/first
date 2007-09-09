@@ -122,15 +122,26 @@ html, body {
     text-align: center;
     }
 
-/*  defines the login status of a user */    
-#login_status {
-    padding: 4px 0px 4px 0px;
+/*  defines the navigation container */
+#navigation_container {
+    padding: 4px 0px 4px 4px;
     background-color: rgb(157, 181, 222);
     color: rgb(255, 255, 255);
-    text-align: right;
     font-family: verdana;
     font-size: small;
     font-weight: normal;
+}
+
+/*  defines hte navigation links */
+#navigation {
+    display: inline-block;
+    float: left;
+    }
+
+/*  defines the login status of a user */    
+#login_status {
+    display: inline-block;
+    float: right;
     }
 
 /*  this style is used only to prevent content to disappear under the footer
@@ -197,7 +208,7 @@ html, body {
     }
     
 #action_bar p {
-    padding: 4px 0px 4px 0px;
+    padding: 4px 0px 4px 4px;
     }
 
 #action_bar p span span {

@@ -301,20 +301,26 @@ function action_create_list ($title, $description, $definition)
     if (strlen($title) == 0)
     {
         $logging->warn("no title given");
-        $result->set_error_str(ERROR_NO_TITLE_GIVEN);
-        $result->set_error_element("listbuilder_list_title_id");
+        set_error_message("listbuilder_list_title_id", ERROR_NO_TITLE_GIVEN);
         
-        return;
+        return $response;
+    }
+    
+    # check if title is well formed
+    if (is_well_formed_string("title", $title) == FALSE_RETURN_STRING)
+    {
+        set_error_message("listbuilder_list_title_id", ERROR_NOT_WELL_FORMED_STRING);
+        
+        return $response;
     }
     
     # check if description has been given
     if (strlen($description) == 0)
     {
         $logging->warn("no description given");
-        $result->set_error_str(ERROR_NO_DESCRIPTION_GIVEN);
-        $result->set_error_element("listbuilder_list_description_id");
+        set_error_message("listbuilder_list_description_id", ERROR_NO_DESCRIPTION_GIVEN);
         
-        return;
+        return $response;
     }
 
     for ($position = 0; $position < (count($definition_values) / 3); $position += 1)
@@ -331,20 +337,26 @@ function action_create_list ($title, $description, $definition)
         if (strlen($definition_values[($position * 3) + 1]) == 0)
         {
             $logging->warn("no field name given");
-            $result->set_error_str(ERROR_NO_FIELD_NAME_GIVEN);
-            $result->set_error_element($definition_keys[($position * 3) + 1]);
+            set_error_message($definition_keys[($position * 3) + 1], ERROR_NO_FIELD_NAME_GIVEN);
         
-            return;
+            return $response;
         }
         
+        # check if title is well formed
+        if (is_well_formed_string("field", $definition_values[($position * 3) + 1]) == FALSE_RETURN_STRING)
+        {
+            set_error_message($definition_keys[($position * 3) + 1], ERROR_NOT_WELL_FORMED_STRING);
+        
+            return $response;
+        }
+
         # check if options string has been given, only when field is of type LABEL_DEFINITION_SELECTION
         if ($field_type == "LABEL_DEFINITION_SELECTION" && strlen($definition_values[($position * 3) + 2]) == 0)
         {
             $logging->warn("no options given");
-            $result->set_error_str(ERROR_NO_FIELD_OPTIONS_GIVEN);
-            $result->set_error_element($definition_keys[($position * 3) + 2]);
+            set_error_message($definition_keys[($position * 3) + 2], ERROR_NO_FIELD_OPTIONS_GIVEN);
         
-            return;
+            return $response;
         }
 
         # only the first column is part of the key
@@ -419,7 +431,7 @@ function get_field_definition_table ($definition)
     $html_str = "";    
     
     $html_str .= "\n\n            <form id=\"database_definition_form\">\n";
-    $html_str .= "                <table id=\"listbuilder_definition\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
+    $html_str .= "                <table id=\"listbuilder_definition\" align=\"left\" border=\"0\" cellspacing=\"0\">\n";
     $html_str .= "                    <thead>\n";
     $html_str .= "                        <tr>\n";
     $html_str .= "                            <th>".LABEL_FIELDTYPE."</th>\n";

@@ -25,10 +25,10 @@ define("GENERAL_SEPARATOR", "***");
 define("FALSE_RETURN_STRING", "<<FaLsE>>");
 
 # user permissions
-define("PERMISSION_CAN_VIEW", 1);
-define("PERMISSION_CANNOT_VIEW", 0);
 define("PERMISSION_CAN_EDIT", 1);
-define("PERMISSION_CANNOT_VIEW", 0);
+define("PERMISSION_CANNOT_EDIT", 0);
+define("PERMISSION_IS_ADMIN", 1);
+define("PERMISSION_ISNOT_ADMIN", 0);
 
 # this array contains all supported field types
 # this array is of the following structure

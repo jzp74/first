@@ -16,13 +16,13 @@ define("ACTION_DEL_LIST_ROW", "del_list_row");
 define("ACTION_CANCEL_LIST_ACTION", "cancel_list_action");
 
 # action permissions
-$firstthingsfirst_action_description[ACTION_GET_LIST_PAGE] = array(PERMISSION_CAN_VIEW, PERMISSION_CANNOT_EDIT);
-$firstthingsfirst_action_description[ACTION_GET_LIST_CONTENT] = array(PERMISSION_CAN_VIEW, PERMISSION_CANNOT_EDIT);
-$firstthingsfirst_action_description[ACTION_GET_LIST_ROW] = array(PERMISSION_CAN_VIEW, PERMISSION_CAN_EDIT);
-$firstthingsfirst_action_description[ACTION_UPDATE_LIST_ROW] = array(PERMISSION_CAN_VIEW, PERMISSION_CAN_EDIT);
-$firstthingsfirst_action_description[ACTION_ADD_LIST_ROW] = array(PERMISSION_CAN_VIEW, PERMISSION_CAN_EDIT);
-$firstthingsfirst_action_description[ACTION_ARCHIVE_LIST_ROW] = array(PERMISSION_CAN_VIEW, PERMISSION_CAN_EDIT);
-$firstthingsfirst_action_description[ACTION_DEL_LIST_ROW] = array(PERMISSION_CAN_VIEW, PERMISSION_CAN_EDIT);
+$firstthingsfirst_action_description[ACTION_GET_LIST_PAGE] = array(PERMISSION_CANNOT_EDIT, PERMISSION_ISNOT_ADMIN);
+$firstthingsfirst_action_description[ACTION_GET_LIST_CONTENT] = array(PERMISSION_CANNOT_EDIT, PERMISSION_ISNOT_ADMIN);
+$firstthingsfirst_action_description[ACTION_GET_LIST_ROW] = array(PERMISSION_CAN_EDIT, PERMISSION_ISNOT_ADMIN);
+$firstthingsfirst_action_description[ACTION_UPDATE_LIST_ROW] = array(PERMISSION_CAN_EDIT, PERMISSION_ISNOT_ADMIN);
+$firstthingsfirst_action_description[ACTION_ADD_LIST_ROW] = array(PERMISSION_CAN_EDIT, PERMISSION_ISNOT_ADMIN);
+$firstthingsfirst_action_description[ACTION_ARCHIVE_LIST_ROW] = array(PERMISSION_CAN_EDIT, PERMISSION_ISNOT_ADMIN);
+$firstthingsfirst_action_description[ACTION_DEL_LIST_ROW] = array(PERMISSION_CAN_EDIT, PERMISSION_ISNOT_ADMIN);
 
 # action registrations
 $xajax->registerFunction("action_get_list_page");

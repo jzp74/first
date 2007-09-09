@@ -59,8 +59,8 @@ class User
         $str = "User: id=\"".$this->get_id()."\", ";
         $str .= "name=\"".$this->get_name()."\", ";
         $str .= "times_login=\"".$this->get_times_login()."\", ";
-        $str .= "read=\"".$this->get_read()."\", ";
         $str .= "write=\"".$this->get_write()."\", ";
+        $str .= "admin=\"".$this->get_admin()."\", ";
         $str .= "list_obf=\"".$this->get_list_order_by_field()."\", ";
         $str .= "list_oasc=\"".$this->get_list_order_ascending()."\", ";
         return $str;
@@ -75,8 +75,8 @@ class User
         $query .= "_id int NOT NULL auto_increment, ";
         $query .= "_name varchar(20) NOT NULL, ";
         $query .= "_pw char(32) binary NOT NULL, ";
-        $query .= "_read int NOT NULL, ";
         $query .= "_write int NOT NULL, ";
+        $query .= "_admin int NOT NULL, ";
         $query .= "_times_login int NOT NULL, ";
         $query .= "PRIMARY KEY (_id), ";
         $query .= "UNIQUE KEY _name (_name)) ";
@@ -84,7 +84,7 @@ class User
         $result = $this->_database->query($query);
         if ($result == FALSE)
         {
-            $this->_log->error("could not create table in database for User");
+            $this->_log->error("could not create table in database for user");
             $this->_log->error("database error: ".$this->_database->get_error_str());
             return FALSE;
         }
@@ -106,15 +106,15 @@ class User
     }
 
     # getter
-    function get_read ()
-    {
-        return $_SESSION["read"];
-    }
-
-    # getter
     function get_write ()
     {
         return $_SESSION["write"];
+    }
+
+    # getter
+    function get_admin ()
+    {
+        return $_SESSION["admin"];
     }
 
     # getter
@@ -166,15 +166,15 @@ class User
     }
     
     # setter
-    function set_read ($permission)
-    {
-        $_SESSION["read"] = $permission;
-    }
-
-    # setter
     function set_write ($permission)
     {
         $_SESSION["write"] = $permission;
+    }
+
+    # setter
+    function set_admin ($permission)
+    {
+        $_SESSION["admin"] = $permission;
     }
 
     # setter
@@ -219,8 +219,8 @@ class User
         $this->set_id(USER_ID_RESET_VALUE);
         $this->set_name(USER_NAME_RESET_VALUE);
         $this->set_times_login("0");
-        $this->set_read("0");
         $this->set_write("0");
+        $this->set_admin("0");
         $this->set_login("0");
         $this->set_action(ACTION_GET_PORTAL);
         $this->set_page_title("-");
@@ -240,6 +240,8 @@ class User
     # restore user settings from database if name/password combination is valid
     function login ($name, $pw)
     {
+        global $firstthingsfirst_db_passwd;
+        
         $this->_log->debug("login (name=".$name.")");
         
         if ($this->is_login())
@@ -247,26 +249,40 @@ class User
             $this->_log->debug("user already logged in (name=".$name.")");
             return FALSE;
         }
-        
+            
+        # create user admin the first time user admin tries to login    
+        if ($name == "admin" && !$this->exists("admin"))
+        {
+            $this->_log->debug("first time login for admin");
+            if (!$this->add($name, $pw, 1, 1))
+                return FALSE;
+        }
+
         $password = md5($pw);
-        $query = "SELECT _id, _name, _pw, _read, _write, _times_login FROM ".USER_TABLE_NAME." WHERE _name=\"".$name."\"";
+        $query = "SELECT _id, _name, _pw, _write, _admin, _times_login FROM ".USER_TABLE_NAME." WHERE _name=\"".$name."\"";
         $result = $this->_database->query($query);
         $row = $this->_database->fetch($result);
+        
         if ($row != FALSE)
         {
             $db_id = $row[0];
             $db_name = $row[1];
             $db_password = $row[2];
-            $db_read = $row[3];
-            $db_write = $row[4];
+            $db_write = $row[3];
+            $db_admin = $row[4];
             $times_login = $row[5] + 1;
+            
+            # obtain admin pw from localsettings
+            if ($name == "admin")
+                $db_password = md5($firstthingsfirst_db_passwd);
+            
             if ($db_password == $password)
             {
                 # set session parameters
                 $this->set_id($db_id);
                 $this->set_name($db_name);
-                $this->set_read($db_read);
                 $this->set_write($db_write);
+                $this->set_admin($db_admin);
                 $this->set_times_login($times_login);
                 $this->set_login(1);
                 
@@ -288,7 +304,7 @@ class User
                 $this->_log->info("user logged in (name=".$name.")");
                 return TRUE;
             }
-            
+                        
             $this->_log->warn("passwords do not match (name=".$name."), user is not logged in");
         }
         
@@ -325,7 +341,7 @@ class User
     }                    
 
     # add given user with given characteristics to database
-    function add ($name, $pw, $r = 1, $w = 0)
+    function add ($name, $pw, $w = 0, $a = 0)
     {
         $password = md5($pw);
 
@@ -335,7 +351,7 @@ class User
         if (!$this->_database->table_exists(USER_TABLE_NAME))
             $this->_create_table();
 
-        $query = "INSERT INTO ".USER_TABLE_NAME." VALUES (0, \"".$name."\", \"".$password."\", ".$r.", ".$w.", 0)";
+        $query = "INSERT INTO ".USER_TABLE_NAME." VALUES (0, \"".$name."\", \"".$password."\", ".$w.", ".$a.", 0)";
         $result = $this->_database->insertion_query($query);
         if ($result == FALSE)
         {

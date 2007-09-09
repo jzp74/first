@@ -14,22 +14,11 @@ function check_preconditions ()
     
     # action descriptions
     $action = $user->get_action();
-    $can_read = $firstthingsfirst_action_descriptions[$action][0];
-    $can_write = $firstthingsfirst_action_descriptions[$action][1];
+    $can_write = $firstthingsfirst_action_descriptions[$action][0];
+    $is_admin = $firstthingsfirst_action_descriptions[$action][1];
     
-    $logging->debug("check preconditions: ".$action." (load_list=".$load_list.", can_read=".$can_read.", can_write=".$can_write.")");
-    
-    # check if read permission is required
-    if ($can_read)
-    {
-        # check if user is logged in and has read permission
-        if (!$user->is_login() || !$user->get_read())
-        {
-            action_get_login_page();
-            return FALSE;
-        }
-    }
-    
+    $logging->debug("check preconditions: ".$action." (can_write=".$can_write.". is_admin=".$is_admin.")");
+        
     # check if write permission is required
     # TODO a user with read permission needs to login when he clicks an action that needs write permission
     if ($can_write)
@@ -42,6 +31,17 @@ function check_preconditions ()
         }
     }
     
+    # check if read permission is required
+    if ($is_admin)
+    {
+        # check if user is logged in and is admin
+        if (!$user->is_login() || !$user->get_admin())
+        {
+            action_get_login_page();
+            return FALSE;
+        }
+    }
+
     $result->reset();
     
     $logging->trace("checked preconditions");

@@ -15,6 +15,7 @@ define("ERROR_NO_PASSWORD_GIVEN", "please enter a password");
 define("ERROR_INCORRECT_NAME_PASSWORD", "name/password combination incorrect<br>please enter correct name and password");
 define("ERROR_NO_TITLE_GIVEN", "please enter a name for this list");
 define("ERROR_NO_DESCRIPTION_GIVEN", "please enter a description for this list");
+define("ERROR_NOT_WELL_FORMED_STRING", "field contains one or more of the<br>following characters: \" ' * / : < > ? \ | & ; #");
 
 # database errors
 define("ERROR_DATABASE_PROBLEM", "database problem, please try again");

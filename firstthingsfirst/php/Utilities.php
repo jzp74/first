@@ -40,7 +40,14 @@ function is_well_formed_string ($field_name, $str)
 {
     global $logging;
 
-    $logging->trace("is_well_formed (field_name=".$field_name.", str=".$str.")");
+    $logging->trace("is_well_formed_string (field_name=".$field_name.", str=".$str.")");
+    
+    if (ereg ("[\"\*'/:<>?|\\&;#]+", $str))
+    {
+        $logging->warn($field_name." is not well formed");
+        
+        return FALSE_RETURN_STRING;
+    }
     
     return $str;
 }

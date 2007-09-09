@@ -9,7 +9,7 @@
 define("ACTION_GET_PORTAL_PAGE", "get_portal_page");
 
 # action permissions
-$firstthingsfirst_action_description[ACTION_GET_PORTAL_PAGE] = array(PERMISSION_CAN_VIEW, PERMISSION_CANNOT_EDIT);
+$firstthingsfirst_action_description[ACTION_GET_PORTAL_PAGE] = array(PERMISSION_CANNOT_EDIT, PERMISSION_ISNOT_ADMIN);
 
 # action registrations
 $xajax->registerFunction("action_get_portal_page");

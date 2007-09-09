@@ -60,7 +60,10 @@ function action_get_list_page ($page_title)
 
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
     $html_str .= "        <div id=\"page_title\">".$list_table_description->get_title()."</div>\n\n";
-    $html_str .= "        <div id=\"login_status\">&nbsp;</div>\n\n";
+    $html_str .= "        <div id=\"navigation_container\">\n";
+    $html_str .= "            <div id=\"navigation\">&nbsp;".get_button("xajax_action_get_portal_page()", BUTTON_PORTAL)."</div>\n";
+    $html_str .= "            <div id=\"login_status\">&nbsp;</div>&nbsp\n";
+    $html_str .= "        </div> <!-- navigation_container -->\n\n";    
     $html_str .= "        <div id=\"list_content_pane\">\n\n";
     $html_str .= "        </div> <!-- list_content_pane -->\n\n";
     $html_str .= "        <div id=\"action_pane\">\n\n";
@@ -275,10 +278,12 @@ function action_get_list_row ($key_string)
     # set the right list_table_description
     $list_table_description->select($user->get_page_title());
 
-    if (strlen($key_string))
-        $row = $list_table->select_row($key_string);
     $field_names = $list_table->get_field_names();
     $definition = $list_table_description->get_definition();
+
+    # get list row when key string has been given
+    if (strlen($key_string))
+        $row = $list_table->select_row($key_string);
 
     # start with the action bar
     if (strlen($key_string))
@@ -355,7 +360,7 @@ function action_get_list_row ($key_string)
                 elseif ($field_type == "LABEL_DEFINITION_TEXT_FIELD")
                     $html_str .= "></textarea";
                 elseif ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
-                    $html_str .= get_list_row_notes($db_field_name, $row[$db_field_name]);
+                    $html_str .= get_list_row_notes($db_field_name, array());
                 elseif ($field_type == "LABEL_DEFINITION_SELECTION")
                 {
                     $html_str .= ">";
@@ -749,19 +754,14 @@ function get_action_bar ($action)
     $html_str = "";
 
     $html_str .= "\n\n               <p>";
-
     if ($action == "edit")
-        $html_str .= "<span>".get_inactive_button(BUTTON_EDIT_ROW)."</span>&nbsp;&nbsp;";
-    else
-        $html_str .= get_inactive_button(BUTTON_EDIT_ROW)."&nbsp;&nbsp;";
-
-    if ($action == "add")
-        $html_str .= "<span>".get_inactive_button(BUTTON_ADD_ROW)."</span>&nbsp;&nbsp";
+        $html_str .= "<strong>".LABEL_EDIT_ROW."</strong>";
+    else if ($action == "add")
+        $html_str .= "<strong>".LABEL_ADD_ROW."</strong>";
     else
         $html_str .= get_button("xajax_action_get_list_row('')", BUTTON_ADD_ROW)."&nbsp;&nbsp;";
+    $html_str .= "</p>";
     
-    $html_str .= get_button("xajax_action_get_portal_page()", BUTTON_BACK)."</p>\n\n";
-
     $logging->trace("got action bar (size=".strlen($html_str).")");
     
     return $html_str;

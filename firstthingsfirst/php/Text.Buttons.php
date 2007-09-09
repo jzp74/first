@@ -5,6 +5,7 @@
 
 
 # shared buttons
+define("BUTTON_PORTAL", "back to portal");
 define("BUTTON_ARCHIVE", "archive");
 define("BUTTON_DELETE", "delete");
 define("BUTTON_ADD", "add");
@@ -16,7 +17,6 @@ define("BUTTON_DOWN", "down");
 
 # Html.List buttons
 define("BUTTON_ADD_ROW", "add row");
-define("BUTTON_EDIT_ROW", "edit row");
 
 # Html.ListBuilder buttons
 define("BUTTON_ADD_FIELD", "add field");

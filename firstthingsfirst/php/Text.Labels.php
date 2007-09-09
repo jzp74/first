@@ -24,6 +24,8 @@ define("LABEL_DEFINITION_SELECTION", "selection box");
 # Html.ListTable labels
 define("LABEL_PAGE", "page");
 define("LABEL_OF", "of");
+define("LABEL_ADD_ROW", "Enter details and commit new row");
+define("LABEL_EDIT_ROW", "Enter and commit changes");
 
 # Html.ListTableItemNote labels
 define("LABEL_NEW_NOTE", "new note");

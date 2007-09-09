@@ -53,7 +53,10 @@ function action_get_listbuilder_page ()
     $html_str = "";
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
     $html_str .= "        <div id=\"page_title\">".LABEL_CONFIGURE_NEW_LIST."</div>\n\n";
-    $html_str .= "        <div id=\"login_status\">&nbsp;</div>\n\n";
+    $html_str .= "        <div id=\"navigation_container\">\n";
+    $html_str .= "            <div id=\"navigation\">&nbsp;".get_button("xajax_action_get_portal_page()", BUTTON_PORTAL)."</div>\n";
+    $html_str .= "            <div id=\"login_status\">&nbsp;</div>&nbsp\n";
+    $html_str .= "        </div> <!-- navigation_container -->\n\n";    
     $html_str .= "        <div id=\"listbuilder_general_settings_title\">".LABEL_GENERAL_SETTINGS."</div>\n\n";        
     $html_str .= "        <div id=\"listbuilder_general_settings_pane\">\n\n";
     $html_str .= "            <table id=\"listbuilder_general_settings\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
@@ -83,8 +86,7 @@ function action_get_listbuilder_page ()
     $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
     $html_str .= "                <p>&nbsp;".get_select("add_select", "add_it", "")."\n";
     $html_str .= "                ".get_button("xajax_action_add_listbuilder_row(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'))", BUTTON_ADD_FIELD)."\n";
-    $html_str .= "                &nbsp;&nbsp;".get_button("xajax_action_create_list(document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value, xajax.getFormValues('database_definition_form'))", BUTTON_CREATE_LIST)."\n";
-    $html_str .= "                &nbsp;&nbsp;".get_button("xajax_action_get_portal_page()", BUTTON_BACK)."</p>\n";
+    $html_str .= "                &nbsp;&nbsp;".get_button("xajax_action_create_list(document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value, xajax.getFormValues('database_definition_form'))", BUTTON_CREATE_LIST)."</p>\n";
     $html_str .= "            </div> <!-- action_bar -->\n\n";    
     $html_str .= "        </div> <!-- action_pane -->\n\n";           
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";

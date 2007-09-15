@@ -73,13 +73,14 @@ class User
         $this->_log->debug("create table in database for User");
         
         $query = "CREATE TABLE ".USER_TABLE_NAME." (";
-        $query .= "_id int NOT NULL auto_increment, ";
-        $query .= "_name varchar(20) NOT NULL, ";
-        $query .= "_pw char(32) binary NOT NULL, ";
-        $query .= "_edit_list int NOT NULL, ";
-        $query .= "_create_list int NOT NULL, ";
-        $query .= "_admin int NOT NULL, ";
-        $query .= "_times_login int NOT NULL, ";
+        $query .= "_id INT NOT NULL AUTO_INCREMENT, ";
+        $query .= "_name VARCHAR(20) NOT NULL, ";
+        $query .= "_pw char(32) BINARY NOT NULL, ";
+        $query .= "_edit_list INT NOT NULL, ";
+        $query .= "_create_list INT NOT NULL, ";
+        $query .= "_admin INT NOT NULL, ";
+        $query .= "_times_login INT NOT NULL, ";
+        $query .= "_last_login DATETIME NOT NULL, ";
         $query .= "PRIMARY KEY (_id), ";
         $query .= "UNIQUE KEY _name (_name)) ";
 
@@ -269,12 +270,12 @@ class User
         if ($name == "admin" && !$this->exists("admin"))
         {
             $this->_log->debug("first time login for admin");
-            if (!$this->add($name, $pw, 1, 1))
+            if (!$this->add($name, $pw, 1, 1, 1))
                 return FALSE;
         }
 
         $password = md5($pw);
-        $query = "SELECT _id, _name, _pw, _edit_list, _create_list, _admin, _times_login FROM ".USER_TABLE_NAME." WHERE _name=\"".$name."\"";
+        $query = "SELECT _id, _name, _pw, _edit_list, _create_list, _admin, _times_login, _last_login FROM ".USER_TABLE_NAME." WHERE _name=\"".$name."\"";
         $result = $this->_database->query($query);
         $row = $this->_database->fetch($result);
         
@@ -284,9 +285,10 @@ class User
             $db_name = $row[1];
             $db_password = $row[2];
             $db_edit_list = $row[3];
-            $db_create_list = $row[3];
-            $db_admin = $row[4];
-            $times_login = $row[5] + 1;
+            $db_create_list = $row[4];
+            $db_admin = $row[5];
+            $times_login = $row[6] + 1;
+            $last_login = $row[7];
             
             # obtain admin pw from localsettings
             if ($name == "admin")
@@ -310,7 +312,7 @@ class User
                 $this->set_list_order_ascending(1);
                 
                 # update the number of times this user has logged in
-                $query = "UPDATE ".USER_TABLE_NAME." SET _times_login=\"".$times_login."\" where _name=\"".$name."\"";
+                $query = "UPDATE ".USER_TABLE_NAME." SET _times_login=\"".$times_login."\", _last_login=\"".strftime(DB_DATETIME_FORMAT)."\" where _name=\"".$name."\"";
                 $result = $this->_database->query($query);
                 if ($result == FALSE)
                 {
@@ -368,7 +370,8 @@ class User
         if (!$this->_database->table_exists(USER_TABLE_NAME))
             $this->_create_table();
 
-        $query = "INSERT INTO ".USER_TABLE_NAME." VALUES (0, \"".$name."\", \"".$password."\", ".$edit_list.", ".$is_admin.", ".$is_admin.", 0)";
+        $query = "INSERT INTO ".USER_TABLE_NAME." VALUES (0, \"".$name."\", \"".$password."\", ";
+        $query .= $edit_list.", ".$create_list.", ".$is_admin.", 0, \"".strftime(DB_DATETIME_FORMAT)."\")";
         $result = $this->_database->insertion_query($query);
         if ($result == FALSE)
         {

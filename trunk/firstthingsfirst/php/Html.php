@@ -24,6 +24,7 @@ function check_preconditions ()
     if (!$user->is_login())
     {
         action_get_login_page();
+        $logging->warn("user is not logged in (action=".$action.")");
 
         return FALSE;
     }
@@ -32,6 +33,7 @@ function check_preconditions ()
     if ($can_edit_list && !$user->get_edit_list())
     {
         action_get_login_page();
+        $logging->warn("user needs edit_list permission (action=".$action.")");
 
         return FALSE;
     }
@@ -40,6 +42,7 @@ function check_preconditions ()
     if ($can_create_list && !$user->get_create_list())
     {
         action_get_login_page();
+        $logging->warn("user needs create_list permission (action=".$action.")");
 
         return FALSE;
     }
@@ -48,6 +51,7 @@ function check_preconditions ()
     if ($is_admin && !$user->get_admin())
     {
         action_get_login_page();
+        $logging->warn("user needs admin permission (action=".$action.")");
 
         return FALSE;
     }

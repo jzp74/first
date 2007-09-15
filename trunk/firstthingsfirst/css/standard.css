@@ -229,3 +229,130 @@ html, body {
     clear: both;
     visibility: hidden;
     }
+
+/*  defines the explanation below the title for this portal */
+#portal_explanation {
+    padding: 12px auto 12px auto;
+    background-color: rgb(157, 181, 222);
+    color: rgb(255, 255, 255);
+    font-family: arial black;    
+    font-size: small;
+    font-weight: bold;
+    text-align: center;
+    }
+    
+/*  defines the pane that contains the portal overview */
+#portal_overview_pane {
+    display: inline-block;
+    float: none;
+    padding: 12px 10px 6px 10px;
+    color: rgb(0, 0, 102);
+    }
+
+/*  defines table that contains portal lists */
+#portal_overview {
+    float: none;
+    width: 100%;
+    padding: 2px 0px 2px 0px;
+    color: rgb(0, 0, 102);
+    text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    }
+
+#portal_overview tr {
+    background-color: rgb(250, 216, 216);
+    }
+    
+#portal_overview th {
+    padding: 4px 4px 4px 4px;
+    }
+
+#portal_overview td {
+    padding: 4px 4px 4px 4px;
+    vertical-align: top;
+    }
+
+#portal_overview tbody tr:hover {
+    background-color: rgb(250, 230, 230);
+    }
+
+/*  defines the pane that contains the login overview */
+#login_pane {
+    margin: 16px 10px 10px 10px;
+    text-align: center;
+    }
+
+/*  defines the login overview */
+#login_overview {
+    margin: 0px auto 0px auto;
+    padding: 10px 10px 10px 10px;
+    background-color: rgb(255, 255, 220);
+    color: rgb(0, 0, 102);
+    border: 1px solid rgb(240, 240, 200);
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    }
+    
+#login_overview td {
+    padding: 4px 4px 4px 4px;
+    vertical-align: top;
+    }
+
+#login_overview input { 
+    padding: 1px 5px 3px 5px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(240, 240, 200);
+    text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    }
+    
+/*  defines the title of the general settings pane */
+#add_user_title {
+    margin: 12px 12px 0px 12px;
+    padding: 2px 3px 2px 3px;
+    background-color: rgb(240, 240, 200);
+    color: rgb(0, 0, 102);
+    font-family: arial black;    
+    font-size: normal;
+    font-weight: normal;
+    text-align: left;
+    }
+
+/*  defines the pane that containes new user settings */    
+#add_user_pane {
+    display: inline-block;
+    float: none;
+    margin: 0px 12px 2px 12px;
+    background-color: rgb(255, 255, 220);
+    color: rgb(0, 0, 102);
+    border: 2px solid rgb(240, 240, 200);
+    }
+
+/*  defines the table that contains the general settings */    
+#add_user_definition {
+    float: none;
+    color: rgb(0, 0, 102);
+    text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    }
+
+#add_user_definition td {
+    padding: 4px 10px 4px 4px;
+    vertical-align: top;
+    }
+
+#add_user_definition input, #add_user_definition textarea { 
+    padding: 1px 5px 3px 5px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(240, 240, 200);
+    font-family: verdana;
+    font-size: small;
+    text-align: left;
+    }

@@ -33,6 +33,7 @@ $xajax = new xajax();
 require_once("php/Html.php");
 require_once("php/Html.Login.php");
 require_once("php/Html.Portal.php");
+require_once("php/Html.AddUser.php");
 require_once("php/Html.ListTable.php");
 require_once("php/Html.ListTableItemNotes.php");
 require_once("php/Html.ListBuilder.php");
@@ -70,10 +71,8 @@ $xajax->processRequests();
     
 <title><?php echo $firstthingsfirst_portal_title ?></title>
 <link rel="stylesheet" href="css/standard.css">
-<link rel="stylesheet" href="css/standard_login.css">
-<link rel="stylesheet" href="css/standard_list.css">
-<link rel="stylesheet" href="css/standard_portal.css">
 <link rel="stylesheet" href="css/standard_listbuilder.css">
+<link rel="stylesheet" href="css/standard_list.css">
 
 <?php $xajax->printJavascript("xajax"); ?>
 </head>

@@ -23,6 +23,17 @@ define("LABEL_DEFINITION_SELECTION", "selection box");
 
 # Html.AddUser labels
 define("LABEL_ADD_USER_PAGE", "Add a new user");
+define("LABEL_ADD_USER_DEFINITION", "New user definition");
+define("LABEL_ADD_USER_NAME", "name of new user");
+define("LABEL_ADD_USER_NAME_EXPLANATION", "");
+define("LABEL_ADD_USER_PASSWORD", "password of new user");
+define("LABEL_ADD_USER_PASSWORD_EXPLANATION", "");
+define("LABEL_ADD_USER_EDIT_LIST", "can edit list");
+define("LABEL_ADD_USER_EDIT_LIST_EXPLANATION", "check this box when the new user has permission to add/edit/archive/delete list entries");
+define("LABEL_ADD_USER_CREATE_LIST", "can create new list");
+define("LABEL_ADD_USER_CREATE_LIST_EXPLANATION", "check this box when the new user has permission to create a new list");
+define("LABEL_ADD_USER_ADMIN", "is admin");
+define("LABEL_ADD_USER_ADMIN_EXPLANATION", "check this box when new user has administrator permissions");
 
 # Html.ListTable labels
 define("LABEL_PAGE", "page");

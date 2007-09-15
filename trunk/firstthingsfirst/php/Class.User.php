@@ -59,7 +59,8 @@ class User
         $str = "User: id=\"".$this->get_id()."\", ";
         $str .= "name=\"".$this->get_name()."\", ";
         $str .= "times_login=\"".$this->get_times_login()."\", ";
-        $str .= "write=\"".$this->get_write()."\", ";
+        $str .= "edit_list=\"".$this->get_edit_list()."\", ";
+        $str .= "create_list=\"".$this->get_create_list()."\", ";
         $str .= "admin=\"".$this->get_admin()."\", ";
         $str .= "list_obf=\"".$this->get_list_order_by_field()."\", ";
         $str .= "list_oasc=\"".$this->get_list_order_ascending()."\", ";
@@ -75,7 +76,8 @@ class User
         $query .= "_id int NOT NULL auto_increment, ";
         $query .= "_name varchar(20) NOT NULL, ";
         $query .= "_pw char(32) binary NOT NULL, ";
-        $query .= "_write int NOT NULL, ";
+        $query .= "_edit_list int NOT NULL, ";
+        $query .= "_create_list int NOT NULL, ";
         $query .= "_admin int NOT NULL, ";
         $query .= "_times_login int NOT NULL, ";
         $query .= "PRIMARY KEY (_id), ";
@@ -106,9 +108,15 @@ class User
     }
 
     # getter
-    function get_write ()
+    function get_edit_list ()
     {
-        return $_SESSION["write"];
+        return $_SESSION["edit_list"];
+    }
+
+    # getter
+    function get_create_list ()
+    {
+        return $_SESSION["create_list"];
     }
 
     # getter
@@ -166,9 +174,15 @@ class User
     }
     
     # setter
-    function set_write ($permission)
+    function set_edit_list ($permission)
     {
-        $_SESSION["write"] = $permission;
+        $_SESSION["edit_list"] = $permission;
+    }
+
+    # setter
+    function set_create_list ($permission)
+    {
+        $_SESSION["create_list"] = $permission;
     }
 
     # setter
@@ -219,7 +233,8 @@ class User
         $this->set_id(USER_ID_RESET_VALUE);
         $this->set_name(USER_NAME_RESET_VALUE);
         $this->set_times_login("0");
-        $this->set_write("0");
+        $this->set_edit_list("0");
+        $this->set_create_list("0");
         $this->set_admin("0");
         $this->set_login("0");
         $this->set_action(ACTION_GET_PORTAL);
@@ -259,7 +274,7 @@ class User
         }
 
         $password = md5($pw);
-        $query = "SELECT _id, _name, _pw, _write, _admin, _times_login FROM ".USER_TABLE_NAME." WHERE _name=\"".$name."\"";
+        $query = "SELECT _id, _name, _pw, _edit_list, _create_list, _admin, _times_login FROM ".USER_TABLE_NAME." WHERE _name=\"".$name."\"";
         $result = $this->_database->query($query);
         $row = $this->_database->fetch($result);
         
@@ -268,7 +283,8 @@ class User
             $db_id = $row[0];
             $db_name = $row[1];
             $db_password = $row[2];
-            $db_write = $row[3];
+            $db_edit_list = $row[3];
+            $db_create_list = $row[3];
             $db_admin = $row[4];
             $times_login = $row[5] + 1;
             
@@ -281,7 +297,8 @@ class User
                 # set session parameters
                 $this->set_id($db_id);
                 $this->set_name($db_name);
-                $this->set_write($db_write);
+                $this->set_edit_list($db_edit_list);
+                $this->set_create_list($db_create_list);
                 $this->set_admin($db_admin);
                 $this->set_times_login($times_login);
                 $this->set_login(1);
@@ -341,7 +358,7 @@ class User
     }                    
 
     # add given user with given characteristics to database
-    function add ($name, $pw, $w = 0, $a = 0)
+    function add ($name, $pw, $edit_list = 0, $create_list = 0, $is_admin = 0)
     {
         $password = md5($pw);
 
@@ -351,7 +368,7 @@ class User
         if (!$this->_database->table_exists(USER_TABLE_NAME))
             $this->_create_table();
 
-        $query = "INSERT INTO ".USER_TABLE_NAME." VALUES (0, \"".$name."\", \"".$password."\", ".$w.", ".$a.", 0)";
+        $query = "INSERT INTO ".USER_TABLE_NAME." VALUES (0, \"".$name."\", \"".$password."\", ".$edit_list.", ".$is_admin.", ".$is_admin.", 0)";
         $result = $this->_database->insertion_query($query);
         if ($result == FALSE)
         {

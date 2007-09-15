@@ -11,9 +11,9 @@ define("ACTION_PREVIOUS_NOTE", "get_previous_note");
 define("ACTION_ADD_NOTE", "add_note");
 
 # action permissions
-$firstthingsfirst_action_description[ACTION_NEXT_NOTE] = array(PERMISSION_CAN_EDIT, PERMISSION_ISNOT_ADMIN);
-$firstthingsfirst_action_description[ACTION_PREVIOUS_NOTE] = array(PERMISSION_CAN_EDIT, PERMISSION_ISNOT_ADMIN);
-$firstthingsfirst_action_description[ACTION_ADD_NOTE] = array(PERMISSION_CAN_EDIT, PERMISSION_ISNOT_ADMIN);
+$firstthingsfirst_action_description[ACTION_NEXT_NOTE] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$firstthingsfirst_action_description[ACTION_PREVIOUS_NOTE] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$firstthingsfirst_action_description[ACTION_ADD_NOTE] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 
 # action registrations
 $xajax->registerFunction("action_get_previous_note");

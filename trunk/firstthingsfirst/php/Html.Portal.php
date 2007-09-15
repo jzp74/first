@@ -9,7 +9,7 @@
 define("ACTION_GET_PORTAL_PAGE", "get_portal_page");
 
 # action permissions
-$firstthingsfirst_action_description[ACTION_GET_PORTAL_PAGE] = array(PERMISSION_CANNOT_EDIT, PERMISSION_ISNOT_ADMIN);
+$firstthingsfirst_action_description[ACTION_GET_PORTAL_PAGE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 
 # action registrations
 $xajax->registerFunction("action_get_portal_page");
@@ -39,8 +39,11 @@ function action_get_portal_page ()
     $html_str .= "        <div id=\"page_title\">".$firstthingsfirst_portal_title."</div>\n\n";
     $html_str .= "        <div id=\"portal_explanation\"><em>".$firstthingsfirst_portal_intro_text."</em></div>\n\n";
     $html_str .= "        <div id=\"navigation_container\">\n";
-    $html_str .= "            <div id=\"navigation\">&nbsp;</div>\n";
-    $html_str .= "            <div id=\"login_status\">&nbsp;</div>&nbsp\n";
+    $html_str .= "            <div id=\"navigation\">";
+    if ($user->is_login() && $user->get_admin())
+        $html_str .= get_button("xajax_action_get_add_user_page()", BUTTON_ADD_USER);
+    $html_str .= "</div>\n";
+    $html_str .= "            <div id=\"login_status\">&nbsp;</div>&nbsp;\n";
     $html_str .= "        </div> <!-- navigation_container -->\n\n";    
     $html_str .= "        <div id=\"portal_overview_pane\">\n\n";
 

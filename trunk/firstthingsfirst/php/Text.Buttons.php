@@ -14,6 +14,7 @@ define("BUTTON_COMMIT", "commit");
 define("BUTTON_BACK", "back");
 define("BUTTON_UP", "&nbsp;up&nbsp;");
 define("BUTTON_DOWN", "down");
+define("BUTTON_ADD_USER", "add user");
 
 # Html.List buttons
 define("BUTTON_ADD_ROW", "add row");

@@ -21,6 +21,9 @@ define("LABEL_DEFINITION_TEXT_FIELD", "text field");
 define("LABEL_DEFINITION_NOTES_FIELD", "notes field");
 define("LABEL_DEFINITION_SELECTION", "selection box");
 
+# Html.AddUser labels
+define("LABEL_ADD_USER_PAGE", "Add a new user");
+
 # Html.ListTable labels
 define("LABEL_PAGE", "page");
 define("LABEL_OF", "of");

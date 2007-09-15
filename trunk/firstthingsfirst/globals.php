@@ -25,8 +25,10 @@ define("GENERAL_SEPARATOR", "***");
 define("FALSE_RETURN_STRING", "<<FaLsE>>");
 
 # user permissions
-define("PERMISSION_CAN_EDIT", 1);
-define("PERMISSION_CANNOT_EDIT", 0);
+define("PERMISSION_CAN_EDIT_LIST", 1);
+define("PERMISSION_CANNOT_EDIT_LIST", 0);
+define("PERMISSION_CAN_CREATE_LIST", 1);
+define("PERMISSION_CANNOT_CREATE_LIST", 0);
 define("PERMISSION_IS_ADMIN", 1);
 define("PERMISSION_ISNOT_ADMIN", 0);
 

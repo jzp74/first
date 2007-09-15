@@ -10,36 +10,46 @@ function check_preconditions ()
     global $logging;
     global $result;
     global $user;
-    global $firstthingsfirst_action_descriptions;
+    global $firstthingsfirst_action_description;
     
     # action descriptions
     $action = $user->get_action();
-    $can_write = $firstthingsfirst_action_descriptions[$action][0];
-    $is_admin = $firstthingsfirst_action_descriptions[$action][1];
+    $can_edit_list = $firstthingsfirst_action_description[$action][0];
+    $can_create_list = $firstthingsfirst_action_description[$action][1];
+    $is_admin = $firstthingsfirst_action_description[$action][2];
     
-    $logging->debug("check preconditions: ".$action." (can_write=".$can_write.". is_admin=".$is_admin.")");
-        
-    # check if write permission is required
-    # TODO a user with read permission needs to login when he clicks an action that needs write permission
-    if ($can_write)
+    $logging->debug("check preconditions: ".$action." (can_edit_list=".$can_edit_list.", can_create_list=".$can_create_list.", is_admin=".$is_admin.")");
+
+    # check if user is logged in
+    if (!$user->is_login())
     {
-        # check if user is logged in and has write permission
-        if (!$user->is_login() || !$user->get_write())
-        {
-            action_get_login_page();
-            return FALSE;
-        }
+        action_get_login_page();
+
+        return FALSE;
+    }
+        
+    # check if edit_list permission is required
+    if ($can_edit_list && !$user->get_edit_list())
+    {
+        action_get_login_page();
+
+        return FALSE;
     }
     
-    # check if read permission is required
-    if ($is_admin)
+    # check if create_list permission is required
+    if ($can_create_list && !$user->get_create_list())
     {
-        # check if user is logged in and is admin
-        if (!$user->is_login() || !$user->get_admin())
-        {
-            action_get_login_page();
-            return FALSE;
-        }
+        action_get_login_page();
+
+        return FALSE;
+    }
+
+    # check if read permission is required
+    if ($is_admin && !$user->get_admin())
+    {
+        action_get_login_page();
+
+        return FALSE;
     }
 
     $result->reset();

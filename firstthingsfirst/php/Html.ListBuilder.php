@@ -14,12 +14,12 @@ define("ACTION_REFRESH_LISTBUILDER", "action_refresh_listbuilder");
 define("ACTION_CREATE_LIST", "action_create_list");
 
 # action permissions
-$firstthingsfirst_action_description[ACTION_GET_LISTBUILDER_PAGE] = array(PERMISSION_CAN_EDIT, PERMISSION_ISNOT_ADMIN);
-$firstthingsfirst_action_description[ACTION_ADD_LISTBUILDER_ROW] = array(PERMISSION_CAN_EDIT, PERMISSION_ISNOT_ADMIN);
-$firstthingsfirst_action_description[ACTION_MOVE_LISTBUILDER_ROW] = array(PERMISSION_CAN_EDIT, PERMISSION_ISNOT_ADMIN);
-$firstthingsfirst_action_description[ACTION_DEL_LISTBUILDER_ROW] = array(PERMISSION_CAN_EDIT, PERMISSION_ISNOT_ADMIN);
-$firstthingsfirst_action_description[ACTION_REFRESH_LISTBUILDER] = array(PERMISSION_CAN_EDIT, PERMISSION_ISNOT_ADMIN);
-$firstthingsfirst_action_description[ACTION_CREATE_LIST] = array(PERMISSION_CAN_EDIT, PERMISSION_ISNOT_ADMIN);
+$firstthingsfirst_action_description[ACTION_GET_LISTBUILDER_PAGE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$firstthingsfirst_action_description[ACTION_ADD_LISTBUILDER_ROW] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$firstthingsfirst_action_description[ACTION_MOVE_LISTBUILDER_ROW] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$firstthingsfirst_action_description[ACTION_DEL_LISTBUILDER_ROW] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$firstthingsfirst_action_description[ACTION_REFRESH_LISTBUILDER] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$firstthingsfirst_action_description[ACTION_CREATE_LIST] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 
 # action registrations
 $xajax->registerFunction("action_get_listbuilder_page");

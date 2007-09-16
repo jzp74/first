@@ -52,8 +52,9 @@ function action_get_login_page ()
 
     $result->set_result_str($html_str);    
 
-    $logging->trace("pasting ".strlen($result->get_result_str())." chars to main_body");
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
+
+    $logging->trace("got login page");
 
     return $response;
 }
@@ -73,7 +74,7 @@ function action_login ($user_name, $password)
 
     if (strlen($user_name) == 0)
     {
-        $logging->warn("no user_name given");
+        $logging->warn("no user name given");
         set_error_message("user_name_id", ERROR_NO_USER_NAME_GIVEN);
 
         return $response;
@@ -89,7 +90,7 @@ function action_login ($user_name, $password)
 
     if ($user->login($user_name, $password))
     {    
-        $logging->trace("logged in");
+        $logging->debug("user is logged in");
         action_get_portal_page();
     }
     else
@@ -143,12 +144,12 @@ function get_login_status ()
     }
     else
     {
-        $logging->debug("no user is logged in");
+        $logging->warn("no user is logged in");
         $html_str .= LABEL_MINUS;
         $html_str .= "&nbsp;&nbsp;".get_button("xajax_action_get_login_page()", BUTTON_LOGIN)."&nbsp;&nbsp;";
     }
         
-    $logging->trace("get login_status (size=".strlen($html_str).")");
+    $logging->trace("got login_status");
 
     return $html_str;
 }

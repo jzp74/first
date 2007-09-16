@@ -77,7 +77,6 @@ function action_get_list_page ($page_title)
     if (!check_postconditions())
         return $reponse;
     
-    $logging->trace("pasting ".strlen($result->get_result_str())." chars to main_body");
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
 
     # set list content
@@ -87,6 +86,8 @@ function action_get_list_page ($page_title)
     set_login_status();
     set_action_bar(get_action_bar(""));
     set_footer(get_list_footer());
+
+    $logging->trace("got list page");
 
     return $response;
 }
@@ -245,8 +246,9 @@ function action_get_list_content ($order_by_field, $page)
     if (!check_postconditions())
         return $reponse;
     
-    $logging->trace("pasting ".strlen($result->get_result_str())." chars to list_content_pane");
     $response->addAssign("list_content_pane", "innerHTML", $result->get_result_str());
+
+    $logging->trace("got list content");
 
     return $response;
 }
@@ -303,8 +305,8 @@ function action_get_list_row ($key_string)
         $field_name = $field_names[$i];
         $db_field_name = $list_table->_get_db_field_name($field_names[$i]);        
         $field_type = $definition[$db_field_name][0];
-        $logging->debug("row (name=".$field_name." db_name=".$db_field_name." type=".$field_type.")");
         $field_options = $definition[$db_field_name][2];
+        $logging->debug("row (name=".$field_name." db_name=".$db_field_name." type=".$field_type.")");
         
         # replace all " chars with \"
         $row[$db_field_name] = str_replace('"', '&quot', $row[$db_field_name]);
@@ -399,8 +401,9 @@ function action_get_list_row ($key_string)
     
     $result->set_result_str($html_str);    
 
-    $logging->trace("pasting ".strlen($result->get_result_str())." chars to action_bar");
     $response->addAssign("action_bar", "innerHTML", $result->get_result_str());
+
+    $logging->trace("got list row");
 
     return $response;
 }
@@ -441,7 +444,7 @@ function action_update_list_row ($key_string, $form_values)
         $field_number = $value_array[2];
         $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][2]);
         
-        $logging->trace("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
+        $logging->debug("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
         
         # set new value to the old value
         $new_form_value = $form_values[$name_key];
@@ -518,12 +521,13 @@ function action_update_list_row ($key_string, $form_values)
     $html_str .= get_action_bar("");
     $result->set_result_str($html_str);    
 
-    $logging->trace("pasting ".strlen($result->get_result_str())." chars to action_bar");
     $response->addAssign("action_bar", "innerHTML", $result->get_result_str());
 
     # refresh list and footer
     action_get_list_content("", 0);
     set_footer(get_list_footer());
+
+    $logging->trace("updated list row");
 
     return $response;
 }
@@ -564,7 +568,7 @@ function action_add_list_row ($form_values)
         $field_number = $value_array[2];
         $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][2]);
         
-        $logging->trace("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
+        $logging->debug("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
         
         # set new value to the old value
         $new_form_value = $form_values[$name_key];
@@ -603,7 +607,7 @@ function action_add_list_row ($form_values)
                 }
             }
             else if (strlen($check_function))
-                $logging->trace("unknown check function (function=".$check_function.", $field_type=".$field_type.")"); 
+                $logging->warn("unknown check function (function=".$check_function.", $field_type=".$field_type.")"); 
         }   
 
         if ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
@@ -638,12 +642,13 @@ function action_add_list_row ($form_values)
     $html_str .= get_action_bar("");
     $result->set_result_str($html_str);    
 
-    $logging->trace("pasting ".strlen($result->get_result_str())." chars to action_bar");
     $response->addAssign("action_bar", "innerHTML", $result->get_result_str());
 
     # refresh list and footer
     action_get_list_content("", 0);
     set_footer(get_list_footer());
+
+    $logging->trace("added list row");
 
     return $response;
 }
@@ -672,12 +677,13 @@ function action_archive_list_row ($key_string)
 
     $list_table->archive($key_string);    
 
-    $logging->trace("pasting ".strlen($result->get_result_str())." chars to list_content_pane");
     $response->addAssign("list_content_pane", "innerHTML", $result->get_result_str());
 
     # refresh list and footer
     action_get_list_content("", 0);
     set_footer(get_list_footer());
+
+    $logging->trace("archived list row");
 
     return $response;
 }
@@ -706,12 +712,13 @@ function action_del_list_row ($key_string)
 
     $list_table->delete($key_string);    
 
-    $logging->trace("pasting ".strlen($result->get_result_str())." chars to list_content_pane");
     $response->addAssign("list_content_pane", "innerHTML", $result->get_result_str());
 
     # refresh list and footer
     action_get_list_content("", 0);
     set_footer(get_list_footer());
+
+    $logging->trace("archived list row");
 
     return $response;
 }
@@ -737,8 +744,9 @@ function action_cancel_list_action ()
     $html_str .= get_action_bar("");
     $result->set_result_str($html_str);    
 
-    $logging->trace("pasting ".strlen($result->get_result_str())." chars to action_bar");
     $response->addAssign("action_bar", "innerHTML", $result->get_result_str());
+
+    $logging->trace("canceled list action");
 
     return $response;
 }
@@ -762,7 +770,7 @@ function get_action_bar ($action)
         $html_str .= get_button("xajax_action_get_list_row('')", BUTTON_ADD_ROW)."&nbsp;&nbsp;";
     $html_str .= "</p>";
     
-    $logging->trace("got action bar (size=".strlen($html_str).")");
+    $logging->trace("got action bar");
     
     return $html_str;
 }

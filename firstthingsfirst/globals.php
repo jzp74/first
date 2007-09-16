@@ -38,27 +38,27 @@ define("PERMISSION_ISNOT_ADMIN", 0);
 $firstthingsfirst_field_descriptions = array(
     "LABEL_DEFINITION_NUMBER"        => array(
         "int not null",
-        "input type=text size=10 maxlength=10",
+        "input type=text size=\"10\" maxlength=\"10\"",
         "is_number"
     ),
     "LABEL_DEFINITION_AUTO_NUMBER"   => array(
         "int not null auto_increment",
-        "input type=text size=10 maxlength=10 readonly",
+        "input type=text size=\"10\" maxlength=\"10\" readonly",
         "is_number"
     ),
     "LABEL_DEFINITION_DATE"          => array(
         "date",
-        "input type=text size=10 maxlength=10",
+        "input type=text size=\"10\" maxlength=\"10\"",
         "is_not_empty is_date"
     ),
     "LABEL_DEFINITION_AUTO_DATE"     => array(
         "date",
-        "input type=text size=10 maxlength=10 readonly",
+        "input type=text size=\"10\" maxlength=\"10\" readonly",
         "is_date"
     ),
     "LABEL_DEFINITION_TEXT_LINE"     => array(
         "tinytext not null",
-        "input type=text size=40",
+        "input type=text size=\"40\" maxlenght=\"100\"",
         "",
     ),
     "LABEL_DEFINITION_TEXT_FIELD"    => array(

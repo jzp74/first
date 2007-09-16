@@ -114,6 +114,8 @@ class ListTable
         $month = intval($date_parts[1]);
         $day = intval($date_parts[2]);
         
+        $this->_log->trace("checking date (date_str=".$date_str.")");
+        
         if (!checkdate($month, $day, $year))
             return FALSE;
         
@@ -221,6 +223,8 @@ class ListTable
     # reset attributes to standard values
     function reset ()
     {
+        $this->_log->trace("resetting ListTable");
+
         $this->table_name = LISTTABLE_EMPTY;
         $this->field_names = array();
         $this->db_field_names = array();
@@ -283,6 +287,8 @@ class ListTable
     {
         global $firstthingsfirst_field_descriptions;
         
+        $this->_log->trace("creating TableList (table=".$this->table_name.")");
+
         if ($this->_database->table_exists($this->table_name))
         {
             if ($force)
@@ -301,13 +307,12 @@ class ListTable
             }
             else
             {
-                $this->_log->debug("table (table=".$this->table_name.") already exists and (force=FALSE)");
+                $this->_log->warn("table (table=".$this->table_name.") already exists and (force=FALSE)");
                 
                 return TRUE;
             }
         }
 
-        $this->_log->debug("creating TableList (table=".$this->table_name.")");
         $query = "CREATE TABLE ".$this->table_name."(";
         foreach ($this->db_field_names as $db_field_name)
         {
@@ -336,7 +341,7 @@ class ListTable
             return FALSE;
         }
         
-        $this->_log->info("created TableList (table=".$this->table_name.")");
+        $this->_log->info("created table");
         
         return TRUE;
     }
@@ -354,7 +359,7 @@ class ListTable
         $definition = $this->_list_table_description->get_definition();
         $db_field_names = $this->get_db_field_names();
 
-        $this->_log->debug("read ListTable (order_by_field=".$order_by_field.", page=".$page.", archived=".$archived.")");
+        $this->_log->trace("selecting ListTable (order_by_field=".$order_by_field.", page=".$page.", archived=".$archived.")");
 
         if (!$this->_database->table_exists($this->table_name))
         {
@@ -404,7 +409,7 @@ class ListTable
             $this->total_pages = floor($total_pages_array[0]/$firstthingsfirst_list_page_entries);
             if (($total_pages_array[0]%$firstthingsfirst_list_page_entries) != 0)
                 $this->total_pages  += 1;
-            $this->_log->debug("total_pages=".$this->total_pages);
+            $this->_log->debug("found total pages (total_pages=".$this->total_pages.")");
         }
         else 
         {
@@ -463,12 +468,10 @@ class ListTable
         $rows_with_notes = array();       
         foreach($rows as $row)
         {
-            $this->_log->debug("getting notes for row (id=".$row[DB_ID_FIELD_NAME].")");
             foreach($note_fields_array as $note_field)
             {
                 if ($row[$note_field] > 0)
                 {
-                    $this->_log->trace("getting notes (field=".$note_field.")");
                     $result = $this->_list_table_item_notes->select($row[DB_ID_FIELD_NAME], $note_field);
                     if (count($result) == 0 || count($result) != $row[$note_field])
                     {
@@ -486,7 +489,7 @@ class ListTable
 
         $this->current_page = $page;
 
-        $this->_log->info("read ListTable (from=".$limit_from.")");
+        $this->_log->trace("read ListTable (from=".$limit_from.")");
     
         return $rows_with_notes;
     }
@@ -497,7 +500,7 @@ class ListTable
         $definition = $this->_list_table_description->get_definition();
         $db_field_names = $this->get_db_field_names();
 
-        $this->_log->debug("read ListTable row (key_string=".$key_string.")");
+        $this->_log->trace("selecting ListTable row (key_string=".$key_string.")");
 
         if (!$this->_database->table_exists($this->table_name))
         {
@@ -521,12 +524,11 @@ class ListTable
                 # get notes
                 foreach($db_field_names as $db_field_name)
                 {
-                    $this->_log->trace("field=".$db_field_name.", def=".$definition[$db_field_name][0].", val=".$row[$db_field_name].")");
+                    $this->_log->debug("field=".$db_field_name.", def=".$definition[$db_field_name][0].", val=".$row[$db_field_name].")");
                     if ($definition[$db_field_name][0] == "LABEL_DEFINITION_NOTES_FIELD")
                     {
                         if ($row[$db_field_name] > 0)
                         {
-                            $this->_log->trace("getting notes (field=".$db_field_name.")");
                             $result = $this->_list_table_item_notes->select($row[DB_ID_FIELD_NAME], $db_field_name);
                             if (count($result) == 0 || count($result) != $row[$db_field_name])
                             {
@@ -540,7 +542,7 @@ class ListTable
                             $row[$db_field_name] = array();
                     }
                 }
-                $this->_log->info("read ListTable row");
+                $this->_log->trace("read ListTable row");
                 
                 return $row;
             }
@@ -571,8 +573,7 @@ class ListTable
         $definition = $this->_list_table_description->get_definition();
         $all_notes_array = array();
         
-        $this->_log->debug("add entry to ListTable");
-        $this->_log->log_array($name_values, "name_values");
+        $this->_log->debug("inserting into ListTable");
 
         if (!$this->_database->table_exists($this->table_name))
         {
@@ -649,7 +650,7 @@ class ListTable
         # update list table description (date modified)
         $this->_list_table_description->update();
 
-        $this->_log->info("added entry to ListTable");
+        $this->_log->trace("inserted into ListTable");
         
         return TRUE;
     }
@@ -662,8 +663,7 @@ class ListTable
         $definition = $this->_list_table_description->get_definition();
         $all_notes_array = array();
 
-        $this->_log->debug("update entry of ListTable (key_string=".$key_string.")");
-        $this->_log->log_array($name_values, "name_values");        
+        $this->_log->trace("updating ListTable (key_string=".$key_string.")");
         
         if (!$this->_database->table_exists($this->table_name))
         {
@@ -763,7 +763,7 @@ class ListTable
         # update list table description (date modified)
         $this->_list_table_description->update();
 
-        $this->_log->info("updated entry of ListTable");
+        $this->_log->trace("updated entry of ListTable");
         
         return TRUE;
     }
@@ -774,7 +774,7 @@ class ListTable
         $definition = $this->_list_table_description->get_definition();
         $field_names = $this->get_field_names();
         
-        $this->_log->debug("archive entry from ListTable (key_string=".$key_string.")");
+        $this->_log->trace("archiving from ListTable (key_string=".$key_string.")");
 
         if (!$this->_database->table_exists($this->table_name))
         {
@@ -806,7 +806,7 @@ class ListTable
             return FALSE;
         }
 
-        $this->_log->info("archived entry from ListTable");
+        $this->_log->trace("archived from ListTable");
         
         return TRUE;
     }
@@ -817,7 +817,7 @@ class ListTable
         $definition = $this->_list_table_description->get_definition();
         $field_names = $this->get_field_names();
         
-        $this->_log->debug("delete entry from ListTable (key_string=".$key_string.")");
+        $this->_log->trace("deleting from ListTable (key_string=".$key_string.")");
 
         if (!$this->_database->table_exists($this->table_name))
         {
@@ -855,7 +855,7 @@ class ListTable
         # update list table description (date modified)
         $this->_list_table_description->update();
 
-        $this->_log->info("deleted entry to ListTable");
+        $this->_log->trace("deleted from ListTable");
         
         return TRUE;
     }

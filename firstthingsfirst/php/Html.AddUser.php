@@ -83,11 +83,7 @@ function action_get_add_user_page ()
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
     
     $result->set_result_str($html_str);   
-    
-    if (!check_postconditions())
-        return $reponse;
-    
-    $logging->trace("pasting ".strlen($result->get_result_str())." chars to main_body");
+        
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
 
     set_login_status();
@@ -122,7 +118,6 @@ function action_add_user ($definition)
         $create_list = 0;
 
     $logging->info("ACTION: add user (name=".$name.", edit_list=".$edit_list.", create_list=".$create_list.")");
-    $logging->log_array($definition, "definition");
 
     $user->set_action(ACTION_ADD_USER);
     
@@ -156,9 +151,9 @@ function action_add_user ($definition)
     }
 
     if (!$user->add($name, $pw, $edit_list, $create_list))
-        $logging->warn("could not create user");
+        $logging->warn("could not add user");
     else
-        $logging->debug("created user");
+        $logging->debug("added new user");
 
     action_get_portal_page();
 

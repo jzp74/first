@@ -31,7 +31,7 @@ function action_get_previous_note ($this_id, $previous_id)
     global $user;
     global $response;
     
-    $logging->debug("ACTION: get previous note");
+    $logging->info("ACTION: get previous note (this_id=".$this_id.", previous_id=".$previous_id.")");
 
     # hide the current note
     $response->addAssign($this_id, "className", "invisible_collapsed");
@@ -54,7 +54,7 @@ function action_get_next_note ($this_id, $next_id)
     global $user;
     global $response;
     
-    $logging->debug("ACTION: get next note");
+    $logging->info("ACTION: get next note (this_id=".$this_id.", next_id=".$next_id.")");
     
     # hide the current note
     $response->addAssign($this_id, "className", "invisible_collapsed");
@@ -78,7 +78,7 @@ function action_add_note ($db_field_name, $this_id)
     $this_td_id = $db_field_name."_".$this_id;
     $next_td_id = $db_field_name."_0";
     
-    $logging->debug("ACTION: add note");
+    $logging->info("ACTION: add note (db_field_name=".$db_field_name.", this_id=".$this_id.")");
 
     # change the link of this_id from 'add' to 'next'
     $next_html_str = get_button("xajax_action_get_next_note('".$this_td_id."', '".$next_td_id."')", BUTTON_NEXT_NOTE);

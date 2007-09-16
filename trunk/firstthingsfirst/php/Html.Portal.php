@@ -64,7 +64,6 @@ function action_get_portal_page ()
     if (!check_postconditions())
         return $reponse;
     
-    $logging->trace("pasting ".strlen($result->get_result_str())." chars to main_body");
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
 
     set_login_status();
@@ -127,7 +126,7 @@ function get_list_tables ()
     
     $result->set_result_str($html_str);    
 
-    $logging->trace("got list_tables (size=".strlen($html_str).")");
+    $logging->trace("got list_tables");
     return;
 }
 

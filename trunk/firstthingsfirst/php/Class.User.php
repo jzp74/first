@@ -67,35 +67,6 @@ class User
         return $str;
     }
 
-    # create the database table that contains all users
-    function _create_table ()
-    {
-        $this->_log->debug("create table in database for User");
-        
-        $query = "CREATE TABLE ".USER_TABLE_NAME." (";
-        $query .= "_id INT NOT NULL AUTO_INCREMENT, ";
-        $query .= "_name VARCHAR(20) NOT NULL, ";
-        $query .= "_pw char(32) BINARY NOT NULL, ";
-        $query .= "_edit_list INT NOT NULL, ";
-        $query .= "_create_list INT NOT NULL, ";
-        $query .= "_admin INT NOT NULL, ";
-        $query .= "_times_login INT NOT NULL, ";
-        $query .= "_last_login DATETIME NOT NULL, ";
-        $query .= "PRIMARY KEY (_id), ";
-        $query .= "UNIQUE KEY _name (_name)) ";
-
-        $result = $this->_database->query($query);
-        if ($result == FALSE)
-        {
-            $this->_log->error("could not create table in database for user");
-            $this->_log->error("database error: ".$this->_database->get_error_str());
-            return FALSE;
-        }
-        
-        $this->_log->info("created table: ".USER_TABLE_NAME);
-        return TRUE;
-    }
-
     # getter
     function get_id ()
     {
@@ -231,6 +202,8 @@ class User
     # reset attributes to standard values
     function reset ()
     {
+        $this->_log->trace("resetting User");
+
         $this->set_id(USER_ID_RESET_VALUE);
         $this->set_name(USER_NAME_RESET_VALUE);
         $this->set_times_login("0");
@@ -242,6 +215,36 @@ class User
         $this->set_page_title("-");
         $this->set_list_order_by_field("");
         $this->set_list_order_ascending(1);
+    }
+
+    # create the database table that contains all users
+    function create ()
+    {
+        $this->_log->trace("creating User (table=".USER_TABLE_NAME.")");
+        
+        $query = "CREATE TABLE ".USER_TABLE_NAME." (";
+        $query .= "_id INT NOT NULL AUTO_INCREMENT, ";
+        $query .= "_name VARCHAR(20) NOT NULL, ";
+        $query .= "_pw char(32) BINARY NOT NULL, ";
+        $query .= "_edit_list INT NOT NULL, ";
+        $query .= "_create_list INT NOT NULL, ";
+        $query .= "_admin INT NOT NULL, ";
+        $query .= "_times_login INT NOT NULL, ";
+        $query .= "_last_login DATETIME NOT NULL, ";
+        $query .= "PRIMARY KEY (_id), ";
+        $query .= "UNIQUE KEY _name (_name)) ";
+
+        $result = $this->_database->query($query);
+        if ($result == FALSE)
+        {
+            $this->_log->error("could not create table in database for user");
+            $this->_log->error("database error: ".$this->_database->get_error_str());
+            return FALSE;
+        }
+        
+        $this->_log->trace("created table");
+
+        return TRUE;
     }
 
     # check if user is really logged in
@@ -258,18 +261,18 @@ class User
     {
         global $firstthingsfirst_db_passwd;
         
-        $this->_log->debug("login (name=".$name.")");
+        $this->_log->trace("log in (name=".$name.")");
         
         if ($this->is_login())
         {
-            $this->_log->debug("user already logged in (name=".$name.")");
+            $this->_log->warn("user already logged in (name=".$name.")");
             return FALSE;
         }
             
         # create user admin the first time user admin tries to login    
         if ($name == "admin" && !$this->exists("admin"))
         {
-            $this->_log->debug("first time login for admin");
+            $this->_log->info("first time login for admin");
             if (!$this->add($name, $pw, 1, 1, 1))
                 return FALSE;
         }
@@ -321,6 +324,7 @@ class User
                 }
                 
                 $this->_log->info("user logged in (name=".$name.")");
+                
                 return TRUE;
             }
                         
@@ -335,6 +339,8 @@ class User
     {
         $name = $this->get_name();
         
+        $this->_log->trace("log out");
+        
         $this->reset();
 
         $this->_log->info("user logged out (name=".$name.")");        
@@ -346,6 +352,9 @@ class User
         $query = "SELECT _name FROM ".USER_TABLE_NAME." WHERE _name=\"".$name."\"";
         $result = $this->_database->query($query);
         $row = $this->_database->fetch($result);
+        
+        $this->_log->trace("checking if user exists (name=".$name.")");
+        
         if ($row != FALSE)
         {
             if ($row[0] == $name)
@@ -364,11 +373,11 @@ class User
     {
         $password = md5($pw);
 
-        $this->_log->debug("add user (name=".$name.")");
+        $this->_log->trace("add user (name=".$name.")");
         
         # create table if it does not yet exists
         if (!$this->_database->table_exists(USER_TABLE_NAME))
-            $this->_create_table();
+            $this->create();
 
         $query = "INSERT INTO ".USER_TABLE_NAME." VALUES (0, \"".$name."\", \"".$password."\", ";
         $query .= $edit_list.", ".$create_list.", ".$is_admin.", 0, \"".strftime(DB_DATETIME_FORMAT)."\")";
@@ -381,6 +390,7 @@ class User
         }
         
         $this->_log->info("user added (name=".$name.")");
+        
         return TRUE;
     }
 }

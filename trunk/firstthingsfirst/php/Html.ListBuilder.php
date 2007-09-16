@@ -96,7 +96,6 @@ function action_get_listbuilder_page ()
     if (!check_postconditions())
         return $reponse;
     
-    $logging->trace("pasting ".strlen($result->get_result_str())." chars to main_body");
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
 
     set_login_status();
@@ -134,8 +133,9 @@ function action_add_listbuilder_row ($field_type, $definition)
     if (!check_postconditions())
         return $reponse;
     
-    $logging->trace("pasting ".strlen($result->get_result_str())." chars to listbuilder_definition_pane");
     $response->addAssign("listbuilder_definition_pane", "innerHTML", $result->get_result_str());
+
+    $logging->trace("added listbuilder row");
 
     return $response;
 }
@@ -195,8 +195,9 @@ function action_move_listbuilder_row ($row_number, $direction, $definition)
     if (!check_postconditions())
         return $reponse;
     
-    $logging->trace("pasting ".strlen($result->get_result_str())." chars to listbuilder_definition_pane");
     $response->addAssign("listbuilder_definition_pane", "innerHTML", $result->get_result_str());
+
+    $logging->trace("moved listbuilder row");
 
     return $response;
 }
@@ -235,8 +236,9 @@ function action_del_listbuilder_row ($row_number, $definition)
     if (!check_postconditions())
         return $reponse;
     
-    $logging->trace("pasting ".strlen($result->get_result_str())." chars to listbuilder_definition_pane");
     $response->addAssign("listbuilder_definition_pane", "innerHTML", $result->get_result_str());
+
+    $logging->trace("deleted listbuilder row");
 
     return $response;
 }
@@ -264,8 +266,9 @@ function action_refresh_listbuilder ($definition)
     if (!check_postconditions())
         return $reponse;
     
-    $logging->trace("pasting ".strlen($result->get_result_str())." chars to listbuilder_definition_pane");
     $response->addAssign("listbuilder_definition_pane", "innerHTML", $result->get_result_str());
+
+    $logging->trace("refreshed listbuilder");
 
     return $response;
 }
@@ -423,11 +426,10 @@ function get_field_definition_table ($definition)
     global $list_table_description;
 
     $logging->trace("getting field definition table");
-    $logging->log_array($definition, "definition");
 
-    $input_html_name = "<input type=text size=16 maxlength=16 class=\"input_box\"";
-    $input_html_value = "<input type=text size=20 maxlength=100 class=\"input_box\"";
-    $input_html_value_invisible = "<input style=\"visibility: hidden;\" type=text size=20 maxlength=100";
+    $input_html_name = "<input type=text size=\"16\" maxlength=\"16\" class=\"input_box\"";
+    $input_html_value = "<input type=text size=\"20\" maxlength=\"100\" class=\"input_box\"";
+    $input_html_value_invisible = "<input style=\"visibility: hidden;\" type=text size=\"20\" maxlength=\"100\"";
     $html_str = "";    
     
     $html_str .= "\n\n            <form id=\"database_definition_form\">\n";
@@ -450,7 +452,7 @@ function get_field_definition_table ($definition)
         $position_name = ($row * 3) + 1;
         $position_options = ($row * 3) + 2;
         
-        $logging->trace("row ".$row." (type=".$definition[$position_type].", name=".$definition[$position_name].", opt=".$definition[$position_options].")");
+        $logging->debug("row ".$row." (type=".$definition[$position_type].", name=".$definition[$position_name].", opt=".$definition[$position_options].")");
 
         # the first column - type
         if ($row == 0)
@@ -505,7 +507,8 @@ function get_field_definition_table ($definition)
     
     $result->set_result_str($html_str);   
     
-    $logging->trace("got field definition table (size=".strlen($html_str).")");
+    $logging->trace("got field definition table");
+
     return;
 }
 

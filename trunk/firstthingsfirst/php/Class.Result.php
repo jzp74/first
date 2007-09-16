@@ -71,6 +71,8 @@ class Result
     # reset values of this object
     function reset ()
     {
+        $this->_log->trace("resetting Result");
+
         $this->error_str = "";
         $this->error_element = "";
         $this->result_str = "";

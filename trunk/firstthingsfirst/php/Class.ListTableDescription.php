@@ -193,6 +193,8 @@ class ListTableDescription
     # reset attributes to standard values
     function reset ()
     {
+        $this->_log->trace("resetting ListTableDescription");
+
         $this->id = -1;
         $this->title = "empty";
         $this->description = "nothing";
@@ -214,7 +216,7 @@ class ListTableDescription
     # TODO ensure title cannot be given names > 100 chars
     function create ()
     {
-        $this->_log->debug("create table in database for ListTableDescriptions");
+        $this->_log->creating("creating table for ListTableDescriptions (table=".LISTTABLEDESCRIPTION_TABLE_NAME.")");
         
         $query = "CREATE TABLE ".LISTTABLEDESCRIPTION_TABLE_NAME." (";
         $query .= DB_ID_FIELD_NAME." INT NOT NULL AUTO_INCREMENT, ";
@@ -231,12 +233,13 @@ class ListTableDescription
         $result = $this->_database->query($query);
         if ($result == FALSE)
         {
-            $this->_log->error("could not create table in database for ListTableDescriptions");
+            $this->_log->error("could not create table");
             $this->_log->error("database error: ".$this->_database->get_error_str());
             return FALSE;
         }
         
-        $this->_log->info("created table: ".LISTTABLEDESCRIPTION_TABLE_NAME);
+        $this->_log->info("created table");
+        
         return TRUE;
     }
 
@@ -244,11 +247,11 @@ class ListTableDescription
     # call set function of list_table
     function select ($title)
     {
-        $this->_log->debug("read ListTableDescription (title=".$title.") from database");
+        $this->_log->debug("selecting ListTableDescription (title=".$title.")");
         
         if (!$this->_database->table_exists(LISTTABLEDESCRIPTION_TABLE_NAME))
         {
-            $this->_log->error("table: ".LISTTABLEDESCRIPTION_TABLE_NAME." does not exist");
+            $this->_log->error("table does not exist in database (table=".LISTTABLEDESCRIPTION_TABLE_NAME.")");
             $this->error_str = ERROR_DATABASE_PROBLEM;
             
             return FALSE;
@@ -276,7 +279,7 @@ class ListTableDescription
             # TODO this must be solved differently
             $this->_user->set_page_title($this->title);
                 
-            $this->_log->info("read ListTableDescription (title=\"".$this->title."\")");
+            $this->_log->trace("selected ListTableDescription (title=\"".$this->title."\")");
             
             # initialise list_table
             $this->_list_table->set();
@@ -295,9 +298,7 @@ class ListTableDescription
     # TODO do something with double titles: "database error: Duplicate entry"
     function insert ()
     {
-        $query = "";
-        
-        $this->_log->debug("insert current ListTableDescription");
+        $this->_log->trace("inserting ListTableDescription");
         
         # create table if it does not yet exists
         if (!$this->_database->table_exists(LISTTABLEDESCRIPTION_TABLE_NAME))
@@ -309,7 +310,7 @@ class ListTableDescription
         $this->set_modifier();
         $this->set_modified();
 
-        $query .= "INSERT INTO ".LISTTABLEDESCRIPTION_TABLE_NAME." VALUES (";
+        $query = "INSERT INTO ".LISTTABLEDESCRIPTION_TABLE_NAME." VALUES (";
         $query .= "0, ";
         $query .= "\"".$this->title."\", ";
         $query .= "\"".$this->description."\", ";
@@ -342,7 +343,7 @@ class ListTableDescription
             return FALSE;
         }
         
-        $this->_log->info("inserted ListTableDescription (title=".$this->title.")");
+        $this->_log->trace("inserted ListTableDescription (title=".$this->title.")");
         
         return TRUE;
     }
@@ -350,13 +351,11 @@ class ListTableDescription
     # update ListTableDescription in database
     function update ()
     {
-        $query = "";
-        
-        $this->_log->debug("update current ListTableDescription in database");
+        $this->_log->trace("updating ListTableDescription");
         
         if (!$this->_database->table_exists(LISTTABLEDESCRIPTION_TABLE_NAME))
         {
-            $this->_log->error("table: ".LISTTABLEDESCRIPTION_TABLE_NAME." does not exist");
+            $this->_log->error("table does not exist in database (table=".LISTTABLEDESCRIPTION_TABLE_NAME.")");
             $this->error_str = ERROR_DATABASE_PROBLEM;
             
             return FALSE;
@@ -366,7 +365,7 @@ class ListTableDescription
         $this->set_modifier();
         $this->set_modified();
                        
-        $query .= "UPDATE ".LISTTABLEDESCRIPTION_TABLE_NAME." SET ";
+        $query = "UPDATE ".LISTTABLEDESCRIPTION_TABLE_NAME." SET ";
         $query .= "_title=\"".$this->title."\", ";
         $query .= "_description=\"".$this->description."\", ";
         $query .= "_definition=\"".$this->definition."\", ";
@@ -384,7 +383,7 @@ class ListTableDescription
             return FALSE;
         }
         
-        $this->_log->info("updated ListTableDescription (title=".$this->title.")");
+        $this->_log->trace("updated ListTableDescription (title=".$this->title.")");
         
         return TRUE;
     }
@@ -395,41 +394,43 @@ class ListTableDescription
     # TODO delete all ListTableItemNotes
     function delete ()
     {
-        $this->_log->trace("delete ListTableDescription from database (title=".$this->title.")");
+        $this->_log->trace("deleting ListTableDescription from database (title=".$this->title.")");
         
-        if ($this->_database->table_exists(LISTTABLEDESCRIPTION_TABLE_NAME))
+        if (!$this->_database->table_exists(LISTTABLEDESCRIPTION_TABLE_NAME))
         {
-            $query = "DELETE FROM ".LISTTABLEDESCRIPTION_TABLE_NAME." WHERE _title=\"".$this->title."\"";
+            $this->_log->error("table does not exist in database (table=".LISTTABLEDESCRIPTION_TABLE_NAME.")");
+            $this->error_str = ERROR_DATABASE_PROBLEM;
             
-            $result = $this->_database->query($query);
-            if ($result == FALSE)
-            {
-                $this->_log->error("could not delete ListTableDescription from database");
-                $this->_log->error("database error: ".$this->_database->get_error_str());
-                $this->error_str = ERROR_DATABASE_PROBLEM;
-        
-                return FALSE;
-            }
-            
-            $this->_list_table->set();
-            $result = $this->_list_table->drop();
-            if ($result == FALSE)
-            {
-                $this->_log->error("could not delete ListTable");
-                $this->error_str = $this->get_error_str();
-                
-                return FALSE;
-            }
-                        
-            $this->_log->debug("deleted ListTableDescription (title=".$this->title.")");
-            return TRUE;
-        }
-        else
-        {
-            $this->_log->error("ListTableDescription does not exist in database");
             return FALSE;
         }
+            
+        $query = "DELETE FROM ".LISTTABLEDESCRIPTION_TABLE_NAME." WHERE _title=\"".$this->title."\"";
+            
+        $result = $this->_database->query($query);
+        if ($result == FALSE)
+        {
+            $this->_log->error("could not delete ListTableDescription from database");
+            $this->_log->error("database error: ".$this->_database->get_error_str());
+            $this->error_str = ERROR_DATABASE_PROBLEM;
+        
+            return FALSE;
+        }
+            
+        $this->_list_table->set();
+        $result = $this->_list_table->drop();
+        if ($result == FALSE)
+        {
+            $this->_log->error("could not delete ListTable");
+            $this->error_str = $this->get_error_str();
+                
+            return FALSE;
+        }
+                        
+        $this->_log->trace("deleted ListTableDescription (title=".$this->title.")");
+
+        return TRUE;
     }
+    
 }
 
 ?>

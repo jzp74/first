@@ -18,7 +18,7 @@ function check_preconditions ()
     $can_create_list = $firstthingsfirst_action_description[$action][1];
     $is_admin = $firstthingsfirst_action_description[$action][2];
     
-    $logging->debug("check preconditions: ".$action." (can_edit_list=".$can_edit_list.", can_create_list=".$can_create_list.", is_admin=".$is_admin.")");
+    $logging->trace("check preconditions: ".$action." (can_edit_list=".$can_edit_list.", can_create_list=".$can_create_list.", is_admin=".$is_admin.")");
 
     # check if user is logged in
     if (!$user->is_login())
@@ -73,7 +73,7 @@ function check_postconditions ()
     # action description
     $action = $user->get_action();
     
-    $logging->debug("check postconditions: ".$action);
+    $logging->trace("check postconditions: ".$action);
     
     #check if an error is set
     if ($result->get_error_str())
@@ -96,12 +96,12 @@ function set_error_message ($error_element, $error_str)
     global $logging;
     global $response;
     
-    $logging->debug("set error (element=".$error_element.")");
+    $logging->trace("set error (element=".$error_element.")");
     
     $response->addRemove("error_message");
     $response->addAppend($error_element, "innerHTML", "<p id=\"error_message\" style=\"color: red;\"><em>".$error_str."</em></p>");
     
-    $logging->debug("set error message (element=".$error_element.")");        
+    $logging->trace("set error message (element=".$error_element.")");        
 }
 
 # get html for an active button

@@ -82,8 +82,6 @@ class ListTableItemNotes
 
         $this->list_table_description_id = "-";
         $this->error_str = "";
-
-        $this->_log->trace("reset ListTableItemNotes");
     }
 
     # set attributes
@@ -93,11 +91,7 @@ class ListTableItemNotes
         $this->_log->trace("setting ListTableItemNotes");
 
         if ($this->_list_table_description->is_valid())
-        {
             $this->list_table_description_id = $this->_list_table_description->get_id();
-         
-            $this->_log->trace("set ListTableItemNotes");
-        }
         else
             $this->reset();       
     }
@@ -114,7 +108,7 @@ class ListTableItemNotes
     # create the database table that contains all ListTableItemNotes
     function create ()
     {
-        $this->_log->trace("create table in database for ListTableItemNotes");
+        $this->_log->trace("creating table for ListTableItemNotes (table=".LISTTABLEITEMRENOTES_TABLE_NAME.")");
         
         $query = "CREATE TABLE ".LISTTABLEITEMRENOTES_TABLE_NAME." (";
         $query .= DB_ID_FIELD_NAME." INT NOT NULL AUTO_INCREMENT, ";
@@ -137,7 +131,7 @@ class ListTableItemNotes
             return FALSE;
         }
         
-        $this->_log->debug("created table: ".LISTTABLEITEMRENOTES_TABLE_NAME);
+        $this->_log->trace("created table");
         
         return TRUE;
     }
@@ -145,11 +139,11 @@ class ListTableItemNotes
     # select all notes
     function select ($list_table_item_id, $list_table_item_field)
     {
-        $this->_log->trace("select ListTableItemNotes");
+        $this->_log->trace("selecting ListTableItemNotes (list_table_item_id=".$list_table_item_id.", list_table_item_field=".$list_table_item_field.")");
         
         if (!$this->_database->table_exists(LISTTABLEITEMRENOTES_TABLE_NAME))
         {
-            $this->_log->error("table: ".LISTTABLEITEMRENOTES_TABLE_NAME." does not exist");
+            $this->_log->error("table does not exist in database (table=".LISTTABLEITEMRENOTES_TABLE_NAME.")");
             $this->error_str = ERROR_DATABASE_PROBLEM;
             
             return array();
@@ -195,7 +189,7 @@ class ListTableItemNotes
     # insert a note
     function insert ($list_table_item_id, $list_table_item_field, $note)
     {
-        $this->_log->trace("insert ListTableItemNotes (list_table_item_id=".$list_table_item_id.", list_table_item_field=".$list_table_item_field.")");
+        $this->_log->trace("inserting ListTableItemNotes (list_table_item_id=".$list_table_item_id.", list_table_item_field=".$list_table_item_field.")");
         
         if (!$this->is_valid())
         {
@@ -208,8 +202,6 @@ class ListTableItemNotes
             $this->create();
         
         # insert ListTableItemNotes in database            
-        $this->_log->debug("insert ListTableItemNote in database");
-   
         $query .= "INSERT INTO ".LISTTABLEITEMRENOTES_TABLE_NAME." VALUES (";
         $query .= "0, ";
         $query .= "\"".$this->list_table_description_id."\", ";
@@ -239,11 +231,11 @@ class ListTableItemNotes
     # update a note
     function update ($list_table_item_id, $list_table_item_field, $note_id, $note)
     {
-        $this->_log->trace("update ListTableItemNotes (list_table_item_id=".$list_table_item_id.", list_table_item_field=".$list_table_item_field.")");
+        $this->_log->trace("updating ListTableItemNotes (list_table_item_id=".$list_table_item_id.", list_table_item_field=".$list_table_item_field.")");
         
         if (!$this->_database->table_exists(LISTTABLEITEMRENOTES_TABLE_NAME))
         {
-            $this->_log->error("table: ".LISTTABLEITEMRENOTES_TABLE_NAME." does not exist");
+            $this->_log->error("table does not exist in database (table=".LISTTABLEITEMRENOTES_TABLE_NAME.")");
             $this->error_str = ERROR_DATABASE_PROBLEM;
             
             return array();
@@ -256,8 +248,6 @@ class ListTableItemNotes
             return array();
         }
         
-        $this->_log->debug("update ListTableItemNote in database");
-               
         $query .= "UPDATE ".LISTTABLEITEMRENOTES_TABLE_NAME." SET ";
         $query .= "_list_table_description_id=\"".$this->list_table_description_id."\", ";
         $query .= "_list_table_item_id=\"".$list_table_item_id."\", ";
@@ -297,7 +287,7 @@ class ListTableItemNotes
 
         if (!$this->_database->table_exists(LISTTABLEITEMRENOTES_TABLE_NAME))
         {
-            $this->_log->error("table: ".LISTTABLEITEMRENOTES_TABLE_NAME." does not exist");
+            $this->_log->error("table does not exist in database (table=".LISTTABLEITEMRENOTES_TABLE_NAME.")");
             $this->error_str = ERROR_DATABASE_PROBLEM;
             
             return FALSE;            

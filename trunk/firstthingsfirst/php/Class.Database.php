@@ -62,7 +62,7 @@ class Database
     # connect to database
     function connect ()
     {    
-        #$this->_log->debug("opening db connection to host: ".$this->host." as user: ".$this->user);
+        $this->_log->trace("opening db connection (host=".$this->host.", user=".$this->user.")");
 
         $db_link = mysql_connect($this->host, $this->user, $this->passwd);
         if (!$db_link)
@@ -73,11 +73,10 @@ class Database
         $succes = mysql_select_db($this->database, $db_link);
         if (!$succes)
         {
-            $this->_log->error("could connect select database: ".$this->database);
+            $this->_log->error("could not select database (db=".$this->database.")");
             return FALSE;
         }
     
-        #$this->_log->debug("db connection opened");
         return $db_link;
     }
 
@@ -91,7 +90,7 @@ class Database
         if (!db_link)
             return FALSE;
     
-        $this->_log->debug("query db: ".$query);
+        $this->_log->debug("query (query=".$query.")");
     
         $result = mysql_query($query, $db_link);
         $this->error_str = mysql_error($db_link);
@@ -107,14 +106,14 @@ class Database
         if (!db_link)
             return FALSE;
      
-        $this->_log->debug("insert query db: ".$query);
+        $this->_log->debug("insertion query (query=".$query.")");
     
         $result = mysql_query($query, $db_link);
         
         if (result != FALSE)
         {
             $result = mysql_insert_id($db_link);
-            $this->_log->debug("insert id: ".$result);
+            $this->_log->debug("insert (id=".$result.")");
         }
         
         $this->error_str = mysql_error($db_link);
@@ -134,6 +133,7 @@ class Database
         else
         {
             $this->_log->error("cannot fetch: result is FALSE");
+        
             return FALSE;
         }
     }
@@ -143,11 +143,13 @@ class Database
     {
 	    $query = "SHOW TABLES";
         $result = $this->query($query);
+        
         while ($row = $this->fetch($result))
         {
             if ($row[0] == $table)
                 return TRUE;
         }
+        
         return FALSE;
     }
 }

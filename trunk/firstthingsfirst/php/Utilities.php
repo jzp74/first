@@ -35,7 +35,6 @@ function is_number ($field_name, $str)
 
 # check if given string is a well formed string
 # return FALSE when string is not a number
-# TODO write and test this function
 function is_well_formed_string ($field_name, $str)
 {
     global $logging;
@@ -103,6 +102,5 @@ function is_date ($field_name, $str)
  
     return sprintf("%04d-%02d-%02d", $year, $month, $day);
 }
-
 
 ?>

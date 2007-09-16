@@ -8,9 +8,7 @@
     background-color: rgb(240, 240, 200);
     color: rgb(0, 0, 102);
     font-family: arial black;    
-    font-size: normal;
-    font-weight: normal;
-    text-align: left;
+    font-size: 16px;
     }
     
 /*  defines the pane that containes general settings */    
@@ -28,10 +26,6 @@
     float: none;
     width: 100%;
     color: rgb(0, 0, 102);
-    text-align: left;
-    font-family: verdana;
-    font-size: small;
-    font-weight: normal;
     }
 
 #listbuilder_general_settings td {
@@ -40,12 +34,7 @@
     }
 
 #listbuilder_general_settings input, #listbuilder_general_settings textarea { 
-    padding: 1px 5px 3px 5px;
-    background-color: rgb(255, 255, 255);
     border: 1px solid rgb(240, 240, 200);
-    font-family: verdana;
-    font-size: small;
-    text-align: left;
     }
 
 /*  defines the title of the definition pane */
@@ -55,9 +44,7 @@
     background-color: rgb(240, 240, 200);
     color: rgb(0, 0, 102);
     font-family: arial black;    
-    font-size: normal;
-    font-weight: normal;
-    text-align: left;
+    font-size: 16px;
     }
 
 /*  defines the pane that contains the list definition */
@@ -75,10 +62,6 @@
     width: 100%;
     float: none;
     color: rgb(0, 0, 102);
-    text-align: left;
-    font-family: verdana;
-    font-size: small;
-    font-weight: normal;
     }
 
 #listbuilder_definition tr {
@@ -98,23 +81,7 @@
     vertical-align: top;
     }
 
-#listbuilder_definition select { 
-    padding: 1px 1px 3px 0px;
-    background-color: rgb(255, 255, 255);
+#listbuilder_definition select, #listbuilder_definition input { 
     border: 1px solid rgb(240, 240, 200);
-    text-align: left;
-    font-family: verdana;
-    font-size: small;
-    font-weight: normal;
-    }
-
-#listbuilder_definition input { 
-    padding: 1px 5px 3px 5px;
-    background-color: rgb(255, 255, 255);
-    border: 1px solid rgb(240, 240, 200);
-    text-align: left;
-    font-family: verdana;
-    font-size: small;
-    font-weight: normal;
     }
 

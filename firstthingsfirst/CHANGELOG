@@ -1,6 +1,9 @@
 Version 0.4
  - Added navigation bar
  - Added native user 'admin'
+ - Created seperate user permissions: can_edit_list and can_create_list
+ - Added functionality to create new users
+ - Cleaned up stylesheets
 
 Version 0.3
  - Added error handling

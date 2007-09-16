@@ -109,7 +109,7 @@ function set_error_message ($error_element, $error_str)
 # string name_str: contains the name of the button
 function get_button ($func_str, $name_str)
 {
-    return "<a xhref=\"javascript:void(0);\" onclick=\"".$func_str."\">".$name_str."</a>";
+    return "<a href=\"javascript:void(0);\" onclick=\"".$func_str."\">".$name_str."</a>";
 }
 
 # get html for an inactive button

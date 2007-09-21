@@ -267,7 +267,7 @@ html, body {
     }
 
 #portal_overview tr {
-    background-color: rgb(250, 216, 216);
+    background-color: rgb(227, 225, 250);
     }
     
 #portal_overview th {
@@ -280,7 +280,7 @@ html, body {
     }
 
 #portal_overview tbody tr:hover {
-    background-color: rgb(250, 230, 230);
+    background-color: rgb(235, 234, 250);
     }
 
 /*  defines the pane that contains the login overview */

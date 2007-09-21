@@ -26,7 +26,7 @@
     }
 
 #list_contents tr {
-    background-color: rgb(250, 216, 216);
+    background-color: rgb(227, 225, 250);
     }
     
 #list_contents th {
@@ -39,7 +39,7 @@
     }
 
 #list_contents tbody tr:hover {
-    background-color: rgb(250, 230, 230);
+    background-color: rgb(235, 234, 250);
     }
     
 /*  defines list pages below the list contents */

@@ -54,6 +54,8 @@ function action_get_login_page ()
 
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
 
+    set_footer("");
+
     $logging->trace("got login page");
 
     return $response;

@@ -293,9 +293,9 @@ html, body {
 #login_overview {
     margin: 0px auto 0px auto;
     padding: 12px 16px 12px 16px;
-    background-color: rgb(255, 255, 220);
+    background-color: rgb(235, 234, 250);
     color: rgb(0, 0, 102);
-    border: 2px solid rgb(240, 240, 200);
+    border: 2px solid rgb(227, 225, 250);
     }
     
 #login_overview td {

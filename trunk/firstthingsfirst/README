@@ -2,9 +2,9 @@ FirstThingsFirst
 Written by Jasper de Jong
 
 1 INTRODUCTION
-FirstThingsFirst is a multi-user webapplication that enables you to define and maintain an unlimited number of different user-defined lists. It can be used to maintain todo lists for instance but it can also be used to maintain your cd collection. The user is completely free in designing his/her own list. 
+FirstThingsFirst is a multi-user webapplication that enables you to define and maintain an unlimited number of different user-defined lists. Users are completely free in designing the structure of their own lists. Examples of possible use:  todo list, cd collection list, etc.
 
-This webapplication is written completely in php and is ajax enabled (xajax).
+FirstThingsFirst is written completely in php and is ajax enabled (xajax).
 
 2 OTHER SOFTWARE USED
 xajax (version 0.2.5)

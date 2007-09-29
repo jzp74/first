@@ -305,14 +305,14 @@ html, body {
 
 #login_overview input { 
     padding: 1px 5px 3px 5px;
-    border: 1px solid rgb(240, 240, 200);
+    border: 1px solid rgb(227, 225, 250);
     }
     
 /*  defines the title of the general settings pane */
 #add_user_title {
     margin: 12px 12px 0px 12px;
     padding: 2px 3px 2px 3px;
-    background-color: rgb(240, 240, 200);
+    background-color: rgb(227, 225, 250);
     color: rgb(0, 0, 102);
     font-family: arial black;    
     font-size: 16px;
@@ -324,9 +324,9 @@ html, body {
     display: inline-block;
     float: none;
     margin: 0px 12px 2px 12px;
-    background-color: rgb(255, 255, 220);
+    background-color: rgb(235, 234, 250);
     color: rgb(0, 0, 102);
-    border: 2px solid rgb(240, 240, 200);
+    border: 2px solid rgb(227, 225, 250);
     }
 
 /*  defines the table that contains the general settings */    
@@ -341,5 +341,5 @@ html, body {
     }
 
 #add_user_definition input, #add_user_definition textarea { 
-    border: 1px solid rgb(240, 240, 200);
+    border: 1px solid rgb(227, 225, 250);
     }

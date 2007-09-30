@@ -275,10 +275,6 @@ class ListTableDescription
             $this->modifier = $row[6];
             $this->modified = $row[7];
             
-            # also set page_title of User
-            # TODO this must be solved differently
-            $this->_user->set_page_title($this->title);
-                
             $this->_log->trace("selected ListTableDescription (title=\"".$this->title."\")");
             
             # initialise list_table

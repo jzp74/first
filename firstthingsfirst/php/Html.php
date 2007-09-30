@@ -5,7 +5,7 @@
 
 
 # check if user is logged in and has permissions to call function
-function check_preconditions ()
+function check_preconditions ($action)
 {
     global $logging;
     global $result;
@@ -13,7 +13,6 @@ function check_preconditions ()
     global $firstthingsfirst_action_description;
     
     # action descriptions
-    $action = $user->get_action();
     $can_edit_list = $firstthingsfirst_action_description[$action][0];
     $can_create_list = $firstthingsfirst_action_description[$action][1];
     $is_admin = $firstthingsfirst_action_description[$action][2];
@@ -69,11 +68,8 @@ function check_postconditions ()
     global $logging;
     global $result;
     global $user;
-    
-    # action description
-    $action = $user->get_action();
-    
-    $logging->trace("check postconditions: ".$action);
+        
+    $logging->trace("check postconditions");
     
     #check if an error is set
     if ($result->get_error_str())

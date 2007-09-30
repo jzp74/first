@@ -45,9 +45,7 @@ function action_get_listbuilder_page ()
 
     $logging->info("ACTION: get listbuilder page");
 
-    $user->set_action(ACTION_GET_LISTBUILDER_PAGE);
-    
-    if (!check_preconditions())
+    if (!check_preconditions(ACTION_GET_LISTBUILDER_PAGE))
         return $response;
             
     $html_str = "";
@@ -123,9 +121,7 @@ function action_add_listbuilder_row ($field_type, $definition)
 
     $logging->info("ACTION: add listbuilder row (field_type=".$field_type.")");
 
-    $user->set_action(ACTION_GET_LISTBUILDER_PAGE);
-    
-    if (!check_preconditions())
+    if (!check_preconditions(ACTION_GET_LISTBUILDER_PAGE))
         return $response;
 
     get_field_definition_table($new_definition);
@@ -159,9 +155,7 @@ function action_move_listbuilder_row ($row_number, $direction, $definition)
 
     $logging->info("ACTION: move listbuilder row (row_number=".$field_type.", $direction=".$direction.")");
 
-    $user->set_action(ACTION_MOVE_LISTBUILDER_ROW);
-    
-    if (!check_preconditions())
+    if (!check_preconditions(ACTION_MOVE_LISTBUILDER_ROW))
         return $response;
 
     # store values of given row number
@@ -219,9 +213,7 @@ function action_del_listbuilder_row ($row_number, $definition)
 
     $logging->info("ACTION: delete listbuilder row (row=".$row_number.")");
 
-    $user->set_action(ACTION_DEL_LISTBUILDER_ROW);
-    
-    if (!check_preconditions())
+    if (!check_preconditions(ACTION_DEL_LISTBUILDER_ROW))
         return $response;
     
     for ($position = 0; $position < count($backup_definition); $position += 1)
@@ -256,9 +248,7 @@ function action_refresh_listbuilder ($definition)
     
     $logging->info("ACTION: refresh listbuilder");
 
-    $user->set_action(ACTION_REFRESH_LISTBUILDER);
-    
-    if (!check_preconditions())
+    if (!check_preconditions(ACTION_REFRESH_LISTBUILDER))
         return $response;
 
     get_field_definition_table(array_values($definition));
@@ -295,9 +285,7 @@ function action_create_list ($title, $description, $definition)
 
     $logging->info("ACTION: create list (title=".$title.")");
 
-    $user->set_action(ACTION_CREATE_LIST);
-    
-    if (!check_preconditions())
+    if (!check_preconditions(ACTION_CREATE_LIST))
         return $response;
     
     # check if title has been given

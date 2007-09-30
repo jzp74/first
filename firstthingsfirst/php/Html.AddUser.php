@@ -29,9 +29,7 @@ function action_get_add_user_page ()
     
     $logging->info("ACTION: get add user page");
 
-    $user->set_action(ACTION_GET_ADD_USER_PAGE);
-    
-    if (!check_preconditions())
+    if (!check_preconditions(ACTION_GET_ADD_USER_PAGE))
         return $response;
             
     $html_str = "";
@@ -119,9 +117,7 @@ function action_add_user ($definition)
 
     $logging->info("ACTION: add user (name=".$name.", edit_list=".$edit_list.", create_list=".$create_list.")");
 
-    $user->set_action(ACTION_ADD_USER);
-    
-    if (!check_preconditions())
+    if (!check_preconditions(ACTION_ADD_USER))
         return $response;
     
     # check if name has been given

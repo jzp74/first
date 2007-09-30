@@ -72,10 +72,7 @@ function process_url ()
     global $user;
     global $response;
     
-    $logging->debug("PROCESS_URL (request_uri=".$_SERVER[REQUEST_URI].")");
-    
-    # store this url
-    $user->set_recent_url($_SERVER[REQUEST_URI]);
+    $logging->trace("PROCESS_URL (request_uri=".$_SERVER[REQUEST_URI].")");
     
     # show portal page if no action is set
     if (isset($_GET['action']))

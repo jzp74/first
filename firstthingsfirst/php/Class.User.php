@@ -15,9 +15,6 @@ define("USER_NAME_RESET_VALUE", "_");
 # TODO add user created, last login date/time
 class User
 {
-    # representing the list_table the user is currently using
-    protected $_page_title;
-    
     # reference to global database object
     protected $_database;
 
@@ -62,8 +59,6 @@ class User
         $str .= "edit_list=\"".$this->get_edit_list()."\", ";
         $str .= "create_list=\"".$this->get_create_list()."\", ";
         $str .= "admin=\"".$this->get_admin()."\", ";
-        $str .= "list_obf=\"".$this->get_list_order_by_field()."\", ";
-        $str .= "list_oasc=\"".$this->get_list_order_ascending()."\", ";
         return $str;
     }
 
@@ -110,18 +105,6 @@ class User
     }
 
     # getter
-    function get_action ()
-    {
-        return $_SESSION["action"];
-    }
-
-    # getter
-    function get_page_title ()
-    {
-        return $_SESSION["page_title"];
-    }
-
-    # getter
     function get_list_order_by_field ()
     {
         return $_SESSION["list_order_by_field"];
@@ -133,12 +116,6 @@ class User
         return $_SESSION["list_order_ascending"];
     }
     
-    # getter
-    function get_recent_url ()
-    {
-        return $_SESSION["recent_url"];
-    }
-
     # setter
     function set_id ($id)
     {
@@ -182,18 +159,6 @@ class User
     }
 
     # setter
-    function set_action ($action)
-    {
-        $_SESSION["action"] = $action;
-    }
-    
-    # setter
-    function set_page_title ($title)
-    {
-        $_SESSION["page_title"] = $title;
-    }
-
-    # setter
     function set_list_order_by_field ($order)
     {
         $_SESSION["list_order_by_field"] = $order;
@@ -205,12 +170,6 @@ class User
         $_SESSION["list_order_ascending"] = $ascending;
     }
     
-    # setter
-    function set_recent_url ($recent_url)
-    {
-        $_SESSION["recent_url"];
-    }
-
     # reset attributes to standard values
     function reset ()
     {
@@ -223,8 +182,6 @@ class User
         $this->set_create_list("0");
         $this->set_admin("0");
         $this->set_login("0");
-        $this->set_action(ACTION_GET_PORTAL);
-        $this->set_page_title("-");
         $this->set_list_order_by_field("");
         $this->set_list_order_ascending(1);
     }
@@ -321,8 +278,6 @@ class User
                 $this->set_login(1);
                 
                 # set other attributes of this class
-                $this->set_action(ACTION_GET_PORTAL);
-                $this->set_page_title("-");
                 $this->set_list_order_by_field("");
                 $this->set_list_order_ascending(1);
                 

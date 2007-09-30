@@ -22,6 +22,7 @@ require_once("php/Text.Labels.php");
 require_once("php/Class.Logging.php");
 require_once("php/Class.Result.php");
 require_once("php/Class.Database.php");
+require_once("php/Class.ListState.php");
 require_once("php/Class.User.php");
 require_once("php/Class.ListTableDescription.php");
 require_once("php/Class.ListTable.php");
@@ -49,9 +50,10 @@ $list_table_item_remarks = new EmptyClass();
 
 # create global objects
 $json = new Services_JSON();
-$logging = new Logging(LOGGING_TRACE, "firstthingsfirst.log");
+$logging = new Logging(LOGGING_INFO, "firstthingsfirst.log");
 $result = new Result();
 $database = new Database();
+$list_state = new ListState();
 $user = new User();
 $list_table_description = new ListTableDescription();
 $list_table = new ListTable();

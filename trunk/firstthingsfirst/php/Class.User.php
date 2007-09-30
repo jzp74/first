@@ -15,6 +15,9 @@ define("USER_NAME_RESET_VALUE", "_");
 # TODO add user created, last login date/time
 class User
 {
+    # reference to global json object
+    protected $_json;
+
     # reference to global database object
     protected $_database;
 
@@ -25,10 +28,12 @@ class User
     function __construct ()
     {
         # these variables are assumed to be globally available
+        global $json;
         global $logging;
         global $database;
         
         # set global references for this object
+        $this->_json =& $json;
         $this->_log =& $logging;
         $this->_database =& $database;
         
@@ -105,15 +110,23 @@ class User
     }
 
     # getter
-    function get_list_order_by_field ()
+    # get settings from session and set global list_state object
+    function get_list_state ($list_title)        
     {
-        return $_SESSION["list_order_by_field"];
-    }
-
-    # getter
-    function get_list_order_ascending ()
-    {
-        return $_SESSION["list_order_ascending"];
+        global $list_state;
+        
+        # for some reason a cast is needed here
+        $list_states = (array)$this->_json->decode(html_entity_decode($_SESSION["list_states"]), ENT_QUOTES);
+        
+        if (array_key_exists($list_title, $list_states))
+            $list_state->set($list_title, (array)$list_states[$list_title]); # mind the cast
+        else
+        {
+            $this->_log->trace("list_state not found in session (list_title=".$list_title.")");
+            
+            $list_state->reset();
+            $list_state->set_list_title($list_title);
+        }
     }
     
     # setter
@@ -159,16 +172,18 @@ class User
     }
 
     # setter
-    function set_list_order_by_field ($order)
+    # store values from global list state object in session 
+    function set_list_state ()
     {
-        $_SESSION["list_order_by_field"] = $order;
-    }
+        global $list_state;
+        
+        # for some reason a cast is needed here
+        $list_states = (array)$this->_json->decode(html_entity_decode($_SESSION["list_states"]), ENT_QUOTES);
 
-    # setter
-    function set_list_order_ascending ($ascending)
-    {
-        $_SESSION["list_order_ascending"] = $ascending;
+        $list_states[$list_state->get_list_title()] = $list_state->pass();        
+        $_SESSION["list_states"] = htmlentities($this->_json->encode($list_states), ENT_QUOTES);
     }
+        
     
     # reset attributes to standard values
     function reset ()
@@ -182,8 +197,6 @@ class User
         $this->set_create_list("0");
         $this->set_admin("0");
         $this->set_login("0");
-        $this->set_list_order_by_field("");
-        $this->set_list_order_ascending(1);
     }
 
     # create the database table that contains all users
@@ -276,10 +289,6 @@ class User
                 $this->set_admin($db_admin);
                 $this->set_times_login($times_login);
                 $this->set_login(1);
-                
-                # set other attributes of this class
-                $this->set_list_order_by_field("");
-                $this->set_list_order_ascending(1);
                 
                 # update the number of times this user has logged in
                 $query = "UPDATE ".USER_TABLE_NAME." SET _times_login=\"".$times_login."\", _last_login=\"".strftime(DB_DATETIME_FORMAT)."\" where _name=\"".$name."\"";

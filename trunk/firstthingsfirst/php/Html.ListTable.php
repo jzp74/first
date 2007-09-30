@@ -103,7 +103,8 @@ function action_get_list_page ($list_title)
 function action_get_list_content ($list_title, $order_by_field, $page)
 {
     global $logging;
-    global $result;    
+    global $result;
+    global $list_state;
     global $user;
     global $response;
     global $list_table_description;
@@ -123,14 +124,14 @@ function action_get_list_content ($list_title, $order_by_field, $page)
     # we'll first get the necessary data from database
     $definition = $list_table_description->get_definition();
     $field_names = $list_table->get_field_names();
-    $rows = $list_table->select($order_by_field, $page_number, 0);
+    $rows = $list_table->select($order_by_field, $page, 0);
     
     # use the params that have been set by _list_table->select()
-    $total_pages = $list_table->get_total_pages();
+    $total_pages = $list_state->get_total_pages();
     if ($total_pages == 0)
         $current_page = 0;
     else
-        $current_page = $list_table->get_current_page();
+        $current_page = $list_state->get_current_page();
 
     # then we'll add some summary information
     $html_str .= "            <div id=\"list_pages_top\">".LABEL_PAGE." ".$current_page." ".LABEL_OF." ".$total_pages."</div>\n\n";
@@ -216,24 +217,46 @@ function action_get_list_content ($list_title, $order_by_field, $page)
     
     # add navigation links
     $html_str .= "            <div id=\"list_pages_bottom\">";
+    # display 1 pagenumber when there is only one page (or none)
     if ($total_pages == 0 || $total_pages == 1)
     {
             $html_str .= LABEL_PAGE.": <strong>".$total_pages."</strong>";
     }
+    # pagenumber display algorithm for 2 or more pages
     else
     {
-        for ($cnt = 1; $cnt<$total_pages; $cnt += 1)
+        # display previous page link
+        if ($current_page > 1)
+            $html_str .= get_button("xajax_action_get_list_content('".$list_title."', '', ".($current_page - 1).")", "<< ".BUTTON_PREVIOUS_PAGE)."&nbsp;&nbsp;";
+        
+        # display first pagenumber
+        if ($current_page == 1)
+            $html_str .= " <strong>1</strong>";
+        else
+            $html_str .= " ".get_button("xajax_action_get_list_content('".$list_title."', '', 1)", 1);
+        # display middle pagenumbers
+        for ($cnt = 2; $cnt<$total_pages; $cnt += 1)
         {
-            if ($cnt == $current_page)
-                $html_str .= " <strong>".$cnt."</strong>";
-            else
+            if ($cnt == ($current_page - 2))
+                $html_str .= " <strong>...<strong>";
+            else if ($cnt == ($current_page - 1))
                 $html_str .= " ".get_button("xajax_action_get_list_content('".$list_title."', '', ".$cnt.")", $cnt);
+            else if ($cnt == $current_page)
+                $html_str .= " <strong>".$cnt."</strong>";
+            else if ($cnt == ($current_page + 1))
+                $html_str .= " ".get_button("xajax_action_get_list_content('".$list_title."', '', ".$cnt.")", $cnt);
+            if ($cnt == ($current_page + 2))
+                $html_str .= " <strong>...<strong>";
         }
-    
+        # display last pagenumber
         if ($current_page == $total_pages)
             $html_str .= "  <strong>".$total_pages."</strong>";
         else
             $html_str .= "  ".get_button("xajax_action_get_list_content('".$list_title."', '', ".$total_pages.")", $total_pages);
+
+        # display next page link
+        if ($current_page < $total_pages)
+            $html_str .= "&nbsp;&nbsp;".get_button("xajax_action_get_list_content('".$list_title."', '', ".($current_page + 1).")", BUTTON_NEXT_PAGE." >>");        
     }
     
     $html_str .= "</div>\n\n";

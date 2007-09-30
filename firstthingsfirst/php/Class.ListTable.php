@@ -30,20 +30,6 @@ class ListTable
     # values in this array are derived from $field_names field
     protected $db_text_field_names;    
     
-    # field name by which this ListTable needs to be ordered
-    # value of this attribute is stored in User 
-    #protected $order_by_field;
-    
-    # order by field ascending or descending
-    # value of this attribute is stored in User
-    #protected $order_ascending;
-
-    # total number of pages
-    protected $total_pages;
-    
-    # current page
-    protected $current_page;
-    
     # error string, contains last known error
     protected $error_str;
 
@@ -59,6 +45,9 @@ class ListTable
     # reference to global database object
     protected $_database;
     
+    # reference to global list_state object
+    protected $_list_state;
+
     # reference to global user object
     protected $_user;
     
@@ -76,6 +65,7 @@ class ListTable
         global $result;
         global $logging;        
         global $database;
+        global $list_state;
         global $user;
         global $list_table_description;
         global $list_table_item_notes;
@@ -85,6 +75,7 @@ class ListTable
         $this->_result =& $result;
         $this->_log =& $logging;
         $this->_database =& $database;
+        $this->_list_state =& $list_state;
         $this->_user =& $user;
         $this->_list_table_description =& $list_table_description;
         $this->_list_table_item_notes =& $list_table_item_notes;
@@ -100,8 +91,6 @@ class ListTable
     {
         $str = "ListTable: table_name=\"".$this->table_name."\", ";
         $str .= "field_names[0]=\"".$this->field_names[0]."\", ";
-        $str .= "order_by_field=\"".$this->get_order_by_field()."\", ";
-        $str .= "order_ascending=\"".$this->get_order_ascending()."\", ";
         
         return $str;
     }
@@ -179,45 +168,9 @@ class ListTable
     }
 
     # getter
-    function get_order_by_field ()
-    {
-        return $this->_user->get_list_order_by_field();
-    }
-
-    # getter
-    function get_order_ascending ()
-    {
-        return $this->_user->get_list_order_ascending();
-    }
-
-    # getter
-    function get_total_pages ()
-    {
-        return $this->total_pages;
-    }
-        
-    # getter
-    function get_current_page ()
-    {
-        return $this->current_page;
-    }
-
-    # getter
     function get_error_str ()
     {
         return $this->error_str;
-    }
-
-    # setter
-    function set_order_by_field ($order)
-    {
-        $this->_user->set_list_order_by_field($order);
-    }
-
-    # setter
-    function set_order_ascending ($ascending)
-    {
-        $this->_user->set_list_order_ascending($ascending);
     }
 
     # reset attributes to standard values
@@ -229,8 +182,7 @@ class ListTable
         $this->field_names = array();
         $this->db_field_names = array();
         $this->db_text_field_names = array();
-        $this->total_pages = 1;
-        $this->current_page = 1;
+        $this->_list_state->reset();
         $this->error_str = "";
     }
 
@@ -261,9 +213,7 @@ class ListTable
                     array_push($this->db_text_field_names, $db_field_name);
             }
             
-            $this->total_pages = 1;
-            $this->current_page = 1;
-            
+            $this->_list_state->set_list_title($this->_list_table_description->get_title());            
             $this->_list_table_item_notes->set();
             
             $this->_log->trace("set ListTable (table_name=".$this->table_name.")");
@@ -368,20 +318,23 @@ class ListTable
             return array();
         }
 
+        # get list_state from session
+        $this->_user->get_list_state($this->_list_state->get_list_title());
+
         if (!strlen($order_by_field))
         {
             # no order_by_field had been given
-            if (strlen($this->get_order_by_field()))
+            if (strlen($this->_list_state->get_order_by_field()))
             {
                 # order by previously given field
-                $order_by_field = $this->get_order_by_field();
+                $order_by_field = $this->_list_state->get_order_by_field();
             }
             else
             {
                 # no field to order by has been given previously
                 # order by first field of this ListTable
                 $order_by_field = $this->db_field_names[0];
-                $this->set_order_by_field($order_by_field);
+                $this->_list_state->set_order_by_field($order_by_field);
             }
         }
         else
@@ -389,13 +342,13 @@ class ListTable
             # order by field has been provided
             # set order by field attribute value and reverse order
             # TODO reset order_ascending when user orders on new field
-            $this->set_order_by_field($this->_get_db_field_name($order_by_field));
+            $this->_list_state->set_order_by_field($this->_get_db_field_name($order_by_field));
             $order_by_field = $this->_get_db_field_name($order_by_field);
 
-            if ($this->get_order_ascending())
-                $this->set_order_ascending(0);
+            if ($this->_list_state->get_order_ascending())
+                $this->_list_state->set_order_ascending(0);
             else
-                $this->set_order_ascending(1);
+                $this->_list_state->set_order_ascending(1);
         }
     
         # get the number of entries
@@ -406,10 +359,11 @@ class ListTable
         if ($result != FALSE)
         {
             $total_pages_array = $this->_database->fetch($result);
-            $this->total_pages = floor($total_pages_array[0]/$firstthingsfirst_list_page_entries);
+            $total_pages = floor($total_pages_array[0]/$firstthingsfirst_list_page_entries);
             if (($total_pages_array[0]%$firstthingsfirst_list_page_entries) != 0)
-                $this->total_pages  += 1;
-            $this->_log->debug("found total pages (total_pages=".$this->total_pages.")");
+                $total_pages += 1;
+            $this->_list_state->set_total_pages($total_pages);
+            $this->_log->debug("found total pages (total_pages=".$total_pages.")");
         }
         else 
         {
@@ -421,14 +375,16 @@ class ListTable
         }
         
         if ($page == 0)
-            $page = $this->current_page;
+            $page = $this->_list_state->get_current_page();
+        if ($page > $total_pages)
+            $page = $total_pages;
             
         $rows = array();
         $query = "SELECT ".implode($this->db_field_names, ", ")." FROM ".$this->table_name." WHERE ".DB_ARCHIVED_FIELD_NAME."=0";
         if ($archived)
             $query = "SELECT ".implode($this->db_field_names, ", ")." FROM ".$this->table_name." WHERE ".DB_ARCHIVED_FIELD_NAME."=1";
         $query .= " ORDER BY ".$order_by_field;
-        if ($this->get_order_ascending())
+        if ($this->_list_state->get_order_ascending() == 1)
             $query .= " ASC";
         else
             $query .= " DESC";
@@ -487,7 +443,10 @@ class ListTable
             array_push($rows_with_notes, $row);
         }
 
-        $this->current_page = $page;
+        $this->_list_state->set_current_page($page);
+
+        # store list_state to session
+        $this->_user->set_list_state();
 
         $this->_log->trace("read ListTable (from=".$limit_from.")");
     

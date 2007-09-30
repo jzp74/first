@@ -4,6 +4,8 @@ Version 0.4
  - Created seperate user permissions: can_edit_list and can_create_list
  - Added functionality to create new users
  - Cleaned up stylesheets
+ - Improved page navigation
+ - Each functional page now has a unique url
 
 Version 0.3
  - Added error handling

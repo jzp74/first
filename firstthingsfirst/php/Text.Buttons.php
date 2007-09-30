@@ -15,6 +15,8 @@ define("BUTTON_BACK", "back");
 define("BUTTON_UP", "&nbsp;up&nbsp;");
 define("BUTTON_DOWN", "down");
 define("BUTTON_ADD_USER", "create user");
+define("BUTTON_NEXT_PAGE", "next");
+define("BUTTON_PREVIOUS_PAGE", "previous");
 
 # Html.List buttons
 define("BUTTON_ADD_ROW", "add row");

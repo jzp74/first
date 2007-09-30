@@ -132,6 +132,12 @@ class User
     {
         return $_SESSION["list_order_ascending"];
     }
+    
+    # getter
+    function get_recent_url ()
+    {
+        return $_SESSION["recent_url"];
+    }
 
     # setter
     function set_id ($id)
@@ -197,6 +203,12 @@ class User
     function set_list_order_ascending ($ascending)
     {
         $_SESSION["list_order_ascending"] = $ascending;
+    }
+    
+    # setter
+    function set_recent_url ($recent_url)
+    {
+        $_SESSION["recent_url"];
     }
 
     # reset attributes to standard values

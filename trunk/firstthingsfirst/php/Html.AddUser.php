@@ -38,7 +38,7 @@ function action_get_add_user_page ()
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
     $html_str .= "        <div id=\"page_title\">".LABEL_ADD_USER_PAGE."</div>\n\n";
     $html_str .= "        <div id=\"navigation_container\">\n";
-    $html_str .= "            <div id=\"navigation\">".get_button("xajax_action_get_portal_page()", BUTTON_PORTAL)."</div>\n";
+    $html_str .= "            <div id=\"navigation\">".get_query_button("action=get_portal_page", BUTTON_PORTAL)."</div>\n";
     $html_str .= "            <div id=\"login_status\">&nbsp;</div>&nbsp\n";
     $html_str .= "        </div> <!-- navigation_container -->\n\n";        
     $html_str .= "        <div id=\"add_user_title\">".LABEL_ADD_USER_DEFINITION."</div>\n\n";        
@@ -154,8 +154,6 @@ function action_add_user ($definition)
         $logging->warn("could not add user");
     else
         $logging->debug("added new user");
-
-    action_get_portal_page();
 
     return $response;
 }

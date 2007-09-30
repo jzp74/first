@@ -93,7 +93,10 @@ function action_login ($user_name, $password)
     if ($user->login($user_name, $password))
     {    
         $logging->debug("user is logged in");
-        action_get_portal_page();
+
+        $response->AddScriptCall("window.location.reload");
+        
+        return $response;
     }
     else
     {

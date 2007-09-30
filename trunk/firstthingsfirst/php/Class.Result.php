@@ -20,11 +20,9 @@ class Result
     function __construct ()
     {
         # these variables are assumed to be globally available
-        global $json;
         global $logging;
         
         # set global references for this object
-        $this->_json =& $json;
         $this->_log =& $logging;
 
         $this->reset();

@@ -41,7 +41,7 @@ function action_get_portal_page ()
     $html_str .= "        <div id=\"navigation_container\">\n";
     $html_str .= "            <div id=\"navigation\">";
     if ($user->is_login() && $user->get_admin())
-        $html_str .= get_button("xajax_action_get_add_user_page()", BUTTON_ADD_USER);
+        $html_str .= get_query_button("action=get_add_user_page", BUTTON_ADD_USER);
     $html_str .= "</div>\n";
     $html_str .= "            <div id=\"login_status\">&nbsp;</div>&nbsp;\n";
     $html_str .= "        </div> <!-- navigation_container -->\n\n";    
@@ -54,7 +54,7 @@ function action_get_portal_page ()
     $html_str .= "        </div> <!-- portal_overview_pane -->\n\n";
     $html_str .= "        <div id=\"action_pane\">\n\n";
     $html_str .= "            <div id=\"action_bar\">\n";
-    $html_str .= "                <p>".get_button("xajax_action_get_listbuilder_page()", BUTTON_CREATE_NEW_LIST)."</p>\n";
+    $html_str .= "                <p>".get_query_button("action=get_listbuilder_page", BUTTON_CREATE_NEW_LIST)."</p>\n";
     $html_str .= "            </div> <!-- action_bar -->\n\n";    
     $html_str .= "        </div> <!-- action_pane -->\n\n";           
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
@@ -108,7 +108,7 @@ function get_list_tables ()
     # add table row for each list
     foreach($list_table_descriptions as $list_table_description)
     {
-        $html_str .= "                    <tr onclick=\"xajax_action_get_list_page('".$list_table_description[0]."')\">\n";
+        $html_str .= "                    <tr ".get_query_link("action=get_list_page&list=".$list_table_description[0]).">\n";
         $html_str .= "                        <td>".$list_table_description[0]."</td>\n";
         $html_str .= "                        <td><em>".$list_table_description[1]."</td>\n";
         $html_str .= "                    </tr>\n";

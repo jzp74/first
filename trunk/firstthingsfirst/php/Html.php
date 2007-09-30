@@ -104,7 +104,7 @@ function set_error_message ($error_element, $error_str)
     $logging->trace("set error message (element=".$error_element.")");        
 }
 
-# get html for an active button
+# get html for an active button that calls a javascript function
 # string func_str: contains the complete js function name and all its parameters
 # string name_str: contains the name of the button
 function get_button ($func_str, $name_str)
@@ -112,11 +112,30 @@ function get_button ($func_str, $name_str)
     return "<a href=\"javascript:void(0);\" onclick=\"".$func_str."\">".$name_str."</a>";
 }
 
+# get html for an active link_button that calls index.php with specified query string
+# string query_str: contains the query string
+# string name_str: contains the name of the button
+function get_query_button ($query_str, $name_str)
+{
+    global $firstthingsfirst_portal_address;
+    
+    return "<a href=\"javascript:void(0);\" onclick=\"window.location='".$firstthingsfirst_portal_address."/index.php?".$query_str."'\">".$name_str."</a>";
+}
+
 # get html for an inactive button
 # string name_str: contains the name of the button
 function get_inactive_button ($name_str)
 {
     return "<span class=\"inactive_button\">".$name_str."</span>";
+}
+
+# get html for an onclick specification that calls index.php with specified query string
+# string query_str: contains the query string
+function get_query_link ($query_str)
+{
+    global $firstthingsfirst_portal_address;
+    
+    return "onclick=\"window.location='".$firstthingsfirst_portal_address."/index.php?".$query_str."'\"";
 }
 
 # set given html in the action bar

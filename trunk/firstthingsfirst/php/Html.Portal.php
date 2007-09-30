@@ -29,9 +29,7 @@ function action_get_portal_page ()
 
     $logging->info("ACTION: get portal page");
 
-    $user->set_action(ACTION_GET_PORTAL_PAGE);
-    
-    if (!check_preconditions())
+    if (!check_preconditions(ACTION_GET_PORTAL_PAGE))
         return $response;
     
     $html_str = "";

@@ -6,12 +6,12 @@
 
 
 # action definitions
-define("ACTION_GET_LISTBUILDER_PAGE", "action_get_listbuilder_page");
-define("ACTION_ADD_LISTBUILDER_ROW", "action_add_listbuilder_row");
-define("ACTION_MOVE_LISTBUILDER_ROW", "action_move_listbuilder_row");
-define("ACTION_DEL_LISTBUILDER_ROW", "action_del_listbuilder_row");
-define("ACTION_REFRESH_LISTBUILDER", "action_refresh_listbuilder");
-define("ACTION_CREATE_LIST", "action_create_list");
+define("ACTION_GET_LISTBUILDER_PAGE", "get_listbuilder_page");
+define("ACTION_ADD_LISTBUILDER_ROW", "add_listbuilder_row");
+define("ACTION_MOVE_LISTBUILDER_ROW", "move_listbuilder_row");
+define("ACTION_DEL_LISTBUILDER_ROW", "del_listbuilder_row");
+define("ACTION_REFRESH_LISTBUILDER", "refresh_listbuilder");
+define("ACTION_CREATE_LIST", "create_list");
 
 # action permissions
 $firstthingsfirst_action_description[ACTION_GET_LISTBUILDER_PAGE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
@@ -54,7 +54,7 @@ function action_get_listbuilder_page ()
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
     $html_str .= "        <div id=\"page_title\">".LABEL_CONFIGURE_NEW_LIST."</div>\n\n";
     $html_str .= "        <div id=\"navigation_container\">\n";
-    $html_str .= "            <div id=\"navigation\">&nbsp;".get_button("xajax_action_get_portal_page()", BUTTON_PORTAL)."</div>\n";
+    $html_str .= "            <div id=\"navigation\">&nbsp;".get_query_button("action=get_portal_page", BUTTON_PORTAL)."</div>\n";
     $html_str .= "            <div id=\"login_status\">&nbsp;</div>&nbsp\n";
     $html_str .= "        </div> <!-- navigation_container -->\n\n";    
     $html_str .= "        <div id=\"listbuilder_general_settings_title\">".LABEL_GENERAL_SETTINGS."</div>\n\n";        
@@ -375,8 +375,6 @@ function action_create_list ($title, $description, $definition)
     $list_table_description->insert();
     
     $logging->trace("created list");
-
-    action_get_portal_page();
 
     return $response;
 }

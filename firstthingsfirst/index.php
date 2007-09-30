@@ -49,7 +49,7 @@ $list_table_item_remarks = new EmptyClass();
 
 # create global objects
 $json = new Services_JSON();
-$logging = new Logging(LOGGING_DEBUG, "firstthingsfirst.log");
+$logging = new Logging(LOGGING_TRACE, "firstthingsfirst.log");
 $result = new Result();
 $database = new Database();
 $user = new User();
@@ -58,8 +58,54 @@ $list_table = new ListTable();
 $list_table_item_notes = new ListTableItemNotes();
 $response = new xajaxResponse();
 
+# register process_url function
+$xajax->registerFunction("process_url");
+
 # start ajax interactions
 $xajax->processRequests();
+
+# parse the url and call function accordingly
+# TODO do we want to show an error page in case of malformed request uri?
+function process_url ()
+{
+    global $logging;
+    global $user;
+    global $response;
+    
+    $logging->debug("PROCESS_URL (request_uri=".$_SERVER[REQUEST_URI].")");
+    
+    # store this url
+    $user->set_recent_url($_SERVER[REQUEST_URI]);
+    
+    # show portal page if no action is set
+    if (isset($_GET['action']))
+        $action = $_GET['action'];
+    else
+        $action = ACTION_GET_PORTAL_PAGE;
+    
+    # show portal page
+    if ($action == ACTION_GET_PORTAL_PAGE)
+        action_get_portal_page();
+    # show list page
+    else if ($action == ACTION_GET_LIST_PAGE)
+    {
+        if (isset($_GET['list']))
+            action_get_list_page($_GET['list']);
+        else
+            action_get_portal_page();
+    }
+    # show add user page
+    else if ($action == ACTION_GET_ADD_USER_PAGE)
+        action_get_add_user_page();
+    # show list builder page
+    else if ($action == ACTION_GET_LISTBUILDER_PAGE)
+        action_get_listbuilder_page();
+    # show portal page in all other instances
+    else
+        action_get_portal_page();
+
+    return $response;
+}
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -90,8 +136,8 @@ $xajax->processRequests();
 
     <div id="main_body">
 
-        <script language="javaScript">xajax_action_get_portal_page()</script>
-
+        <script language="javaScript">xajax_process_url()</script>
+            
     </div> <!-- main_body -->
 
 </div> <!-- outer_body -->
@@ -107,4 +153,5 @@ $xajax->processRequests();
 </body>
 
 <html>
+
 

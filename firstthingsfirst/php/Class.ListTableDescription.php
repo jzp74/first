@@ -212,7 +212,6 @@ class ListTableDescription
     }
     
     # create the database table that contains all ListTableDescriptions
-    # TODO exception handling for this function
     # TODO ensure title cannot be given names > 100 chars
     function create ()
     {
@@ -235,6 +234,8 @@ class ListTableDescription
         {
             $this->_log->error("could not create table");
             $this->_log->error("database error: ".$this->_database->get_error_str());
+            $this->error_str = ERROR_DATABASE_PROBLEM;
+            
             return FALSE;
         }
         
@@ -285,13 +286,15 @@ class ListTableDescription
         else
         {
             $this->_log->error("could not read ListTableDescription (id=".$this->id.") from database");
+            $this->_log->error("database error: ".$this->_database->get_error_str());
+            $this->error_str = ERROR_DATABASE_PROBLEM;
+
             return FALSE;
         }
     }
     
     # insert ListTableDescription in database
     # call create function of list_table
-    # TODO do something with double titles: "database error: Duplicate entry"
     function insert ()
     {
         $this->_log->trace("inserting ListTableDescription");

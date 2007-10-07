@@ -18,6 +18,9 @@ define("ERROR_NO_DESCRIPTION_GIVEN", "please enter a description for this list")
 define("ERROR_NOT_WELL_FORMED_STRING", "field contains one or more of the<br>following characters: \" ' * / : < > ? \ | & ; #");
 
 # database errors
-define("ERROR_DATABASE_PROBLEM", "database problem, please try again");
+define("ERROR_DATABASE_PROBLEM", "an unkwown error occurred<br>please check your database settings or contact an administrator");
+
+# list creation errors
+define("ERROR_DUPLICATE_LIST_NAME", "a list with the same name already exists, please choose a new name");
 
 ?>

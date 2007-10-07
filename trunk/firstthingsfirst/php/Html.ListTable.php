@@ -125,6 +125,11 @@ function action_get_list_content ($list_title, $order_by_field, $page)
     $definition = $list_table_description->get_definition();
     $field_names = $list_table->get_field_names();
     $rows = $list_table->select($order_by_field, $page, 0);
+    if (strlen($list_table->get_error_str()) > 0)
+    {
+        $result->set_error_str($list_table->get_error_str());
+        $result->set_error_element("list_content_pane");
+    }
     
     # use the params that have been set by _list_table->select()
     $total_pages = $list_state->get_total_pages();
@@ -263,11 +268,11 @@ function action_get_list_content ($list_title, $order_by_field, $page)
     
     $result->set_result_str($html_str);    
 
-    if (!check_postconditions())
-        return $reponse;
-    
     $response->addAssign("list_content_pane", "innerHTML", $result->get_result_str());
 
+    if (!check_postconditions())
+        return $response;
+    
     $logging->trace("got list content");
 
     return $response;
@@ -298,13 +303,19 @@ function action_get_list_row ($list_title, $key_string)
 
     # set the right list_table_description
     $list_table_description->select($list_title);
-
     $field_names = $list_table->get_field_names();
     $definition = $list_table_description->get_definition();
 
     # get list row when key string has been given
     if (strlen($key_string))
+    {
         $row = $list_table->select_row($key_string);
+        if (strlen($list_table->get_error_str()) > 0)
+        {
+            $result->set_error_str($list_table->get_error_str());
+            $result->set_error_element("list_content_pane");
+        }
+    }
 
     # start with the action bar
     if (strlen($key_string))
@@ -421,6 +432,9 @@ function action_get_list_row ($list_title, $key_string)
     $result->set_result_str($html_str);    
 
     $response->addAssign("action_bar", "innerHTML", $result->get_result_str());
+
+    if (!check_postconditions())
+        return $response;
 
     $logging->trace("got list row");
 
@@ -645,12 +659,11 @@ function action_add_list_row ($list_title, $form_values)
     }
     
     # display error when insertion returns false
-    # TODO determine what the best place is to diplay error
     if (!$list_table->insert($new_form_values))
     {
         $logging->warn("insert returns false (".$last_name_key.")");
         $result->set_error_str($list_table->get_error_str());
-        $result->set_error_element(end($name_keys));
+        $result->set_error_element("list_content_pane");
         
         if (!check_postconditions())
             return $response;
@@ -691,7 +704,16 @@ function action_archive_list_row ($list_title, $key_string)
     # set the right list_table_description
     $list_table_description->select($list_title);
 
-    $list_table->archive($key_string);    
+    # display error when archive returns false
+    if (!$list_table->archive($key_string))
+    {
+        $logging->warn("archive returns false");
+        $result->set_error_str($list_table->get_error_str());
+        $result->set_error_element("list_content_pane");
+        
+        if (!check_postconditions())
+            return $response;
+    }
 
     $response->addAssign("list_content_pane", "innerHTML", $result->get_result_str());
 
@@ -725,7 +747,16 @@ function action_del_list_row ($list_title, $key_string)
     # set the right list_table_description
     $list_table_description->select($list_title);
 
-    $list_table->delete($key_string);    
+    # display error when delete returns false
+    if (!$list_table->delete($key_string))
+    {
+        $logging->warn("delete returns false");
+        $result->set_error_str($list_table->get_error_str());
+        $result->set_error_element("list_content_pane");
+        
+        if (!check_postconditions())
+            return $response;
+    }
 
     $response->addAssign("list_content_pane", "innerHTML", $result->get_result_str());
 
@@ -758,6 +789,8 @@ function action_cancel_list_action ($list_title)
     $html_str .= get_action_bar($list_title, "");
     $result->set_result_str($html_str);    
 
+    # remove any error messages
+    $response->addRemove("error_message");
     $response->addAssign("action_bar", "innerHTML", $result->get_result_str());
 
     $logging->trace("canceled list action");

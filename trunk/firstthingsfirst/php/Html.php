@@ -68,12 +68,18 @@ function check_postconditions ()
     global $logging;
     global $result;
     global $user;
+    global $response;
         
     $logging->trace("check postconditions");
     
-    #check if an error is set
+    # first remove the error messages
+    $response->addRemove("error_message");
+
+    # check if an error is set
     if ($result->get_error_str())
     {
+        $logging->warn("an error has been set");
+        
         $error_element = $result->get_error_element();
         $error_str = $result->get_error_str();
         set_error_message($error_element, $error_str);
@@ -94,8 +100,7 @@ function set_error_message ($error_element, $error_str)
     
     $logging->trace("set error (element=".$error_element.")");
     
-    $response->addRemove("error_message");
-    $response->addAppend($error_element, "innerHTML", "<p id=\"error_message\" style=\"color: red;\"><em>".$error_str."</em></p>");
+    $response->addAppend($error_element, "innerHTML", "<p id=\"error_message\"><em><strong>".$error_str."</strong></em></p>");
     
     $logging->trace("set error message (element=".$error_element.")");        
 }

@@ -238,7 +238,7 @@ class ListTable
         global $firstthingsfirst_field_descriptions;
         
         $this->_log->trace("creating TableList (table=".$this->table_name.")");
-
+        
         if ($this->_database->table_exists($this->table_name))
         {
             if ($force)
@@ -310,6 +310,9 @@ class ListTable
         $db_field_names = $this->get_db_field_names();
 
         $this->_log->trace("selecting ListTable (order_by_field=".$order_by_field.", page=".$page.", archived=".$archived.")");
+
+        # blank error_str
+        $this->error_str = "";
 
         if (!$this->_database->table_exists($this->table_name))
         {
@@ -460,6 +463,9 @@ class ListTable
         $db_field_names = $this->get_db_field_names();
 
         $this->_log->trace("selecting ListTable row (key_string=".$key_string.")");
+
+        # blank error_str
+        $this->error_str = "";
 
         if (!$this->_database->table_exists($this->table_name))
         {

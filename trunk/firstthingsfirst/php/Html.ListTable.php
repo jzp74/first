@@ -72,9 +72,6 @@ function action_get_list_page ($list_title)
 
     $result->set_result_str($html_str);    
     
-    if (!check_postconditions())
-        return $reponse;
-    
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
 
     # set list content

@@ -7,12 +7,15 @@
 
 # action definitions
 define("ACTION_GET_PORTAL_PAGE", "get_portal_page");
+define("ACTION_GET_LIST_TABLES", "get_list_tables");
 
 # action permissions
 $firstthingsfirst_action_description[ACTION_GET_PORTAL_PAGE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$firstthingsfirst_action_description[ACTION_GET_LIST_TABLES] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 
 # action registrations
 $xajax->registerFunction("action_get_portal_page");
+$xajax->registerFunction("action_get_list_tables");
 
 
 # set the html for a complete portal page
@@ -20,7 +23,7 @@ $xajax->registerFunction("action_get_portal_page");
 function action_get_portal_page ()
 {
     global $logging;
-    global $result;    
+    global $result;
     global $user;
     global $response;
     global $firstthingsfirst_portal_title;
@@ -44,11 +47,6 @@ function action_get_portal_page ()
     $html_str .= "            <div id=\"login_status\">&nbsp;</div>&nbsp;\n";
     $html_str .= "        </div> <!-- navigation_container -->\n\n";    
     $html_str .= "        <div id=\"portal_overview_pane\">\n\n";
-
-    $result->set_result_str($html_str);    
-    get_list_tables();
-    
-    $html_str = "";
     $html_str .= "        </div> <!-- portal_overview_pane -->\n\n";
     $html_str .= "        <div id=\"action_pane\">\n\n";
     $html_str .= "            <div id=\"action_bar\">\n";
@@ -59,10 +57,10 @@ function action_get_portal_page ()
 
     $result->set_result_str($html_str);    
 
-    if (!check_postconditions())
-        return $reponse;
-    
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
+
+    # get list tables
+    action_get_list_tables();
 
     set_login_status();
     set_footer("&nbsp;");
@@ -73,21 +71,31 @@ function action_get_portal_page ()
 }
 
 # return the html for an overview of all ListTables contained in database
-function get_list_tables ()
+function action_get_list_tables ()
 {
     global $firstthingsfirst_portal_address;
     global $logging;
     global $result;
     global $database;
+    global $response;
 
-    $logging->trace("getting list_tables");
+    $logging->info("ACTION: get list tables");
 
     $html_str = "";
     $list_table_descriptions = array();
 
+    if (!check_preconditions(ACTION_GET_LIST_PAGES))
+        return $response;
+
     # get all list_tables from database
     $query = "SELECT _title, _description FROM ".LISTTABLEDESCRIPTION_TABLE_NAME;
     $result_object = $database->query($query);
+    if (!$result_object)
+    {
+        $result->set_error_str(ERROR_DATABASE_PROBLEM);
+        $result->set_error_element("portal_overview_pane");
+    }
+    
     while ($row = $database->fetch($result_object))
         array_push($list_table_descriptions, array($row[0], $row[1]));
 
@@ -124,7 +132,13 @@ function get_list_tables ()
     
     $result->set_result_str($html_str);    
 
+    $response->addAssign("portal_overview_pane", "innerHTML", $result->get_result_str());
+
+    if (!check_postconditions())
+        return $response;
+
     $logging->trace("got list_tables");
+
     return;
 }
 

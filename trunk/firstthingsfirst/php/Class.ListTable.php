@@ -258,8 +258,10 @@ class ListTable
             else
             {
                 $this->_log->warn("table (table=".$this->table_name.") already exists and (force=FALSE)");
+                $this->_log->error("database error: ".$this->_database->get_error_str());
+                $this->error_str = ERROR_DUPLICATE_LIST_NAME;
                 
-                return TRUE;
+                return FALSE;
             }
         }
 

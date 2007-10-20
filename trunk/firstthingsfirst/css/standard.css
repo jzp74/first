@@ -254,7 +254,7 @@ html, body {
 #portal_overview_pane {
     display: inline-block;
     float: none;
-    padding: 12px 10px 6px 10px;
+    padding: 10px 10px 6px 10px;
     color: rgb(0, 0, 102);
     }
 
@@ -262,7 +262,7 @@ html, body {
 #portal_overview {
     float: none;
     width: 100%;
-    padding: 2px 0px 2px 0px;
+    padding: 0px 0px 0px 0px;
     color: rgb(0, 0, 102);
     }
 
@@ -350,4 +350,12 @@ html, body {
     margin: 4px 10px 0px 10px;
     padding: 6px 6px 6px 6px;
     border: 1px dashed rgb(255, 0, 0);
+    }
+
+/*  defines info messages */
+#info_message {
+    color: rgb(0, 0, 102);
+    margin: 4px 10px 0px 10px;
+    padding: 6px 6px 6px 6px;
+    border: 1px dashed rgb(0, 0, 102);
     }

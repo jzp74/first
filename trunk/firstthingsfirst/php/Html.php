@@ -72,8 +72,9 @@ function check_postconditions ()
         
     $logging->trace("check postconditions");
     
-    # first remove the error messages
+    # first remove any error or info messages
     $response->addRemove("error_message");
+    $response->addRemove("info_message");
 
     # check if an error is set
     if ($result->get_error_str())
@@ -100,9 +101,30 @@ function set_error_message ($error_element, $error_str)
     
     $logging->trace("set error (element=".$error_element.")");
     
+    # first remove any error or info messages
+    $response->addRemove("error_message");
+    $response->addRemove("info_message");
+
     $response->addAppend($error_element, "innerHTML", "<p id=\"error_message\"><em><strong>".$error_str."</strong></em></p>");
     
     $logging->trace("set error message (element=".$error_element.")");        
+}
+
+# set info message
+function set_info_message ($info_element, $info_str)
+{
+    global $logging;
+    global $response;
+    
+    $logging->trace("set error (element=".$info_element.")");
+    
+    # first remove any error or info messages
+    $response->addRemove("error_message");
+    $response->addRemove("info_message");
+
+    $response->addAppend($info_element, "innerHTML", "<p id=\"info_message\"><em><strong>".$info_str."</strong></em></p>");
+    
+    $logging->trace("set error message (element=".$info_element.")");        
 }
 
 # get html for an active button that calls a javascript function

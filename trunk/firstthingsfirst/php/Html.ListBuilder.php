@@ -54,32 +54,34 @@ function action_get_listbuilder_page ()
     $html_str .= "        <div id=\"navigation_container\">\n";
     $html_str .= "            <div id=\"navigation\">&nbsp;".get_query_button("action=get_portal_page", BUTTON_PORTAL)."</div>\n";
     $html_str .= "            <div id=\"login_status\">&nbsp;</div>&nbsp\n";
-    $html_str .= "        </div> <!-- navigation_container -->\n\n";    
-    $html_str .= "        <div id=\"listbuilder_general_settings_title\">".LABEL_GENERAL_SETTINGS."</div>\n\n";        
-    $html_str .= "        <div id=\"listbuilder_general_settings_pane\">\n\n";
-    $html_str .= "            <table id=\"listbuilder_general_settings\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
-    $html_str .= "                <tbody>\n";
-    $html_str .= "                    <tr>\n";
-    $html_str .= "                        <td>".LABEL_TITLE_OF_THIS_LIST."</td>\n";
-    $html_str .= "                        <td id=\"listbuilder_list_title_id\"><input size=\"20\" maxlength=\"100\" id=\"listbuilder_list_title\" type=\"text\"></td>\n";
-    $html_str .= "                        <td width=\"90%\">&nbsp;</td>\n";
-    $html_str .= "                    </tr>\n";
-    $html_str .= "                    <tr>\n";
-    $html_str .= "                        <td>".LABEL_SHORT_DESCRIPTION_OF_THIS_LIST."</td>\n";
-    $html_str .= "                        <td id=\"listbuilder_list_description_id\"><textarea cols=\"40\" rows=\"4\" id=\"listbuilder_list_description\"></textarea></td>\n";
-    $html_str .= "                        <td width=\"90%\">&nbsp;</td>\n";
-    $html_str .= "                    </tr>\n";
-    $html_str .= "                </tbody>\n";
-    $html_str .= "            </table> <!-- listbuilder_general_settings -->\n\n";
-    $html_str .= "        </div> <!-- listbuilder_general_settings_pane -->\n\n";
-    $html_str .= "        <div id=\"listbuilder_definition_title\">".LABEL_DEFINE_TABLE_FIELDS."</div>\n\n";
-    $html_str .= "        <div id=\"listbuilder_definition_pane\">\n\n";
+    $html_str .= "        </div> <!-- navigation_container -->\n\n";
+    $html_str .= "        <div id=\"listbuilder_pane\">\n\n";
+    $html_str .= "            <div id=\"listbuilder_general_settings_title\">".LABEL_GENERAL_SETTINGS."</div>\n\n";        
+    $html_str .= "            <div id=\"listbuilder_general_settings_pane\">\n\n";
+    $html_str .= "                <table id=\"listbuilder_general_settings\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
+    $html_str .= "                    <tbody>\n";
+    $html_str .= "                        <tr>\n";
+    $html_str .= "                            <td>".LABEL_TITLE_OF_THIS_LIST."</td>\n";
+    $html_str .= "                            <td id=\"listbuilder_list_title_id\"><input size=\"20\" maxlength=\"100\" id=\"listbuilder_list_title\" type=\"text\"></td>\n";
+    $html_str .= "                            <td width=\"90%\">&nbsp;</td>\n";
+    $html_str .= "                        </tr>\n";
+    $html_str .= "                        <tr>\n";
+    $html_str .= "                            <td>".LABEL_SHORT_DESCRIPTION_OF_THIS_LIST."</td>\n";
+    $html_str .= "                            <td id=\"listbuilder_list_description_id\"><textarea cols=\"40\" rows=\"4\" id=\"listbuilder_list_description\"></textarea></td>\n";
+    $html_str .= "                            <td width=\"90%\">&nbsp;</td>\n";
+    $html_str .= "                        </tr>\n";
+    $html_str .= "                    </tbody>\n";
+    $html_str .= "                </table> <!-- listbuilder_general_settings -->\n\n";
+    $html_str .= "            </div> <!-- listbuilder_general_settings_pane -->\n\n";
+    $html_str .= "            <div id=\"listbuilder_definition_title\">".LABEL_DEFINE_TABLE_FIELDS."</div>\n\n";
+    $html_str .= "            <div id=\"listbuilder_definition_pane\">\n\n";
 
     $result->set_result_str($html_str);    
     get_field_definition_table($definition);
 
     $html_str = "";            
-    $html_str .= "        </div> <!-- listbuiler_definition_pane -->\n\n";
+    $html_str .= "           </div> <!-- listbuilder_definition_pane -->\n\n";
+    $html_str .= "        </div> <!-- listbuilder_pane -->\n\n";
     $html_str .= "        <div id=\"action_pane\">\n\n";
     $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
     $html_str .= "                <p>&nbsp;".get_select("add_select", "add_it", "")."\n";
@@ -360,7 +362,10 @@ function action_create_list ($title, $description, $definition)
     $list_table_description->set_title($title);
     $list_table_description->set_description($description);
     $list_table_description->set_definition($new_definition);
-    $list_table_description->insert();
+    if ($list_table_description->insert())
+        set_info_message("listbuilder_pane", LABEL_NEW_LIST_CREATED);
+    else
+        set_error_message("listbuilder_pane", $list_table_description->get_error_str());
     
     $logging->trace("created list");
 

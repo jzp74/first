@@ -21,6 +21,6 @@ define("ERROR_NOT_WELL_FORMED_STRING", "field contains one or more of the<br>fol
 define("ERROR_DATABASE_PROBLEM", "an unkwown error occurred<br>please check your database settings or contact an administrator");
 
 # list creation errors
-define("ERROR_DUPLICATE_LIST_NAME", "a list with the same name already exists, please choose a new name");
+define("ERROR_DUPLICATE_LIST_NAME", "a list with the same name already exists, please choose a different name");
 
 ?>

@@ -383,6 +383,8 @@ class ListTable
             $page = $this->_list_state->get_current_page();
         if ($page > $total_pages)
             $page = $total_pages;
+        if ($total_pages == 0)
+            $page = 1;
             
         $rows = array();
         $query = "SELECT ".implode($this->db_field_names, ", ")." FROM ".$this->table_name." WHERE ".DB_ARCHIVED_FIELD_NAME."=0";

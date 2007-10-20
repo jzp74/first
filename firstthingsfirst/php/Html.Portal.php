@@ -90,7 +90,7 @@ function action_get_list_tables ()
     # get all list_tables from database
     $query = "SELECT _title, _description FROM ".LISTTABLEDESCRIPTION_TABLE_NAME;
     $result_object = $database->query($query);
-    if (!$result_object)
+    if ($result_object == FALSE)
     {
         $result->set_error_str(ERROR_DATABASE_PROBLEM);
         $result->set_error_element("portal_overview_pane");

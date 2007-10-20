@@ -303,6 +303,26 @@ class ListTableDescription
         if (!$this->_database->table_exists(LISTTABLEDESCRIPTION_TABLE_NAME))
             $this->create();
         
+        # check if this is not a duplicate list
+        $query = "SELECT * FROM ".LISTTABLEDESCRIPTION_TABLE_NAME." WHERE _title=\"".$this->title."\"";
+        $result = $this->_database->query($query);
+        if ($result == FALSE)
+        {
+            $this->_log->error("could not check if this is a duplicate list");
+            $this->_log->error("database error: ".$this->_database->get_error_str());
+            $this->error_str = ERROR_DATABASE_PROBLEM;
+            
+            return FALSE;
+        }
+        $entries = $this->_database->fetch($result);
+        if (count($entries[0]))
+        {
+            $this->_log->error("this is a duplicate list");
+            $this->error_str = ERROR_DUPLICATE_LIST_NAME;
+            
+            return FALSE;
+        }
+
         # set creator, created, modifier and modified attributes
         $this->set_creator();
         $this->set_created();

@@ -544,7 +544,7 @@ function action_update_list_row ($list_title, $key_string, $form_values)
         $result->set_error_str($list_table->get_error_str());
         $result->set_error_element(end($name_keys));
         
-        return;
+        return $response;
     }
     
     $html_str .= get_action_bar($list_title, "");

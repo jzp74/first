@@ -308,39 +308,42 @@ html, body {
     border: 1px solid rgb(227, 225, 250);
     }
     
-/*  defines the title of the general settings pane */
+/*  defines the new user settings pane */
+#add_user_pane {
+    display: inline-block;
+    float: none;
+    margin: 12px 12px 6px 12px;
+    color: rgb(0, 0, 102);
+    }
+
+/*  defines the title of the new user settings */
 #add_user_title {
-    margin: 12px 12px 0px 12px;
     padding: 2px 3px 2px 3px;
     background-color: rgb(227, 225, 250);
-    color: rgb(0, 0, 102);
     font-family: arial black;    
     font-size: 16px;
     font-weight: normal;
     }
 
 /*  defines the pane that containes new user settings */    
-#add_user_pane {
+#add_user_definition {
     display: inline-block;
     float: none;
-    margin: 0px 12px 2px 12px;
     background-color: rgb(235, 234, 250);
-    color: rgb(0, 0, 102);
     border: 2px solid rgb(227, 225, 250);
     }
 
 /*  defines the table that contains the general settings */    
-#add_user_definition {
+#add_user_definition_table {
     float: none;
-    color: rgb(0, 0, 102);
     }
 
-#add_user_definition td {
-    padding: 4px 10px 4px 4px;
+#add_user_definition_table td {
+    padding: 4px 4px 4px 4px;
     vertical-align: top;
     }
 
-#add_user_definition input, #add_user_definition textarea { 
+#add_user_definition_table input, #add_user_definition_table textarea { 
     border: 1px solid rgb(227, 225, 250);
     }
     

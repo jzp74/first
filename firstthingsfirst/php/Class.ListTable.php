@@ -320,6 +320,7 @@ class ListTable
         {
             $this->_log->error("TableList does not exist in database");
             $this->error_str = ERROR_DATABASE_PROBLEM;
+            
             return array();
         }
 

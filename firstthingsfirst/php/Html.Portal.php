@@ -94,6 +94,7 @@ function action_get_list_tables ()
     {
         $result->set_error_str(ERROR_DATABASE_PROBLEM);
         $result->set_error_element("portal_overview_pane");
+        # no return statement here because we want the complete page to be displayed
     }
     
     while ($row = $database->fetch($result_object))

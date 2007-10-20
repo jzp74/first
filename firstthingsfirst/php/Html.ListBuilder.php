@@ -423,22 +423,22 @@ function get_field_definition_table ($definition)
     $input_html_value_invisible = "<input style=\"visibility: hidden;\" type=text size=\"20\" maxlength=\"100\"";
     $html_str = "";    
     
-    $html_str .= "\n\n            <form id=\"database_definition_form\">\n";
-    $html_str .= "                <table id=\"listbuilder_definition\" align=\"left\" border=\"0\" cellspacing=\"0\">\n";
-    $html_str .= "                    <thead>\n";
-    $html_str .= "                        <tr>\n";
-    $html_str .= "                            <th>".LABEL_FIELDTYPE."</th>\n";
-    $html_str .= "                            <th>".LABEL_FIELDNAME."</th>\n";
-    $html_str .= "                            <th>".LABEL_OPTIONS."</th>\n";
-    $html_str .= "                            <th>".LABEL_COMMENT."</th>\n";
-    $html_str .= "                            <th colspan=\"3\">".LABEL_ACTION."</th>\n";
-    $html_str .= "                        </tr>\n";
-    $html_str .= "                    </thead>\n";
-    $html_str .= "                    <tbody>\n";
+    $html_str .= "\n\n                <form id=\"database_definition_form\">\n";
+    $html_str .= "                    <table id=\"listbuilder_definition\" align=\"left\" border=\"0\" cellspacing=\"0\">\n";
+    $html_str .= "                        <thead>\n";
+    $html_str .= "                            <tr>\n";
+    $html_str .= "                                <th>".LABEL_FIELDTYPE."</th>\n";
+    $html_str .= "                                <th>".LABEL_FIELDNAME."</th>\n";
+    $html_str .= "                                <th>".LABEL_OPTIONS."</th>\n";
+    $html_str .= "                                <th>".LABEL_COMMENT."</th>\n";
+    $html_str .= "                                <th colspan=\"3\">".LABEL_ACTION."</th>\n";
+    $html_str .= "                            </tr>\n";
+    $html_str .= "                        </thead>\n";
+    $html_str .= "                        <tbody>\n";
     
     for ($row = 0; $row < (count($definition) / 3); $row += 1)
     {
-        $html_str .= "                        <tr>\n";
+        $html_str .= "                            <tr>\n";
         $position_type = $row * 3;
         $position_name = ($row * 3) + 1;
         $position_options = ($row * 3) + 2;
@@ -447,54 +447,54 @@ function get_field_definition_table ($definition)
 
         # the first column - type
         if ($row == 0)
-            $html_str .= "                            <td>".$input_html_name." name=\"row_".$row."_1\" readonly value=\"automatic number\"></td>\n";
+            $html_str .= "                                <td>".$input_html_name." name=\"row_".$row."_1\" readonly value=\"automatic number\"></td>\n";
         else
-            $html_str .= "                            <td>".get_select("", "row_".$row."_1", $definition[$position_type])."</td>\n";
+            $html_str .= "                                <td>".get_select("", "row_".$row."_1", $definition[$position_type])."</td>\n";
         
         # the second column - name
-        $html_str .= "                            <td id=\"row_".$row."_2\">".$input_html_value." name=\"row_".$row."_2\" ";
+        $html_str .= "                                <td id=\"row_".$row."_2\">".$input_html_value." name=\"row_".$row."_2\" ";
         if ($row == 0)
             $html_str .="readonly ";
         $html_str .= "value=\"".$definition[$position_name]."\"></td>\n";
 
         # the third column - options
         if ($definition[$position_type] == "LABEL_DEFINITION_SELECTION")
-            $html_str .= "                            <td id=\"row_".$row."_3\">".$input_html_value." name=\"row_".$row."_3\" value=\"".$definition[$position_options]."\"></td>\n";
+            $html_str .= "                                <td id=\"row_".$row."_3\">".$input_html_value." name=\"row_".$row."_3\" value=\"".$definition[$position_options]."\"></td>\n";
         else
-            $html_str .= "                            <td id=\"row_".$row."_3\">".$input_html_value_invisible." name=\"row_".$row."_3\" value=\"\"></td>\n";
+            $html_str .= "                                <td id=\"row_".$row."_3\">".$input_html_value_invisible." name=\"row_".$row."_3\" value=\"\"></td>\n";
 
         # the fourth column - remarks
         if ($row == 0)
-            $html_str .= "                            <td><em>".LABEL_FIELD_CANNOT_BE_CHANGED."</em></td>\n";
+            $html_str .= "                                <td><em>".LABEL_FIELD_CANNOT_BE_CHANGED."</em></td>\n";
         else if ($definition[$position_type] == "LABEL_DEFINITION_SELECTION")
-            $html_str .= "                            <td><em>".LABEL_OPTIONS_EXAMPLE."</em></td>\n";
+            $html_str .= "                                <td><em>".LABEL_OPTIONS_EXAMPLE."</em></td>\n";
         else
-            $html_str .= "                            <td>&nbsp</td>\n";
+            $html_str .= "                                <td>&nbsp</td>\n";
         
         # the fifth column - up
         if ($row > 1)
-            $html_str .= "                            <td width=\"1%\">".get_button("xajax_action_move_listbuilder_row(".$row.", 'up', xajax.getFormValues('database_definition_form'))", BUTTON_UP)."</td>\n";
+            $html_str .= "                                <td width=\"1%\">".get_button("xajax_action_move_listbuilder_row(".$row.", 'up', xajax.getFormValues('database_definition_form'))", BUTTON_UP)."</td>\n";
         else
-            $html_str .= "                            <td width=\"1%\"><p style=\"visibility: hidden;\">".BUTTON_UP."</p></td>\n";
+            $html_str .= "                                <td width=\"1%\"><p style=\"visibility: hidden;\">".BUTTON_UP."</p></td>\n";
         
         # the sixth column - down
         if ($row > 0 && $row < ((count($definition) / 3) - 1))
-            $html_str .= "                            <td width=\"1%\">".get_button("xajax_action_move_listbuilder_row(".$row.", 'down', xajax.getFormValues('database_definition_form'))", BUTTON_DOWN)."</td>\n";
+            $html_str .= "                                <td width=\"1%\">".get_button("xajax_action_move_listbuilder_row(".$row.", 'down', xajax.getFormValues('database_definition_form'))", BUTTON_DOWN)."</td>\n";
         else
-            $html_str .= "                            <td width=\"1%\"><p style=\"visibility: hidden;\">".BUTTON_DOWN."</p></td>\n";
+            $html_str .= "                                <td width=\"1%\"><p style=\"visibility: hidden;\">".BUTTON_DOWN."</p></td>\n";
         
         # the seventh column - delete
         if ($row > 0)
-            $html_str .= "                            <td width=\"1%\">".get_button("xajax_action_del_listbuilder_row(".$row.", xajax.getFormValues('database_definition_form'))", BUTTON_DELETE)."</td>\n";
+            $html_str .= "                                <td width=\"1%\">".get_button("xajax_action_del_listbuilder_row(".$row.", xajax.getFormValues('database_definition_form'))", BUTTON_DELETE)."</td>\n";
         else
-            $html_str .= "                            <td width=\"1%\"><p style=\"visibility: hidden;\">".BUTTON_DELETE."</p></td>\n";
+            $html_str .= "                                <td width=\"1%\"><p style=\"visibility: hidden;\">".BUTTON_DELETE."</p></td>\n";
     
-        $html_str .= "                        </tr>\n";
+        $html_str .= "                            </tr>\n";
     }
     
-    $html_str .= "                    </tbody>\n";
-    $html_str .= "                </table> <!-- listbuilder_general_settings -->\n";
-    $html_str .= "            </form> <!-- database_definition_form -->\n\n";
+    $html_str .= "                        </tbody>\n";
+    $html_str .= "                    </table> <!-- listbuilder_general_settings -->\n";
+    $html_str .= "                </form> <!-- database_definition_form -->\n\n";
     
     $result->set_result_str($html_str);   
     

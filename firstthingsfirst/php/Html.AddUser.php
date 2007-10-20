@@ -38,40 +38,42 @@ function action_get_add_user_page ()
     $html_str .= "        <div id=\"navigation_container\">\n";
     $html_str .= "            <div id=\"navigation\">".get_query_button("action=get_portal_page", BUTTON_PORTAL)."</div>\n";
     $html_str .= "            <div id=\"login_status\">&nbsp;</div>&nbsp\n";
-    $html_str .= "        </div> <!-- navigation_container -->\n\n";        
-    $html_str .= "        <div id=\"add_user_title\">".LABEL_ADD_USER_DEFINITION."</div>\n\n";        
+    $html_str .= "        </div> <!-- navigation_container -->\n\n";
     $html_str .= "        <div id=\"add_user_pane\">\n\n";
-    $html_str .= "            <form id=\"user_definition_form\">\n\n";
-    $html_str .= "                <table id=\"add_user_definition\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
-    $html_str .= "                    <tbody>\n";
-    $html_str .= "                        <tr>\n";
-    $html_str .= "                            <td>".LABEL_ADD_USER_NAME."</td>\n";
-    $html_str .= "                            <td id=\"user_definition_name_id\"><input size=\"16\" maxlength=\"16\" name=\"user_definition_name\" type=\"text\"></td>\n";
-    $html_str .= "                            <td>".LABEL_ADD_USER_NAME_EXPLANATION."</td>\n";
-    $html_str .= "                        </tr>\n";
-    $html_str .= "                        <tr>\n";
-    $html_str .= "                            <td>".LABEL_ADD_USER_PASSWORD."</td>\n";
-    $html_str .= "                            <td id=\"user_definition_password_id\"><input size=\"16\" maxlength=\"16\" name=\"user_definition_password\" type=\"password\"></td>\n";
-    $html_str .= "                            <td>".LABEL_ADD_USER_PASSWORD_EXPLANATION."</td>\n";
-    $html_str .= "                        </tr>\n";
-    $html_str .= "                        <tr>\n";
-    $html_str .= "                            <td>&nbsp</td>\n";
-    $html_str .= "                            <td>&nbsp</td>\n";
-    $html_str .= "                            <td>&nbsp</td>\n";
-    $html_str .= "                        </tr>\n";
-    $html_str .= "                        <tr>\n";
-    $html_str .= "                            <td>".LABEL_ADD_USER_EDIT_LIST."</td>\n";
-    $html_str .= "                            <td id=\"user_definition_edit_list_id\"><input name=\"user_definition_edit_list\" type=\"checkbox\"></td>\n";
-    $html_str .= "                            <td>".LABEL_ADD_USER_EDIT_LIST_EXPLANATION."</td>\n";
-    $html_str .= "                        </tr>\n";
-    $html_str .= "                        <tr>\n";
-    $html_str .= "                            <td>".LABEL_ADD_USER_CREATE_LIST."</td>\n";
-    $html_str .= "                            <td id=\"user_definition_create_list_id\"><input name=\"user_definition_create_list\" type=\"checkbox\"></td>\n";
-    $html_str .= "                            <td>".LABEL_ADD_USER_CREATE_LIST_EXPLANATION."</td>\n";
-    $html_str .= "                        </tr>\n";
-    $html_str .= "                    </tbody>\n";
-    $html_str .= "                </table> <!-- add_user_definition -->\n\n";
-    $html_str .= "            </form> <!-- user_definition_form -->\n\n";
+    $html_str .= "            <div id=\"add_user_title\">".LABEL_ADD_USER_DEFINITION."</div>\n\n";        
+    $html_str .= "            <div id=\"add_user_definition\">\n\n";
+    $html_str .= "                <form id=\"user_definition_form\">\n\n";
+    $html_str .= "                    <table id=\"add_user_definition_table\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
+    $html_str .= "                        <tbody>\n";
+    $html_str .= "                            <tr>\n";
+    $html_str .= "                                <td>".LABEL_ADD_USER_NAME."</td>\n";
+    $html_str .= "                                <td id=\"user_definition_name_id\"><input size=\"16\" maxlength=\"16\" name=\"user_definition_name\" type=\"text\"></td>\n";
+    $html_str .= "                                <td>".LABEL_ADD_USER_NAME_EXPLANATION."</td>\n";
+    $html_str .= "                            </tr>\n";
+    $html_str .= "                            <tr>\n";
+    $html_str .= "                                <td>".LABEL_ADD_USER_PASSWORD."</td>\n";
+    $html_str .= "                                <td id=\"user_definition_password_id\"><input size=\"16\" maxlength=\"16\" name=\"user_definition_password\" type=\"password\"></td>\n";
+    $html_str .= "                                <td>".LABEL_ADD_USER_PASSWORD_EXPLANATION."</td>\n";
+    $html_str .= "                            </tr>\n";
+    $html_str .= "                            <tr>\n";
+    $html_str .= "                                <td>&nbsp</td>\n";
+    $html_str .= "                                <td>&nbsp</td>\n";
+    $html_str .= "                                <td>&nbsp</td>\n";
+    $html_str .= "                            </tr>\n";
+    $html_str .= "                            <tr>\n";
+    $html_str .= "                                <td>".LABEL_ADD_USER_EDIT_LIST."</td>\n";
+    $html_str .= "                                <td id=\"user_definition_edit_list_id\"><input name=\"user_definition_edit_list\" type=\"checkbox\"></td>\n";
+    $html_str .= "                                <td>".LABEL_ADD_USER_EDIT_LIST_EXPLANATION."</td>\n";
+    $html_str .= "                            </tr>\n";
+    $html_str .= "                            <tr>\n";
+    $html_str .= "                                <td>".LABEL_ADD_USER_CREATE_LIST."</td>\n";
+    $html_str .= "                                <td id=\"user_definition_create_list_id\"><input name=\"user_definition_create_list\" type=\"checkbox\"></td>\n";
+    $html_str .= "                                <td>".LABEL_ADD_USER_CREATE_LIST_EXPLANATION."</td>\n";
+    $html_str .= "                            </tr>\n";
+    $html_str .= "                        </tbody>\n";
+    $html_str .= "                    </table> <!-- add_user_definition_table -->\n\n";
+    $html_str .= "                </form> <!-- user_definition_form -->\n\n";
+    $html_str .= "            </div> <!-- add_user_definition -->\n\n";
     $html_str .= "        </div> <!-- add_user_pane -->\n\n";
     $html_str .= "        <div id=\"action_pane\">\n\n";
     $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
@@ -147,9 +149,9 @@ function action_add_user ($definition)
     }
 
     if (!$user->add($name, $pw, $edit_list, $create_list))
-        $logging->warn("could not add user");
+        set_error_message("add_user_pane", $user->get_error_str());
     else
-        $logging->debug("added new user");
+        set_info_message("add_user_pane", LABEL_USER_ADDED);
 
     return $response;
 }

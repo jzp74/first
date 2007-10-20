@@ -15,6 +15,9 @@ define("USER_NAME_RESET_VALUE", "_");
 # TODO add user created, last login date/time
 class User
 {
+    # error string, contains last known error
+    protected $error_str;
+
     # reference to global json object
     protected $_json;
 
@@ -68,6 +71,12 @@ class User
     }
 
     # getter
+    function get_error_str ()
+    {
+        return $this->error_str;
+    }
+
+    # getter
     function get_id ()
     {
         return $_SESSION["id"];
@@ -77,6 +86,12 @@ class User
     function get_name ()
     {
         return $_SESSION["name"];
+    }
+
+    # getter
+    function get_created ()
+    {
+        return $_SESSION["created"];
     }
 
     # getter
@@ -139,6 +154,12 @@ class User
     function set_name ($name)
     {
         $_SESSION["name"] = $name;
+    }
+    
+    # setter
+    function set_created ($created)
+    {
+        $_SESSION["created"] = $created;
     }
     
     # setter
@@ -205,9 +226,10 @@ class User
         $this->_log->trace("creating User (table=".USER_TABLE_NAME.")");
         
         $query = "CREATE TABLE ".USER_TABLE_NAME." (";
-        $query .= "_id INT NOT NULL AUTO_INCREMENT, ";
+        $query .= DB_ID_FIELD_NAME." INT NOT NULL AUTO_INCREMENT, ";
         $query .= "_name VARCHAR(20) NOT NULL, ";
         $query .= "_pw char(32) BINARY NOT NULL, ";
+        $query .= DB_CREATED_FIELD_NAME. " DATETIME NOT NULL, ";
         $query .= "_edit_list INT NOT NULL, ";
         $query .= "_create_list INT NOT NULL, ";
         $query .= "_admin INT NOT NULL, ";
@@ -221,6 +243,8 @@ class User
         {
             $this->_log->error("could not create table in database for user");
             $this->_log->error("database error: ".$this->_database->get_error_str());
+            $this->error_str = ERROR_DATABASE_PROBLEM;
+            
             return FALSE;
         }
         
@@ -260,7 +284,8 @@ class User
         }
 
         $password = md5($pw);
-        $query = "SELECT _id, _name, _pw, _edit_list, _create_list, _admin, _times_login, _last_login FROM ".USER_TABLE_NAME." WHERE _name=\"".$name."\"";
+        $query = "SELECT ".DB_ID_FIELD_NAME.", _name, _pw, ".DB_CREATED_FIELD_NAME.", _edit_list, ";
+        $query .= "_create_list, _admin, _times_login, _last_login FROM ".USER_TABLE_NAME." WHERE _name=\"".$name."\"";
         $result = $this->_database->query($query);
         $row = $this->_database->fetch($result);
         
@@ -269,11 +294,12 @@ class User
             $db_id = $row[0];
             $db_name = $row[1];
             $db_password = $row[2];
-            $db_edit_list = $row[3];
-            $db_create_list = $row[4];
-            $db_admin = $row[5];
-            $times_login = $row[6] + 1;
-            $last_login = $row[7];
+            $db_created = $row[3];
+            $db_edit_list = $row[4];
+            $db_create_list = $row[5];
+            $db_admin = $row[6];
+            $times_login = $row[7] + 1;
+            $last_login = $row[8];
             
             # obtain admin pw from localsettings
             if ($name == "admin")
@@ -284,6 +310,7 @@ class User
                 # set session parameters
                 $this->set_id($db_id);
                 $this->set_name($db_name);
+                $this->set_created($db_created);
                 $this->set_edit_list($db_edit_list);
                 $this->set_create_list($db_create_list);
                 $this->set_admin($db_admin);
@@ -297,17 +324,33 @@ class User
                 {
                     $this->_log->error("could not update _times_login (name=".$name.")");
                     $this->_log->error("database error: ".$this->_database->get_error_str());
+                    $this->error_str = ERROR_DATABASE_PROBLEM;
+                    
+                    return FALSE;
                 }
+                else
+                {
+                    $this->_log->info("user logged in (name=".$name.")");
                 
-                $this->_log->info("user logged in (name=".$name.")");
-                
-                return TRUE;
+                    return TRUE;
+                }
             }
-                        
-            $this->_log->warn("passwords do not match (name=".$name."), user is not logged in");
+            else
+            {        
+                $this->_log->warn("passwords do not match (name=".$name."), user is not logged in");
+                $this->error_str = ERROR_INCORRECT_NAME_PASSWORD;
+                
+                return FALSE;
+            }
         }
-        
-        return FALSE;
+        else
+        {
+            $this->_log->error("could not select user (name=".$name.")");
+            $this->_log->error("database error: ".$this->_database->get_error_str());
+            $this->error_str = ERROR_DATABASE_PROBLEM;
+                    
+            return FALSE;
+        }
     } 
     
     # logout current user
@@ -336,10 +379,22 @@ class User
             if ($row[0] == $name)
             {
                 $this->_log->debug("user already exists (name=".$name.")");
+                
                 return TRUE;
             }
-
-            $this->_log->debug("user does not exist (name=".$name.")");
+            else
+            {
+                $this->_log->debug("user does not exist (name=".$name.")");
+                
+                return FALSE;
+            }
+        }
+        else
+        {
+            $this->_log->error("could not select (name=".$name.")");
+            $this->_log->error("database error: ".$this->_database->get_error_str());
+            $this->error_str = ERROR_DATABASE_PROBLEM;
+            
             return FALSE;
         }
     }                    
@@ -354,20 +409,32 @@ class User
         # create table if it does not yet exists
         if (!$this->_database->table_exists(USER_TABLE_NAME))
             $this->create();
+        
+        # check if user already exists
+        if ($this->exists($name))
+        {
+            $this->error_str = ERROR_DUPLICATE_USER_NAME;
+            
+            return FALSE;
+        }
 
-        $query = "INSERT INTO ".USER_TABLE_NAME." VALUES (0, \"".$name."\", \"".$password."\", ";
+        $query = "INSERT INTO ".USER_TABLE_NAME." VALUES (0, \"".$name."\", \"".$password."\", \"".strftime(DB_DATETIME_FORMAT)."\", ";
         $query .= $edit_list.", ".$create_list.", ".$is_admin.", 0, \"".strftime(DB_DATETIME_FORMAT)."\")";
         $result = $this->_database->insertion_query($query);
         if ($result == FALSE)
         {
             $this->_log->error("could not add user (name=".$name.")");
             $this->_log->error("database error: ".$this->_database->get_error_str());
+            $this->error_str = ERROR_DATABASE_PROBLEM;
+            
             return FALSE;
         }
+        else
+        {
+            $this->_log->info("user added (name=".$name.")");
         
-        $this->_log->info("user added (name=".$name.")");
-        
-        return TRUE;
+            return TRUE;
+        }
     }
 }
 

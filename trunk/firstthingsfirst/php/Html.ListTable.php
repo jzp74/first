@@ -126,6 +126,7 @@ function action_get_list_content ($list_title, $order_by_field, $page)
     {
         $result->set_error_str($list_table->get_error_str());
         $result->set_error_element("list_content_pane");
+        # no return statement here because we want the complete page to be displayed
     }
     
     # use the params that have been set by _list_table->select()
@@ -311,6 +312,7 @@ function action_get_list_row ($list_title, $key_string)
         {
             $result->set_error_str($list_table->get_error_str());
             $result->set_error_element("list_content_pane");
+            # no return statement here because we want the complete page to be displayed
         }
     }
 

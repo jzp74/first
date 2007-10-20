@@ -200,6 +200,10 @@ class ListTableDescription
         $this->description = "nothing";
         $this->definition = "";
         $this->error_str = "";
+        
+        # create table if it does not yet exists
+        if (!$this->_database->table_exists(LISTTABLEDESCRIPTION_TABLE_NAME))
+            $this->create();
     }
     
     # check if this ListTableDescription is valid
@@ -215,7 +219,7 @@ class ListTableDescription
     # TODO ensure title cannot be given names > 100 chars
     function create ()
     {
-        $this->_log->creating("creating table for ListTableDescriptions (table=".LISTTABLEDESCRIPTION_TABLE_NAME.")");
+        $this->_log->debug("creating table for ListTableDescriptions (table=".LISTTABLEDESCRIPTION_TABLE_NAME.")");
         
         $query = "CREATE TABLE ".LISTTABLEDESCRIPTION_TABLE_NAME." (";
         $query .= DB_ID_FIELD_NAME." INT NOT NULL AUTO_INCREMENT, ";

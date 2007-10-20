@@ -101,13 +101,10 @@ function action_login ($user_name, $password)
     else
     {
         $logging->warn("user could not log in");
-        set_error_message("password_id", ERROR_INCORRECT_NAME_PASSWORD);
+        set_error_message("password_id", $user->get_error_str());
+        
+        return $response;
     }
-
-    if (!check_postconditions())
-        return $reponse;
-    
-    return $response;
 }
     
 # logout a user

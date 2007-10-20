@@ -34,6 +34,7 @@ define("LABEL_ADD_USER_CREATE_LIST", "can create new list");
 define("LABEL_ADD_USER_CREATE_LIST_EXPLANATION", "check this box when the new user has permission to create a new list");
 define("LABEL_ADD_USER_ADMIN", "is admin");
 define("LABEL_ADD_USER_ADMIN_EXPLANATION", "check this box when new user has administrator permissions");
+define("LABEL_USER_ADDED", "new user added!<br>add another user or return to the portal page");
 
 # Html.ListTable labels
 define("LABEL_PAGE", "page");

@@ -111,15 +111,15 @@ class ListTableItemNotes
         $this->_log->trace("creating table for ListTableItemNotes (table=".LISTTABLEITEMRENOTES_TABLE_NAME.")");
         
         $query = "CREATE TABLE ".LISTTABLEITEMRENOTES_TABLE_NAME." (";
-        $query .= DB_ID_FIELD_NAME." INT NOT NULL AUTO_INCREMENT, ";
-        $query .= "_list_table_description_id INT NOT NULL, ";
-        $query .= "_list_table_item_id INT NOT NULL, ";
-        $query .= "_list_table_item_field VARCHAR(100) NOT NULL, ";
-        $query .= "_note MEDIUMTEXT NOT NULL, ";
-        $query .= DB_CREATOR_FIELD_NAME." VARCHAR(20) NOT NULL, ";
-        $query .= DB_CREATED_FIELD_NAME." DATETIME NOT NULL, ";
-        $query .= DB_MODIFIER_FIELD_NAME." VARCHAR(20) NOT NULL, ";
-        $query .= DB_MODIFIED_FIELD_NAME." DATETIME NOT NULL, ";
+        $query .= DB_ID_FIELD_NAME." ".DB_DATATYPE_ID.", ";
+        $query .= "_list_table_description_id ".DB_DATATYPE_INT.", ";
+        $query .= "_list_table_item_id ".DB_DATATYPE_INT.", ";
+        $query .= "_list_table_item_field ".DB_DATATYPE_TEXTLINE.", ";
+        $query .= "_note ".DB_DATATYPE_TEXTMESSAGE.", ";
+        $query .= DB_CREATOR_FIELD_NAME." ".DB_DATATYPE_USERNAME.", ";
+        $query .= DB_TS_CREATED_FIELD_NAME." ".DB_DATATYPE_DATETIME.", ";
+        $query .= DB_MODIFIER_FIELD_NAME." ".DB_DATATYPE_USERNAME.", ";
+        $query .= DB_TS_MODIFIED_FIELD_NAME." ".DB_DATATYPE_DATETIME.", ";
         $query .= "PRIMARY KEY (".DB_ID_FIELD_NAME."))";
 
         $result = $this->_database->query($query);
@@ -157,8 +157,8 @@ class ListTableItemNotes
         }
         
         $rows = array();
-        $query = "SELECT ".DB_ID_FIELD_NAME.", _note, ".DB_CREATOR_FIELD_NAME.", ".DB_CREATED_FIELD_NAME.", ";
-        $query .= DB_MODIFIER_FIELD_NAME.", ".DB_MODIFIED_FIELD_NAME." FROM ".LISTTABLEITEMRENOTES_TABLE_NAME;
+        $query = "SELECT ".DB_ID_FIELD_NAME.", _note, ".DB_CREATOR_FIELD_NAME.", ".DB_TS_CREATED_FIELD_NAME.", ";
+        $query .= DB_MODIFIER_FIELD_NAME.", ".DB_TS_MODIFIED_FIELD_NAME." FROM ".LISTTABLEITEMRENOTES_TABLE_NAME;
         $query .= " WHERE _list_table_description_id=".$this->list_table_description_id." AND ";
         $query .= "_list_table_item_id=".$list_table_item_id." AND ";
         $query .= "_list_table_item_field=\"".$list_table_item_field."\"";
@@ -254,7 +254,7 @@ class ListTableItemNotes
         $query .= "_list_table_item_field=\"".$list_table_item_field."\", ";
         $query .= "_note=\"".htmlentities($note, ENT_QUOTES)."\", ";
         $query .= DB_MODIFIER_FIELD_NAME."=\"".$this->_user->get_name()."\", ";
-        $query .= DB_MODIFIED_FIELD_NAME."=\"".strftime(DB_DATETIME_FORMAT)."\"";
+        $query .= DB_TS_MODIFIED_FIELD_NAME."=\"".strftime(DB_DATETIME_FORMAT)."\"";
         $query .= " WHERE ".DB_ID_FIELD_NAME."=".$note_id;
 
         $result = $this->_database->query($query);

@@ -226,16 +226,16 @@ class User
         $this->_log->trace("creating User (table=".USER_TABLE_NAME.")");
         
         $query = "CREATE TABLE ".USER_TABLE_NAME." (";
-        $query .= DB_ID_FIELD_NAME." INT NOT NULL AUTO_INCREMENT, ";
-        $query .= "_name VARCHAR(20) NOT NULL, ";
-        $query .= "_pw char(32) BINARY NOT NULL, ";
-        $query .= DB_CREATED_FIELD_NAME. " DATETIME NOT NULL, ";
-        $query .= "_edit_list INT NOT NULL, ";
-        $query .= "_create_list INT NOT NULL, ";
-        $query .= "_admin INT NOT NULL, ";
-        $query .= "_times_login INT NOT NULL, ";
-        $query .= "_last_login DATETIME NOT NULL, ";
-        $query .= "PRIMARY KEY (_id), ";
+        $query .= DB_ID_FIELD_NAME." ".DB_DATATYPE_ID.", ";
+        $query .= "_name ".DB_DATATYPE_USERNAME.", ";
+        $query .= "_pw ".DB_DATATYPE_PASSWORD.", ";
+        $query .= DB_TS_CREATED_FIELD_NAME." ".DB_DATATYPE_DATETIME.", ";
+        $query .= "_edit_list ".DB_DATATYPE_BOOL.", ";
+        $query .= "_create_list ".DB_DATATYPE_BOOL.", ";
+        $query .= "_admin ".DB_DATATYPE_BOOL.", ";
+        $query .= "_times_login ".DB_DATATYPE_INT.", ";
+        $query .= "_ts_last_login ".DB_DATATYPE_DATETIME.", ";
+        $query .= "PRIMARY KEY (".DB_ID_FIELD_NAME."), ";
         $query .= "UNIQUE KEY _name (_name)) ";
 
         $result = $this->_database->query($query);
@@ -284,8 +284,8 @@ class User
         }
 
         $password = md5($pw);
-        $query = "SELECT ".DB_ID_FIELD_NAME.", _name, _pw, ".DB_CREATED_FIELD_NAME.", _edit_list, ";
-        $query .= "_create_list, _admin, _times_login, _last_login FROM ".USER_TABLE_NAME." WHERE _name=\"".$name."\"";
+        $query = "SELECT ".DB_ID_FIELD_NAME.", _name, _pw, ".DB_TS_CREATED_FIELD_NAME.", _edit_list, ";
+        $query .= "_create_list, _admin, _times_login, _ts_last_login FROM ".USER_TABLE_NAME." WHERE _name=\"".$name."\"";
         $result = $this->_database->query($query);
         $row = $this->_database->fetch($result);
         
@@ -318,7 +318,7 @@ class User
                 $this->set_login(1);
                 
                 # update the number of times this user has logged in
-                $query = "UPDATE ".USER_TABLE_NAME." SET _times_login=\"".$times_login."\", _last_login=\"".strftime(DB_DATETIME_FORMAT)."\" where _name=\"".$name."\"";
+                $query = "UPDATE ".USER_TABLE_NAME." SET _times_login=\"".$times_login."\", _ts_last_login=\"".strftime(DB_DATETIME_FORMAT)."\" where _name=\"".$name."\"";
                 $result = $this->_database->query($query);
                 if ($result == FALSE)
                 {

@@ -222,14 +222,14 @@ class ListTableDescription
         $this->_log->debug("creating table for ListTableDescriptions (table=".LISTTABLEDESCRIPTION_TABLE_NAME.")");
         
         $query = "CREATE TABLE ".LISTTABLEDESCRIPTION_TABLE_NAME." (";
-        $query .= DB_ID_FIELD_NAME." INT NOT NULL AUTO_INCREMENT, ";
-        $query .= "_title VARCHAR(100) NOT NULL, ";
-        $query .= "_description MEDIUMTEXT NOT NULL, ";
-        $query .= "_definition MEDIUMTEXT NOT NULL, ";
-        $query .= DB_CREATOR_FIELD_NAME." VARCHAR(20) NOT NULL, ";
-        $query .= DB_CREATED_FIELD_NAME." DATETIME NOT NULL, ";
-        $query .= DB_MODIFIER_FIELD_NAME." VARCHAR(20) NOT NULL, ";
-        $query .= DB_MODIFIED_FIELD_NAME." DATETIME NOT NULL, ";
+        $query .= DB_ID_FIELD_NAME." ".DB_DATATYPE_ID.", ";
+        $query .= "_title ".DB_DATATYPE_TEXTLINE.", ";
+        $query .= "_description ".DB_DATATYPE_TEXTMESSAGE.", ";
+        $query .= "_definition ".DB_DATATYPE_TEXTMESSAGE.", ";
+        $query .= DB_CREATOR_FIELD_NAME." ".DB_DATATYPE_USERNAME.", ";
+        $query .= DB_TS_CREATED_FIELD_NAME." ".DB_DATATYPE_DATETIME.", ";
+        $query .= DB_MODIFIER_FIELD_NAME." ".DB_DATATYPE_USERNAME.", ";
+        $query .= DB_TS_MODIFIED_FIELD_NAME." ".DB_DATATYPE_DATETIME.", ";
         $query .= "PRIMARY KEY (".DB_ID_FIELD_NAME."), ";
         $query .= "UNIQUE KEY _title (_title))";
 
@@ -264,8 +264,8 @@ class ListTableDescription
             
         $this->reset();
         $query = "SELECT ".DB_ID_FIELD_NAME.", _title, _description, _definition, ";
-        $query .= DB_CREATOR_FIELD_NAME.", ".DB_CREATED_FIELD_NAME.", ".DB_MODIFIER_FIELD_NAME.", ";
-        $query .= DB_MODIFIED_FIELD_NAME." FROM ".LISTTABLEDESCRIPTION_TABLE_NAME;
+        $query .= DB_CREATOR_FIELD_NAME.", ".DB_TS_CREATED_FIELD_NAME.", ".DB_MODIFIER_FIELD_NAME.", ";
+        $query .= DB_TS_MODIFIED_FIELD_NAME." FROM ".LISTTABLEDESCRIPTION_TABLE_NAME;
         $query .= " WHERE _title=\"".$title."\"";
         $result = $this->_database->query($query);
         $row = $this->_database->fetch($result);
@@ -393,7 +393,7 @@ class ListTableDescription
         $query .= "_description=\"".$this->description."\", ";
         $query .= "_definition=\"".$this->definition."\", ";
         $query .= DB_MODIFIER_FIELD_NAME."=\"".$this->modifier."\", ";
-        $query .= DB_MODIFIED_FIELD_NAME."=\"".$this->modified."\" ";
+        $query .= DB_TS_MODIFIED_FIELD_NAME."=\"".$this->modified."\" ";
         $query .= "WHERE ".DB_ID_FIELD_NAME."=\"".$this->id."\"";
         
         $result = $this->_database->query($query);

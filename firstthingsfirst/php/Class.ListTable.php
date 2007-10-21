@@ -276,11 +276,13 @@ class ListTable
         }
         
         # add hidden fields
-        $query .= DB_ARCHIVED_FIELD_NAME." TINYINT , ";
-        $query .= DB_CREATOR_FIELD_NAME." VARCHAR(20) NOT NULL, ";
-        $query .= DB_CREATED_FIELD_NAME." DATETIME NOT NULL, ";
-        $query .= DB_MODIFIER_FIELD_NAME." VARCHAR(20) NOT NULL, ";
-        $query .= DB_MODIFIED_FIELD_NAME." DATETIME NOT NULL, ";
+        $query .= DB_ARCHIVED_FIELD_NAME." ".DB_DATATYPE_BOOL." , ";
+        $query .= DB_ARCHIVER_FIELD_NAME." ".DB_DATATYPE_USERNAME." , ";
+        $query .= DB_TS_ARCHIVED_FIELD_NAME." ".DB_DATATYPE_DATETIME.", ";
+        $query .= DB_CREATOR_FIELD_NAME." ".DB_DATATYPE_USERNAME.", ";
+        $query .= DB_TS_CREATED_FIELD_NAME." ".DB_DATATYPE_DATETIME.", ";
+        $query .= DB_MODIFIER_FIELD_NAME." ".DB_DATATYPE_USERNAME.", ";
+        $query .= DB_TS_MODIFIED_FIELD_NAME." ".DB_DATATYPE_DATETIME.", ";
 
         $query .= "PRIMARY KEY (".DB_ID_FIELD_NAME."))";
         $result = $this->_database->query($query);
@@ -596,7 +598,7 @@ class ListTable
         }
         
         $query = "INSERT INTO ".$this->table_name." VALUES (0, ".implode($values, ", ");
-        $query .= ", 0, "; # new entries are not archived
+        $query .= ", 0, \"\", \"".DB_NULL_DATETIME."\", "; # new entries are not archived
         $query .= "\"".$this->_user->get_name()."\", ";
         $query .= "\"".strftime(DB_DATETIME_FORMAT)."\", ";
         $query .= "\"".$this->_user->get_name()."\", ";
@@ -687,7 +689,7 @@ class ListTable
         
         $query = "UPDATE ".$this->table_name." SET ".implode($values, ", ");
         $query .= ", ".DB_MODIFIER_FIELD_NAME."=\"".$this->_user->get_name()."\", ";
-        $query .= DB_MODIFIED_FIELD_NAME."=\"".strftime(DB_DATETIME_FORMAT)."\"";
+        $query .= DB_TS_MODIFIED_FIELD_NAME."=\"".strftime(DB_DATETIME_FORMAT)."\"";
         $query .= " WHERE ".$key_string;
         $result = $this->_database->query($query);
         if ($result == FALSE)
@@ -764,7 +766,9 @@ class ListTable
             return FALSE;
         }
         
-        $query = "UPDATE ".$this->table_name." SET ".DB_ARCHIVED_FIELD_NAME."=1 WHERE ".$key_string;
+        $query = "UPDATE ".$this->table_name." SET ".DB_ARCHIVED_FIELD_NAME."=1, ";
+        $query .= DB_ARCHIVER_FIELD_NAME."=\"".$this->_user->get_name()."\", ";
+        $query .= DB_TS_ARCHIVED_FIELD_NAME."=\"".strftime(DB_DATETIME_FORMAT)."\" WHERE ".$key_string;
         $result = $this->_database->query($query);
 
         if ($result == FALSE)

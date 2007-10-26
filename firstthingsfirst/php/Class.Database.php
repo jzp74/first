@@ -1,31 +1,53 @@
 <?php
 
-# This class takes care of all database access
+/*
+ * This class takes care of all database access
+ * @author Jasper de Jong
+ */
 
-# make sure firstthingsfirst_db_table_prefix ends with an '_' char
+
+# make sure firstthingsfirst_db_table_prefix ends with a '_' char
 if ((substr($firstthingsfirst_db_table_prefix, -1, 1) != "_") && (strlen($firstthingsfirst_db_table_prefix) > 0))
     $firstthingsfirst_db_table_prefix = $firstthingsfirst_db_table_prefix."_";
 
+
 # Class definition
-# TODO improve use of trace/debug logging
 class Database
 {
-    # name of the host
+    /**
+    * name of host
+    * @var string
+    */
     protected $host;
     
-    # name of the user
+    /**
+    * name of user
+    * @var string
+    */
     protected $user;
     
-    # password 
+    /**
+    * the password
+    * @var string
+    */
     protected $passwd;
     
-    # name of the database
+    /**
+    * name of database
+    * @var string
+    */
     protected $database;
     
-    # error string, contains last known error
+    /**
+    * error string, contains last known error
+    * @var string
+    */
     protected $error_str;
     
-    # reference to global logging object
+    /**
+    * reference to global logging object
+    * @var Logging
+    */
     protected $_log;
     
     # set attributes of this object when it is constructed
@@ -53,13 +75,19 @@ class Database
         $this->_log->trace("constructed new Database object");        
     }
 
-    # getter
+    /**
+    * get last known error
+    * @return string
+    */
     function get_error_str ()
     {
         return $this->error_str;
     }
 
-    # connect to database
+    /**
+    * open database connection, select database and return link identifier of FALSE
+    * @return resource|bool
+    */
     function connect ()
     {    
         $this->_log->trace("opening db connection (host=".$this->host.", user=".$this->user.")");
@@ -80,10 +108,12 @@ class Database
         return $db_link;
     }
 
-    # TODO add support for queries with ' and " chars
-    # TODO all db access should contain db link id
-    # send given query to given database table and return resulting array
-    # array is empty in case of an error and in case the query yields no results
+    /**
+    * query database and return result
+    * result is FALSE in case of any error
+    * @param string $query
+    * @return resource|bool
+    */
     function query ($query)
     {   
         $db_link = $this->connect();
@@ -99,7 +129,12 @@ class Database
         return $result;
     }
     
-    # send given insert query to given database table and return the id of this insert
+    /**
+    * perform insertion query and return the resulting id
+    * array is empty in case of an error and in case the query yields no results
+    * @param string $query
+    * @return int|bool
+    */
     function insertion_query ($query)
     {
         $db_link = $this->connect();
@@ -121,11 +156,14 @@ class Database
     
         return $result;
     }
-        
     
-    # get the next row from database
-    # this function only works after the query function has been called
-    # returns an array
+    /**
+    * get next row from result of last query
+    * be sure to call the query function or the insertion_query function first
+    * return an array of FALSE
+    * @param resource $result
+    * @return array|bool
+    */
     function fetch ($result)
     {
         if ($result != FALSE)

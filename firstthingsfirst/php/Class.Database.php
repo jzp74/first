@@ -11,7 +11,7 @@ if ((substr($firstthingsfirst_db_table_prefix, -1, 1) != "_") && (strlen($firstt
     $firstthingsfirst_db_table_prefix = $firstthingsfirst_db_table_prefix."_";
 
 
-# Class definition
+# class definition
 class Database
 {
     /**
@@ -50,7 +50,10 @@ class Database
     */
     protected $_log;
     
-    # set attributes of this object when it is constructed
+    /**
+    * overwrite __construct() function
+    * @return void
+    */
     function __construct ()
     {
         # variable $logging is assumed to be globally available
@@ -76,8 +79,8 @@ class Database
     }
 
     /**
-    * get last known error
-    * @return string
+    * get value of error_str attribute
+    * @return string value of error_str attribute
     */
     function get_error_str ()
     {
@@ -85,8 +88,8 @@ class Database
     }
 
     /**
-    * open database connection, select database and return link identifier of FALSE
-    * @return resource|bool
+    * open database connection, select database and return link identifier or FALSE
+    * @return resource|bool link identifier or FALSE in case of any error
     */
     function connect ()
     {    
@@ -110,9 +113,8 @@ class Database
 
     /**
     * query database and return result
-    * result is FALSE in case of any error
-    * @param string $query
-    * @return resource|bool
+    * @param string $query database query
+    * @return resource|bool result of query or FALSE in case of any error
     */
     function query ($query)
     {   
@@ -131,9 +133,8 @@ class Database
     
     /**
     * perform insertion query and return the resulting id
-    * array is empty in case of an error and in case the query yields no results
-    * @param string $query
-    * @return int|bool
+    * @param string $query database insertion query
+    * @return int|bool insertion identifier or FALSE in case of any error
     */
     function insertion_query ($query)
     {
@@ -160,9 +161,8 @@ class Database
     /**
     * get next row from result of last query
     * be sure to call the query function or the insertion_query function first
-    * return an array of FALSE
-    * @param resource $result
-    * @return array|bool
+    * @param resource $result result of query or insertion_query function call
+    * @return array|bool array containing one table row or FALSE in case of any error
     */
     function fetch ($result)
     {
@@ -176,7 +176,11 @@ class Database
         }
     }
     
-    # return TRUE if given table exists, FALSE otherwise
+    /**
+    * check if given table exists in database
+    * @param string $table name of table
+    * @return bool indicates if given table exists in database
+    */
     function table_exists ($table)
     {
 	    $query = "SHOW TABLES";

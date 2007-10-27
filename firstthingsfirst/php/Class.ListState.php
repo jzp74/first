@@ -1,31 +1,61 @@
 <?php
 
-# this class contains the state of a specific list
-# list specific data is passed to user class and stored in a cookie
+/*
+ * This class contains the state of a specific list
+ * List specific data is passed to User object and stored in session
+ * @author Jasper de Jong
+ */
+
+
+# class definition
 class ListState
 {
-    # list title
+    /**
+    * list title
+    * @var string
+    */
     protected $list_title;
     
-    # list is ordered by this field
+    /**
+    * field by which this list is ordered
+    * @var string
+    */
     protected $order_by_field;
 
-    # list is ordered ascending when value of this attribute
+    /**
+    * order list ascending by order_by_field when value is TRUE
+    * @var bool
+    */
     protected $order_ascending;
     
-    # current list page which is shown
+    /**
+    * current page
+    * @var int
+    */
     protected $current_page;
     
-    # total number of pages
+    /**
+    * total number of pages
+    * @var int
+    */
     protected $total_pages;
 
-    # reference to global json object
+    /**
+    * reference to global json object
+    * @var Services_JSON
+    */
     protected $_json;
     
-    # reference to global logging object
+    /**
+    * reference to global logging object
+    * @var Logging
+    */
     protected $_log;
 
-    # set attributes of this object when it is constructed
+    /**
+    * overwrite __construct() function
+    * @return void
+    */
     function __construct ()
     {
         # these variables are assumed to be globally available
@@ -41,67 +71,105 @@ class ListState
         $this->_log->trace("constructed new ListState object");
     }
 
-    # getter
+    /**
+    * get value of list_title attribute
+    * @return string value of list_title attribute
+    */
     function get_list_title ()
     {
         return $this->list_title;
     }
 
-    # getter
+    /**
+    * get value of order_by_field attribute
+    * @return string value of order_by_field attribute
+    */
     function get_order_by_field ()
     {
         return $this->order_by_field;
     }
 
-    # getter
+    /**
+    * get value of order_ascending attribute
+    * @return bool value of order_ascending attribute
+    */
     function get_order_ascending ()
     {
         return $this->order_ascending;
     }
 
-    # getter
+    /**
+    * get value of total_pages attribute
+    * @return int value of total_pages attribute
+    */
     function get_total_pages ()
     {
         return $this->total_pages;
     }
 
-    # getter
+    /**
+    * get value of current_page attribute
+    * @return int value of current_page attribute
+    */
     function get_current_page ()
     {
         return $this->current_page;
     }
     
-    # setter
+    /**
+    * set value of $list_title attribute
+    * @param string $list_title value of list_title attribute
+    * @return void
+    */
     function set_list_title ($list_title)
     {
         $this->list_title = $list_title;
     }
     
-    # setter
+    /**
+    * set value of order_by_field attribute
+    * @param string $order_by_field value of order_by_field attribute
+    * @return void
+    */
     function set_order_by_field ($order_by_field)
     {
         $this->order_by_field = $order_by_field;
     }
 
-    # setter
+    /**
+    * set value of order_ascending attribute
+    * @param bool $order_ascending value of order_ascending attribute
+    * @return void
+    */
     function set_order_ascending ($order_ascending)
     {
         $this->order_ascending = $order_ascending;
     }
 
-    # setter
+    /**
+    * set value of total_pages attribute
+    * @param int $total_pages value of total_pages attribute
+    * @return void
+    */
     function set_total_pages ($total_pages)
     {
         $this->total_pages = $total_pages;
     }
     
-    # setter
+    /**
+    * set value of current_page attribute
+    * @param int $current_page value of current_page attribute
+    * @return void
+    */
     function set_current_page ($current_page)
     {
         $this->current_page = $current_page;
     }
     
-    # reset attributes to initial values
+    /**
+    * reset attributes to initial values
+    * @return void
+    */
     function reset ()
     {
         $this->_log->trace("resetting ListState");
@@ -113,7 +181,12 @@ class ListState
         $this->current_page = 1;
     }
     
-    # set attributes passed by User class
+    /**
+    * set attributes passed by User object (initiate this object)
+    * @param string $list_title title of list this object is associated with
+    * @param array $list_state_array array containing attribute values for this object
+    * @return void
+    */
     function set ($list_title, $list_state_array)
     {
         $this->_log->trace("setting ListState (title=".$list_title.")");
@@ -127,7 +200,10 @@ class ListState
         $this->_log->trace("set ListState (order=".$list_state_array['order_by_field'].", asc=".$list_state_array['order_ascending'].", page=".$list_state_array['current_page'].")");
     }
     
-    # pass attributes to User class
+    /**
+    * pass attributes to User class
+    * @return array $list_state_array array containing attribute values of this object
+    */
     function pass ()
     {
         $list_state_array = array();

@@ -1,7 +1,10 @@
 <?php
 
-# This class represents a logfile
-# Log messages of varies levels can be added to the logfile
+/*
+ * This class represents a logfile
+ * Log messages of various levels can be added to the logfile
+ * @author Jasper de Jong
+ */
 
 
 # Logging defines
@@ -13,16 +16,26 @@ define("LOGGING_WARN", 4);
 define("LOGGING_ERROR", 5);
 define("LOGGING_NAME", "logfile.log");
 
+
 # Class definition
 class Logging
 {        
-    # current log level
+    /**
+    * current loglevel
+    * @var int
+    */
     protected $level;
     
-    # current name of the logfile
+    /**
+    * current name of the logfile
+    * @var string
+    */
     protected $name;
     
-    # set attributes of this object when it is constructed
+    /**
+    * overwrite __construct() function
+    * @return void
+    */
     function __construct ($level = LOGGING_INFO, $name = LOGGING_NAME)
     {
         # globals defined in localsetting.php
@@ -32,10 +45,14 @@ class Logging
         $this->level = $level;
     }
         
-    # this function should not be called directly but is used by main logging functions
-    # write given string to fixed log file as given type
-    # logging setting can be modified in globals.php
-    function _log ($tp, $str)
+    /**
+    * write given string to fixed log file as given type
+    * this function should not be called directly but is used by main logging functions
+    * @param $log_level string log level
+    * @param $str string string to log
+    * @return void
+    */
+    function _log ($log_level, $str)
     {
         $trace = debug_backtrace();
         if (count($trace) > 2)
@@ -53,12 +70,17 @@ class Logging
         
         $the_time = strftime("%d-%m-%Y %H:%M:%S");
     
-        error_log($the_time." [".$tp."] ".$filename.":".$line." [".$func."] ".$str."\n", 3, $this->name);        
+        error_log($the_time." [".$log_level."] ".$filename.":".$line." [".$func."] ".$str."\n", 3, $this->name);        
     }
 
-    # log given array
-    # array should not contain arrays
-    # debug log line is standard
+    /**
+    * log given array
+    * array should not contain arrays
+    * @param $the_array array array to be logged
+    * @param $the_array_name string name of the array ("Array" if not provided)
+    * @param $level int log level (DEBUG if not provided)
+    * @return void
+    */
     function log_array ($the_array, $the_array_name="Array", $level=LOGGING_DEBUG)
     {
         $log_str = $the_array_name.": (";
@@ -85,40 +107,55 @@ class Logging
             $this->info($log_str);
     }
 
-    # write given string as TRACE message to logfile
-    # logging setting are can be modified in globals.php
+    /**
+    * write given string as TRACE message to logfile
+    * @param $str string string to be logged
+    * @return void
+    */
     function trace ($str)
     {
         if (($this->level > 0) && (LOGGING_TRACE >= $this->level))
             $this->_log ("trace", $str);
     }
 
-    # write given string as DEBUG message to logfile
-    # logging setting are can be modified in globals.php
+    /**
+    * write given string as DEBUG message to logfile
+    * @param $str string string to be logged
+    * @return void
+    */
     function debug ($str)
     {
         if (($this->level > 0) && (LOGGING_DEBUG >= $this->level))
             $this->_log ("debug", $str);
     }
 
-    # write given string as info message to logfile
-    # logging setting can be modified in globals.php
+    /**
+    * write given string as INFO message to logfile
+    * @param $str string string to be logged
+    * @return void
+    */
     function info ($str)
     {
         if ($this->level > 0 && (LOGGING_INFO >= $this->level))
             $this->_log ("info", $str);
     }
 
-    # write given string as warn message to logfile
-    # logging setting can be modified in globals.php
+    /**
+    * write given string as WARN message to logfile
+    * @param $str string string to be logged
+    * @return void
+    */
     function warn ($str)
     {
         if ($this->level > 0 && (LOGGING_WARN >= $this->level))
             $this->_log ("WARN", $str);
     }
 
-    # write given string as info message to logfile
-    # logging setting can be modified in globals.php
+    /**
+    * write given string as ERROR message to logfile
+    * @param $str string string to be logged
+    * @return void
+    */
     function error ($str)
     {
         if ($this->level > 0 && (LOGGING_ERROR >= $this->level))

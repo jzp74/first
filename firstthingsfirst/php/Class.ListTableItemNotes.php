@@ -1,8 +1,10 @@
 <?php
 
-# This class represents a set of notes
-# This set of notes belongs to a specified field of specified ListTableItem of a specified ListTable
-# It is assumed that ListTable.php is required in the main file
+/*
+ * This class represents a set of notes
+ * This set of notes belongs to a specified field of specified ListTableItem of a specified ListTable
+ * @author Jasper de Jong
+ */
 
 
 # ListTableItemNotes defines
@@ -12,28 +14,58 @@ define("LISTTABLEITEMRENOTES_TABLE_NAME", $firstthingsfirst_db_table_prefix."lis
 # Class definition
 class ListTableItemNotes
 {
-    # id of ListTableDescription that is connected to this ListTableItemNotes instance
+    /**
+    * id of ListTableDescription that is connected to current ListTableItemNotes object
+    * @var int
+    */
     protected $list_table_description_id;
 
-    # error string, contains last known error
+    /**
+    * error string, contains last known error
+    * @var string
+    */
     protected $error_str;
 
-    # reference to global result object
+    /**
+    * reference to global result object
+    * @var Result
+    */
     protected $_result;
 
-    # reference to global logging object
+    /**
+    * reference to global logging object
+    * @var Logging
+    */
     protected $_log;
     
-    # reference to global database object
+    /**
+    * reference to global database object
+    * @var Database
+    */
     protected $_database;
     
-    # reference to global user object
+    /**
+    * reference to global user object
+    * @var User
+    */
     protected $_user;
-    
-    # reference to global list_table object
+
+    /**
+    * reference to global list_state object
+    * @var ListState
+    */
     protected $_list_table;
 
-    # set attributes of this object when it is constructed
+    /**
+    * reference to global list_table_description object
+    * @var ListTableDescription
+    */
+    protected $_list_table_description;
+
+    /**
+    * overwrite __construct() function
+    * @return void
+    */
     function __construct ()
     {
         # these variables are assumed to be globally available
@@ -57,25 +89,28 @@ class ListTableItemNotes
         $this->_log->trace("constructed new ListTableItemNotes object");
     }
         
-    # getter
+    /**
+    * get value of list_table_description_id attribute
+    * @return string value of list_table_description_id attribute
+    */
     function get_list_table_description_id ()
     {
         return $this->list_table_description_id;
     }
 
-    # getter
+    /**
+    * get value of error_str attribute
+    * @return string value of error_str attribute
+    */
     function get_error_str ()
     {
         return $this->error_str;
     }
 
-    # setter
-    function set_list_table_description_id ($list_table_id)
-    {
-        $this->list_table_description_id = $list_table_description_id;
-    }
-    
-    # set attributes
+    /**
+    * reset attributes to initial values
+    * @return void
+    */
     function reset ()
     {
         $this->_log->trace("resetting ListTableItemNotes");
@@ -84,8 +119,11 @@ class ListTableItemNotes
         $this->error_str = "";
     }
 
-    # set attributes
-    # TODO error handling
+    /**
+    * set attributes (initiate this object)
+    * @todo error handling for this function
+    * @return void
+    */
     function set ()
     {
         $this->_log->trace("setting ListTableItemNotes");
@@ -96,7 +134,10 @@ class ListTableItemNotes
             $this->reset();       
     }
     
-    # check if this ListTableItemNotes is valid
+    /**
+    * check if this object is valid
+    * @return bool indicates if this object is valid
+    */
     function is_valid ()
     {
         if ($this->list_table_id != "-" && $this->list_table_item_id != "-")
@@ -105,7 +146,10 @@ class ListTableItemNotes
         return FALSE;
     }
     
-    # create the database table that contains all ListTableItemNotes
+    /**
+    * create new database table that contains all ListTableItemNotes
+    * @return bool indicates if table has been created
+    */
     function create ()
     {
         $this->_log->trace("creating table for ListTableItemNotes (table=".LISTTABLEITEMRENOTES_TABLE_NAME.")");
@@ -137,6 +181,12 @@ class ListTableItemNotes
     }
 
     # select all notes
+    /**
+    * select all notes for a specific field of a specific ListTableItem object
+    * @param $list_table_item_id int unique identifier of a ListTableItem object
+    * @param $list_table_item_field string field name
+    * @return array array containing notes (one ListTableItemNote is an array)
+    */
     function select ($list_table_item_id, $list_table_item_field)
     {
         $this->_log->trace("selecting ListTableItemNotes (list_table_item_id=".$list_table_item_id.", list_table_item_field=".$list_table_item_field.")");
@@ -186,7 +236,13 @@ class ListTableItemNotes
         return $rows;
     }
     
-    # insert a note
+    /**
+    * add a new note to database
+    * @param $list_table_item_id int unique identifier of a ListTableItem object
+    * @param $list_table_item_field string field name
+    * @param $note string the new note
+    * @return bool indicates if new note has been added
+    */
     function insert ($list_table_item_id, $list_table_item_field, $note)
     {
         $this->_log->trace("inserting ListTableItemNotes (list_table_item_id=".$list_table_item_id.", list_table_item_field=".$list_table_item_field.")");
@@ -228,7 +284,14 @@ class ListTableItemNotes
         return TRUE;
     }
     
-    # update a note
+    /**
+    * update an existing note in database
+    * @param $list_table_item_id int unique identifier of a ListTableItem object
+    * @param $list_table_item_field string field name
+    * @param $note_id int unique identifier of a specific ListTableItemNote object
+    * @param $note string the new note
+    * @return bool indicates if ListTableDescription has been updated
+    */
     function update ($list_table_item_id, $list_table_item_field, $note_id, $note)
     {
         $this->_log->trace("updating ListTableItemNotes (list_table_item_id=".$list_table_item_id.", list_table_item_field=".$list_table_item_field.")");
@@ -272,8 +335,12 @@ class ListTableItemNotes
         return TRUE;
     }
 
-    # delete all notes connected to any fields of given ListTableItem
-    # delete all notes connected to any fields when no ListTableItem is provided
+    /**
+    * delete all notes from database
+    * delete all notes connected to any field of given ListTableItem when $list_table_item_id param has been set
+    * @param $list_table_item_id int unique identifier of a ListTableItem object
+    * @return bool indicates if notes have been deleted
+    */
     function delete ($list_table_item_id=-1)
     {
         $this->_log->trace("delete ListTableItemNotes (list_id=".$this->list_table_description_id.")");

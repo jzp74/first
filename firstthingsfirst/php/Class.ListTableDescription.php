@@ -10,6 +10,7 @@
 define("LISTTABLEDESCRIPTION_TABLE_NAME", $firstthingsfirst_db_table_prefix."listtabledescription");
 define("LISTTABLEDESCRIPTION_FIELD_PREFIX", "_user_defined_");
 
+
 # Class definition
 class ListTableDescription
 {
@@ -488,7 +489,7 @@ class ListTableDescription
     }
 
     /**
-    * update currecnt ListTableDescription object in database
+    * update current ListTableDescription object in database
     * @return bool indicates if ListTableDescription has been updated
     */
     function update ()
@@ -531,7 +532,7 @@ class ListTableDescription
     }
 
     /**
-    * delete currecnt ListTableDescription object from database
+    * delete current ListTableDescription object from database
     * this function also deletes the ListTable that is connected to current object
     * @todo delete all connected ListTableItemNotes
     * @return bool indicates if ListTableDescription has been deleted

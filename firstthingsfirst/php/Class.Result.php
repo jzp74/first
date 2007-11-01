@@ -1,22 +1,42 @@
 <?php
 
-# this class contains the cumulative results of function calls
-# TODO improve use of trace/debug logging
+/*
+ * This class contains the cumulative results of function calls
+ * @author Jasper de Jong
+ */
+
+   
+# Class definition
 class Result
 {
-    # error string
+    /**
+    * error string
+    * @var string
+    */
     protected $error_str;
 
-    # element id that should display the error
+    /**
+    * DOM element id that should contain the error
+    * @var string
+    */
     protected $error_element;
     
-    # result string
+    /**
+    * result string
+    * @var string
+    */
     protected $result_str;
     
-    # reference to global logging object
+    /**
+    * reference to global logging object
+    * @var Logging
+    */
     protected $_log;
 
-    # set attributes of this object when it is constructed
+    /**
+    * overwrite __construct() function
+    * @return void
+    */
     function __construct ()
     {
         # these variables are assumed to be globally available
@@ -30,43 +50,67 @@ class Result
         $this->_log->trace("constructed new Result object");
     }
 
-    # getter
+    /**
+    * get value of error_str attribute
+    * @return int value of error_str attribute
+    */
     function get_error_str ()
     {
         return $this->error_str;
     }
     
-    # getter
+    /**
+    * get value of error_element attribute
+    * @return int value of error_element attribute
+    */
     function get_error_element ()
     {
         return $this->error_element;
     }
 
-    # getter
+    /**
+    * get value of result_str attribute
+    * @return int value of result_str attribute
+    */
     function get_result_str ()
     {
         return $this->result_str;
     }
     
-    # setter
+    /**
+    * set value of error_str attribute
+    * @param string $error_str value of error_str attribute
+    * @return void
+    */
     function set_error_str ($str)
     {
         $this->error_str = $str;
     }
     
-    # setter
+    /**
+    * set value of error_element attribute
+    * @param string $error_element value of error_element attribute
+    * @return void
+    */
     function set_error_element ($str)
     {
         $this->error_element = $str;
     }
     
-    # setter (append to result string)
+    /**
+    * set value of result_str attribute (BEWARE: this function appends to existing string)
+    * @param string $result_str value of result_str attribute
+    * @return void
+    */
     function set_result_str ($str)
     {
         $this->result_str .= $str;
     }
     
-    # reset values of this object
+    /**
+    * reset attributes to initial values
+    * @return void
+    */
     function reset ()
     {
         $this->_log->trace("resetting Result");

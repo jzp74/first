@@ -117,7 +117,7 @@ class ListState
     }
     
     /**
-    * set value of $list_title attribute
+    * set value of list_title attribute
     * @param string $list_title value of list_title attribute
     * @return void
     */

@@ -1,63 +1,104 @@
 <?php
 
-# This class represents a user defined ListTable
-# It is assumed that ListTableDescription.php is required in the main file
+/*
+ * This class represents a user defined ListTable
+ * It is assumed that ListTableDescription.php is required in the main file
+ * @author Jasper de Jong
+ */
 
 
-# ListTableItemNotes defines
+# ListTable defines
 define("LISTTABLE_TABLE_NAME_PREFIX", $firstthingsfirst_db_table_prefix."listtable_");
 define("LISTTABLELISTTABLE_EMPTY", "_LISTTABLE_EMPTY__");
 
 
 # Class definition
-# TODO remove all attributes that are stored in User
-# TODO improve use of trace/debug logging
-# TODO add creator, created, modifier, modified fields to records
 class ListTable
 {
-    # name of the table in which entries of this ListTable are stored
+    /**
+    * name of the table in which entries of this ListTable are stored
+    * @var string
+    */
     protected $table_name;
     
-    # array containing the field names
-    # values in this array are derived from $definition field
+    /**
+    * array containing all user defined field names
+    * @var array
+    */
     protected $field_names;
     
-    # array containing the database field names
-    # values in this array are derived from $field_names field
+    /**
+    * array containing the database field names
+    * values in this array are derived from $field_names field
+    * @var array
+    */
     protected $db_field_names;
     
-    # array containing the database field names of type text
-    # values in this array are derived from $field_names field
+    /**
+    * array containing the database text type field names
+    * values in this array are derived from $field_names field
+    * @var array
+    */
     protected $db_text_field_names;    
     
-    # error string, contains last known error
+    /**
+    * error string, contains last known error
+    * @var string
+    */
     protected $error_str;
 
-    # reference to global json object
+    /**
+    * reference to global json object
+    * @var Services_JSON
+    */
     protected $_json;
     
-    # reference to global result object
+    /**
+    * reference to global result object
+    * @var Result
+    */
     protected $_result;
 
-    # reference to global logging object
+    /**
+    * reference to global logging object
+    * @var Logging
+    */
     protected $_log;
     
-    # reference to global database object
+    /**
+    * reference to global database object
+    * @var Database
+    */
     protected $_database;
     
-    # reference to global list_state object
+    /**
+    * reference to global list_state object
+    * @var ListState
+    */
     protected $_list_state;
 
-    # reference to global user object
+    /**
+    * reference to global user object
+    * @var User
+    */
     protected $_user;
     
-    # reference to global list_table_description object
+    /**
+    * reference to global list_table_description object
+    * @var ListTableDescription
+    */
     protected $_list_table_description;
 
-    # reference to global list_table_description object
+    /**
+    * reference to global list_table_item_notes object
+    * @var ListTableItemNotes
+    */
     protected $_list_table_item_notes;
 
-    # set attributes of this object when it is constructed
+    /**
+    * overwrite __construct() function
+    * @return void
+    */
     function __construct ()
     {
         # these variables are assumed to be globally available
@@ -86,7 +127,11 @@ class ListTable
         $this->_log->trace("constructed new ListTable object (title=".$this->table_name.")");
     }
     
-    # return string representation of this object
+    /**
+    * overwrite __toString() function
+    * @todo function seems to be obsolete
+    * @return void
+    */
     function __toString ()
     {
         $str = "ListTable: table_name=\"".$this->table_name."\", ";
@@ -95,15 +140,19 @@ class ListTable
         return $str;
     }
     
-    # check if date complies with format YYYY-MM-DD
-    function _check_date ($date_str)
+    /**
+    * check if datetime complies with standard database datetime format YYYY-MM-DD
+    * @param $date_string string string datetime representation
+    * @return bool indicates if datetime complies with standard database datetime format
+    */
+    function _check_datetime ($date_str)
     {
         $date_parts = explode("-", $date_str);
         $year = intval($date_parts[0]);
         $month = intval($date_parts[1]);
         $day = intval($date_parts[2]);
         
-        $this->_log->trace("checking date (date_str=".$date_str.")");
+        $this->_log->trace("checking datetime (date_str=".$date_str.")");
         
         if (!checkdate($month, $day, $year))
             return FALSE;
@@ -111,7 +160,11 @@ class ListTable
         return TRUE;
     }
     
-    # return fieldname for given database fieldname
+    /**
+    * convert db_field_name to field_name
+    * @param $db_field_name string db_field_name to be converted
+    * @return string field_name
+    */
     function _get_field_name ($db_field_name)
     {
         if ((strlen($db_field_name) > strlen(LISTTABLEDESCRIPTION_FIELD_PREFIX)) &&
@@ -121,7 +174,11 @@ class ListTable
             return substr($db_field_name, 1);
     }
     
-    # return database fieldname for given fieldname
+    /**
+    * convert field name to db_field_name
+    * @param $field_name string field_name
+    * @return string db_field_name
+    */
     function _get_db_field_name ($field_name)
     {
         # this is somewhat of a hack
@@ -131,49 +188,75 @@ class ListTable
             return LISTTABLEDESCRIPTION_FIELD_PREFIX.str_replace(" ", "__", $field_name);
     }
 
-    # return the key_string (_id="some_unique_number")
-    function _get_key_string ($table_row)
+    /**
+    * return key string of given ListTableItem
+    * @param $list_table_item array array containing all field values of a ListTableItem
+    * @return string the key string
+    */
+    function _get_key_string ($list_table_item)
     {
-        return DB_ID_FIELD_NAME."='".$table_row[DB_ID_FIELD_NAME]."'";
+        return DB_ID_FIELD_NAME."='".$list_table_item[DB_ID_FIELD_NAME]."'";
     }
     
-    # return the value of the key field
-    function _get_key_values_string ($table_row)
+    /**
+    * return string containing only the key field values
+    * @param $list_table_item array array containing all field values of a ListTableItem
+    * @return string the key field values
+    */
+    function _get_key_values_string ($list_table_item)
     {        
-        return "_".$table_row[DB_ID_FIELD_NAME];
+        return "_".$list_table_item[DB_ID_FIELD_NAME];
     }
 
-    # getter
+    /**
+    * get value of table_name attribute
+    * @return string value of table_name attribute
+    */
     function get_table_name ()
     {
         return $this->table_name;
     }
 
-    # getter
+    /**
+    * get value of field_names attribute
+    * @return string value of field_names attribute
+    */
     function get_field_names ()
     {
         return $this->field_names;
     }
 
-    # getter
+    /**
+    * get value of db_field_names attribute
+    * @return string value of db_field_names attribute
+    */
     function get_db_field_names ()
     {
         return $this->db_field_names;
     }
 
-    # getter
+    /**
+    * get value of db_text_field_names attribute
+    * @return string value of db_text_field_names attribute
+    */
     function get_db_text_field_names ()
     {
         return $this->db_text_field_names;
     }
 
-    # getter
+    /**
+    * get value of error_str attribute
+    * @return string value of error_str attribute
+    */
     function get_error_str ()
     {
         return $this->error_str;
     }
 
-    # reset attributes to standard values
+    /**
+    * reset attributes to initial values
+    * @return void
+    */
     function reset ()
     {
         $this->_log->trace("resetting ListTable");
@@ -186,9 +269,11 @@ class ListTable
         $this->error_str = "";
     }
 
-    # set attributes to match with given ListTableDescription
-    # set ListTableItemNotes
-    # TODO error handling
+    /**
+    * set attributes to match with _list_table_description attribute (initiate this object)
+    * reset all attributes when _list_table_description is not valid
+    * @return void
+    */
     function set ()
     {
         global $firstthingsfirst_field_descriptions;
@@ -222,7 +307,10 @@ class ListTable
             $this->reset();
     }
     
-    # check if this ListTable is valid
+    /**
+    * check if _list_table_description is valid
+    * @return bool indicates if _list_table_description is valid
+    */
     function is_valid ()
     {
         if ($this->table_name != LISTTABLE_EMPTY && count($this->field_names))
@@ -231,8 +319,11 @@ class ListTable
         return FALSE;
     }
     
-    # create database table for this TableList
-    # remove database table is it already exists and force=TRUE
+    /**
+    * create new database table for current ListTable object
+    * @param $force bool indicates is existing database table should be removed
+    * @return bool indicates if table has been created
+    */
     function create ($force = FALSE)
     {
         global $firstthingsfirst_field_descriptions;
@@ -300,11 +391,13 @@ class ListTable
         return TRUE;
     }
 
-    # return array of rows for given table, each row is an array of values
-    # select only given field names, take field into account by wich the selection
-    # needs to be ordered (ascending or descending)
-    # take first field of $field_names if $order_by_field is left empty and no session data is set
-    # TODO store current page in User. Use current page if page is set to -1
+    /**
+    * select a fixed number of ListTableItems (a page) from database
+    * @param $order_by_field string order ListTableItems by this fieldname
+    * @param $page int the page number to select
+    * @param $archived int indicates if archived ListTableItems or normal ListTableItems should be selected
+    * @return array array containing the ListTableItems (each ListTableItem is an array)
+    */
     function select ($order_by_field, $page, $archived)
     {
         global $firstthingsfirst_field_descriptions;
@@ -463,7 +556,11 @@ class ListTable
         return $rows_with_notes;
     }
     
-    # return array containing one row from this ListTable
+    /**
+    * select exactly one ListTableItem from database
+    * @param $key_string string unique identifier of requested ListTableItem
+    * @return array array containing exactly one ListTableItem (which is an array)
+    */
     function select_row ($key_string)
     {
         $definition = $this->_list_table_description->get_definition();
@@ -537,7 +634,11 @@ class ListTable
         }
     }
     
-    # add a row to database
+    /**
+    * add a new ListTableItem to database
+    * @param $name_values array array containing name-values of the ListTableItem
+    * @return bool indicates if ListTableItem has been added
+    */
     function insert ($name_values)
     {
         $values = array();
@@ -569,7 +670,7 @@ class ListTable
             
             if (stristr($definition[$array_key][0], "DATE"))
             {
-                if (!$this->_check_date($value))
+                if (!$this->_check_datetime($value))
                 {
                     $this->_log->error("given date string is incorrect (".$value.")");
                     $this->error_str = ERROR_DATE_WRONG_FORMAT;
@@ -627,7 +728,12 @@ class ListTable
         return TRUE;
     }
 
-    # update a row in database
+    /**
+    * update an existing ListTableItem in database
+    * @param $key_string string unique identifier of ListTableItem
+    * @param $name_values array array containing name-values of the ListTableItem
+    * @return bool indicates if ListTableItem has been updated
+    */
     function update ($key_string, $name_values)
     {
         $values = array();
@@ -659,7 +765,7 @@ class ListTable
 
             if (stristr($definition[$array_key][0], "DATE"))
             {
-                if (!$this->_check_date($value))
+                if (!$this->_check_datetime($value))
                 {
                     $this->_log->error("given date string is not correct (".$value.")");
                     $this->error_str = ERROR_DATE_WRONG_FORMAT;
@@ -740,7 +846,11 @@ class ListTable
         return TRUE;
     }
 
-    # archive a row from database
+    /**
+    * archive an existing ListTableItem in database
+    * @param $key_string string unique identifier of ListTableItem to be archived
+    * @return bool indicates if ListTableItem has been archived
+    */
     function archive ($key_string)
     {
         $definition = $this->_list_table_description->get_definition();
@@ -785,7 +895,11 @@ class ListTable
         return TRUE;
     }
 
-    # delete a row from database
+    /**
+    * delete an existing ListTableItem from database
+    * @param $key_string string unique identifier of ListTableItem to be deleted
+    * @return bool indicates if ListTableItem has been deleted
+    */
     function delete ($key_string)
     {
         $definition = $this->_list_table_description->get_definition();
@@ -834,6 +948,10 @@ class ListTable
         return TRUE;
     }
     
+    /**
+    * remove database table of current ListTableItems object
+    * @return bool indicates if database table has been removed
+    */
     function drop ()
     {
         $this->_log->debug("drop ListTable (table_name=".$this->table_name.")");

@@ -1,19 +1,37 @@
 <?php
 
-/*
- * This class represents a user and handles login/logout as well as permissions
- * This class contains no actual data. Data is only stored in session params
+/**
+ * This file contains the class definition of User
+ *
+ * @package Class_FirstThingsFirst
  * @author Jasper de Jong
+ * @copyright 2007 Jasper de Jong
+ * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
 
-# User defines
+/**
+ * Define USER_TABLE_NAME
+ */
 define("USER_TABLE_NAME", $firstthingsfirst_db_table_prefix."user");
+
+/**
+ * Define USER_ID_RESET_VALUE
+ */
 define("USER_ID_RESET_VALUE", -1);
+
+/**
+ * Define USER_NAME_RESET_VALUE
+ */
 define("USER_NAME_RESET_VALUE", "_");
 
 
-# Class definition
+/**
+ * This class represents a user and handles login/logout as well as permissions
+ * This class contains no actual data. Data is only stored in session params
+ *
+ * @package Class_FirstThingsFirst
+ */
 class User
 {
     /**
@@ -446,6 +464,7 @@ class User
     
     /**
     * check if user already exists
+    * @param string $name name of user
     * @return bool indicates if user already exists
     */
     function exists ($name)
@@ -484,9 +503,9 @@ class User
     /**
     * add a new user to database
     * @param string $name name of new user
-    * @param string $password password of new user
+    * @param string $pw password of new user
     * @param bool $edit_list indicates if new user is allowed to edit a list (FALSE if not provided)
-    * @param bool $created_list indicates if current user is allowed to create a new list (FALSE if not provided)
+    * @param bool $create_list indicates if current user is allowed to create a new list (FALSE if not provided)
     * @param bool $is_admin indicates if current user is has admin privileges (FALSE if not provided)
     * @return bool indicates if user has been added
     */

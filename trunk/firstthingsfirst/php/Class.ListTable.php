@@ -1,18 +1,32 @@
 <?php
 
-/*
- * This class represents a user defined ListTable
- * It is assumed that ListTableDescription.php is required in the main file
+/**
+ * This file contains the class definition of ListTable
+ *
+ * @package Class_FirstThingsFirst
  * @author Jasper de Jong
+ * @copyright 2007 Jasper de Jong
+ * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
 
-# ListTable defines
+/**
+ * Define LISTTABLE_TABLE_NAME_PREFIX
+ */
 define("LISTTABLE_TABLE_NAME_PREFIX", $firstthingsfirst_db_table_prefix."listtable_");
+
+/**
+ * Define LISTTABLELISTTABLE_EMPTY
+ */
 define("LISTTABLELISTTABLE_EMPTY", "_LISTTABLE_EMPTY__");
 
 
-# Class definition
+/**
+ * This class represents a user defined ListTable
+ * It is assumed that ListTableDescription.php is required in the main file
+ *
+ * @package Class_FirstThingsFirst
+ */
 class ListTable
 {
     /**

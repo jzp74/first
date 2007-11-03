@@ -1,17 +1,31 @@
 <?php
 
-/*
- * This class represents the description of a user defined list
+/**
+ * This file contains the class definition of ListTableDescription
+ *
+ * @package Class_FirstThingsFirst
  * @author Jasper de Jong
+ * @copyright 2007 Jasper de Jong
+ * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
 
-# ListTableDescription defines
+/**
+ * Define LISTTABLEDESCRIPTION_TABLE_NAME
+ */
 define("LISTTABLEDESCRIPTION_TABLE_NAME", $firstthingsfirst_db_table_prefix."listtabledescription");
+
+/**
+ * Define LISTTABLEDESCRIPTION_FIELD_PREFIX
+ */
 define("LISTTABLEDESCRIPTION_FIELD_PREFIX", "_user_defined_");
 
 
-# Class definition
+/**
+ * This class represents the description of a user defined list
+ *
+ * @package Class_FirstThingsFirst
+ */
 class ListTableDescription
 {
     /**

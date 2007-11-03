@@ -1,7 +1,10 @@
 <?php
 
-# This class represents a user and handles login/logout as well as permissions
-# This class contains now actual data. Data is only stored in session params
+/*
+ * This class represents a user and handles login/logout as well as permissions
+ * This class contains no actual data. Data is only stored in session params
+ * @author Jasper de Jong
+ */
 
 
 # User defines
@@ -11,34 +14,44 @@ define("USER_NAME_RESET_VALUE", "_");
 
 
 # Class definition
-# TODO improve use of trace/debug logging
-# TODO add user created, last login date/time
 class User
 {
-    # error string, contains last known error
+    /**
+    * error string, contains last known error
+    * @var string
+    */
     protected $error_str;
 
-    # reference to global json object
+    /**
+    * reference to global json object
+    * @var Services_JSON
+    */
     protected $_json;
-
-    # reference to global database object
-    protected $_database;
-
-    # reference to global logging object
+    
+    /**
+    * reference to global logging object
+    * @var Logging
+    */
     protected $_log;
+    
+    /**
+    * reference to global database object
+    * @var Database
+    */
+    protected $_database;
     
     # set attributes of this object when it is constructed
     function __construct ()
     {
         # these variables are assumed to be globally available
         global $json;
-        global $logging;
         global $database;
+        global $logging;
         
         # set global references for this object
         $this->_json =& $json;
-        $this->_log =& $logging;
         $this->_database =& $database;
+        $this->_log =& $logging;
         
         # start a session
         session_cache_limiter('private, must-revalidate');
@@ -58,74 +71,90 @@ class User
         $this->_log->trace("constructed new User object");
     }
 
-    # return string representation of this object
+    /**
+    * overwrite __toString() function
+    * @todo function seems to be obsolete
+    * @return void
+    */
     function __toString ()
     {
         $str = "User: id=\"".$this->get_id()."\", ";
         $str .= "name=\"".$this->get_name()."\", ";
-        $str .= "times_login=\"".$this->get_times_login()."\", ";
         $str .= "edit_list=\"".$this->get_edit_list()."\", ";
         $str .= "create_list=\"".$this->get_create_list()."\", ";
         $str .= "admin=\"".$this->get_admin()."\", ";
         return $str;
     }
 
-    # getter
+    /**
+    * get value of error_str attribute
+    * @return string value of error_str attribute
+    */
     function get_error_str ()
     {
         return $this->error_str;
     }
 
-    # getter
+    /**
+    * get value of SESSION variable id.
+    * @return int value of SESSION variable id.
+    */
     function get_id ()
     {
         return $_SESSION["id"];
     }
     
-    # getter
+    /**
+    * get value of SESSION variable name.
+    * @return string value of SESSION variable name.
+    */
     function get_name ()
     {
         return $_SESSION["name"];
     }
 
-    # getter
-    function get_created ()
-    {
-        return $_SESSION["created"];
-    }
-
-    # getter
+    /**
+    * get value of SESSION variable edit_list.
+    * @return bool value of SESSION variable edit_list.
+    */
     function get_edit_list ()
     {
         return $_SESSION["edit_list"];
     }
 
-    # getter
+    /**
+    * get value of SESSION variable create_list.
+    * @return bool value of SESSION variable create_list.
+    */
     function get_create_list ()
     {
         return $_SESSION["create_list"];
     }
 
-    # getter
+    /**
+    * get value of SESSION variable admin.
+    * @return bool value of SESSION variable admin.
+    */
     function get_admin ()
     {
         return $_SESSION["admin"];
     }
 
-    # getter
-    function get_times_login ()
-    {
-        return $_SESSION["times_login"];
-    }
-
-    # getter
+    /**
+    * get value of SESSION variable login.
+    * @return bool value of SESSION variable login.
+    */
     function get_login ()
     {
         return $_SESSION["login"];
     }
 
-    # getter
-    # get settings from session and set global list_state object
+    /**
+    * get value of SESSION variable list_state.
+    * get settings from session and set global list_state object
+    * @param string $list_title set blobal list_state varible with state of this list
+    * @return string value of SESSION variable list_state.
+    */
     function get_list_state ($list_title)        
     {
         global $list_state;
@@ -144,56 +173,90 @@ class User
         }
     }
     
-    # setter
+    /**
+    * set value of SESSION variable id
+    * @param int $id id of current user
+    * @return void
+    */
     function set_id ($id)
     {
         $_SESSION["id"] = $id;
     }
     
-    # setter
+    /**
+    * set value of SESSION variable name
+    * @param int $name name of current user
+    * @return void
+    */
     function set_name ($name)
     {
         $_SESSION["name"] = $name;
     }
     
-    # setter
+    /**
+    * set value of SESSION variable created
+    * @param string $created datetime at which current user was created
+    * @return void
+    */
     function set_created ($created)
     {
         $_SESSION["created"] = $created;
     }
     
-    # setter
+    /**
+    * set value of SESSION variable edit_list
+    * @param bool $permission indicates if current user is allowed to edit a list
+    * @return void
+    */
     function set_edit_list ($permission)
     {
         $_SESSION["edit_list"] = $permission;
     }
 
-    # setter
+    /**
+    * set value of SESSION variable create_list
+    * @param bool $permission indicates if current user is allowed to create a new list
+    * @return void
+    */
     function set_create_list ($permission)
     {
         $_SESSION["create_list"] = $permission;
     }
 
-    # setter
+    /**
+    * set value of SESSION variable admin
+    * @param bool $permission indicates if current user is has admin privileges
+    * @return void
+    */
     function set_admin ($permission)
     {
         $_SESSION["admin"] = $permission;
     }
 
-    # setter
+    /**
+    * set value of SESSION variable times_login
+    * @param int $times_login number of times current user has logged in
+    * @return void
+    */
     function set_times_login ($times_login)
     {
         $_SESSION["times_login"] = $times_login;
     }
 
-    # setter
+    /**
+    * set value of SESSION variable login
+    * @param bool $login indicates if current user is logged in
+    * @return void
+    */
     function set_login ($login)
     {
         $_SESSION["login"] = $login;
     }
 
-    # setter
-    # store values from global list state object in session 
+    /**
+    * store values from global list state object in session 
+    * @return void
+    */
     function set_list_state ()
     {
         global $list_state;
@@ -206,7 +269,10 @@ class User
     }
         
     
-    # reset attributes to standard values
+    /**
+    * reset attributes to initial values
+    * @return void
+    */
     function reset ()
     {
         $this->_log->trace("resetting User");
@@ -220,7 +286,10 @@ class User
         $this->set_login("0");
     }
 
-    # create the database table that contains all users
+    /**
+    * create new database table that contains all users
+    * @return bool indicates if table has been created
+    */
     function create ()
     {
         $this->_log->trace("creating User (table=".USER_TABLE_NAME.")");
@@ -253,7 +322,10 @@ class User
         return TRUE;
     }
 
-    # check if user is really logged in
+    /**
+    * check if current user is logged in
+    * @return bool indicates if current user is logged in
+    */
     function is_login ()
     {
         if (($this->get_login()) && ($this->get_id() != USER_ID_RESET_VALUE) && ($this->get_name() != USER_NAME_RESET_VALUE) && ($this->get_name() != ""))
@@ -261,8 +333,12 @@ class User
         return FALSE;
     }
 
-    # try to login specified user with specified password
-    # restore user settings from database if name/password combination is valid
+    /**
+    * login a user and restore user settings from database
+    * @param string $name name of user
+    * @param string $pw encrypted password
+    * @return bool indicates if user has been logged in
+    */
     function login ($name, $pw)
     {
         global $firstthingsfirst_db_passwd;
@@ -353,7 +429,10 @@ class User
         }
     } 
     
-    # logout current user
+    /**
+    * logout current user
+    * @return void
+    */
     function logout ()
     {
         $name = $this->get_name();
@@ -365,7 +444,10 @@ class User
         $this->_log->info("user logged out (name=".$name.")");        
     }
     
-    # return TRUE when user already exists
+    /**
+    * check if user already exists
+    * @return bool indicates if user already exists
+    */
     function exists ($name)
     {
         $query = "SELECT _name FROM ".USER_TABLE_NAME." WHERE _name=\"".$name."\"";
@@ -399,7 +481,15 @@ class User
         }
     }                    
 
-    # add given user with given characteristics to database
+    /**
+    * add a new user to database
+    * @param string $name name of new user
+    * @param string $password password of new user
+    * @param bool $edit_list indicates if new user is allowed to edit a list (FALSE if not provided)
+    * @param bool $created_list indicates if current user is allowed to create a new list (FALSE if not provided)
+    * @param bool $is_admin indicates if current user is has admin privileges (FALSE if not provided)
+    * @return bool indicates if user has been added
+    */
     function add ($name, $pw, $edit_list = 0, $create_list = 0, $is_admin = 0)
     {
         $password = md5($pw);

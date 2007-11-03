@@ -1,17 +1,27 @@
 <?php
 
-/*
- * This class takes care of all database access
+/**
+ * This file contains the class definition of Database
+ *
+ * @package Class_FirstThingsFirst
  * @author Jasper de Jong
+ * @copyright 2007 Jasper de Jong
+ * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
 
-# make sure firstthingsfirst_db_table_prefix ends with a '_' char
+/**
+ * Make sure firstthingsfirst_db_table_prefix ends with a '_' char
+ */
 if ((substr($firstthingsfirst_db_table_prefix, -1, 1) != "_") && (strlen($firstthingsfirst_db_table_prefix) > 0))
     $firstthingsfirst_db_table_prefix = $firstthingsfirst_db_table_prefix."_";
 
 
-# class definition
+/**
+ * This class takes care of all database access
+ *
+ * @package Class_FirstThingsFirst
+ */
 class Database
 {
     /**

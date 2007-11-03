@@ -1,13 +1,21 @@
 <?php
 
-/*
- * This class contains the state of a specific list
- * List specific data is passed to User object and stored in session
+/**
+ * This file contains the class definition of ListState
+ *
+ * @package Class_FirstThingsFirst
  * @author Jasper de Jong
+ * @copyright 2007 Jasper de Jong
+ * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
 
-# class definition
+/**
+ * This class contains the state of a specific list
+ * List specific data is passed to User object and stored in session
+ *
+ * @package Class_FirstThingsFirst
+ */
 class ListState
 {
     /**

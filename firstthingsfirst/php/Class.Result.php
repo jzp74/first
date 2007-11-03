@@ -1,12 +1,20 @@
 <?php
 
-/*
- * This class contains the cumulative results of function calls
+/**
+ * This file contains the class definition of Result
+ *
+ * @package Class_FirstThingsFirst
  * @author Jasper de Jong
+ * @copyright 2007 Jasper de Jong
+ * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
    
-# Class definition
+/**
+ * This class contains the cumulative results of function calls
+ *
+ * @package Class_FirstThingsFirst
+ */
 class Result
 {
     /**

@@ -1,23 +1,57 @@
 <?php
 
-/*
- * This class represents a logfile
- * Log messages of various levels can be added to the logfile
+/**
+ * This file contains the class definition of ListTable
+ *
+ * @package Class_FirstThingsFirst
  * @author Jasper de Jong
+ * @copyright 2007 Jasper de Jong
+ * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
 
-# Logging defines
+/**
+ * Define LOGGING_OFF
+ */
 define("LOGGING_OFF", 0);
+
+/**
+ * Define LOGGING_TRACE
+ */
 define("LOGGING_TRACE", 1);
+
+/**
+ * Define LOGGING_DEBUG
+ */
 define("LOGGING_DEBUG", 2);
+
+/**
+ * Define LOGGING_INFO
+ */
 define("LOGGING_INFO", 3);
+
+/**
+ * Define LOGGING_WARN
+ */
 define("LOGGING_WARN", 4);
+
+/**
+ * Define LOGGING_ERROR
+ */
 define("LOGGING_ERROR", 5);
+
+/**
+ * Define LOGGING_NAME
+ */
 define("LOGGING_NAME", "logfile.log");
 
 
-# Class definition
+/**
+ * This class represents a logfile
+ * Log messages of various levels can be added to the logfile
+ *
+ * @package Class_FirstThingsFirst
+ */
 class Logging
 {        
     /**

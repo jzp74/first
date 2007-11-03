@@ -1,17 +1,27 @@
 <?php
 
-/*
- * This class represents a set of notes
- * This set of notes belongs to a specified field of specified ListTableItem of a specified ListTable
+/**
+ * This file contains the class definition of ListTableItemNotes
+ *
+ * @package Class_FirstThingsFirst
  * @author Jasper de Jong
+ * @copyright 2007 Jasper de Jong
+ * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
 
-# ListTableItemNotes defines
+/**
+ * Define LISTTABLEITEMRENOTES_TABLE_NAME
+ */
 define("LISTTABLEITEMRENOTES_TABLE_NAME", $firstthingsfirst_db_table_prefix."listtableitemnote");
 
 
-# Class definition
+/**
+ * This class represents a set of notes
+ * This set of notes belongs to a specified field of specified ListTableItem of a specified ListTable
+ *
+ * @package Class_FirstThingsFirst
+ */
 class ListTableItemNotes
 {
     /**

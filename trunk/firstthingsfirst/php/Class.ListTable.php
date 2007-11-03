@@ -321,7 +321,7 @@ class ListTable
     
     /**
     * create new database table for current ListTable object
-    * @param $force bool indicates is existing database table should be removed
+    * @param $force bool indicates if existing database table should be removed (FALSE if not provided)
     * @return bool indicates if table has been created
     */
     function create ($force = FALSE)

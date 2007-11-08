@@ -359,7 +359,7 @@ class User
     */
     function login ($name, $pw)
     {
-        global $firstthingsfirst_db_passwd;
+        global $firstthingsfirst_admin_passwd;
         
         $this->_log->trace("log in (name=".$name.")");
         
@@ -373,7 +373,7 @@ class User
         if ($name == "admin" && !$this->exists("admin"))
         {
             $this->_log->info("first time login for admin");
-            if (!$this->add($name, $pw, 1, 1, 1))
+            if (!$this->add($name, $firstthingsfirst_admin_passwd, 1, 1, 1))
                 return FALSE;
         }
 
@@ -394,10 +394,6 @@ class User
             $db_admin = $row[6];
             $times_login = $row[7] + 1;
             $last_login = $row[8];
-            
-            # obtain admin pw from localsettings
-            if ($name == "admin")
-                $db_password = md5($firstthingsfirst_db_passwd);
             
             if ($db_password == $password)
             {
@@ -489,6 +485,12 @@ class User
                 
                 return FALSE;
             }
+        }
+        else if (strlen($this->_database->get_error_str()) == 0)
+        {
+            $this->_log->debug("user does not exist (name=".$name.")");
+                
+            return FALSE;
         }
         else
         {

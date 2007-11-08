@@ -1,29 +1,42 @@
 <?php
 
-require_once("../localsettings.php");
-require_once("../globals.php");
+require_once("globals.php");
+require_once("localsettings.php");
 
-require_once("../php/external/JSON.php");
+require_once("php/external/JSON.php");
+require_once("xajax/xajax.inc.php");
 
-require_once("../php/Class.Logging.php");
-require_once("../php/Class.Database.php");
-require_once("../php/Class.User.php");
-require_once("../php/Class.ListTableDescription.php");
-require_once("../php/Class.ListTableItemNotes.php");
-require_once("../php/Class.ListTable.php");
+require_once("php/Utilities.php");
+
+require_once("php/Text.Buttons.php");
+require_once("php/Text.Errors.php");
+require_once("php/Text.Labels.php");
+
+require_once("php/Class.Logging.php");
+require_once("php/Class.Result.php");
+require_once("php/Class.Database.php");
+require_once("php/Class.ListState.php");
+require_once("php/Class.User.php");
+require_once("php/Class.ListTableDescription.php");
+require_once("php/Class.ListTable.php");
+require_once("php/Class.ListTableItemNotes.php");
 
 
+# initialisations
 # needed to initialise several classes
 class EmptyClass {}
 
+
 # dummy initialisations
 $list_table = new EmptyClass();
-$list_table_item_notes = new EmptyClass();
+$list_table_item_remarks = new EmptyClass();
 
-# initialisations
+# create global objects
 $json = new Services_JSON();
-$logging = new Logging(LOGGING_TRACE, "regression.log");
+$logging = new Logging(LOGGING_INFO, "firstthingsfirst.log");
+$result = new Result();
 $database = new Database();
+$list_state = new ListState();
 $user = new User();
 $list_table_description = new ListTableDescription();
 $list_table = new ListTable();
@@ -32,6 +45,10 @@ $list_table_item_notes = new ListTableItemNotes();
 
 # cleanup tables and entries created during this test
 $cleanup = FALSE;
+
+# login as admin
+$user->logout();
+$login("admin", $firstthingsfirst_admin_passwd);
 
 # definitions
 $_title = "testing 1 2 3";

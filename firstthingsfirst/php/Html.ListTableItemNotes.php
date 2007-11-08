@@ -177,8 +177,8 @@ function get_list_row_note ($db_field_name, $this_id, $previous_id, $next_id, $n
     # display info about the creator of this note only when it is not a new note
     if ($this_id != 0)
     {
-        $html_str .= "                                        <p>&nbsp;".$note_array["_creator"]."&nbsp;".LABEL_AT."&nbsp;";
-        $html_str .= strftime($firstthingsfirst_date_string, (strtotime($note_array["_created"])))."</p>\n";
+        $html_str .= "                                        <p>&nbsp;".$note_array[DB_CREATOR_FIELD_NAME]."&nbsp;".LABEL_AT."&nbsp;";
+        $html_str .= strftime($firstthingsfirst_date_string, (strtotime($note_array[DB_TS_CREATED_FIELD_NAME])))."</p>\n";
     }
     else
         $html_str .= "                                        <p>&nbsp;".LABEL_NEW_NOTE."</p>\n";

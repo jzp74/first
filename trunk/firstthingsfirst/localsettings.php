@@ -23,6 +23,9 @@ $firstthingsfirst_list_page_entries = 16;
 # this setting allows you have multiple firstthingsfirst instances to share the same db schema
 $firstthingsfirst_db_table_prefix = "ftf";
 
+# administrator password
+$firstthingsfirst_admin_passwd = "somepassword";
+
 # database connection settings
 $firstthingsfirst_db_host = "127.0.0.1";
 $firstthingsfirst_db_user = "firstthingsfirst";

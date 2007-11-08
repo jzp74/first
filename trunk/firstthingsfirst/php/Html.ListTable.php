@@ -182,8 +182,8 @@ function action_get_list_content ($list_title, $order_by_field, $page)
                     $html_str .= "\n";
                     foreach ($value as $note_array)
                     {
-                        $html_str .= "                            <p>".$note_array["_creator"]."&nbsp;".LABEL_AT."&nbsp;";
-                        $html_str .= strftime($firstthingsfirst_date_string, (strtotime($note_array["_created"]))).": ";
+                        $html_str .= "                            <p>".$note_array[DB_CREATOR_FIELD_NAME]."&nbsp;".LABEL_AT."&nbsp;";
+                        $html_str .= strftime($firstthingsfirst_date_string, (strtotime($note_array[DB_TS_CREATED_FIELD_NAME]))).": ";
                         $html_str .= $note_array["_note"]."</p>\n";
                     }
                 }

@@ -1,8 +1,14 @@
 <?php
 
 
-# This file contains all php code that is used to generate list table html 
-# TODO add explicit info logging for all actions
+/**
+ * This file contains all php code that is used to generate list table html 
+ *
+ * @package HTML_FirstThingsFirst
+ * @author Jasper de Jong
+ * @copyright 2007 Jasper de Jong
+ * @license http://www.opensource.org/licenses/gpl-license.php
+ */
 
 
 # action definitions

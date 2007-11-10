@@ -1,7 +1,14 @@
 <?php
 
 
-# This file contains all general php code that is used to generate html
+/**
+ * This file contains all php code that is used to generate login html
+ *
+ * @package HTML_FirstThingsFirst
+ * @author Jasper de Jong
+ * @copyright 2007 Jasper de Jong
+ * @license http://www.opensource.org/licenses/gpl-license.php
+ */
 
 
 # check if user is logged in and has permissions to call function

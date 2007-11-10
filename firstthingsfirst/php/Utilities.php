@@ -1,6 +1,13 @@
 <?php
 
+/**
 # This file contains a number of utility functions
+ *
+ * @package HTML_FirstThingsFirst
+ * @author Jasper de Jong
+ * @copyright 2007 Jasper de Jong
+ * @license http://www.opensource.org/licenses/gpl-license.php
+ */
 
 
 # check if given string is not empty

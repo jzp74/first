@@ -11,7 +11,7 @@
 
 
 /**
- * defintion of database table name
+ * definition of database table name
  */
 define("LISTTABLEITEMRENOTES_TABLE_NAME", $firstthingsfirst_db_table_prefix."listtableitemnote");
 

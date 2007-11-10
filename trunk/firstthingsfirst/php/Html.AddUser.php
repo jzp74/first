@@ -1,8 +1,15 @@
 <?php
 
 
-# This file contains all php code that is used to generate listbuilder html
-# TODO add explicit info logging for all actions
+/**
+ * This file contains all php code that is used to generate listbuilder html
+ *
+ * @package HTML_FirstThingsFirst
+ * @author Jasper de Jong
+ * @copyright 2007 Jasper de Jong
+ * @license http://www.opensource.org/licenses/gpl-license.php
+ * @todo change name of this file
+ */
 
 
 # action definitions

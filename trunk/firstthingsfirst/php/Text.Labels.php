@@ -1,39 +1,164 @@
 <?php
 
 
-# This file contains all labels texts
+/**
+ * This file contains all definitions of text labels (messages)
+ *
+ * @package Text_FirstThingsFirst
+ * @author Jasper de Jong
+ * @copyright 2007 Jasper de Jong
+ * @license http://www.opensource.org/licenses/gpl-license.php
+ */
 
 
-# shared labels
+/**
+ * shared label
+ * definition of minus sign
+ */
 define("LABEL_MINUS", "-");
-define("LABEL_CREATED_BY", "created by");
-define("LABEL_AT", "at");
-define("LABEL_LAST_MODIFICATION_BY", "last modification by");
-define("LABEL", "");
 
-# field definitions
+/**
+ * shared label
+ * definition of 'created by' label
+ */
+define("LABEL_CREATED_BY", "created by");
+
+/**
+ * shared label
+ * definition of 'at' label
+ */
+define("LABEL_AT", "at");
+
+/**
+ * shared label
+ * definition of 'last modification by' label
+ */
+define("LABEL_LAST_MODIFICATION_BY", "last modification by");
+
+/**
+ * shared field definition
+ * definition of number
+ */
 define("LABEL_DEFINITION_NUMBER", "number");
+
+/**
+ * shared field definition
+ * definition of automatic number
+ */
 define("LABEL_DEFINITION_AUTO_NUMBER", "automatic number");
+
+/**
+ * shared field definition
+ * definition of date
+ */
 define("LABEL_DEFINITION_DATE", "date");
+
+/**
+ * shared field definition
+ * definition of automatic date
+ */
 define("LABEL_DEFINITION_AUTO_DATE", "automatic date");
+
+/**
+ * shared field definition
+ * definition of text line
+ */
 define("LABEL_DEFINITION_TEXT_LINE", "text line");
+
+/**
+ * shared field definition
+ * definition of text field
+ */
 define("LABEL_DEFINITION_TEXT_FIELD", "text field");
+
+/**
+ * shared field definition
+ * definition of notes field
+ */
 define("LABEL_DEFINITION_NOTES_FIELD", "notes field");
+
+/**
+ * shared field definition
+ * definition of selection box
+ */
 define("LABEL_DEFINITION_SELECTION", "selection box");
 
-# Html.AddUser labels
+/**
+ * add user label
+ * definition of add user page name
+ */
 define("LABEL_ADD_USER_PAGE", "Add a new user");
+
+/**
+ * add user label
+ * definition of add user definition
+ */
 define("LABEL_ADD_USER_DEFINITION", "New user definition");
+
+/**
+ * add user label
+ * definition of new user name
+ */
 define("LABEL_ADD_USER_NAME", "name of new user");
+
+/**
+ * add user label
+ * definition of new user field explanation
+ */
 define("LABEL_ADD_USER_NAME_EXPLANATION", "");
+
+/**
+ * add user label
+ * definition of new user password
+ */
 define("LABEL_ADD_USER_PASSWORD", "password of new user");
+
+/**
+ * add user label
+ * definition of add user password explanation
+ */
 define("LABEL_ADD_USER_PASSWORD_EXPLANATION", "");
+
+/**
+ * add user label
+ * definition of 'can edit list' label
+ */
 define("LABEL_ADD_USER_EDIT_LIST", "can edit list");
+
+/**
+ * add user label
+ * definition of 'can edit list' explanation
+ */
 define("LABEL_ADD_USER_EDIT_LIST_EXPLANATION", "check this box when the new user has permission to add/edit/archive/delete list entries");
+
+/**
+ * add user label
+ * definition of 'can create new list' label
+ */
 define("LABEL_ADD_USER_CREATE_LIST", "can create new list");
+
+/**
+ * add user label
+ * definition of 'can create new list' explantion
+ */
 define("LABEL_ADD_USER_CREATE_LIST_EXPLANATION", "check this box when the new user has permission to create a new list");
+
+/**
+ * add user label
+ * definition of 'is admin' label
+ */
 define("LABEL_ADD_USER_ADMIN", "is admin");
+
+/**
+ * add user label
+ * definition of 'is admin' explantion
+ */
 define("LABEL_ADD_USER_ADMIN_EXPLANATION", "check this box when new user has administrator permissions");
+
+/**
+ * add user label
+ * definition of success after creation of new user
+ */
 define("LABEL_USER_ADDED", "new user added!<br>add another user or return to the portal page");
 
 # Html.ListTable labels

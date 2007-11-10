@@ -11,12 +11,12 @@
 
 
 /**
- * Define LISTTABLE_TABLE_NAME_PREFIX
+ * definition of database prefix for each ListTable
  */
 define("LISTTABLE_TABLE_NAME_PREFIX", $firstthingsfirst_db_table_prefix."listtable_");
 
 /**
- * Define LISTTABLELISTTABLE_EMPTY
+ * definition of name of an empty (non initialized) ListTable object
  */
 define("LISTTABLELISTTABLE_EMPTY", "_LISTTABLE_EMPTY__");
 

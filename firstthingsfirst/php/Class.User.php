@@ -11,17 +11,17 @@
 
 
 /**
- * Define USER_TABLE_NAME
+ * defintion of database table name
  */
 define("USER_TABLE_NAME", $firstthingsfirst_db_table_prefix."user");
 
 /**
- * Define USER_ID_RESET_VALUE
+ * definition of id of an empty (non initialized) User object
  */
 define("USER_ID_RESET_VALUE", -1);
 
 /**
- * Define USER_NAME_RESET_VALUE
+ * definition of name of an empty (non initialized) User object
  */
 define("USER_NAME_RESET_VALUE", "_");
 

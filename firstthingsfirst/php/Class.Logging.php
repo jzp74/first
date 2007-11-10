@@ -11,37 +11,37 @@
 
 
 /**
- * Define LOGGING_OFF
+ * definition of no loglevel (logging is switched off)
  */
 define("LOGGING_OFF", 0);
 
 /**
- * Define LOGGING_TRACE
+ * definition of TRACE loglevel
  */
 define("LOGGING_TRACE", 1);
 
 /**
- * Define LOGGING_DEBUG
+ * definition of DEBUG loglevel
  */
 define("LOGGING_DEBUG", 2);
 
 /**
- * Define LOGGING_INFO
+ * definition of INFO loglevel
  */
 define("LOGGING_INFO", 3);
 
 /**
- * Define LOGGING_WARN
+ * definition of WARN loglevel
  */
 define("LOGGING_WARN", 4);
 
 /**
- * Define LOGGING_ERROR
+ * definition of ERROR loglevel
  */
 define("LOGGING_ERROR", 5);
 
 /**
- * Define LOGGING_NAME
+ * definition of standard logfile name
  */
 define("LOGGING_NAME", "logfile.log");
 

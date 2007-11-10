@@ -11,12 +11,12 @@
 
 
 /**
- * Define LISTTABLEDESCRIPTION_TABLE_NAME
+ * defintion of database table name
  */
 define("LISTTABLEDESCRIPTION_TABLE_NAME", $firstthingsfirst_db_table_prefix."listtabledescription");
 
 /**
- * Define LISTTABLEDESCRIPTION_FIELD_PREFIX
+ * definition of prefix that is used for all user-defined field names
  */
 define("LISTTABLEDESCRIPTION_FIELD_PREFIX", "_user_defined_");
 

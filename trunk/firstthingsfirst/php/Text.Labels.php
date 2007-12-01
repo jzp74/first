@@ -161,40 +161,161 @@ define("LABEL_ADD_USER_ADMIN_EXPLANATION", "check this box when new user has adm
  */
 define("LABEL_USER_ADDED", "new user added!<br>add another user or return to the portal page");
 
-# Html.ListTable labels
+/**
+ * listtable label
+ * definition of 'page' label
+ */
 define("LABEL_PAGE", "page");
+
+/**
+ * listtable label
+ * definition of 'of' label
+ */
 define("LABEL_OF", "of");
+
+/**
+ * listtable label
+ * definition of user message: enter details and commit new row
+ */
 define("LABEL_ADD_ROW", "enter details and commit new row");
+
+/**
+ * listtable label
+ * definition of user message: enter and commit changes
+ */
 define("LABEL_EDIT_ROW", "enter and commit changes");
 
-# Html.ListTableItemNote labels
+
+/**
+ * listtableitemnote label
+ * definition of 'new note' label
+ */
 define("LABEL_NEW_NOTE", "new note");
 
-# Html.ListBuilder labels
+/**
+ * listbuilder label
+ * definition of 'configure a new list' label
+ */
 define("LABEL_CONFIGURE_NEW_LIST", "Configure a new list");
+
+/**
+ * listbuilder label
+ * definition of 'general settings' label
+ */
 define("LABEL_GENERAL_SETTINGS", "General settings");
+
+/**
+ * listbuilder label
+ * definition of 'title of this list' label
+ */
 define("LABEL_TITLE_OF_THIS_LIST", "Title&nbsp;of&nbsp;this&nbsp;list");
+
+/**
+ * listbuilder label
+ * definition of 'short description' label
+ */
 define("LABEL_SHORT_DESCRIPTION_OF_THIS_LIST", "Short&nbsp;description&nbsp;of&nbsp;this&nbsp;list");
+
+/**
+ * listbuilder label
+ * definition of 'define table fields' label
+ */
 define("LABEL_DEFINE_TABLE_FIELDS", "Define table fields");
+
+/**
+ * listbuilder label
+ * definition of 'fieldtype' label
+ */
 define("LABEL_FIELDTYPE", "fieldtype");
+
+/**
+ * listbuilder label
+ * definition of 'fieldname' label
+ */
 define("LABEL_FIELDNAME", "fieldname");
+
+/**
+ * listbuilder label
+ * definition of 'options' label
+ */
 define("LABEL_OPTIONS", "options");
+
+/**
+ * listbuilder label
+ * definition of 'comment' label
+ */
 define("LABEL_COMMENT", "comment");
+
+/**
+ * listbuilder label
+ * definition of 'action' label
+ */
 define("LABEL_ACTION", "action");
+
+/**
+ * listbuilder label
+ * definition of user message: this field cannot be changed
+ */
 define("LABEL_FIELD_CANNOT_BE_CHANGED", "this field cannot be changed");
+
+/**
+ * listbuilder label
+ * definition of an example of options field type
+ */
 define("LABEL_OPTIONS_EXAMPLE", "specify '|' seperated options for this selection field.<br>For instance: 'dog|cat|sheep'");
+
+/**
+ * listbuilder label
+ * definition of user message: new list created
+ */
 define("LABEL_NEW_LIST_CREATED", "new list created!<br>create another new list or return to the portal page");
 
-# Html.Login.php
+/**
+ * login label
+ * definition of 'please' label
+ */
 define("LABEL_PLEASE_LOGIN", "Please login");
+
+/**
+ * login label
+ * definition of 'name' label
+ */
 define("LABEL_USER_NAME", "name");
+
+/**
+ * login label
+ * definition of 'password' label
+ */
 define("LABEL_PASSWORD", "password");
+
+/**
+ * login label
+ * definition of 'user' label
+ */
 define("LABEL_USER", "user");
 
-# Html.Portal.php
+/**
+ * portal label
+ * definition of 'list name' label
+ */
 define("LABEL_LIST_NAME", "name");
+
+/**
+ * login label
+ * definition of 'description' label
+ */
 define("LABEL_LIST_DESCRIPTION", "description");
+
+/**
+ * login label
+ * definition of 'none' label
+ */
 define("LABEL_NONE", "none");
+
+/**
+ * login label
+ * definition of user message: no lists defined yet
+ */
 define("LABEL_NO_LISTST_DEFINED", "no lists defined yet!");
 
 ?>

@@ -2,7 +2,7 @@
 
 
 /**
- * This file contains all php code that is used to generate login html
+ * This file contains code that is used in all Html.*.php pages
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
@@ -11,7 +11,11 @@
  */
 
 
-# check if user is logged in and has permissions to call function
+/**
+ * test if user is logged in and has permissions for given action
+ * @param string $action the action for which user permissions have to be checked
+ * @return bool indicated if user has permission for given action
+ */
 function check_preconditions ($action)
 {
     global $logging;
@@ -69,7 +73,10 @@ function check_preconditions ($action)
     return TRUE;
 }
 
-# check if an error has been set
+/**
+ * test if an error has been set and show the error on screen if an error has been set
+ * @return bool indicated if an error has been set
+ */
 function check_postconditions ()
 {
     global $logging;
@@ -100,7 +107,12 @@ function check_postconditions ()
     return TRUE;
 }
 
-# set error message
+/**
+ * show an error on screen
+ * @param string $error_element DOM element in which error has to be shown
+ * @param string $error_str the error string
+ * @return void
+ */
 function set_error_message ($error_element, $error_str)
 {
     global $logging;
@@ -117,7 +129,12 @@ function set_error_message ($error_element, $error_str)
     $logging->trace("set error message (element=".$error_element.")");        
 }
 
-# set info message
+/**
+ * show an info message on screen
+ * @param string $info_element DOM element in which info message has to be shown
+ * @param string $info_str the info string
+ * @return void
+ */
 function set_info_message ($info_element, $info_str)
 {
     global $logging;
@@ -134,17 +151,23 @@ function set_info_message ($info_element, $info_str)
     $logging->trace("set error message (element=".$info_element.")");        
 }
 
-# get html for an active button that calls a javascript function
-# string func_str: contains the complete js function name and all its parameters
-# string name_str: contains the name of the button
+/**
+ * get html for an active button (button calls a javascript function)
+ * @param string $func_str contains the complete js function name and all its parameters
+ * @param string $name_str contains the name of the button
+ * @return string html containing button
+ */
 function get_button ($func_str, $name_str)
 {
     return "<a href=\"javascript:void(0);\" onclick=\"".$func_str."\">".$name_str."</a>";
 }
 
-# get html for an active link_button that calls index.php with specified query string
-# string query_str: contains the query string
-# string name_str: contains the name of the button
+/**
+ * get html for an active link_button (button calls index.php with specified query string)
+ * @param string $query_str contains the query string
+ * @param string $name_str contains the name of the button
+ * @return string html containing button
+ */
 function get_query_button ($query_str, $name_str)
 {
     global $firstthingsfirst_portal_address;
@@ -152,15 +175,21 @@ function get_query_button ($query_str, $name_str)
     return "<a href=\"javascript:void(0);\" onclick=\"window.location='".$firstthingsfirst_portal_address."/index.php?".$query_str."'\">".$name_str."</a>";
 }
 
-# get html for an inactive button
-# string name_str: contains the name of the button
+/**
+ * get html for an inactive button
+ * @param string $name_str contains the name of the button
+ * @return string html containing button
+ */
 function get_inactive_button ($name_str)
 {
     return "<span class=\"inactive_button\">".$name_str."</span>";
 }
 
-# get html for an onclick specification that calls index.php with specified query string
-# string query_str: contains the query string
+/**
+ * get html for an onclick specification that calls index.php with specified query string
+ * @param string $query_str contains the query string
+ * @return string html containing link
+ */
 function get_query_link ($query_str)
 {
     global $firstthingsfirst_portal_address;
@@ -168,8 +197,11 @@ function get_query_link ($query_str)
     return "onclick=\"window.location='".$firstthingsfirst_portal_address."/index.php?".$query_str."'\"";
 }
 
-# set given html in the action bar
-# string html_str: html for the action bar
+/**
+ * set html in the action bar
+ * @param string $html_str html for the action bar
+ * return void
+ */
 function set_action_bar ($html_str)
 {
     global $logging;
@@ -184,8 +216,11 @@ function set_action_bar ($html_str)
     return;
 }
 
-# set given html in the footer
-# string html_str: html for the footer
+/**
+ * set html in the footer
+ * @param string $html_str html for the footer
+ * return void
+ */
 function set_footer ($html_str)
 {
     global $logging;

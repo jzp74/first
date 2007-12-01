@@ -11,26 +11,35 @@
  */
 
 
-# action definitions
+/**
+ * definition of 'get_next_note' action
+ */
 define("ACTION_NEXT_NOTE", "get_next_note");
-define("ACTION_PREVIOUS_NOTE", "get_previous_note");
-define("ACTION_ADD_NOTE", "add_note");
-
-# action permissions
 $firstthingsfirst_action_description[ACTION_NEXT_NOTE] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$firstthingsfirst_action_description[ACTION_PREVIOUS_NOTE] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$firstthingsfirst_action_description[ACTION_ADD_NOTE] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-
-# action registrations
 $xajax->registerFunction("action_get_previous_note");
+
+/**
+ * definition of 'get_previous_note' action
+ */
+define("ACTION_PREVIOUS_NOTE", "get_previous_note");
+$firstthingsfirst_action_description[ACTION_PREVIOUS_NOTE] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 $xajax->registerFunction("action_get_next_note");
+
+/**
+ * definition of 'add_note' action
+ */
+define("ACTION_ADD_NOTE", "add_note");
+$firstthingsfirst_action_description[ACTION_ADD_NOTE] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 $xajax->registerFunction("action_add_note");
 
 
-# hide the current note and show the previous note (by changing classnames)
-# this function is registered in xajax
-# int this_id: the id of the current note
-# int previous_id: the id of the previous note
+/**
+ * hide the current note and show the previous note (by changing classnames in DOM)
+ * this function is registered in xajax
+ * @param int $this_id id of current note
+ * @param int previous_id id of previous note
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_get_previous_note ($this_id, $previous_id)
 {
     global $logging;
@@ -50,10 +59,13 @@ function action_get_previous_note ($this_id, $previous_id)
     return $response;
 }
 
-# hide the current note and show the next note (by changing classnames)
-# this function is registered in xajax
-# int this_id: the id of the current note
-# int next_id: the id of the next note
+/**
+ * hide the current note and show the next note (by changing classnames in DOM)
+ * this function is registered in xajax
+ * @param int $this_id id of current note
+ * @param int next_id id of next note
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_get_next_note ($this_id, $next_id)
 {
     global $logging;
@@ -73,8 +85,13 @@ function action_get_next_note ($this_id, $next_id)
     return $response;
 }
 
-# add a note to the dom
-# this function is registered in xajax
+/**
+ * add a note to the DOM
+ * this function is registered in xajax
+ * @param string $db_field_name is used to generate id's
+ * @param int $this_id id of current note
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_add_note ($db_field_name, $this_id)
 {
     global $logging;
@@ -101,12 +118,15 @@ function action_add_note ($db_field_name, $this_id)
     return $response;
 }
 
-# generate html for a number of notes
-# this function is called when user edits or adds a row
-# TODO add labels for this function
-# string field_name: name of the field that contains the notes
-# array notes_array: array of notes. each notes is also an array
-# bool new_note: add new note to list of notes and show this new note
+/**
+ * generate html for a number of notes
+ * this function is called when user edits or adds a row
+ * @todo add labels for this function
+ * @param string $field_name name of the field that contains the notes
+ * @param array $notes_array array of notes. each notes is also an array
+ * @param bool $new_note add new note to list of notes and show this new note
+ * @return string resulting html
+ */
 function get_list_row_notes ($db_field_name, $notes_array)
 {
     global $logging;
@@ -152,14 +172,17 @@ function get_list_row_notes ($db_field_name, $notes_array)
     return $html_str;
 }
 
-# generate html for one note
-# this function is called only by function get_list_row_notes
-# TODO list of arguments is too long
-# string db_field_name: name of the field that contains this note
-# string this_id: id of this note
-# string previous_id: id of previous note (set to -1 when no previous note exists)
-# string next_id: id next note (set to -1 when no next note exists, set to 0 when a new note can be added)
-# array note_array: array describing a single note
+/**
+ * generate html for one note
+ * this function is called only by function get_list_row_notes
+ * @todo list of arguments is too long
+ * @param string $db_field_name name of the field that contains this note
+ * @param string $this_id id of this note
+ * @param string $previous_id id of previous note (set to -1 when no previous note exists)
+ * @param string $next_id id next note (set to -1 when no next note exists, set to 0 when a new note can be added)
+ * @param array $note_array array describing a single note
+ * @return string resulting html
+ */
 function get_list_row_note ($db_field_name, $this_id, $previous_id, $next_id, $note_array)
 {
     global $firstthingsfirst_date_string;

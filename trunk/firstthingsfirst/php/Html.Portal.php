@@ -2,7 +2,7 @@
 
 
 /**
- * This file contains all php code that is used to generate portal html
+ * This file contains all php code that is used to generate html for the portal page
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
@@ -11,21 +11,26 @@
  */
 
 
-# action definitions
+/**
+ * definition of 'get_portal_page' action
+ */
 define("ACTION_GET_PORTAL_PAGE", "get_portal_page");
-define("ACTION_GET_LIST_TABLES", "get_list_tables");
-
-# action permissions
 $firstthingsfirst_action_description[ACTION_GET_PORTAL_PAGE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$firstthingsfirst_action_description[ACTION_GET_LIST_TABLES] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-
-# action registrations
 $xajax->registerFunction("action_get_portal_page");
+
+/**
+ * definition of 'get_list_tables' action
+ */
+define("ACTION_GET_LIST_TABLES", "get_list_tables");
+$firstthingsfirst_action_description[ACTION_GET_LIST_TABLES] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 $xajax->registerFunction("action_get_list_tables");
 
 
-# set the html for a complete portal page
-# this function is registered in xajax
+/**
+ * set the html for the portal page
+ * this function is registered in xajax
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_get_portal_page ()
 {
     global $logging;
@@ -76,7 +81,10 @@ function action_get_portal_page ()
     return $response;
 }
 
-# return the html for an overview of all ListTables contained in database
+/*
+ * get the html for an overview of all ListTable objects contained in database
+ * @return void
+ */
 function action_get_list_tables ()
 {
     global $firstthingsfirst_portal_address;

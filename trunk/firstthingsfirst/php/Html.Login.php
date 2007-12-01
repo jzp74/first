@@ -2,7 +2,7 @@
 
 
 /**
- * This file contains all php code that is used to generate login html
+ * This file contains all php code that is used to generate html for the login page
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
@@ -11,20 +11,16 @@
  */
 
 
-# action definitions
-# no action definitions required for login functions
-
-# action permissions
-# no action permissions required for login functions
-
-# action registrations
 $xajax->registerFunction("action_get_login_page");
 $xajax->registerFunction("action_login");
 $xajax->registerFunction("action_logout");                                        
 
 
-# set the html for a login page
-# this function is registered in xajax
+/**
+ * set the html for the login page
+ * this function is registered in xajax
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_get_login_page ()
 {
     global $logging;
@@ -67,10 +63,13 @@ function action_get_login_page ()
     return $response;
 }
 
-# login a user
-# this function is registered in xajax
-# string user_name: user to login
-# string password: password lo login user_name
+/**
+ * login a user
+ * this function is registered in xajax
+ * @param string $user_name name of user
+ * @param string $password password for user
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_login ($user_name, $password)
 {
     global $logging;
@@ -113,8 +112,11 @@ function action_login ($user_name, $password)
     }
 }
     
-# logout a user
-# this function is registered in xajax
+/**
+ * logout a user
+ * this function is registered in xajax
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_logout ()
 {
     global $logging;
@@ -133,7 +135,10 @@ function action_logout ()
     return $response;
 }
 
-# generate html to display the login status of a user
+/**
+ * get html to display the login status of a user
+ * @return string html for login status
+ */
 function get_login_status ()
 {
     global $user;
@@ -162,7 +167,10 @@ function get_login_status ()
     return $html_str;
 }
 
-# set login status
+/**
+ * set login status
+ * return void
+ */
 function set_login_status ()
 {
     global $logging;

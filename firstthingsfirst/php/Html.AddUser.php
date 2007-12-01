@@ -2,7 +2,7 @@
 
 
 /**
- * This file contains all php code that is used to generate listbuilder html
+ * This file contains all php code that is used to generate html for the adduser page
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
@@ -12,21 +12,26 @@
  */
 
 
-# action definitions
+/**
+ * definition of 'get_add_user_page' action
+ */
 define("ACTION_GET_ADD_USER_PAGE", "get_add_user_page");
-define("ACTION_ADD_USER", "add_user");
-
-# action permissions
 $firstthingsfirst_action_description[ACTION_GET_ADD_USER_PAGE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_IS_ADMIN);
-$firstthingsfirst_action_description[ACTION_ADD_USER] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_IS_ADMIN);
-
-# action registrations
 $xajax->registerFunction("action_get_add_user_page");
+
+/**
+ * definition of 'add_user' action
+ */
+define("ACTION_ADD_USER", "add_user");
+$firstthingsfirst_action_description[ACTION_ADD_USER] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_IS_ADMIN);
 $xajax->registerFunction("action_add_user");
 
 
-# set the html for the add user page
-# this function is registered in xajax
+/**
+ * set the html for the add user page
+ * this function is registered in xajax
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_get_add_user_page ()
 {
     global $logging;

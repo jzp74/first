@@ -2,7 +2,7 @@
 
 
 /**
- * This file contains all php code that is used to generate list table html 
+ * This file contains all php code that is used to generate html for a list table page
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
@@ -11,39 +11,69 @@
  */
 
 
-# action definitions
+/**
+ * definition of 'get_list_page' action
+ */
 define("ACTION_GET_LIST_PAGE", "get_list_page");
-define("ACTION_GET_LIST_CONTENT", "get_list_content");
-define("ACTION_GET_LIST_ROW", "get_list_row");
-define("ACTION_UPDATE_LIST_ROW", "update_list_row");
-define("ACTION_ADD_LIST_ROW", "add_list_row");
-define("ACTION_ARCHIVE_LIST_ROW", "archive_list_row");
-define("ACTION_DEL_LIST_ROW", "del_list_row");
-define("ACTION_CANCEL_LIST_ACTION", "cancel_list_action");
-
-# action permissions
 $firstthingsfirst_action_description[ACTION_GET_LIST_PAGE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$firstthingsfirst_action_description[ACTION_GET_LIST_CONTENT] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$firstthingsfirst_action_description[ACTION_GET_LIST_ROW] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$firstthingsfirst_action_description[ACTION_UPDATE_LIST_ROW] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$firstthingsfirst_action_description[ACTION_ADD_LIST_ROW] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$firstthingsfirst_action_description[ACTION_ARCHIVE_LIST_ROW] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$firstthingsfirst_action_description[ACTION_DEL_LIST_ROW] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-
-# action registrations
 $xajax->registerFunction("action_get_list_page");
+
+/**
+ * definition of 'get_list_content' action
+ */
+define("ACTION_GET_LIST_CONTENT", "get_list_content");
+$firstthingsfirst_action_description[ACTION_GET_LIST_CONTENT] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 $xajax->registerFunction("action_get_list_content");
+
+/**
+ * definition of 'get_list_row' action
+ */
+define("ACTION_GET_LIST_ROW", "get_list_row");
+$firstthingsfirst_action_description[ACTION_GET_LIST_ROW] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 $xajax->registerFunction("action_get_list_row");
+
+/**
+ * definition of 'update_list_row' action
+ */
+define("ACTION_UPDATE_LIST_ROW", "update_list_row");
+$firstthingsfirst_action_description[ACTION_UPDATE_LIST_ROW] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 $xajax->registerFunction("action_update_list_row");
+
+/**
+ * definition of 'add_list_row' action
+ */
+define("ACTION_ADD_LIST_ROW", "add_list_row");
+$firstthingsfirst_action_description[ACTION_ADD_LIST_ROW] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 $xajax->registerFunction("action_add_list_row");
+
+/**
+ * definition of 'archive_list_row' action
+ */
+define("ACTION_ARCHIVE_LIST_ROW", "archive_list_row");
+$firstthingsfirst_action_description[ACTION_ARCHIVE_LIST_ROW] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 $xajax->registerFunction("action_archive_list_row");
+
+/**
+ * definition of 'del_list_row' action
+ */
+define("ACTION_DEL_LIST_ROW", "del_list_row");
+$firstthingsfirst_action_description[ACTION_DEL_LIST_ROW] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 $xajax->registerFunction("action_del_list_row");
+
+/**
+ * definition of 'cancel_list_action' action
+ */
+define("ACTION_CANCEL_LIST_ACTION", "cancel_list_action");
+$firstthingsfirst_action_description[ACTION_CANCEL_LIST_PAGE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 $xajax->registerFunction("action_cancel_list_action");
 
 
-# return the html for a complete list page
-# this function is registered in xajax
-# string list_title: name of current list
+/**
+ * set the html for a list page
+ * this function is registered in xajax
+ * @param string $list_title title of list
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_get_list_page ($list_title)
 {
     global $logging;

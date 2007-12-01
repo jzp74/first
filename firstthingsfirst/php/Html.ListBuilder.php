@@ -2,7 +2,7 @@
 
 
 /**
- * This file contains all php code that is used to generate listbuilder html
+ * This file contains all php code that is used to generate html for the listbuilder page
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
@@ -11,33 +11,54 @@
  */
 
 
-# action definitions
+/**
+ * definition of 'get_listbuilder_page' action
+ */
 define("ACTION_GET_LISTBUILDER_PAGE", "get_listbuilder_page");
-define("ACTION_ADD_LISTBUILDER_ROW", "add_listbuilder_row");
-define("ACTION_MOVE_LISTBUILDER_ROW", "move_listbuilder_row");
-define("ACTION_DEL_LISTBUILDER_ROW", "del_listbuilder_row");
-define("ACTION_REFRESH_LISTBUILDER", "refresh_listbuilder");
-define("ACTION_CREATE_LIST", "create_list");
-
-# action permissions
 $firstthingsfirst_action_description[ACTION_GET_LISTBUILDER_PAGE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$firstthingsfirst_action_description[ACTION_ADD_LISTBUILDER_ROW] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$firstthingsfirst_action_description[ACTION_MOVE_LISTBUILDER_ROW] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$firstthingsfirst_action_description[ACTION_DEL_LISTBUILDER_ROW] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$firstthingsfirst_action_description[ACTION_REFRESH_LISTBUILDER] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$firstthingsfirst_action_description[ACTION_CREATE_LIST] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-
-# action registrations
 $xajax->registerFunction("action_get_listbuilder_page");
+
+/**
+ * definition of 'add_listbuilder_row' action
+ */
+define("ACTION_ADD_LISTBUILDER_ROW", "add_listbuilder_row");
+$firstthingsfirst_action_description[ACTION_ADD_LISTBUILDER_ROW] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 $xajax->registerFunction("action_add_listbuilder_row");
+
+/**
+ * definition of 'move_listbuilder_row' action
+ */
+define("ACTION_MOVE_LISTBUILDER_ROW", "move_listbuilder_row");
+$firstthingsfirst_action_description[ACTION_MOVE_LISTBUILDER_ROW] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 $xajax->registerFunction("action_move_listbuilder_row");
+
+/**
+ * definition of 'del_listbuilder_row' action
+ */
+define("ACTION_DEL_LISTBUILDER_ROW", "del_listbuilder_row");
+$firstthingsfirst_action_description[ACTION_DEL_LISTBUILDER_ROW] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 $xajax->registerFunction("action_del_listbuilder_row");
+
+/**
+ * definition of 'refresh_listbuilder' action
+ */
+define("ACTION_REFRESH_LISTBUILDER", "refresh_listbuilder");
+$firstthingsfirst_action_description[ACTION_REFRESH_LISTBUILDER] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 $xajax->registerFunction("action_refresh_listbuilder");
+
+/**
+ * definition of 'create_list' action
+ */
+define("ACTION_CREATE_LIST", "create_list");
+$firstthingsfirst_action_description[ACTION_CREATE_LIST] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 $xajax->registerFunction("action_create_list");
 
 
-# set the html for the listbuilder page
-# this function is registered in xajax
+/**
+ * set the html for the listbuilder page
+ * this function is registered in xajax
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_get_listbuilder_page ()
 {
     global $logging;

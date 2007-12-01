@@ -1,7 +1,7 @@
 <?php
 
 /**
-# This file contains a number of utility functions
+ * This file contains a number of utility functions
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
@@ -9,9 +9,13 @@
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
-
-# check if given string is not empty
-# return FALSE when string is empty
+/**
+ * test if given string is not empty
+ * @todo write checks for this function
+ * @param string $field_name name of field that contains this string
+ * @param string $str string to test
+ * @return bool indicates if string is empty
+ */
 function is_not_empty ($field_name, $str)
 {
     global $logging;
@@ -28,9 +32,12 @@ function is_not_empty ($field_name, $str)
     return $str;
 }
 
-# check if given string is a number
-# return FALSE when string is not a number
-# TODO write and test this function
+/**
+ * test if given string is a number
+ * @param string $field_name name of field that contains this string
+ * @param string $str string to test
+ * @return bool indicates if string is a number
+ */
 function is_number ($field_name, $str)
 {
     global $logging;
@@ -40,8 +47,12 @@ function is_number ($field_name, $str)
     return $str;
 }
 
-# check if given string is a well formed string
-# return FALSE when string is not a number
+/**
+ * test if string is well formed
+ * @param string $field_name name of field that contains this string
+ * @param string $str string to test
+ * @return bool indicates if string is well formed
+ */
 function is_well_formed_string ($field_name, $str)
 {
     global $logging;
@@ -58,8 +69,12 @@ function is_well_formed_string ($field_name, $str)
     return $str;
 }
 
-# check if given string complies with predifined date format
-# return FALSE when string doesn't comply
+/**
+ * test if string complies with predefined date format
+ * @param string $field_name name of field that contains this string
+ * @param string $str string to test
+ * @return bool indicates if string is empty
+ */
 function is_date ($field_name, $str)
 {
     global $firstthingsfirst_date_string;

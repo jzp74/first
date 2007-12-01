@@ -6,8 +6,6 @@ require_once("localsettings.php");
 require_once("php/external/JSON.php");
 require_once("xajax/xajax.inc.php");
 
-require_once("php/Utilities.php");
-
 require_once("php/Text.Buttons.php");
 require_once("php/Text.Errors.php");
 require_once("php/Text.Labels.php");
@@ -48,7 +46,7 @@ $cleanup = FALSE;
 
 # login as admin
 $user->logout();
-$login("admin", $firstthingsfirst_admin_passwd);
+$user->login("admin", $firstthingsfirst_admin_passwd);
 
 # definitions
 $_title = "testing 1 2 3";

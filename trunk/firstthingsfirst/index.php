@@ -13,8 +13,6 @@ require_once("localsettings.php");
 require_once("php/external/JSON.php");
 require_once("xajax/xajax.inc.php");
 
-require_once("php/Utilities.php");
-
 require_once("php/Text.Buttons.php");
 require_once("php/Text.Errors.php");
 require_once("php/Text.Labels.php");
@@ -31,6 +29,7 @@ require_once("php/Class.ListTableItemNotes.php");
 # Initialize xajax
 $xajax = new xajax();
 
+require_once("php/Html.Utilities.php");
 require_once("php/Html.php");
 require_once("php/Html.Login.php");
 require_once("php/Html.Portal.php");

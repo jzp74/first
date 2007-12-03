@@ -92,6 +92,13 @@ function process_url ()
         else
             action_get_portal_page();
     }
+    else if ($action == ACTION_GET_PRINT_LIST)
+    {
+        if (isset($_GET['list']))
+            action_get_print_list($_GET['list']);
+        else
+            action_get_portal_page();
+    }
     # show add user page
     else if ($action == ACTION_GET_ADD_USER_PAGE)
         action_get_add_user_page();

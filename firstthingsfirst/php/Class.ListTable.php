@@ -20,6 +20,16 @@ define("LISTTABLE_TABLE_NAME_PREFIX", $firstthingsfirst_db_table_prefix."listtab
  */
 define("LISTTABLELISTTABLE_EMPTY", "_LISTTABLE_EMPTY__");
 
+/**
+ * definition of an unknown page (used only in select() function)
+ */
+define("LISTTABLELISTTABLE_UNKWOWN_PAGE", 0);
+
+/**
+ * definition of all pages (used only in select() function)
+ */
+define("LISTTABLELISTTABLE_ALL_PAGES", -1);
+
 
 /**
  * This class represents a user defined ListTable
@@ -489,7 +499,7 @@ class ListTable
             return array();
         }
         
-        if ($page == 0)
+        if ($page == LISTTABLELISTTABLE_UNKWOWN_PAGE)
             $page = $this->_list_state->get_current_page();
         if ($page > $total_pages)
             $page = $total_pages;
@@ -505,8 +515,12 @@ class ListTable
             $query .= " ASC";
         else
             $query .= " DESC";
-        $limit_from = ($page - 1) * $firstthingsfirst_list_page_entries;
-        $query .= " LIMIT ".$limit_from.", ".$firstthingsfirst_list_page_entries;
+        # only limit the number of entries when user does not want all pages
+        if ($page != LISTTABLELISTTABLE_ALL_PAGES)
+        {
+            $limit_from = ($page - 1) * $firstthingsfirst_list_page_entries;
+            $query .= " LIMIT ".$limit_from.", ".$firstthingsfirst_list_page_entries;
+        }
 
         $result = $this->_database->query($query);
         if ($result != FALSE)
@@ -560,7 +574,8 @@ class ListTable
             array_push($rows_with_notes, $row);
         }
 
-        $this->_list_state->set_current_page($page);
+        if ($page != LISTTABLELISTTABLE_ALL_PAGES)
+            $this->_list_state->set_current_page($page);
 
         # store list_state to session
         $this->_user->set_list_state();

@@ -33,6 +33,13 @@ $firstthingsfirst_action_description[ACTION_GET_LIST_ROW] = array(PERMISSION_CAN
 $xajax->registerFunction("action_get_list_row");
 
 /**
+ * definition of 'get_list_row' action
+ */
+define("ACTION_GET_PRINT_LIST", "get_print_list");
+$firstthingsfirst_action_description[ACTION_GET_PRINT_LIST] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$xajax->registerFunction("action_get_print_list");
+
+/**
  * definition of 'update_list_row' action
  */
 define("ACTION_UPDATE_LIST_ROW", "update_list_row");
@@ -111,7 +118,7 @@ function action_get_list_page ($list_title)
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
 
     # set list content
-    action_get_list_content ($list_title, "", 0);
+    action_get_list_content ($list_title, "", LISTTABLELISTTABLE_UNKWOWN_PAGE);
     
     # set login status, action bar and footer
     set_login_status();
@@ -172,8 +179,9 @@ function action_get_list_content ($list_title, $order_by_field, $page)
     else
         $current_page = $list_state->get_current_page();
 
-    # then we'll add some summary information
-    $html_str .= "            <div id=\"list_pages_top\">".LABEL_PAGE." ".$current_page." ".LABEL_OF." ".$total_pages."</div>\n\n";
+    # then we'll add some summary information, except when all pages have to be displayed
+    if ($page != LISTTABLELISTTABLE_ALL_PAGES)
+        $html_str .= "            <div id=\"list_pages_top\">".LABEL_PAGE." ".$current_page." ".LABEL_OF." ".$total_pages."</div>\n\n";
     
     # then we'll start with the table definition
     $html_str .= "            <table id=\"list_contents\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
@@ -254,48 +262,51 @@ function action_get_list_content ($list_title, $order_by_field, $page)
     $html_str .= "                </tbody>\n";
     $html_str .= "            </table>\n\n";
     
-    # add navigation links
-    $html_str .= "            <div id=\"list_pages_bottom\">";
-    # display 1 pagenumber when there is only one page (or none)
-    if ($total_pages == 0 || $total_pages == 1)
+    # add navigation links, except when all pages have to be shown
+    if ($page != LISTTABLELISTTABLE_ALL_PAGES)
     {
-            $html_str .= LABEL_PAGE.": <strong>".$total_pages."</strong>";
-    }
-    # pagenumber display algorithm for 2 or more pages
-    else
-    {
-        # display previous page link
-        if ($current_page > 1)
-            $html_str .= get_button("xajax_action_get_list_content('".$list_title."', '', ".($current_page - 1).")", "<< ".BUTTON_PREVIOUS_PAGE)."&nbsp;&nbsp;";
-        
-        # display first pagenumber
-        if ($current_page == 1)
-            $html_str .= " <strong>1</strong>";
-        else
-            $html_str .= " ".get_button("xajax_action_get_list_content('".$list_title."', '', 1)", 1);
-        # display middle pagenumbers
-        for ($cnt = 2; $cnt<$total_pages; $cnt += 1)
+        $html_str .= "            <div id=\"list_pages_bottom\">";
+        # display 1 pagenumber when there is only one page (or none)
+        if ($total_pages == 0 || $total_pages == 1)
         {
-            if ($cnt == ($current_page - 2))
-                $html_str .= " <strong>...<strong>";
-            else if ($cnt == ($current_page - 1))
-                $html_str .= " ".get_button("xajax_action_get_list_content('".$list_title."', '', ".$cnt.")", $cnt);
-            else if ($cnt == $current_page)
-                $html_str .= " <strong>".$cnt."</strong>";
-            else if ($cnt == ($current_page + 1))
-                $html_str .= " ".get_button("xajax_action_get_list_content('".$list_title."', '', ".$cnt.")", $cnt);
-            if ($cnt == ($current_page + 2))
-                $html_str .= " <strong>...<strong>";
+                $html_str .= LABEL_PAGE.": <strong>".$total_pages."</strong>";
         }
-        # display last pagenumber
-        if ($current_page == $total_pages)
-            $html_str .= "  <strong>".$total_pages."</strong>";
+        # pagenumber display algorithm for 2 or more pages
         else
-            $html_str .= "  ".get_button("xajax_action_get_list_content('".$list_title."', '', ".$total_pages.")", $total_pages);
+        {
+            # display previous page link
+            if ($current_page > 1)
+                $html_str .= get_button("xajax_action_get_list_content('".$list_title."', '', ".($current_page - 1).")", "<< ".BUTTON_PREVIOUS_PAGE)."&nbsp;&nbsp;";
+        
+            # display first pagenumber
+            if ($current_page == 1)
+                $html_str .= " <strong>1</strong>";
+            else
+                $html_str .= " ".get_button("xajax_action_get_list_content('".$list_title."', '', 1)", 1);
+            # display middle pagenumbers
+            for ($cnt = 2; $cnt<$total_pages; $cnt += 1)
+            {
+                if ($cnt == ($current_page - 2))
+                    $html_str .= " <strong>...<strong>";
+                else if ($cnt == ($current_page - 1))
+                    $html_str .= " ".get_button("xajax_action_get_list_content('".$list_title."', '', ".$cnt.")", $cnt);
+                else if ($cnt == $current_page)
+                    $html_str .= " <strong>".$cnt."</strong>";
+                else if ($cnt == ($current_page + 1))
+                    $html_str .= " ".get_button("xajax_action_get_list_content('".$list_title."', '', ".$cnt.")", $cnt);
+                if ($cnt == ($current_page + 2))
+                    $html_str .= " <strong>...<strong>";
+            }
+            # display last pagenumber
+            if ($current_page == $total_pages)
+                $html_str .= "  <strong>".$total_pages."</strong>";
+            else
+                $html_str .= "  ".get_button("xajax_action_get_list_content('".$list_title."', '', ".$total_pages.")", $total_pages);
 
-        # display next page link
-        if ($current_page < $total_pages)
-            $html_str .= "&nbsp;&nbsp;".get_button("xajax_action_get_list_content('".$list_title."', '', ".($current_page + 1).")", BUTTON_NEXT_PAGE." >>");        
+            # display next page link
+            if ($current_page < $total_pages)
+                $html_str .= "&nbsp;&nbsp;".get_button("xajax_action_get_list_content('".$list_title."', '', ".($current_page + 1).")", BUTTON_NEXT_PAGE." >>");        
+        }
     }
     
     $html_str .= "</div>\n\n";
@@ -472,6 +483,51 @@ function action_get_list_row ($list_title, $key_string)
         return $response;
 
     $logging->trace("got list row");
+
+    return $response;
+}
+
+/**
+ * set the html to print a list
+ * this function is registered in xajax
+ * @param string $list_title title of list
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
+function action_get_print_list ($list_title)
+{
+    global $logging;
+    global $result;    
+    global $user;
+    global $response;
+    global $list_table_description;
+    
+    $html_str = "";
+
+    $logging->info("ACTION: get print list (list_title=".$list_title.")");
+
+    if (!check_preconditions(ACTION_GET_LIST_PAGE))
+        return $response;
+    
+    # set the right list_table_description
+    $list_table_description->select($list_title);
+
+    $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
+    $html_str .= "        <div id=\"page_title\">".$list_table_description->get_title()."</div>\n\n";
+    $html_str .= "        <div id=\"list_content_pane\">\n\n";
+    $html_str .= "        </div> <!-- list_content_pane -->\n\n";
+    $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
+
+    $result->set_result_str($html_str);    
+    
+    $response->addAssign("main_body", "innerHTML", $result->get_result_str());
+
+    # set list content
+    action_get_list_content ($list_title, "", -1);
+    
+    # set footer
+    set_footer(get_list_footer());
+
+    $logging->trace("got print list");
 
     return $response;
 }

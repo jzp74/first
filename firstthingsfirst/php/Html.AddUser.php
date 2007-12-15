@@ -106,11 +106,12 @@ function action_get_add_user_page ()
     return $response;
 }
 
-
-# create a new user and get the portal page
-# this function is registered in xajax
-# array definition: defintion of new user
-# TODO add error checking for actual creation of user
+/**
+ * create a new user and get the portal page
+ * this function is registered in xajax
+ * @param array $definition defintion of new user
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_add_user ($definition)
 {
     global $logging;

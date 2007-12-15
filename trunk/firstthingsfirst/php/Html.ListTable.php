@@ -130,16 +130,14 @@ function action_get_list_page ($list_title)
     return $response;
 }
 
-# generate html only for the content of current list
-# this function is called when user sorts or views a different page
-# return a string containing html of a complete table
-# this table represents the contents of the database
-# TODO the same page should reload after delete or add row
-# order by given field
-# this function is registered in xajax
-# string list_title: name of current list
-# string order_by_field: name of field by which this list needs to be ordered
-# int page: number of page to be shown (show first page when 0 is given)
+/**
+ * get html only for the content of current list (called then sorts or changes pages)
+ * this function is registered in xajax
+ * @param string $list_title title of list
+ * @param string $order_by_field name of field by which this list needs to be ordered
+ * @param int $page page to be shown (show first page when 0 is given)
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_get_list_content ($list_title, $order_by_field, $page)
 {
     global $logging;
@@ -323,11 +321,13 @@ function action_get_list_content ($list_title, $order_by_field, $page)
     return $response;
 }
 
-# generate html only for one specified row
-# this function is called when user edits or adds a row
-# this function is registered in xajax
-# string list_title: name of current list
-# string key_string: comma separated name value pares
+/**
+ * get html of one specified row (called when user edits or adds a row)
+ * this function is registered in xajax
+ * @param string $list_title title of list
+ * @param string $key_string comma separated name value pairs
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_get_list_row ($list_title, $key_string)
 {
     global $logging;
@@ -532,11 +532,14 @@ function action_get_print_list ($list_title)
     return $response;
 }
 
-# update a row from current list
-# this function is registered in xajax
-# string key_string: comma separated name value pares
-# string list_title: name of current list
-# array form_values: new row as an array of name value pairs
+/**
+ * update a row from current list
+ * this function is registered in xajax
+ * @param string $list_title title of list
+ * @param string $key_string comma separated name value pairs
+ * @param string $array $form_values values of new row (array of name value pairs)
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_update_list_row ($list_title, $key_string, $form_values)
 {
     global $logging;
@@ -655,11 +658,14 @@ function action_update_list_row ($list_title, $key_string, $form_values)
     return $response;
 }
 
-# add a row to current list
-# this function is registered in xajax
-# TODO more field checking (number field should only contain numbers)
-# string list_title: name of current list
-# array form_values: new row as an array of name value pairs
+/**
+ * add a row to current list
+ * this function is registered in xajax
+ * @todo add more field checking (number field should only contain numbers)
+ * @param string $list_title title of list
+ * @param string $array $form_values values of new row (array of name value pairs)
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_add_list_row ($list_title, $form_values)
 {
     global $logging;
@@ -774,10 +780,13 @@ function action_add_list_row ($list_title, $form_values)
     return $response;
 }
 
-# archive a row from current list
-# this function is registered in xajax
-# string list_title: name of current list
-# string key_string: comma separated name value pares
+/**
+ * archive a row from current list
+ * this function is registered in xajax
+ * @param string $list_title title of list
+ * @param string $key_string comma separated name value pairs
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_archive_list_row ($list_title, $key_string)
 {
     global $logging;
@@ -817,10 +826,13 @@ function action_archive_list_row ($list_title, $key_string)
     return $response;
 }
 
-# delete a row from current list
-# this function is registered in xajax
-# string list_title: name of current list
-# string key_string: comma separated name value pares
+/**
+ * delete a row from current list
+ * this function is registered in xajax
+ * @param string $list_title title of list
+ * @param string $key_string comma separated name value pairs
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_del_list_row ($list_title, $key_string)
 {
     global $logging;
@@ -860,9 +872,12 @@ function action_del_list_row ($list_title, $key_string)
     return $response;
 }
 
-# cancel current list action and substitute current html with new html
-# this function is registered in xajax
-# string list_title: name of current list
+/**
+ * cancel current list action and substitute current html with new html
+ * this function is registered in xajax
+ * @param string $list_title title of list
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_cancel_list_action ($list_title)
 {
     global $logging;
@@ -889,9 +904,12 @@ function action_cancel_list_action ($list_title)
     return $response;
 }
 
-# return html for the action bar
-# string list_title: name of current list
-# string action: highlight given action in the action bar (highlight none when action is empty)
+/**
+ * return html for the action bar
+ * @param string $list_title title of list
+ * @param string $action highlight given action in the action bar (highlight none when action is empty)
+ * @return string returned html
+ */
 function get_action_bar ($list_title, $action)
 {
     global $logging;
@@ -914,7 +932,10 @@ function get_action_bar ($list_title, $action)
     return $html_str;
 }
 
-# return html for the footer of a list page
+/**
+ * return html for the footer of a list page
+ * @return string returned html
+ */
 function get_list_footer ()
 {
     global $list_table_description;

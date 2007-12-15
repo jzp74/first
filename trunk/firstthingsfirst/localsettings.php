@@ -21,15 +21,15 @@ $firstthingsfirst_list_page_entries = 16;
 # database table prefix
 # define a prefix that is unique for this firstthingsfirst instance
 # this setting allows you have multiple firstthingsfirst instances to share the same db schema
-$firstthingsfirst_db_table_prefix = "ftf";
+$firstthingsfirst_db_table_prefix = "firstthingsfirst";
 
 # administrator password
-$firstthingsfirst_admin_passwd = "somepassword";
+$firstthingsfirst_admin_passwd = "adminpassword";
 
 # database connection settings
 $firstthingsfirst_db_host = "127.0.0.1";
-$firstthingsfirst_db_user = "firstthingsfirst";
-$firstthingsfirst_db_passwd = "firstthingsfirst";
-$firstthingsfirst_db_schema = "firstthingsfirst";
+$firstthingsfirst_db_user = "some_user";
+$firstthingsfirst_db_passwd = "password";
+$firstthingsfirst_db_schema = "some_schema";
 
 ?>

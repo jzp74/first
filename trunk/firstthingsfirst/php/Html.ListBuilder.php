@@ -133,10 +133,13 @@ function action_get_listbuilder_page ()
     return $response;
 }
 
-# add a listbuilder row
-# this function is registered in xajax
-# string field_type: type of field to add
-# array definition: defintion of current list that is being build
+/**
+ * add a listbuilder row
+ * this function is registered in xajax
+ * @param string $field_type type of field to add
+ * @param array $definition defintion of current list that is being build
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_add_listbuilder_row ($field_type, $definition)
 {
     global $logging;
@@ -165,12 +168,14 @@ function action_add_listbuilder_row ($field_type, $definition)
     return $response;
 }
 
-# move a listbuilder row up or down
-# this function is registered in xajax
-# see move_listbuilder_row function for details
-# int row_number: number of the row that needs to be moved
-# string direction: direction to move row ("up" or "down")
-# array definition: defintion of current list that is being build
+/**
+ * move a listbuilder row up or down
+ * this function is registered in xajax
+ * @param int $row_number number of the row that needs to be moved
+ * @param string $direction direction to move row ("up" or "down")
+ * @param array $definition defintion of current list that is being build
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_move_listbuilder_row ($row_number, $direction, $definition)
 {
     global $logging;
@@ -225,10 +230,13 @@ function action_move_listbuilder_row ($row_number, $direction, $definition)
     return $response;
 }
 
-# delete a listbuilder row
-# this function is registered in xajax
-# int row_number: number of the row that needs to be deleted
-# array definition: defintion of current list that is being build
+/**
+ * delete a listbuilder row
+ * this function is registered in xajax
+ * @param int $row_number number of the row that needs to be moved
+ * @param array $definition defintion of current list that is being build
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_del_listbuilder_row ($row_number, $definition)
 {
     global $logging;
@@ -264,10 +272,12 @@ function action_del_listbuilder_row ($row_number, $definition)
     return $response;
 }
 
-# refresh a listbuilder
-# this function is registered in xajax
-# this function is called when user changes the field_type of a particular row
-# array definition: defintion of current list that is being build
+/**
+ * add a listbuilder row (function is called when user changes field_type of a row)
+ * this function is registered in xajax
+ * @param array $definition defintion of current list that is being build
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_refresh_listbuilder ($definition)
 {
     global $logging;
@@ -292,12 +302,14 @@ function action_refresh_listbuilder ($definition)
     return $response;
 }
 
-# create a new list and get the portal page
-# this function is registered in xajax
-# string title: title of the new list
-# string description: description of the new list
-# array definition: defintion of current list that is being build
-# TODO add error checking for actual creation of list
+/**
+ * create a new list and get the portal page
+ * this function is registered in xajax
+ * @param string $title title of the new list
+ * @param string $description description of the new list
+ * @param array $definition defintion of current list that is being build
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
 function action_create_list ($title, $description, $definition)
 {
     global $logging;
@@ -399,10 +411,13 @@ function action_create_list ($title, $description, $definition)
     return $response;
 }
 
-# return the html for a select box
-# set id to given id (don't set id when no id has been given)
-# set onChange function to action_reresh_listbuilder
-# set selection to given selection string
+/**
+ * return the html for a select box
+ * @param string $id id parameter of this new select box
+ * @param string $name name parameter of this new select box
+ * @param string $selection option to preselect
+ * @return void
+ */
 function get_select ($id, $name, $selection)
 {
     global $firstthingsfirst_field_descriptions;
@@ -433,10 +448,11 @@ function get_select ($id, $name, $selection)
     return $html_str;
 }
 
-# return the html for a tabel that contains the current current list that is being build
-# use given definition to create this table
-# also returns the 'add' button to add a row to the list
-# array definition: defintion of current list that is being build
+/**
+ * return the html for a tabel that contains the current current list that is being build
+ * @param array $definition defintion of current list that is being build
+ * @return void
+ */
 function get_field_definition_table ($definition)
 {
     global $logging;

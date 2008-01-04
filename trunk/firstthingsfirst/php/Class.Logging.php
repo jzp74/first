@@ -5,7 +5,7 @@
  *
  * @package Class_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007 Jasper de Jong
+ * @copyright 2008 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -68,6 +68,8 @@ class Logging
     
     /**
     * overwrite __construct() function
+    * @param $level int loglevel
+    * @param $name string name of logfile
     * @return void
     */
     function __construct ($level = LOGGING_INFO, $name = LOGGING_NAME)

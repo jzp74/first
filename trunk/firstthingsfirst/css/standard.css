@@ -111,10 +111,10 @@ html, body {
 
 /*  defines the body which has borders on both sides and stretches to the bottom of the page */
 #outer_body {
-	min-height: 100%;
-	height: auto !important;
-	height: 100%;
-	margin: 0px 16px -38px 16px;
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0px 16px -38px 16px;
     background-color: rgb(255, 255, 255);
     border-left: 6px solid rgb(157, 181, 222);
     border-right: 6px solid rgb(157, 181, 222);

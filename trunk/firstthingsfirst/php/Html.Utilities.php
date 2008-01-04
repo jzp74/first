@@ -5,13 +5,12 @@
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007 Jasper de Jong
+ * @copyright 2008 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
 /**
  * test if given string is not empty
- * @todo write checks for this function
  * @param string $field_name name of field that contains this string
  * @param string $str string to test
  * @return bool indicates if string is empty
@@ -34,6 +33,7 @@ function is_not_empty ($field_name, $str)
 
 /**
  * test if given string is a number
+ * @todo write checks for this function
  * @param string $field_name name of field that contains this string
  * @param string $str string to test
  * @return bool indicates if string is a number

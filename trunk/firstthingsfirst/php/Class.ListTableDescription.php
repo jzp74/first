@@ -5,7 +5,7 @@
  *
  * @package Class_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007 Jasper de Jong
+ * @copyright 2008 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -340,7 +340,6 @@ class ListTableDescription
     
     /**
     * create new database table that contains all ListTableDescriptions
-    * @todo ensure title attribute cannot exceed 100 characters
     * @return bool indicates if table has been created
     */
     function create ()
@@ -466,7 +465,7 @@ class ListTableDescription
 
         $query = "INSERT INTO ".LISTTABLEDESCRIPTION_TABLE_NAME." VALUES (";
         $query .= "0, ";
-        $query .= "\"".$this->title."\", ";
+        $query .= "\"".substr($this->title, 0, 99)."\", ";
         $query .= "\"".$this->description."\", ";
         $query .= "\"".$this->definition."\", ";
         $query .= "\"".$this->creator."\", ";
@@ -548,7 +547,6 @@ class ListTableDescription
     /**
     * delete current ListTableDescription object from database
     * this function also deletes the ListTable that is connected to current object
-    * @todo delete all connected ListTableItemNotes
     * @return bool indicates if ListTableDescription has been deleted
     */
     function delete ()

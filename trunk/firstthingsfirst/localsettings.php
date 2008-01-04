@@ -1,6 +1,7 @@
 <?php
 
-# This file contains local firstthingsfirst settings and was automatically generated
+# This file contains local firstthingsfirst settings
+# PLEASE EDIT THIS FILE
 
 # title and intro of the portal
 $firstthingsfirst_portal_title = "FirstThingsFirst Portal";

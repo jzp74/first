@@ -300,8 +300,6 @@ class ListTable
     */
     function set ()
     {
-        global $firstthingsfirst_field_descriptions;
-        
         $this->_log->trace("setting ListTable");
 
         $this->field_names = array();
@@ -318,9 +316,11 @@ class ListTable
                 
                 # get the text fields
                 $field_type = $definition[$db_field_name][0];
-                if (stristr($firstthingsfirst_field_descriptions[$field_type][0], "text"))
+                $this->_log->info("examaning FIELDTYPE: ".$field_type);
+                if (stristr($field_type, "TEXT"))
                     array_push($this->db_text_field_names, $db_field_name);
             }
+            $this->_log->log_array($this->db_text_field_names, "TEXT_FIELD_NAMES");
             
             $this->_list_state->set_list_title($this->_list_table_description->get_title());            
             $this->_list_table_item_notes->set();

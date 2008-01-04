@@ -383,7 +383,7 @@ function action_get_list_row ($list_title, $key_string)
         $field_options = $definition[$db_field_name][2];
         $logging->debug("row (name=".$field_name." db_name=".$db_field_name." type=".$field_type.")");
         
-        # replace all " chars with \"
+        # replace all " chars with &quot
         $row[$db_field_name] = str_replace('"', '&quot', $row[$db_field_name]);
         
         # only add non auto_increment field types

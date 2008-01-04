@@ -5,7 +5,7 @@
  *
  * @package Class_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007 Jasper de Jong
+ * @copyright 2008 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -417,6 +417,7 @@ class ListTable
 
     /**
     * select a fixed number of ListTableItems (a page) from database
+    * @todo reset order_ascending when user orders on new field
     * @param $order_by_field string order ListTableItems by this fieldname
     * @param $page int the page number to select
     * @param $archived int indicates if archived ListTableItems or normal ListTableItems should be selected
@@ -466,7 +467,6 @@ class ListTable
         {
             # order by field has been provided
             # set order by field attribute value and reverse order
-            # TODO reset order_ascending when user orders on new field
             $this->_list_state->set_order_by_field($this->_get_db_field_name($order_by_field));
             $order_by_field = $this->_get_db_field_name($order_by_field);
 
@@ -926,6 +926,7 @@ class ListTable
 
     /**
     * delete an existing ListTableItem from database
+    * delete all connected ListTableItemNotes objects
     * @param $key_string string unique identifier of ListTableItem to be deleted
     * @return bool indicates if ListTableItem has been deleted
     */
@@ -978,7 +979,8 @@ class ListTable
     }
     
     /**
-    * remove database table of current ListTableItems object
+    * remove database table of current ListTable object
+    * remove all connected ListTableItemNotes objects
     * @return bool indicates if database table has been removed
     */
     function drop ()

@@ -1,12 +1,11 @@
 <?php
 
-
 /**
  * This file contains all php code that is used to generate html for a list table page
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007 Jasper de Jong
+ * @copyright 2008 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -274,7 +273,7 @@ function action_get_list_content ($list_title, $order_by_field, $page)
         {
             # display previous page link
             if ($current_page > 1)
-                $html_str .= get_button("xajax_action_get_list_content('".$list_title."', '', ".($current_page - 1).")", "<< ".BUTTON_PREVIOUS_PAGE)."&nbsp;&nbsp;";
+                $html_str .= get_button("xajax_action_get_list_content('".$list_title."', '', ".($current_page - 1).")", "&laquo;&nbsp;".BUTTON_PREVIOUS_PAGE)."&nbsp;&nbsp;";
         
             # display first pagenumber
             if ($current_page == 1)
@@ -303,7 +302,7 @@ function action_get_list_content ($list_title, $order_by_field, $page)
 
             # display next page link
             if ($current_page < $total_pages)
-                $html_str .= "&nbsp;&nbsp;".get_button("xajax_action_get_list_content('".$list_title."', '', ".($current_page + 1).")", BUTTON_NEXT_PAGE." >>");        
+                $html_str .= "&nbsp;&nbsp;".get_button("xajax_action_get_list_content('".$list_title."', '', ".($current_page + 1).")", BUTTON_NEXT_PAGE."&nbsp;&raquo;");        
         }
     }
     
@@ -537,7 +536,7 @@ function action_get_print_list ($list_title)
  * this function is registered in xajax
  * @param string $list_title title of list
  * @param string $key_string comma separated name value pairs
- * @param string $array $form_values values of new row (array of name value pairs)
+ * @param array $form_values values of new row (array of name value pairs)
  * @return xajaxResponse every xajax registered function needs to return this object
  */
 function action_update_list_row ($list_title, $key_string, $form_values)
@@ -634,7 +633,6 @@ function action_update_list_row ($list_title, $key_string, $form_values)
     }
     
     # display error when insertion returns false
-    # TODO determine what the best place is to diplay error
     if (!$list_table->update($key_string, $new_form_values))
     {
         $logging->warn("insert returns false (".$last_name_key.")");
@@ -661,9 +659,8 @@ function action_update_list_row ($list_title, $key_string, $form_values)
 /**
  * add a row to current list
  * this function is registered in xajax
- * @todo add more field checking (number field should only contain numbers)
  * @param string $list_title title of list
- * @param string $array $form_values values of new row (array of name value pairs)
+ * @param array $form_values values of new row (array of name value pairs)
  * @return xajaxResponse every xajax registered function needs to return this object
  */
 function action_add_list_row ($list_title, $form_values)

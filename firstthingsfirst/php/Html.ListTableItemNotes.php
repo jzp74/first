@@ -1,12 +1,11 @@
 <?php
 
-
 /**
  * This file contains all php code that is used to generate list notes html 
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007 Jasper de Jong
+ * @copyright 2008 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -121,8 +120,7 @@ function action_add_note ($db_field_name, $this_id)
 /**
  * generate html for a number of notes
  * this function is called when user edits or adds a row
- * @todo add labels for this function
- * @param string $field_name name of the field that contains the notes
+ * @param string $db_field_name name of the field that contains the notes
  * @param array $notes_array array of notes. each notes is also an array
  * @param bool $new_note add new note to list of notes and show this new note
  * @return string resulting html

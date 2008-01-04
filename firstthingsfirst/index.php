@@ -1,10 +1,13 @@
 <?php
 
-# General index.php as used in this project
-# Jasper de Jong
-# 2007
-
-# TODO how much data can we transfer from php to js?
+/**
+ * General index.php as used in this project
+ *
+ * @author Jasper de Jong
+ * @copyright 2008 Jasper de Jong
+ * @license http://www.opensource.org/licenses/gpl-license.php
+ * @todo how much data can we transfer from php to js?
+ */
 
 
 require_once("globals.php");
@@ -26,7 +29,9 @@ require_once("php/Class.ListTableDescription.php");
 require_once("php/Class.ListTable.php");
 require_once("php/Class.ListTableItemNotes.php");
 
-# Initialize xajax
+/**
+ * Initialize xajax
+ */
 $xajax = new xajax();
 
 require_once("php/Html.Utilities.php");
@@ -38,16 +43,21 @@ require_once("php/Html.ListTable.php");
 require_once("php/Html.ListTableItemNotes.php");
 require_once("php/Html.ListBuilder.php");
 
-
-# needed to initialise several classes
+/**
+ * needed to initialise several classes
+ */
 class EmptyClass {}
 
 
-# dummy initialisations
+/**
+ * dummy initialisations
+ */
 $list_table = new EmptyClass();
 $list_table_item_remarks = new EmptyClass();
 
-# create global objects
+/**
+ * create global objects
+ */
 $json = new Services_JSON();
 $logging = new Logging(LOGGING_INFO, "firstthingsfirst.log");
 $result = new Result();
@@ -59,14 +69,21 @@ $list_table = new ListTable();
 $list_table_item_notes = new ListTableItemNotes();
 $response = new xajaxResponse();
 
-# register process_url function
+/**
+ * register process_url function
+ */
 $xajax->registerFunction("process_url");
 
-# start ajax interactions
+/**
+ * start ajax interactions
+ */
 $xajax->processRequests();
 
-# parse the url and call function accordingly
-# TODO do we want to show an error page in case of malformed request uri?
+
+/**
+ * parse the url and return html code accordingly
+ * @return html code
+ */
 function process_url ()
 {
     global $logging;
@@ -120,7 +137,8 @@ function process_url ()
 <head>
 <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
     
-<title><?php echo $firstthingsfirst_portal_title ?></title>
+<title>First Things First</title>
+<link rel="shortcut icon" href="images/favicon.ico">
 <link rel="stylesheet" href="css/standard.css">
 <link rel="stylesheet" href="css/standard_listbuilder.css">
 <link rel="stylesheet" href="css/standard_list.css">

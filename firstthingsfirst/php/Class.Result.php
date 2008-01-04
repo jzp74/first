@@ -5,7 +5,7 @@
  *
  * @package Class_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007 Jasper de Jong
+ * @copyright 2008 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -87,7 +87,7 @@ class Result
     
     /**
     * set value of error_str attribute
-    * @param string $error_str value of error_str attribute
+    * @param string $str value of error_str attribute
     * @return void
     */
     function set_error_str ($str)
@@ -97,7 +97,7 @@ class Result
     
     /**
     * set value of error_element attribute
-    * @param string $error_element value of error_element attribute
+    * @param string $str value of error_element attribute
     * @return void
     */
     function set_error_element ($str)
@@ -107,7 +107,7 @@ class Result
     
     /**
     * set value of result_str attribute (BEWARE: this function appends to existing string)
-    * @param string $result_str value of result_str attribute
+    * @param string $str value of result_str attribute
     * @return void
     */
     function set_result_str ($str)

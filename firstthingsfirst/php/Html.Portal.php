@@ -1,12 +1,11 @@
 <?php
 
-
 /**
  * This file contains all php code that is used to generate html for the portal page
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007 Jasper de Jong
+ * @copyright 2008 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -39,7 +38,6 @@ function action_get_portal_page ()
     global $response;
     global $firstthingsfirst_portal_title;
     global $firstthingsfirst_portal_intro_text;
-    global $firstthingsfirst_portal_address;
 
     $logging->info("ACTION: get portal page");
 
@@ -81,13 +79,12 @@ function action_get_portal_page ()
     return $response;
 }
 
-/*
+/**
  * get the html for an overview of all ListTable objects contained in database
  * @return void
  */
 function action_get_list_tables ()
 {
-    global $firstthingsfirst_portal_address;
     global $logging;
     global $result;
     global $database;

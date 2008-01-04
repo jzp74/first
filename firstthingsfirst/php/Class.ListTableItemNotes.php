@@ -5,7 +5,7 @@
  *
  * @package Class_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007 Jasper de Jong
+ * @copyright 2008 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -131,7 +131,6 @@ class ListTableItemNotes
 
     /**
     * set attributes (initiate this object)
-    * @todo error handling for this function
     * @return void
     */
     function set ()

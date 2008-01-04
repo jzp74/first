@@ -1,12 +1,11 @@
 <?php
 
-
 /**
  * This file contains all php code that is used to generate html for the login page
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007 Jasper de Jong
+ * @copyright 2008 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -169,7 +168,7 @@ function get_login_status ()
 
 /**
  * set login status
- * return void
+ * @return void
  */
 function set_login_status ()
 {

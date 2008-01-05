@@ -26,7 +26,7 @@ $firstthingsfirst_db_table_prefix = "firstthingsfirst";
 $firstthingsfirst_admin_passwd = "adminpassword";
 
 # database connection settings
-$firstthingsfirst_db_host = "127.0.0.1";
+$firstthingsfirst_db_host = "localhost";
 $firstthingsfirst_db_user = "some_user";
 $firstthingsfirst_db_passwd = "password";
 $firstthingsfirst_db_schema = "some_schema";

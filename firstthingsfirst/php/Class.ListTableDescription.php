@@ -344,7 +344,7 @@ class ListTableDescription
     */
     function create ()
     {
-        $this->_log->debug("creating table for ListTableDescriptions (table=".LISTTABLEDESCRIPTION_TABLE_NAME.")");
+        $this->_log->trace("creating table for ListTableDescriptions (table=".LISTTABLEDESCRIPTION_TABLE_NAME.")");
         
         $query = "CREATE TABLE ".LISTTABLEDESCRIPTION_TABLE_NAME." (";
         $query .= DB_ID_FIELD_NAME." ".DB_DATATYPE_ID.", ";
@@ -368,7 +368,7 @@ class ListTableDescription
             return FALSE;
         }
         
-        $this->_log->info("created table");
+        $this->_log->info("created table for ListTableDescriptions (table=".LISTTABLEDESCRIPTION_TABLE_NAME.")");
         
         return TRUE;
     }
@@ -380,7 +380,7 @@ class ListTableDescription
     */
     function select ($title)
     {
-        $this->_log->debug("selecting ListTableDescription (title=".$title.")");
+        $this->_log->trace("selecting ListTableDescription (title=".$title.")");
         
         if (!$this->_database->table_exists(LISTTABLEDESCRIPTION_TABLE_NAME))
         {

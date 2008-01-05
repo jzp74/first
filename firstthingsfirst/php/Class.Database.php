@@ -132,7 +132,7 @@ class Database
         if (!db_link)
             return FALSE;
     
-        $this->_log->debug("query (query=".$query.")");
+        $this->_log->trace("query database (query=".$query.")");
     
         $result = mysql_query($query, $db_link);
         $this->error_str = mysql_error($db_link);
@@ -152,7 +152,7 @@ class Database
         if (!db_link)
             return FALSE;
      
-        $this->_log->debug("insertion query (query=".$query.")");
+        $this->_log->trace("insertion query (query=".$query.")");
     
         $result = mysql_query($query, $db_link);
         
@@ -193,7 +193,10 @@ class Database
     */
     function table_exists ($table)
     {
-	    $query = "SHOW TABLES";
+        $query = "SHOW TABLES";
+
+        $this->_log->trace("check if table exists (table=".$table.")");
+
         $result = $this->query($query);
         
         while ($row = $this->fetch($result))

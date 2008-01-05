@@ -223,6 +223,8 @@ class ListState
         $list_state_array['total_pages'] = $this->total_pages;
         $list_state_array['current_page'] = $this->current_page;
         
+        $this->_log->trace("passed ListState");
+        
         return $list_state_array;
     }
     

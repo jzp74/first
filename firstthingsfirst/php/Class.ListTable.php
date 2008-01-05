@@ -408,7 +408,7 @@ class ListTable
             return FALSE;
         }
         
-        $this->_log->info("created table");
+        $this->_log->info("created TableList (table=".$this->table_name.")");
         
         return TRUE;
     }
@@ -673,7 +673,7 @@ class ListTable
         $definition = $this->_list_table_description->get_definition();
         $all_notes_array = array();
         
-        $this->_log->debug("inserting into ListTable");
+        $this->_log->trace("inserting into ListTable");
 
         if (!$this->_database->table_exists($this->table_name))
         {
@@ -983,7 +983,7 @@ class ListTable
     */
     function drop ()
     {
-        $this->_log->debug("drop ListTable (table_name=".$this->table_name.")");
+        $this->_log->trace("drop ListTable (table_name=".$this->table_name.")");
         
         if (!$this->_database->table_exists($this->table_name))
         {
@@ -1011,7 +1011,7 @@ class ListTable
             return FALSE;
         }
 
-        $this->_log->info("dropped ListTable");
+        $this->_log->info("dropped ListTable (table_name=".$this->table_name.")");
         
         return TRUE;
     }

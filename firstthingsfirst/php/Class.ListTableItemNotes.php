@@ -184,7 +184,7 @@ class ListTableItemNotes
             return FALSE;
         }
         
-        $this->_log->trace("created table");
+        $this->_log->info("created table for ListTableItemNotes (table=".LISTTABLEITEMRENOTES_TABLE_NAME.")");
         
         return TRUE;
     }

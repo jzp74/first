@@ -32,7 +32,7 @@ define("BUTTON_DELETE", "delete");
  * shared button
  * definition of 'add' button
  */
-define("BUTTON_ADD", "add");
+define("BUTTON_ADD", "ok");
 
 /**
  * shared button
@@ -44,7 +44,7 @@ define("BUTTON_CANCEL", "cancel");
  * shared button
  * definition of 'commit' button
  */
-define("BUTTON_COMMIT", "commit");
+define("BUTTON_COMMIT", "ok");
 
 /**
  * shared button
@@ -86,7 +86,7 @@ define("BUTTON_PREVIOUS_PAGE", "previous");
  * list button
  * definition of 'add row' button
  */
-define("BUTTON_ADD_ROW", "add row");
+define("BUTTON_ADD_ROW", "add list item");
 
 /**
  * list button
@@ -110,7 +110,7 @@ define("BUTTON_ADD_NOTE", "add note");
  * list builder button
  * definition of 'add field' button
  */
-define("BUTTON_ADD_FIELD", "add field");
+define("BUTTON_ADD_FIELD", "add this field");
 
 /**
  * list builder button

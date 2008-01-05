@@ -10,7 +10,8 @@ $firstthingsfirst_portal_intro_text = "Welcome to the FirstThingsFirst portal. P
 # full path name to portal on host
 $firstthingsfirst_full_pathname = "e:///sites/firstthingsfirst";
 
-# date setting for all lists (choose between DATE_FORMAT_EU and DATE_FORMAT_US)
+# date setting for all lists
+# choose between DATE_FORMAT_EU and DATE_FORMAT_US
 $firstthingsfirst_date_string = DATE_FORMAT_EU;
 
 # maximum numbers of entries per page
@@ -29,5 +30,13 @@ $firstthingsfirst_db_host = "127.0.0.1";
 $firstthingsfirst_db_user = "some_user";
 $firstthingsfirst_db_passwd = "password";
 $firstthingsfirst_db_schema = "some_schema";
+
+# loglevel
+# choose between LOGGING_NONE, LOGGING_ERROR, LOGGING_WARN, LOGGING_INFO, LOGGING_DEBUG and LOGGING_TRACE
+# make sure you have write privileges on your hosting provider if you want to turn on logging
+$firstthingsfirst_loglevel = LOGGING_NONE;
+
+# logfile, all logmessages will be written in this file
+$firstthingsfirst_logfile = "firstthingsfirst.log";
 
 ?>

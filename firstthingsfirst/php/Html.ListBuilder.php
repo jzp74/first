@@ -434,6 +434,8 @@ function get_select ($id, $name, $selection)
     global $logging;
     
     $field_types = array_keys($firstthingsfirst_field_descriptions);
+    # remove the first item from this array (auto number)
+    array_shift($field_types);
 
     $logging->trace("getting select (id=".$id.", name=".$name.", selection=".$selection.")");
 

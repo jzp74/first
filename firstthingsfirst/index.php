@@ -10,6 +10,8 @@
  */
 
 
+require_once("php/Class.Logging.php");
+
 require_once("globals.php");
 require_once("localsettings.php");
 
@@ -20,7 +22,6 @@ require_once("php/Text.Buttons.php");
 require_once("php/Text.Errors.php");
 require_once("php/Text.Labels.php");
 
-require_once("php/Class.Logging.php");
 require_once("php/Class.Result.php");
 require_once("php/Class.Database.php");
 require_once("php/Class.ListState.php");
@@ -59,7 +60,7 @@ $list_table_item_remarks = new EmptyClass();
  * create global objects
  */
 $json = new Services_JSON();
-$logging = new Logging(LOGGING_INFO, "firstthingsfirst.log");
+$logging = new Logging($firstthingsfirst_loglevel, $firstthingsfirst_logfile);
 $result = new Result();
 $database = new Database();
 $list_state = new ListState();

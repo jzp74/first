@@ -38,49 +38,49 @@ define("LABEL_LAST_MODIFICATION_BY", "last modification by");
  * shared field definition
  * definition of number
  */
-define("LABEL_DEFINITION_NUMBER", "number");
+define("LABEL_DEFINITION_NUMBER", "number&nbsp;&nbsp;");
 
 /**
  * shared field definition
  * definition of automatic number
  */
-define("LABEL_DEFINITION_AUTO_NUMBER", "automatic number");
+define("LABEL_DEFINITION_AUTO_NUMBER", "automatic number&nbsp;&nbsp;");
 
 /**
  * shared field definition
  * definition of date
  */
-define("LABEL_DEFINITION_DATE", "date");
+define("LABEL_DEFINITION_DATE", "date&nbsp;&nbsp;");
 
 /**
  * shared field definition
  * definition of automatic date
  */
-define("LABEL_DEFINITION_AUTO_DATE", "automatic date");
+define("LABEL_DEFINITION_AUTO_DATE", "automatic date&nbsp;&nbsp;");
 
 /**
  * shared field definition
  * definition of text line
  */
-define("LABEL_DEFINITION_TEXT_LINE", "text line");
+define("LABEL_DEFINITION_TEXT_LINE", "text line&nbsp;&nbsp;");
 
 /**
  * shared field definition
  * definition of text field
  */
-define("LABEL_DEFINITION_TEXT_FIELD", "text field");
+define("LABEL_DEFINITION_TEXT_FIELD", "text field&nbsp;&nbsp;");
 
 /**
  * shared field definition
  * definition of notes field
  */
-define("LABEL_DEFINITION_NOTES_FIELD", "notes field");
+define("LABEL_DEFINITION_NOTES_FIELD", "notes field&nbsp;&nbsp;");
 
 /**
  * shared field definition
  * definition of selection box
  */
-define("LABEL_DEFINITION_SELECTION", "selection box");
+define("LABEL_DEFINITION_SELECTION", "selection box&nbsp;&nbsp;");
 
 /**
  * add user label
@@ -176,13 +176,13 @@ define("LABEL_OF", "of");
  * listtable label
  * definition of user message: enter details and commit new row
  */
-define("LABEL_ADD_ROW", "enter details and commit new row");
+define("LABEL_ADD_ROW", "enter list item details");
 
 /**
  * listtable label
  * definition of user message: enter and commit changes
  */
-define("LABEL_EDIT_ROW", "enter and commit changes");
+define("LABEL_EDIT_ROW", "enter list item modifications");
 
 
 /**
@@ -219,7 +219,7 @@ define("LABEL_SHORT_DESCRIPTION_OF_THIS_LIST", "Short&nbsp;description&nbsp;of&n
  * listbuilder label
  * definition of 'define table fields' label
  */
-define("LABEL_DEFINE_TABLE_FIELDS", "Define table fields");
+define("LABEL_DEFINE_TABLE_FIELDS", "Define list fields");
 
 /**
  * listbuilder label

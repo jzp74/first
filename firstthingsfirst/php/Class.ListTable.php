@@ -712,7 +712,7 @@ class ListTable
                 foreach ($value as $note)
                 {
                     if ($note[1] == "")
-                        $this->_log->warn("found an empty note (field=".$array_key.")");
+                        $this->_log->debug("found an empty note (field=".$array_key.")");
                     else
                     {
                         array_push($notes_array, array($array_key, $note[1]));

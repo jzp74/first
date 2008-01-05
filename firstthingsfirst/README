@@ -1,31 +1,6 @@
-FirstThingsFirst
-Written by Jasper de Jong
+First Things First
 
-1 INTRODUCTION
-FirstThingsFirst is a multi-user webapplication that enables you to define and maintain an unlimited number of different user-defined lists. Users are completely free in designing the structure of their own lists. Examples of possible use:  todo list, cd collection list, etc.
+See docs/Installation.html for installation instructions.
+See docs/ChangeLog.html for change history.
 
-FirstThingsFirst is written completely in php and is ajax enabled (xajax).
-
-2 OTHER SOFTWARE USED
-xajax (version 0.2.5)
-   See: http://www.xajaxproject.org/
-json (version unknown version)
-   See: http://pear.php.net/pepr/pepr-proposal-show.php?id=198
-
-3 BROWSER COMPATIBILITY
-This version has been tested on the following browsers:
- - Internet Explorer 7
- - Firefox 2.0.x
-
-4 INSTALLATION REQUIREMENTS
-You need to install the following software:
- - Apache
- - MySQL
- - php
-
-This version has been tested on:
- - Windows XP SP-2
- - Apache 2.0.55
- - MySQL 5.0.19
- - php-5.2.0
-
+Visit the First Things First website at http://www.jaspershome.org/firstthingsfirst/ 

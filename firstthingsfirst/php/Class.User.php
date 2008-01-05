@@ -435,9 +435,8 @@ class User
         }
         else
         {
-            $this->_log->error("could not select user (name=".$name.")");
-            $this->_log->error("database error: ".$this->_database->get_error_str());
-            $this->error_str = ERROR_DATABASE_PROBLEM;
+            $this->_log->warn("passwords do not match (name=".$name."), user is not logged in");
+            $this->error_str = ERROR_INCORRECT_NAME_PASSWORD;
                     
             return FALSE;
         }

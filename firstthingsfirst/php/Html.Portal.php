@@ -47,7 +47,7 @@ function action_get_portal_page ()
     $html_str = "";
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
     $html_str .= "        <div id=\"page_title\">".$firstthingsfirst_portal_title."</div>\n\n";
-    $html_str .= "        <div id=\"portal_explanation\"><em>".$firstthingsfirst_portal_intro_text."</em></div>\n\n";
+    $html_str .= "        <div id=\"portal_explanation\">".$firstthingsfirst_portal_intro_text."</div>\n\n";
     $html_str .= "        <div id=\"navigation_container\">\n";
     $html_str .= "            <div id=\"navigation\">";
     if ($user->is_login() && $user->get_admin())

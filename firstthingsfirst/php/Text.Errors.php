@@ -77,6 +77,12 @@ define("ERROR_NO_DESCRIPTION_GIVEN", "please enter a description for this list")
 define("ERROR_NOT_WELL_FORMED_STRING", "field contains one or more of the<br>following characters: \" ' * / : < > ? \ | & ; #");
 
 /**
+ * field check error
+ * definition of error that is shown when user has entered a forbidden character in a selection field (pipe character is now permitted)
+ */
+define("ERROR_NOT_WELL_FORMED_SELECTION_STRING", "selection field contains one or more of the<br>following characters: \" ' * / : < > ? \ & ; #");
+
+/**
  * database error
  * definition of unkwown database error
  */

@@ -139,7 +139,7 @@ function set_info_message ($info_element, $info_str)
     global $logging;
     global $response;
     
-    $logging->trace("set error (element=".$info_element.")");
+    $logging->trace("set info (element=".$info_element.")");
     
     # first remove any error or info messages
     $response->addRemove("error_message");
@@ -147,7 +147,7 @@ function set_info_message ($info_element, $info_str)
 
     $response->addAppend($info_element, "innerHTML", "<p id=\"info_message\">".$info_str."</p>");
     
-    $logging->trace("set error message (element=".$info_element.")");        
+    $logging->trace("set info message (element=".$info_element.")");        
 }
 
 /**

@@ -51,19 +51,34 @@ function is_number ($field_name, $str)
  * test if string is well formed
  * @param string $field_name name of field that contains this string
  * @param string $str string to test
+ * @param string $use_pipe_char bool indicates if pipe character is permitted (standard: false)
  * @return bool indicates if string is well formed
  */
-function is_well_formed_string ($field_name, $str)
+function is_well_formed_string ($field_name, $str, $use_pipe_char=0)
 {
     global $logging;
 
-    $logging->trace("is_well_formed_string (field_name=".$field_name.", str=".$str.")");
+    $logging->trace("is_well_formed_string (field_name=".$field_name.", str=".$str.", use_pipe_char=".$use_pipe_char.")");
     
-    if (ereg ("[\"\*'/:<>?|\\&;#]+", $str))
+    if ($use_pipe_char == 0)
     {
-        $logging->warn($field_name." is not well formed");
+        $logging->debug("checking (str=".$str.", pipe char NOT permitted)");
+        if (ereg ("[\"\*'/:<>?|\\&;#]+", $str))
+        {
+            $logging->warn($field_name." is not well formed (pipe char NOT permitted)");
         
-        return FALSE_RETURN_STRING;
+            return FALSE_RETURN_STRING;
+        }
+    }
+    else
+    {
+        $logging->debug("checking (str=".$str.", pipe char permitted)");
+        if (ereg ("[\"\*'/:<>?\\&;#]+", $str))
+        {
+            $logging->warn($field_name." is not well formed (pipe char permitted)");
+        
+            return FALSE_RETURN_STRING;
+        }
     }
     
     return $str;

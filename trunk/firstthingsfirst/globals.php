@@ -73,11 +73,11 @@ define("PERMISSION_ISNOT_ADMIN", 0);
  *   field_name => (database_definition, html_definition, input check)
  */
 $firstthingsfirst_field_descriptions = array(
-    "LABEL_DEFINITION_NUMBER"        => array(
-        DB_DATATYPE_INT,
-        "input type=text size=\"10\" maxlength=\"10\"",
-        "is_number"
-    ),
+#    "LABEL_DEFINITION_NUMBER"        => array(
+#        DB_DATATYPE_INT,
+#        "input type=text size=\"10\" maxlength=\"10\"",
+#        "is_number"
+#    ),
     "LABEL_DEFINITION_AUTO_NUMBER"   => array(
         DB_DATATYPE_ID,
         "input type=text size=\"10\" maxlength=\"10\" readonly",

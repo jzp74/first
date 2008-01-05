@@ -232,6 +232,11 @@ function action_get_list_content ($list_title, $order_by_field, $page)
                     $html_str .= "-";
                 $html_str .= "                        </td>\n";
             }
+            else if ($definition[$db_field_name][0] == "LABEL_DEFINITION_TEXT_FIELD")
+            {
+                $html_str .= "                        <td onclick=\"xajax_action_get_list_row('".$list_title."', &quot;".$key_string."&quot;)\">";
+                $html_str .= nl2br($value)."</td>\n";
+            }            
             else
             {
                 $html_str .= "                        <td onclick=\"xajax_action_get_list_row('".$list_title."', &quot;".$key_string."&quot;)\">";

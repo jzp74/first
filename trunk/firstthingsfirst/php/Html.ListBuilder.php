@@ -381,13 +381,24 @@ function action_create_list ($title, $description, $definition)
             return $response;
         }
 
-        # check if options string has been given, only when field is of type LABEL_DEFINITION_SELECTION
-        if ($field_type == "LABEL_DEFINITION_SELECTION" && strlen($definition_values[($position * 3) + 2]) == 0)
+        # check if field is of type LABEL_DEFINITION_SELECTION
+        if ($field_type == "LABEL_DEFINITION_SELECTION")
         {
-            $logging->warn("no options given");
-            set_error_message($definition_keys[($position * 3) + 2], ERROR_NO_FIELD_OPTIONS_GIVEN);
+            # check if options string has been given
+            if (strlen($definition_values[($position * 3) + 2]) == 0)
+            {
+                $logging->warn("no options given");
+                set_error_message($definition_keys[($position * 3) + 2], ERROR_NO_FIELD_OPTIONS_GIVEN);
         
-            return $response;
+                return $response;
+            }
+            # check if options string is well formed
+            if (is_well_formed_string("field", $definition_values[($position * 3) + 2], 1) == FALSE_RETURN_STRING)
+            {
+                set_error_message($definition_keys[($position * 3) + 2], ERROR_NOT_WELL_FORMED_SELECTION_STRING);
+            
+                return $response;
+            }
         }
 
         # only the first column is part of the key

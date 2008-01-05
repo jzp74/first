@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains global firstthingsfirst settings
+ * This file contains global firstthingsfirst definitions
  *
  * @author Jasper de Jong
  * @copyright 2008 Jasper de Jong

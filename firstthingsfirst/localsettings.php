@@ -7,9 +7,6 @@
 $firstthingsfirst_portal_title = "FirstThingsFirst Portal";
 $firstthingsfirst_portal_intro_text = "Welcome to the FirstThingsFirst portal. Please select a list or create a new one";
 
-# relative address on host
-$firstthingsfirst_portal_address = "/firstthingsfirst";
-
 # full path name to portal on host
 $firstthingsfirst_full_pathname = "e:///sites/firstthingsfirst";
 

@@ -947,7 +947,7 @@ function get_list_footer ()
     $html_str .= "</strong>, ".LABEL_LAST_MODIFICATION_BY." <strong>".$list_table_description->get_modifier();
     $html_str .= "</strong> ".LABEL_AT." <strong>".$list_table_description->get_modified()."</strong>";
         
-    $logging->trace("got list_footer (size=".strlen($html_str).")");
+    $logging->trace("got list_footer");
 
     return $html_str;
 }

@@ -310,7 +310,7 @@ class User
     */
     function create ()
     {
-        $this->_log->trace("creating User (table=".USER_TABLE_NAME.")");
+        $this->_log->trace("creating table for Users (table=".USER_TABLE_NAME.")");
         
         $query = "CREATE TABLE ".USER_TABLE_NAME." (";
         $query .= DB_ID_FIELD_NAME." ".DB_DATATYPE_ID.", ";
@@ -335,7 +335,7 @@ class User
             return FALSE;
         }
         
-        $this->_log->trace("created table");
+        $this->_log->info("created table for Users (table=".USER_TABLE_NAME.")");
 
         return TRUE;
     }
@@ -361,7 +361,7 @@ class User
     {
         global $firstthingsfirst_admin_passwd;
         
-        $this->_log->trace("log in (name=".$name.")");
+        $this->_log->trace("login (name=".$name.")");
         
         if ($this->is_login())
         {
@@ -420,7 +420,7 @@ class User
                 }
                 else
                 {
-                    $this->_log->info("user logged in (name=".$name.")");
+                    $this->_log->debug("user logged in (name=".$name.")");
                 
                     return TRUE;
                 }
@@ -454,7 +454,7 @@ class User
         
         $this->reset();
 
-        $this->_log->info("user logged out (name=".$name.")");        
+        $this->_log->trace("user logged out (name=".$name.")");        
     }
     
     /**

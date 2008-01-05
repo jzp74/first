@@ -96,7 +96,7 @@ function action_login ($user_name, $password)
 
     if ($user->login($user_name, $password))
     {    
-        $logging->debug("user is logged in");
+        $logging->trace("user is logged in");
 
         $response->AddScriptCall("window.location.reload");
         
@@ -131,6 +131,8 @@ function action_logout ()
     if (!check_postconditions())
         return $reponse;
     
+    $logging->trace("user is logged out");
+
     return $response;
 }
 

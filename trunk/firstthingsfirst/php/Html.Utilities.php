@@ -28,6 +28,8 @@ function is_not_empty ($field_name, $str)
         return FALSE_RETURN_STRING;
     }
     
+    $logging->trace("is_not_empty");
+
     return $str;
 }
 
@@ -44,6 +46,8 @@ function is_number ($field_name, $str)
 
     $logging->trace("is_number (field_name=".$field_name.", str=".$str.")");
     
+    $logging->trace("is_number");
+
     return $str;
 }
 
@@ -81,6 +85,8 @@ function is_well_formed_string ($field_name, $str, $use_pipe_char=0)
         }
     }
     
+    $logging->trace("is_well_formed_string");
+
     return $str;
 }
 
@@ -137,6 +143,8 @@ function is_date ($field_name, $str)
     if (!checkdate($month, $day, $year))
         return FALSE_RETURN_STRING;
  
+    $logging->trace("is_date");
+
     return sprintf("%04d-%02d-%02d", $year, $month, $day);
 }
 

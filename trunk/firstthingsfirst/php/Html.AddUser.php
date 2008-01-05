@@ -164,5 +164,7 @@ function action_add_user ($definition)
     else
         set_info_message("add_user_pane", LABEL_USER_ADDED);
 
+    $logging->trace("added user");
+
     return $response;
 }

@@ -125,7 +125,7 @@ function set_error_message ($error_element, $error_str)
 
     $response->addAppend($error_element, "innerHTML", "<p id=\"error_message\">".$error_str."</p>");
     
-    $logging->trace("set error message (element=".$error_element.")");        
+    $logging->trace("set error (element=".$error_element.")");        
 }
 
 /**
@@ -147,7 +147,7 @@ function set_info_message ($info_element, $info_str)
 
     $response->addAppend($info_element, "innerHTML", "<p id=\"info_message\">".$info_str."</p>");
     
-    $logging->trace("set info message (element=".$info_element.")");        
+    $logging->trace("set info (element=".$info_element.")");        
 }
 
 /**

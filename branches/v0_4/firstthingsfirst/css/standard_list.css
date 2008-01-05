@@ -1,0 +1,92 @@
+/* This stylesheet contains all list styles */
+
+
+/*  defines the pane that contains the list contents */
+#list_content_pane {
+    display: inline-block;
+    float: none;
+    margin: 12px 10px 2px 10px;
+    color: rgb(0, 0, 102);
+    }
+
+/*  defines list pages above the list contents */
+#list_pages_top {
+    display: inline-block;
+    float: none;
+    padding: 7px 4px 7px 4px;
+    text-align: center;
+    }    
+    
+/*  defines table that contains list contents */
+#list_contents {
+    width: 100%;
+    float: none;
+    margin: 2px 0px 2px 0px;
+    color: rgb(0, 0, 102);
+    }
+
+#list_contents tr {
+    background-color: rgb(227, 225, 250);
+    }
+    
+#list_contents th {
+    padding: 4px 4px 4px 4px;
+    }
+
+#list_contents td {
+    padding: 4px 4px 4px 4px;
+    vertical-align: top;
+    }
+
+#list_contents tbody tr:hover {
+    background-color: rgb(235, 234, 250);
+    }
+    
+/*  defines list pages below the list contents */
+#list_pages_bottom {
+    display: inline-block;
+    float: none;
+    padding: 7px 4px 11px 4px;
+    text-align: center;
+    }
+    
+/*  defines pane that contains list row contents */
+#list_row_contens_pane {
+    display: inline-block;
+    float: none;
+    padding: 10px 0px 2px 0px;
+    background-color: rgb(238, 246, 238);
+    border: 2px solid rgb(208, 239, 208);
+    }
+    
+/*  defines table that contains contents of one list row */
+#list_row_contents {
+    float: none;
+    color: rgb(0, 0, 102);
+    }
+    
+#list_row_contents th {
+    padding: 3px 10px 3px 4px;
+    vertical-align: top;
+    }
+
+#list_row_contents td {
+    padding: 3px 10px 3px 4px;
+    vertical-align: top;
+    }
+
+#list_row_contents td p {
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 6px 0px;
+    vertical-align: top;
+    }
+
+#list_row_contents td div {
+    margin: 0px 0px 0px 0px;
+    padding: 6px 0px 0px 0px;
+    vertical-align: top;
+    }
+
+#list_row_contents select, #list_row_contents input, #list_row_contents textarea { 
+    border: 1px solid rgb(208, 239, 208);
+    }

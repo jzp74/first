@@ -169,9 +169,7 @@ function get_button ($func_str, $name_str)
  */
 function get_query_button ($query_str, $name_str)
 {
-    global $firstthingsfirst_portal_address;
-    
-    return "<a href=\"javascript:void(0);\" onclick=\"window.location='".$firstthingsfirst_portal_address."/index.php?".$query_str."'\">".$name_str."</a>";
+    return "<a href=\"javascript:void(0);\" onclick=\"window.location='index.php?".$query_str."'\">".$name_str."</a>";
 }
 
 /**
@@ -191,9 +189,7 @@ function get_inactive_button ($name_str)
  */
 function get_query_link ($query_str)
 {
-    global $firstthingsfirst_portal_address;
-    
-    return "onclick=\"window.location='".$firstthingsfirst_portal_address."/index.php?".$query_str."'\"";
+    return "onclick=\"window.location='index.php?".$query_str."'\"";
 }
 
 /**

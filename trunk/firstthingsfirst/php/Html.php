@@ -123,7 +123,7 @@ function set_error_message ($error_element, $error_str)
     $response->addRemove("error_message");
     $response->addRemove("info_message");
 
-    $response->addAppend($error_element, "innerHTML", "<p id=\"error_message\"><em><strong>".$error_str."</strong></em></p>");
+    $response->addAppend($error_element, "innerHTML", "<p id=\"error_message\">".$error_str."</p>");
     
     $logging->trace("set error message (element=".$error_element.")");        
 }
@@ -145,7 +145,7 @@ function set_info_message ($info_element, $info_str)
     $response->addRemove("error_message");
     $response->addRemove("info_message");
 
-    $response->addAppend($info_element, "innerHTML", "<p id=\"info_message\"><em><strong>".$info_str."</strong></em></p>");
+    $response->addAppend($info_element, "innerHTML", "<p id=\"info_message\">".$info_str."</p>");
     
     $logging->trace("set error message (element=".$info_element.")");        
 }

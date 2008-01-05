@@ -82,7 +82,7 @@ html, body {
     position: absolute;
     top: 18px;
     left: 0px;
-    background-color: rgb(157, 181, 222);
+    background-color: rgb(5, 114, 197);
     color: rgb(255, 255, 255);
     z-index: 20;
     }
@@ -116,8 +116,8 @@ html, body {
     height: 100%;
     margin: 0px 16px -38px 16px;
     background-color: rgb(255, 255, 255);
-    border-left: 6px solid rgb(157, 181, 222);
-    border-right: 6px solid rgb(157, 181, 222);
+    border-left: 6px solid rgb(5, 114, 197);
+    border-right: 6px solid rgb(5, 114, 197);
     }    
 
 /*  this style is used only to prevent content to disappear under the header
@@ -135,7 +135,7 @@ html, body {
 /*  defines the title of a page */    
 #page_title {
     padding: 4px 0px 4px 0px;
-    background-color: rgb(157, 181, 222);
+    background-color: rgb(5, 114, 197);
     color: rgb(255, 255, 255);
     font-family: arial black;    
     font-size: 32px;
@@ -146,9 +146,13 @@ html, body {
 /*  defines the navigation container */
 #navigation_container {
     padding: 4px 0px 4px 4px;
-    background-color: rgb(157, 181, 222);
+    background-color: rgb(5, 114, 197);
     color: rgb(255, 255, 255);
 }
+
+#navigation_container a, #navigation_container a:link, #navigation_container a:visited {
+    color: rgb(112, 193, 255);
+    }
 
 /*  defines hte navigation links */
 #navigation {
@@ -173,7 +177,7 @@ html, body {
 /*  defines the footer of all pages */
 #footer {
     height: 20px;
-    background-color: rgb(157, 181, 222);
+    background-color: rgb(5, 114, 197);
     color: rgb(255, 255, 255);
     text-align: center;
     font-size: 12px;
@@ -242,11 +246,10 @@ html, body {
 /*  defines the explanation below the title for this portal */
 #portal_explanation {
     padding: 12px auto 12px auto;
-    background-color: rgb(157, 181, 222);
+    background-color: rgb(5, 114, 197);
     color: rgb(255, 255, 255);
     font-family: arial black;    
     font-size: 14px;
-    font-weight: bold;
     text-align: center;
     }
     
@@ -352,7 +355,9 @@ html, body {
     color: rgb(255, 0, 0);
     margin: 4px 10px 0px 10px;
     padding: 6px 6px 6px 6px;
-    border: 1px dashed rgb(255, 0, 0);
+    border: 1px solid rgb(255, 0, 0);
+    font-size: 11px;
+    font-weight: bold;
     }
 
 /*  defines info messages */
@@ -360,5 +365,7 @@ html, body {
     color: rgb(0, 0, 102);
     margin: 4px 10px 0px 10px;
     padding: 6px 6px 6px 6px;
-    border: 1px dashed rgb(0, 0, 102);
+    border: 1px solid rgb(0, 0, 102);
+    font-size: 11px;
+    font-weight: bold;
     }

@@ -306,6 +306,18 @@ define("LABEL_LIST_NAME", "name");
 define("LABEL_LIST_DESCRIPTION", "description");
 
 /**
+ * portal label
+ * definition of 'list creator' label
+ */
+define("LABEL_LIST_CREATOR", "created by");
+
+/**
+ * portal label
+ * definition of 'list modifier' label
+ */
+define("LABEL_LIST_MODIFIER", "modified by");
+
+/**
  * login label
  * definition of 'none' label
  */

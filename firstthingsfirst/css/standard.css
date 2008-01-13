@@ -61,7 +61,7 @@ select {
 
 /*  defines the html overall style of a page */
 html, body {
-	height: 100%;
+    height: 100%;
     background-color: rgb(255, 255, 255);
     }
 
@@ -214,23 +214,27 @@ html, body {
 #action_pane {
     display: block;
     float: none;
-    padding: 14px 12px 8px 12px;
+    padding: 14px 12px 14px 12px;
     color: rgb(0, 0, 102);
     }
 
 /*  defines the action bar that contains a number of actions (hrefs) */
 #action_bar {
+    display: block;
     float: none;
     background-color: rgb(208, 239, 208);
+    padding: 4px 2px 4px 2px;
     }
     
-#action_bar p {
-    padding: 4px 0px 4px 4px;
+#action_bar_left {
+    display: inline;
+    padding: 0px 4px 0px 4px;
     }
 
-#action_bar p span span {
-    padding: 4px 2px 4px 2px;
-    background-color: rgb(238, 246, 238);
+#action_bar_right {
+    display: inline;
+    position: absolute;
+    right: 40px;
     }
 
 #action_bar select { 

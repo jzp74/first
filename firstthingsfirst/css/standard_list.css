@@ -56,7 +56,9 @@
     float: none;
     padding: 10px 0px 2px 0px;
     background-color: rgb(238, 246, 238);
-    border: 2px solid rgb(208, 239, 208);
+    border-left: 2px solid rgb(208, 239, 208);
+    border-right: 2px solid rgb(208, 239, 208);
+    border-bottom: 2px solid rgb(208, 239, 208);
     }
     
 /*  defines table that contains contents of one list row */

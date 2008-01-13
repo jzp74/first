@@ -173,6 +173,17 @@ function get_query_button ($query_str, $name_str)
 }
 
 /**
+ * get html for an active link_button (button calls index.php with specified query string) and open a new window
+ * @param string $query_str contains the query string
+ * @param string $name_str contains the name of the button
+ * @return string html containing button
+ */
+function get_query_button_new_window ($query_str, $name_str)
+{
+    return "<a href=\"javascript:void(0);\" onclick=\"window.open('http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']."?".$query_str."')\">".$name_str."</a>";
+}
+
+/**
  * get html for an inactive button
  * @param string $name_str contains the name of the button
  * @return string html containing button

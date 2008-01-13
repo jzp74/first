@@ -102,7 +102,7 @@ function process_url ()
     # show portal page
     if ($action == ACTION_GET_PORTAL_PAGE)
         action_get_portal_page();
-    # show list page
+    # show or print list page
     else if ($action == ACTION_GET_LIST_PAGE)
     {
         if (isset($_GET['list']))
@@ -143,6 +143,7 @@ function process_url ()
 <link rel="stylesheet" href="css/standard.css">
 <link rel="stylesheet" href="css/standard_listbuilder.css">
 <link rel="stylesheet" href="css/standard_list.css">
+<link rel="stylesheet" href="css/standard_print.css" media="print">
 
 <?php $xajax->printJavascript("xajax"); ?>
 </head>

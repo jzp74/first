@@ -66,7 +66,7 @@ function action_get_portal_page ()
     $html_str .= "        </div> <!-- portal_overview_pane -->\n\n";
     $html_str .= "        <div id=\"action_pane\">\n\n";
     $html_str .= "            <div id=\"action_bar\">\n";
-    $html_str .= "                <p>".get_query_button("action=get_listbuilder_page", BUTTON_CREATE_NEW_LIST)."</p>\n";
+    $html_str .= "                <p>&nbsp;".get_query_button("action=get_listbuilder_page", BUTTON_CREATE_NEW_LIST)."</p>\n";
     $html_str .= "            </div> <!-- action_bar -->\n\n";    
     $html_str .= "        </div> <!-- action_pane -->\n\n";           
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
@@ -145,7 +145,8 @@ function action_get_list_tables ()
         $html_str .= strftime($firstthingsfirst_date_string, (strtotime($list_table_description[3])))."</td>\n";
         $html_str .= "                        <td ".get_query_link("action=get_list_page&list=".$list_table_description[0]).">".$list_table_description[4]."&nbsp;".LABEL_AT."&nbsp;";
         $html_str .= strftime($firstthingsfirst_date_string, (strtotime($list_table_description[5])))."</td>\n";
-        $html_str .= "                        <td>".get_button("xajax_action_del_list_table('".$list_table_description[0]."')", BUTTON_DELETE)."</td>\n";
+        $html_str .= "                        <td>".get_query_button("action=get_listbuilder_page&list=".$list_table_description[0], BUTTON_MODIFY);
+        $html_str .= "&nbsp;&nbsp;".get_button("xajax_action_del_list_table('".$list_table_description[0]."')", BUTTON_DELETE)."</td>\n";
         $html_str .= "                    </tr>\n";
     }
     if (!count($list_table_descriptions))

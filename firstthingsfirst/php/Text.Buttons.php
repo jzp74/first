@@ -30,6 +30,12 @@ define("BUTTON_DELETE", "delete");
 
 /**
  * shared button
+ * definition of 'modify' button
+ */
+define("BUTTON_MODIFY", "modify");
+
+/**
+ * shared button
  * definition of 'add' button
  */
 define("BUTTON_ADD", "ok");
@@ -124,6 +130,12 @@ define("BUTTON_ADD_FIELD", "add this field");
  */
 define("BUTTON_CREATE_LIST", "create this list");
     
+/**
+ * list builder button
+ * definition of 'modify list' button
+ */
+define("BUTTON_MODIFY_LIST", "modify this list");
+
 /**
  * login button
  * definition of 'login' button

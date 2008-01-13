@@ -663,9 +663,10 @@ function action_update_list_row ($list_title, $key_string, $form_values)
     $html_str .= get_action_bar($list_title, "");
     $result->set_result_str($html_str);    
 
+    $response->addRemove("list_row_contens_pane");
     $response->addAssign("action_bar", "innerHTML", $result->get_result_str());
 
-    # refresh list and footer
+    # refresh list and footer and remove 
     action_get_list_content($list_title, "", 0);
     set_footer(get_list_footer());
 
@@ -784,6 +785,7 @@ function action_add_list_row ($list_title, $form_values)
     $html_str .= get_action_bar($list_title, "");
     $result->set_result_str($html_str);    
 
+    $response->addRemove("list_row_contens_pane");
     $response->addAssign("action_bar", "innerHTML", $result->get_result_str());
 
     # refresh list and footer
@@ -912,6 +914,7 @@ function action_cancel_list_action ($list_title)
 
     # remove any error messages
     $response->addRemove("error_message");
+    $response->addRemove("list_row_contens_pane");
     $response->addAssign("action_bar", "innerHTML", $result->get_result_str());
 
     $logging->trace("canceled list action");

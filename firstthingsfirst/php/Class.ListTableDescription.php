@@ -179,7 +179,7 @@ class ListTableDescription
     */
     function get_description ()
     {
-        return $this->html_entity_decode($this->description, ENT_QUOTES);
+        return html_entity_decode($this->description, ENT_QUOTES);
     }
 
     /**
@@ -407,12 +407,12 @@ class ListTableDescription
             $this->created = $row[5];
             $this->modifier = $row[6];
             $this->modified = $row[7];
-            
-            $this->_log->trace("selected ListTableDescription (title=\"".$this->title."\")");
-            
+                        
             # initialise list_table
             $this->_list_table->set();
             
+            $this->_log->trace("selected ListTableDescription (title=\"".$this->title."\")");
+
             return TRUE;
         }
         else

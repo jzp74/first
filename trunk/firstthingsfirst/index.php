@@ -122,7 +122,12 @@ function process_url ()
         action_get_add_user_page();
     # show list builder page
     else if ($action == ACTION_GET_LISTBUILDER_PAGE)
-        action_get_listbuilder_page();
+    {
+        if (isset($_GET['list']))
+            action_get_listbuilder_page($_GET['list']);
+        else
+            action_get_listbuilder_page("");
+    }
     # show portal page in all other instances
     else
         action_get_portal_page();

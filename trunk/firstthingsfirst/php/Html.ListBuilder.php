@@ -46,6 +46,13 @@ $firstthingsfirst_action_description[ACTION_REFRESH_LISTBUILDER] = array(PERMISS
 $xajax->registerFunction("action_refresh_listbuilder");
 
 /**
+ * definition of 'modify list' action
+ */
+define("ACTION_MODIFY_LIST", "modify_list");
+$firstthingsfirst_action_description[ACTION_MODIFY_LIST] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$xajax->registerFunction("action_modify_list");
+
+/**
  * definition of 'create_list' action
  */
 define("ACTION_CREATE_LIST", "create_list");
@@ -56,14 +63,16 @@ $xajax->registerFunction("action_create_list");
 /**
  * set the html for the listbuilder page
  * this function is registered in xajax
+ * @param string $list_title title of list
  * @return xajaxResponse every xajax registered function needs to return this object
  */
-function action_get_listbuilder_page ()
+function action_get_listbuilder_page ($list_title)
 {
     global $logging;
     global $result;    
     global $user;
     global $response;
+    global $list_table_description;
     global $firstthingsfirst_field_descriptions;
     
     $field_types = array_keys($firstthingsfirst_field_descriptions);
@@ -73,10 +82,20 @@ function action_get_listbuilder_page ()
 
     if (!check_preconditions(ACTION_GET_LISTBUILDER_PAGE))
         return $response;
+
+    # load list details when list title has been given
+    if (strlen($list_title))
+        $list_table_description->select($list_title);
             
     $html_str = "";
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
-    $html_str .= "        <div id=\"page_title\">".LABEL_CONFIGURE_NEW_LIST."</div>\n\n";
+    
+    # different page title when list title has been given
+    if (strlen($list_title))
+        $html_str .= "        <div id=\"page_title\">".LABEL_MODIFY_LIST." '".$list_title."'</div>\n\n";
+    else        
+        $html_str .= "        <div id=\"page_title\">".LABEL_CONFIGURE_NEW_LIST."</div>\n\n";
+    
     $html_str .= "        <div id=\"navigation_container\">\n";
     $html_str .= "            <div id=\"navigation\">&nbsp;".get_query_button("action=get_portal_page", BUTTON_PORTAL)."</div>\n";
     $html_str .= "            <div id=\"login_status\">&nbsp;</div>&nbsp\n";
@@ -88,31 +107,63 @@ function action_get_listbuilder_page ()
     $html_str .= "                    <tbody>\n";
     $html_str .= "                        <tr>\n";
     $html_str .= "                            <td>".LABEL_TITLE_OF_THIS_LIST."</td>\n";
-    $html_str .= "                            <td id=\"listbuilder_list_title_id\"><input size=\"20\" maxlength=\"100\" id=\"listbuilder_list_title\" type=\"text\"></td>\n";
+
+    # set value for title when list title has been given
+    if (strlen($list_title))
+    {
+        $html_str .= "                            <td id=\"listbuilder_list_title_id\"><input size=\"20\" maxlength=\"100\"";
+        $html_str .= " id=\"listbuilder_list_title\" value=\"".$list_table_description->get_title()."\" type=\"text\"></td>\n";
+    }
+    else
+        $html_str .= "                            <td id=\"listbuilder_list_title_id\"><input size=\"20\" maxlength=\"100\" id=\"listbuilder_list_title\" type=\"text\"></td>\n";
+
     $html_str .= "                            <td width=\"90%\">&nbsp;</td>\n";
     $html_str .= "                        </tr>\n";
     $html_str .= "                        <tr>\n";
     $html_str .= "                            <td>".LABEL_SHORT_DESCRIPTION_OF_THIS_LIST."</td>\n";
-    $html_str .= "                            <td id=\"listbuilder_list_description_id\"><textarea cols=\"40\" rows=\"4\" id=\"listbuilder_list_description\"></textarea></td>\n";
+
+    # set value for description when list title has been given
+    if (strlen($list_title))
+    {
+        $html_str .= "                            <td id=\"listbuilder_list_description_id\"><textarea cols=\"40\" rows=\"4\"";
+        $html_str .= " id=\"listbuilder_list_description\">".$list_table_description->get_description()."</textarea></td>\n";
+    }
+    else
+        $html_str .= "                            <td id=\"listbuilder_list_description_id\"><textarea cols=\"40\" rows=\"4\" id=\"listbuilder_list_description\"></textarea></td>\n";
+
     $html_str .= "                            <td width=\"90%\">&nbsp;</td>\n";
     $html_str .= "                        </tr>\n";
     $html_str .= "                    </tbody>\n";
     $html_str .= "                </table> <!-- listbuilder_general_settings -->\n\n";
     $html_str .= "            </div> <!-- listbuilder_general_settings_pane -->\n\n";
-    $html_str .= "            <div id=\"listbuilder_definition_title\">".LABEL_DEFINE_TABLE_FIELDS."</div>\n\n";
-    $html_str .= "            <div id=\"listbuilder_definition_pane\">\n\n";
+    
+    # do not show the actual listbuilder when list title has been set
+    if (!strlen($list_title))
+    {
+        $html_str .= "            <div id=\"listbuilder_definition_title\">".LABEL_DEFINE_TABLE_FIELDS."</div>\n\n";
+        $html_str .= "            <div id=\"listbuilder_definition_pane\">\n\n";
 
-    $result->set_result_str($html_str);    
-    get_field_definition_table($definition);
+        $result->set_result_str($html_str);    
+        get_field_definition_table($definition);
 
-    $html_str = "";            
-    $html_str .= "           </div> <!-- listbuilder_definition_pane -->\n\n";
+        $html_str = "";            
+        $html_str .= "           </div> <!-- listbuilder_definition_pane -->\n\n";
+    }
+
     $html_str .= "        </div> <!-- listbuilder_pane -->\n\n";
     $html_str .= "        <div id=\"action_pane\">\n\n";
     $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
-    $html_str .= "                <p>&nbsp;".get_select("add_select", "add_it", "")."\n";
-    $html_str .= "                ".get_button("xajax_action_add_listbuilder_row(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'))", BUTTON_ADD_FIELD)."\n";
-    $html_str .= "                &nbsp;&nbsp;".get_button("xajax_action_create_list(document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value, xajax.getFormValues('database_definition_form'))", BUTTON_CREATE_LIST)."</p>\n";
+    
+    # only show one link when list title had been given
+    if (strlen($list_title))
+        $html_str .= "                <p>&nbsp;".get_button("xajax_action_modify_list('".$list_title."', document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value)", BUTTON_MODIFY_LIST)."</p>\n";
+    else
+    {
+        $html_str .= "                <p>&nbsp;".get_select("add_select", "add_it", "")."\n";
+        $html_str .= "                ".get_button("xajax_action_add_listbuilder_row(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'))", BUTTON_ADD_FIELD)."\n";
+        $html_str .= "                &nbsp;&nbsp;".get_button("xajax_action_create_list(document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value, xajax.getFormValues('database_definition_form'))", BUTTON_CREATE_LIST)."</p>\n";
+    }
+    
     $html_str .= "            </div> <!-- action_bar -->\n\n";    
     $html_str .= "        </div> <!-- action_pane -->\n\n";           
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
@@ -302,7 +353,89 @@ function action_refresh_listbuilder ($definition)
 }
 
 /**
- * create a new list and get the portal page
+ * modify an existing list
+ * this function is registered in xajax
+ * @param string $former_title former title of this list
+ * @param string $title title of the new list
+ * @param string $description description of the new list
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
+function action_modify_list ($former_title, $title, $description)
+{
+    global $database;
+    global $logging;
+    global $response;
+    global $list_table_description;
+    global $list_table;
+    
+    $logging->info("ACTION: modify list (former_title=".$former_title.", title=".$title.")");
+
+    if (!check_preconditions(ACTION_MODIFY_LIST))
+        return $response;
+        
+    # set the right list_table_description
+    $list_table_description->select($former_title);
+    
+    # get table name
+    $list_table->set();
+    $former_table_name = $list_table->get_table_name();
+
+    # check if title has been given
+    if (strlen($title) == 0)
+    {
+        $logging->warn("no title given");
+        set_error_message("listbuilder_list_title_id", ERROR_NO_TITLE_GIVEN);
+        
+        return $response;
+    }
+    
+    # check if title is well formed
+    if (is_well_formed_string("title", $title) == FALSE_RETURN_STRING)
+    {
+        set_error_message("listbuilder_list_title_id", ERROR_NOT_WELL_FORMED_STRING);
+        
+        return $response;
+    }
+    
+    # check if description has been given
+    if (strlen($description) == 0)
+    {
+        $logging->warn("no description given");
+        set_error_message("listbuilder_list_description_id", ERROR_NO_DESCRIPTION_GIVEN);
+        
+        return $response;
+    }
+
+    $list_table_description->set_title($title);
+    $list_table_description->set_description($description);
+    
+    if (strcmp($former_title, $title))
+    {
+        $logging->trace("list title has changed");
+        
+        $list_table->set();
+        $new_table_name = $list_table->get_table_name();
+        $query = "ALTER TABLE ".$former_table_name." RENAME ".$new_table_name;
+        $result_object = $database->query($query);
+        if ($result_object == FALSE)
+        {
+            $logging->error($database->get_error_str());
+            set_error_message("listbuilder_pane", ERROR_DATABASE_PROBLEM);
+
+            return $response;
+        }
+    }
+
+    $list_table_description->update();
+    set_info_message("listbuilder_pane", LABEL_LIST_MODIFICATIONS_DONE);
+    
+    $logging->trace("modified list");
+
+    return $response;
+}
+
+/**
+ * create a new list
  * this function is registered in xajax
  * @param string $title title of the new list
  * @param string $description description of the new list
@@ -312,8 +445,6 @@ function action_refresh_listbuilder ($definition)
 function action_create_list ($title, $description, $definition)
 {
     global $logging;
-    global $result;    
-    global $user;
     global $response;
     global $list_table_description;
     global $list_table;

@@ -199,6 +199,12 @@ define("LABEL_CONFIGURE_NEW_LIST", "Configure a new list");
 
 /**
  * listbuilder label
+ * definition of 'modify existing list' label
+ */
+define("LABEL_MODIFY_LIST", "Modify list");
+
+/**
+ * listbuilder label
  * definition of 'general settings' label
  */
 define("LABEL_GENERAL_SETTINGS", "General settings");
@@ -261,7 +267,13 @@ define("LABEL_FIELD_CANNOT_BE_CHANGED", "this field cannot be changed");
  * listbuilder label
  * definition of an example of options field type
  */
-define("LABEL_OPTIONS_EXAMPLE", "specify '|' seperated options for this selection field.<br>For instance: 'dog|cat|sheep'");
+define("LABEL_OPTIONS_EXAMPLE", "specify '|' seperated options for this selection field<br>for instance: 'open|busy|close'");
+
+/**
+ * listbuilder label
+ * definition of user message: list modifications done
+ */
+define("LABEL_LIST_MODIFICATIONS_DONE", "list modifications done!<br>return to the portal page");
 
 /**
  * listbuilder label

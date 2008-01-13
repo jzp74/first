@@ -24,6 +24,13 @@ define("ACTION_GET_LIST_TABLES", "get_list_tables");
 $firstthingsfirst_action_description[ACTION_GET_LIST_TABLES] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 $xajax->registerFunction("action_get_list_tables");
 
+/**
+ * definition of 'del_list_table' action
+ */
+define("ACTION_DEL_LIST_TABLE", "del_list_table");
+$firstthingsfirst_action_description[ACTION_DEL_LIST_TABLE] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$xajax->registerFunction("action_del_list_table");
+
 
 /**
  * set the html for the portal page
@@ -89,7 +96,8 @@ function action_get_list_tables ()
     global $result;
     global $database;
     global $response;
-
+    global $firstthingsfirst_date_string;
+    
     $logging->info("ACTION: get list tables");
 
     $html_str = "";
@@ -99,7 +107,8 @@ function action_get_list_tables ()
         return $response;
 
     # get all list_tables from database
-    $query = "SELECT _title, _description FROM ".LISTTABLEDESCRIPTION_TABLE_NAME;
+    $query = "SELECT _title, _description, ".DB_CREATOR_FIELD_NAME.", ".DB_TS_CREATED_FIELD_NAME.", ";
+    $query .= DB_MODIFIER_FIELD_NAME.", ".DB_TS_MODIFIED_FIELD_NAME." FROM ".LISTTABLEDESCRIPTION_TABLE_NAME;
     $result_object = $database->query($query);
     if ($result_object == FALSE)
     {
@@ -109,7 +118,7 @@ function action_get_list_tables ()
     }
     
     while ($row = $database->fetch($result_object))
-        array_push($list_table_descriptions, array($row[0], $row[1]));
+        array_push($list_table_descriptions, array($row[0], $row[1], $row[2], $row[3], $row[4], $row[5]));
 
     # now create the table
     $html_str .= "            <table id=\"portal_overview\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
@@ -119,6 +128,9 @@ function action_get_list_tables ()
     $html_str .= "                    <tr>\n";
     $html_str .= "                        <th>".LABEL_LIST_NAME."</th>\n";
     $html_str .= "                        <th>".LABEL_LIST_DESCRIPTION."</th>\n";
+    $html_str .= "                        <th>".LABEL_LIST_CREATOR."</th>\n";
+    $html_str .= "                        <th>".LABEL_LIST_MODIFIER."</th>\n";
+    $html_str .= "                        <th>&nbsp;</th>\n";
     $html_str .= "                    </tr>\n";
     $html_str .= "                </thead>\n";
     $html_str .= "                <tbody>\n";
@@ -126,9 +138,14 @@ function action_get_list_tables ()
     # add table row for each list
     foreach($list_table_descriptions as $list_table_description)
     {
-        $html_str .= "                    <tr ".get_query_link("action=get_list_page&list=".$list_table_description[0]).">\n";
-        $html_str .= "                        <td>".$list_table_description[0]."</td>\n";
-        $html_str .= "                        <td><em>".$list_table_description[1]."</td>\n";
+        $html_str .= "                    <tr>\n";
+        $html_str .= "                        <td ".get_query_link("action=get_list_page&list=".$list_table_description[0]).">".$list_table_description[0]."</td>\n";
+        $html_str .= "                        <td ".get_query_link("action=get_list_page&list=".$list_table_description[0]).">".$list_table_description[1]."</td>\n";
+        $html_str .= "                        <td ".get_query_link("action=get_list_page&list=".$list_table_description[0]).">".$list_table_description[2]."&nbsp;".LABEL_AT."&nbsp;";
+        $html_str .= strftime($firstthingsfirst_date_string, (strtotime($list_table_description[3])))."</td>\n";
+        $html_str .= "                        <td ".get_query_link("action=get_list_page&list=".$list_table_description[0]).">".$list_table_description[4]."&nbsp;".LABEL_AT."&nbsp;";
+        $html_str .= strftime($firstthingsfirst_date_string, (strtotime($list_table_description[5])))."</td>\n";
+        $html_str .= "                        <td>".get_button("xajax_action_del_list_table('".$list_table_description[0]."')", BUTTON_DELETE)."</td>\n";
         $html_str .= "                    </tr>\n";
     }
     if (!count($list_table_descriptions))
@@ -152,6 +169,36 @@ function action_get_list_tables ()
     $logging->trace("got list_tables");
 
     return;
+}
+
+/**
+ * delete a list table 
+ * this function is registered in xajax
+ * @param string $list_title title of list
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
+
+function action_del_list_table ($list_title)
+{
+    global $logging;
+    global $response;
+    global $list_table_description;
+    
+    $logging->info("ACTION: delete list table (list_title=".$list_title.")");
+
+    if (!check_preconditions(ACTION_DEL_LIST_TABLE))
+        return $response;
+
+    # set the right list_table_description
+    $list_table_description->select($list_title);
+
+    # delete the list table
+    if (!$list_table_description->delete())
+        set_error_message("portal_overview_pane", $list_table_description->get_error_str());
+    else
+        action_get_list_tables();
+    
+    return $response;
 }
 
 ?>

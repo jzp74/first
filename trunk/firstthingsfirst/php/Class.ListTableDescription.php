@@ -578,7 +578,7 @@ class ListTableDescription
         if ($result == FALSE)
         {
             $this->_log->error("could not delete ListTable");
-            $this->error_str = $this->get_error_str();
+            $this->error_str = $this->_list_table->get_error_str();
                 
             return FALSE;
         }

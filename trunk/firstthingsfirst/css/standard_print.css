@@ -1,0 +1,55 @@
+/* This stylesheet contains modifications on styles needed for printing*/
+
+/* all links should be black */
+a, a:link, a:visited {
+    color: rgb(0, 0, 0);
+    }
+   
+/* do not show upper and lower margins */
+#upper_margin, #lower_margin {
+    display: none;
+    visibility: hidden;
+    }
+
+/* show header at top of page */
+#header {
+    top: 0px;
+    }
+
+/* do not use full heigth, use full width of screen/page */
+#outer_body {
+    height: auto;
+    border-left: 0px;
+    border-right: 0px;
+    margin: 0px 0px -38px 0px;
+    }
+    
+/* use only black and white for printing */
+#page_title, #footer, #login_overview, #list_content_pane {
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    }
+
+/* use full width of screen/page */    
+#list_content_pane {
+    margin: 0px 0px 0px 0px;
+    }
+
+/* use collapsed borders to be able to print nice borders */
+#list_contents {
+    border-collapse: collapse; 
+    color: rgb(0, 0, 0);
+    background-color: rgb(0, 0, 0);
+    }
+
+/* td and th need a border */    
+#list_contents td, #list_contents th {
+    border: 1px solid rgb(0, 0, 0);
+    }
+
+/* do not show these divs */
+#header, #hidden_upper_margin, navigation_container, #navigation_container a, #navigation, #login_status {
+    display: none;
+    visibility: hidden;
+    }
+   

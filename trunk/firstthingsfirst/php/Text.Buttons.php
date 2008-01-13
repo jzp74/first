@@ -107,6 +107,12 @@ define("BUTTON_NEXT_NOTE", "next note");
 define("BUTTON_ADD_NOTE", "add note");
 
 /**
+ * list button
+ * definition of 'print this list' button
+ */
+define("BUTTON_PRINT_LIST", "print this list");
+
+/**
  * list builder button
  * definition of 'add field' button
  */

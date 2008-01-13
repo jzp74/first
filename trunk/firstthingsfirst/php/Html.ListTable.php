@@ -180,15 +180,21 @@ function action_get_list_content ($list_title, $order_by_field, $page)
     if ($page != LISTTABLELISTTABLE_ALL_PAGES)
         $html_str .= "            <div id=\"list_pages_top\">".LABEL_PAGE." ".$current_page." ".LABEL_OF." ".$total_pages."</div>\n\n";
     
-    # then we'll start with the table definition
-    $html_str .= "            <table id=\"list_contents\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
+    # then we'll start with the table definition, different table when all pages have to be displayed
+    if ($page != LISTTABLELISTTABLE_ALL_PAGES)
+        $html_str .= "            <table id=\"list_contents\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
+    else
+        $html_str .= "            <table id=\"list_contents\" align=\"left\">\n";
     
     # now the first row containing the field names
     $html_str .= "                <thead>\n";
     $html_str .= "                    <tr>\n";
     foreach ($field_names as $field_name)
         $html_str .= "                        <th>".get_button("xajax_action_get_list_content('".$list_title."', '".$field_name."', ".$current_page.")", $field_name)."</th>\n";
-    $html_str .= "                        <th>&nbsp</th>\n";
+
+    # display extra column for actions, except when all pages have to be displayed
+    if ($page != LISTTABLELISTTABLE_ALL_PAGES)
+        $html_str .= "                        <th>&nbsp</th>\n";
     $html_str .= "                    </tr>\n";
     $html_str .= "                </thead>\n";
     $html_str .= "                <tbody>\n";
@@ -245,8 +251,9 @@ function action_get_list_content ($list_title, $order_by_field, $page)
             $col_number += 1;
         }
         
-        # add the delete link
-        $html_str .= "                        <td width=\"1%\" onclick=\"xajax_action_archive_list_row('".$list_title."', &quot;".$key_string."&quot;)\">".get_button("", BUTTON_ARCHIVE)."</td>\n";
+        # add the archive link, except when all pages have to be displayed
+        if ($page != LISTTABLELISTTABLE_ALL_PAGES)
+            $html_str .= "                        <td width=\"1%\" onclick=\"xajax_action_archive_list_row('".$list_title."', &quot;".$key_string."&quot;)\">".get_button("", BUTTON_ARCHIVE)."</td>\n";
         $html_str .= "                    </tr>\n";
         $row_number += 1;
     }
@@ -311,7 +318,7 @@ function action_get_list_content ($list_title, $order_by_field, $page)
         }
     }
     
-    $html_str .= "</div>\n\n";
+    $html_str .= "</div>\n\n        ";
     
     $result->set_result_str($html_str);    
 
@@ -368,10 +375,12 @@ function action_get_list_row ($list_title, $key_string)
     }
 
     # start with the action bar
+    $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
     if (strlen($key_string))
         $html_str .= get_action_bar($list_title, "edit");
     else
         $html_str .= get_action_bar($list_title, "add");
+    $html_str .= "            </div> <!-- action_bar -->\n\n";
        
     # then the form and table definition
     $html_str .= "\n                <div id=\"list_row_contens_pane\">\n\n";
@@ -477,11 +486,11 @@ function action_get_list_row ($list_title, $key_string)
     $html_str .= "                            </tbody>\n";
     $html_str .= "                        </table> <!-- list_row_contents -->\n";
     $html_str .= "                    </form> <!-- row_form -->\n\n";
-    $html_str .= "                </div> <!-- list_row_contens_pane -->\n\n            ";
+    $html_str .= "                </div> <!-- list_row_contents_pane -->\n\n            ";
     
     $result->set_result_str($html_str);    
 
-    $response->addAssign("action_bar", "innerHTML", $result->get_result_str());
+    $response->addAssign("action_pane", "innerHTML", $result->get_result_str());
 
     if (!check_postconditions())
         return $response;
@@ -531,6 +540,10 @@ function action_get_print_list ($list_title)
     # set footer
     set_footer(get_list_footer());
 
+    # print this page
+    $response->AddScriptCall("window.print()");
+    $response->AddScriptCall("window.close()");
+    
     $logging->trace("got print list");
 
     return $response;
@@ -920,14 +933,17 @@ function get_action_bar ($list_title, $action)
 
     $html_str = "";
 
-    $html_str .= "\n\n               <p>";
+    $html_str .= "\n\n               <div id=\"action_bar_left\">";
     if ($action == "edit")
         $html_str .= "<strong>".LABEL_EDIT_ROW."</strong>";
     else if ($action == "add")
         $html_str .= "<strong>".LABEL_ADD_ROW."</strong>";
     else
-        $html_str .= get_button("xajax_action_get_list_row('".$list_title."', '')", BUTTON_ADD_ROW)."&nbsp;&nbsp;";
-    $html_str .= "</p>";
+        $html_str .= get_button("xajax_action_get_list_row('".$list_title."', '')", BUTTON_ADD_ROW);
+    $html_str .= "</div>\n";
+    $html_str .= "               <div id=\"action_bar_right\">";
+    $html_str .= get_query_button_new_window("action=get_print_list&list=".$list_title, BUTTON_PRINT_LIST);
+    $html_str .= "</div>\n\n           ";
     
     $logging->trace("got action bar");
     

@@ -183,7 +183,6 @@ function get_list_row_notes ($db_field_name, $notes_array)
  */
 function get_list_row_note ($db_field_name, $this_id, $previous_id, $next_id, $note_array)
 {
-    global $firstthingsfirst_date_string;
     global $logging;
 
     $html_str = "";
@@ -205,7 +204,7 @@ function get_list_row_note ($db_field_name, $this_id, $previous_id, $next_id, $n
     if ($this_id != 0)
     {
         $html_str .= "                                        <p>&nbsp;".$note_array[DB_CREATOR_FIELD_NAME]."&nbsp;".LABEL_AT."&nbsp;";
-        $html_str .= strftime($firstthingsfirst_date_string, (strtotime($note_array[DB_TS_CREATED_FIELD_NAME])))."</p>\n";
+        $html_str .= get_date_str(DATE_FORMAT_WEEKDAY, $note_array[DB_TS_CREATED_FIELD_NAME])."</p>\n";
     }
     else
         $html_str .= "                                        <p>&nbsp;".LABEL_NEW_NOTE."</p>\n";

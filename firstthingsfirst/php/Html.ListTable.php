@@ -146,7 +146,6 @@ function action_get_list_content ($list_title, $order_by_field, $page)
     global $response;
     global $list_table_description;
     global $list_table;
-    global $firstthingsfirst_date_string;
     
     $html_str = "";
     
@@ -217,7 +216,7 @@ function action_get_list_content ($list_title, $order_by_field, $page)
             
             if (stristr($definition[$db_field_name][0], "DATE"))
             {
-                $date_string = strftime($firstthingsfirst_date_string, (strtotime($value)));
+                $date_string = get_date_str(DATE_FORMAT_WEEKDAY, $value);
                 $html_str .= "                        <td onclick=\"xajax_action_get_list_row('".$list_title."', &quot;".$key_string."&quot;)\">";
                 $html_str .= $date_string."</td>\n";
             }
@@ -230,7 +229,7 @@ function action_get_list_content ($list_title, $order_by_field, $page)
                     foreach ($value as $note_array)
                     {
                         $html_str .= "                            <p>".$note_array[DB_CREATOR_FIELD_NAME]."&nbsp;".LABEL_AT."&nbsp;";
-                        $html_str .= strftime($firstthingsfirst_date_string, (strtotime($note_array[DB_TS_CREATED_FIELD_NAME]))).": ";
+                        $html_str .= get_date_str(DATE_FORMAT_NORMAL, $note_array[DB_TS_CREATED_FIELD_NAME]).": ";
                         $html_str .= $note_array["_note"]."</p>\n";
                     }
                 }
@@ -419,7 +418,7 @@ function action_get_list_row ($list_title, $key_string)
             {
                 if (stristr($field_type, "DATE"))
                 {
-                    $date_string = strftime($firstthingsfirst_date_string, (strtotime($row[$db_field_name])));
+                    $date_string = get_date_str(DATE_FORMAT_NORMAL, $row[$db_field_name]);
                     $html_str .= " value=\"".$date_string."\"";
                 }
                 else if ($field_type == "LABEL_DEFINITION_TEXT_FIELD")

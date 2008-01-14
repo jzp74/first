@@ -9,6 +9,7 @@
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
+
 /**
  * test if given string is not empty
  * @param string $field_name name of field that contains this string
@@ -98,8 +99,8 @@ function is_well_formed_string ($field_name, $str, $use_pipe_char=0)
  */
 function is_date ($field_name, $str)
 {
-    global $firstthingsfirst_date_string;
     global $logging;
+    global $firstthingsfirst_date_string;
     
     $logging->trace("is_date (field_name=".$field_name.", str=".$str.")");
 
@@ -146,6 +147,36 @@ function is_date ($field_name, $str)
     $logging->trace("is_date");
 
     return sprintf("%04d-%02d-%02d", $year, $month, $day);
+}
+
+/**
+ * convert one date string into another date string
+ * @param int $format format of date string
+ * @param string $value string representation of date
+ * @return string date string
+ */
+function get_date_str ($format, $value)
+{
+    global $logging;
+    global $firstthingsfirst_date_string;
+    global $first_things_first_day_definitions;
+    
+    $logging->debug("get_date_str (format=".$format.", value=".$value.")");
+    
+    if ($format == DATE_FORMAT_NORMAL)
+        return strftime($firstthingsfirst_date_string, (strtotime($value)));
+    else if ($format == DATE_FORMAT_WEEKDAY)
+    {
+        # get weekday
+        $weekday = strftime("%w", (strtotime($value)));
+        $logging->debug("found weekday (weekday=".$weekday.")");
+        # get normal date format
+        $date_str = strftime($firstthingsfirst_date_string, (strtotime($value)));
+        
+        return constant($first_things_first_day_definitions[$weekday])."&nbsp;".$date_str;
+    }
+    else
+        return $value;
 }
 
 ?>

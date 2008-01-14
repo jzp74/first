@@ -14,6 +14,21 @@
  */
 define("DATE_FORMAT_US", "%m/%d/%Y");
 define("DATE_FORMAT_EU", "%d-%m-%Y");
+define("DATE_FORMAT_NORMAL", 0);
+define("DATE_FORMAT_WEEKDAY", 1);
+
+/**
+ * day definitions
+ */
+$first_things_first_day_definitions = array(
+    "LABEL_SUNDAY",
+    "LABEL_MONDAY",
+    "LABEL_TUESDAY",
+    "LABEL_WEDNESDAY",
+    "LABEL_THURSDAY",
+    "LABEL_FRIDAY",
+    "LABEL_SATERDAY"
+);
 
 /**
  * format in which a date is stored in database

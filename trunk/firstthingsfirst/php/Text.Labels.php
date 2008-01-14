@@ -12,6 +12,48 @@
 
 /**
  * shared label
+ * definition of sunday
+ */
+define("LABEL_SUNDAY", "Sun"); 
+
+/**
+ * shared label
+ * definition of monday
+ */
+define("LABEL_MONDAY", "Mon"); 
+
+/**
+ * shared label
+ * definition of tuesday
+ */
+define("LABEL_TUESDAY", "Tue"); 
+
+/**
+ * shared label
+ * definition of wednesday
+ */
+define("LABEL_WEDNESDAY", "Wed"); 
+
+/**
+ * shared label
+ * definition of thursday
+ */
+define("LABEL_THURSDAY", "Thu"); 
+
+/**
+ * shared label
+ * definition of friday
+ */
+define("LABEL_FRIDAY", "Fri"); 
+
+/**
+ * shared label
+ * definition of saterday
+ */
+define("LABEL_SATERDAY", "Sat"); 
+
+/**
+ * shared label
  * definition of minus sign
  */
 define("LABEL_MINUS", "-");

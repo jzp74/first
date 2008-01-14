@@ -96,7 +96,6 @@ function action_get_list_tables ()
     global $result;
     global $database;
     global $response;
-    global $firstthingsfirst_date_string;
     
     $logging->info("ACTION: get list tables");
 
@@ -141,10 +140,10 @@ function action_get_list_tables ()
         $html_str .= "                    <tr>\n";
         $html_str .= "                        <td ".get_query_link("action=get_list_page&list=".$list_table_description[0]).">".$list_table_description[0]."</td>\n";
         $html_str .= "                        <td ".get_query_link("action=get_list_page&list=".$list_table_description[0]).">".$list_table_description[1]."</td>\n";
-        $html_str .= "                        <td ".get_query_link("action=get_list_page&list=".$list_table_description[0]).">".$list_table_description[2]."&nbsp;".LABEL_AT."&nbsp;";
-        $html_str .= strftime($firstthingsfirst_date_string, (strtotime($list_table_description[3])))."</td>\n";
-        $html_str .= "                        <td ".get_query_link("action=get_list_page&list=".$list_table_description[0]).">".$list_table_description[4]."&nbsp;".LABEL_AT."&nbsp;";
-        $html_str .= strftime($firstthingsfirst_date_string, (strtotime($list_table_description[5])))."</td>\n";
+        $html_str .= "                        <td ".get_query_link("action=get_list_page&list=".$list_table_description[0])."><strong>".$list_table_description[2];
+        $html_str .= "</strong>&nbsp;".LABEL_AT."&nbsp;<strong>".get_date_str(DATE_FORMAT_NORMAL, $list_table_description[3])."</strong></td>\n";
+        $html_str .= "                        <td ".get_query_link("action=get_list_page&list=".$list_table_description[0])."><strong>".$list_table_description[4];
+        $html_str .= "</strong>&nbsp;".LABEL_AT."&nbsp;<strong>".get_date_str(DATE_FORMAT_NORMAL, $list_table_description[5])."</strong></td>\n";
         $html_str .= "                        <td>".get_query_button("action=get_listbuilder_page&list=".$list_table_description[0], BUTTON_MODIFY);
         $html_str .= "&nbsp;&nbsp;".get_button("xajax_action_del_list_table('".$list_table_description[0]."')", BUTTON_DELETE)."</td>\n";
         $html_str .= "                    </tr>\n";

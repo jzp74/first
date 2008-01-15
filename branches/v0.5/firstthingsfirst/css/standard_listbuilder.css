@@ -1,0 +1,89 @@
+/* This stylesheet contains all portal styles */
+
+
+/*  defines the listbuilder pane */
+#listbuilder_pane {
+    display: inline-block;
+    float: none;
+    margin: 12px 12px 2px 12px;
+    color: rgb(0, 0, 102);
+    }
+
+/*  defines the title of the general settings pane */
+#listbuilder_general_settings_title {
+    padding: 2px 3px 2px 3px;
+    background-color: rgb(227, 225, 250);
+    font-family: arial black;    
+    font-size: 16px;
+    }
+    
+/*  defines the pane that containes general settings */    
+#listbuilder_general_settings_pane {
+    display: inline-block;
+    float: none;
+    background-color: rgb(235, 234, 250);
+    border: 2px solid rgb(227, 225, 250);
+    }
+
+/*  defines the table that contains the general settings */    
+#listbuilder_general_settings {
+    float: none;
+    width: 100%;
+    color: rgb(0, 0, 102);
+    }
+
+#listbuilder_general_settings td {
+    padding: 4px 10px 4px 4px;
+    vertical-align: top;
+    }
+
+#listbuilder_general_settings input, #listbuilder_general_settings textarea { 
+    border: 1px solid rgb(227, 225, 250);
+    }
+
+/*  defines the title of the definition pane */
+#listbuilder_definition_title {
+    margin: 12px 0px 0px 0px;
+    padding: 2px 3px 2px 3px;
+    background-color: rgb(227, 225, 250);
+    font-family: arial black;    
+    font-size: 16px;
+    }
+
+/*  defines the pane that contains the list definition */
+#listbuilder_definition_pane {
+    display: inline-block;
+    float: none;
+    margin: 0px 0px 6px 0px;
+    background-color: rgb(235, 234, 250);
+    border: 2px solid rgb(227, 225, 250);
+    }
+
+/*  defines the table that contains the list definition */
+#listbuilder_definition {
+    width: 100%;
+    float: none;
+    color: rgb(0, 0, 102);
+    }
+
+#listbuilder_definition tr {
+    background-color: rgb(235, 234, 250);
+    }
+    
+#listbuilder_definition tbody tr:hover {
+    background-color: rgb(227, 225, 250);
+    }
+    
+#listbuilder_definition th {
+    padding: 4px 4px 4px 4px;
+    }
+
+#listbuilder_definition td {
+    padding: 4px 4px 4px 4px;
+    vertical-align: top;
+    }
+
+#listbuilder_definition select, #listbuilder_definition input { 
+    border: 1px solid rgb(227, 225, 250);
+    }
+

@@ -1,69 +1,34 @@
 <?php
 
-/**
- * This file contains the class definition of Database
- *
- * @package Class_FirstThingsFirst
- * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
- * @license http://www.opensource.org/licenses/gpl-license.php
- */
+# This class takes care of all database access
 
-
-/**
- * Make sure firstthingsfirst_db_table_prefix ends with a '_' char
- */
+# make sure firstthingsfirst_db_table_prefix ends with an '_' char
 if ((substr($firstthingsfirst_db_table_prefix, -1, 1) != "_") && (strlen($firstthingsfirst_db_table_prefix) > 0))
     $firstthingsfirst_db_table_prefix = $firstthingsfirst_db_table_prefix."_";
 
-
-/**
- * This class takes care of all database access
- *
- * @package Class_FirstThingsFirst
- */
+# Class definition
+# TODO improve use of trace/debug logging
 class Database
 {
-    /**
-    * name of host
-    * @var string
-    */
+    # name of the host
     protected $host;
     
-    /**
-    * name of user
-    * @var string
-    */
+    # name of the user
     protected $user;
     
-    /**
-    * the password
-    * @var string
-    */
+    # password 
     protected $passwd;
     
-    /**
-    * name of database
-    * @var string
-    */
+    # name of the database
     protected $database;
     
-    /**
-    * error string, contains last known error
-    * @var string
-    */
+    # error string, contains last known error
     protected $error_str;
     
-    /**
-    * reference to global logging object
-    * @var Logging
-    */
+    # reference to global logging object
     protected $_log;
     
-    /**
-    * overwrite __construct() function
-    * @return void
-    */
+    # set attributes of this object when it is constructed
     function __construct ()
     {
         # variable $logging is assumed to be globally available
@@ -88,22 +53,16 @@ class Database
         $this->_log->trace("constructed new Database object");        
     }
 
-    /**
-    * get value of error_str attribute
-    * @return string value of error_str attribute
-    */
+    # getter
     function get_error_str ()
     {
         return $this->error_str;
     }
 
-    /**
-    * open database connection, select database and return link identifier or FALSE
-    * @return resource|bool link identifier or FALSE in case of any error
-    */
+    # connect to database
     function connect ()
     {    
-        $this->_log->trace("opening db connection (host=".$this->host.", user=".$this->user.")");
+        #$this->_log->debug("opening db connection to host: ".$this->host." as user: ".$this->user);
 
         $db_link = mysql_connect($this->host, $this->user, $this->passwd);
         if (!$db_link)
@@ -114,25 +73,25 @@ class Database
         $succes = mysql_select_db($this->database, $db_link);
         if (!$succes)
         {
-            $this->_log->error("could not select database (db=".$this->database.")");
+            $this->_log->error("could connect select database: ".$this->database);
             return FALSE;
         }
     
+        #$this->_log->debug("db connection opened");
         return $db_link;
     }
 
-    /**
-    * query database and return result
-    * @param string $query database query
-    * @return resource|bool result of query or FALSE in case of any error
-    */
+    # TODO add support for queries with ' and " chars
+    # TODO all db access should contain db link id
+    # send given query to given database table and return resulting array
+    # array is empty in case of an error and in case the query yields no results
     function query ($query)
     {   
         $db_link = $this->connect();
         if (!db_link)
             return FALSE;
     
-        $this->_log->trace("query database (query=".$query.")");
+        $this->_log->debug("query db: ".$query);
     
         $result = mysql_query($query, $db_link);
         $this->error_str = mysql_error($db_link);
@@ -141,25 +100,21 @@ class Database
         return $result;
     }
     
-    /**
-    * perform insertion query and return the resulting id
-    * @param string $query database insertion query
-    * @return int|bool insertion identifier or FALSE in case of any error
-    */
+    # send given insert query to given database table and return the id of this insert
     function insertion_query ($query)
     {
         $db_link = $this->connect();
         if (!db_link)
             return FALSE;
      
-        $this->_log->trace("insertion query (query=".$query.")");
+        $this->_log->debug("insert query db: ".$query);
     
         $result = mysql_query($query, $db_link);
         
         if (result != FALSE)
         {
             $result = mysql_insert_id($db_link);
-            $this->_log->debug("insert (id=".$result.")");
+            $this->_log->debug("insert id: ".$result);
         }
         
         $this->error_str = mysql_error($db_link);
@@ -167,13 +122,11 @@ class Database
     
         return $result;
     }
+        
     
-    /**
-    * get next row from result of last query
-    * be sure to call the query function or the insertion_query function first
-    * @param resource $result result of query or insertion_query function call
-    * @return array|bool array containing one table row or FALSE in case of any error
-    */
+    # get the next row from database
+    # this function only works after the query function has been called
+    # returns an array
     function fetch ($result)
     {
         if ($result != FALSE)
@@ -181,30 +134,20 @@ class Database
         else
         {
             $this->_log->error("cannot fetch: result is FALSE");
-        
             return FALSE;
         }
     }
     
-    /**
-    * check if given table exists in database
-    * @param string $table name of table
-    * @return bool indicates if given table exists in database
-    */
+    # return TRUE if given table exists, FALSE otherwise
     function table_exists ($table)
     {
-        $query = "SHOW TABLES";
-
-        $this->_log->trace("check if table exists (table=".$table.")");
-
+	    $query = "SHOW TABLES";
         $result = $this->query($query);
-        
         while ($row = $this->fetch($result))
         {
             if ($row[0] == $table)
                 return TRUE;
         }
-        
         return FALSE;
     }
 }

@@ -1,132 +1,120 @@
 <?php
 
-/**
- * This file contains global firstthingsfirst definitions
- *
- * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
- * @license http://www.opensource.org/licenses/gpl-license.php
- */
+# This file contains global firstthingsfirst settings
 
-
-/**
- * date format defines
- */
+# date format defines
 define("DATE_FORMAT_US", "%m/%d/%Y");
 define("DATE_FORMAT_EU", "%d-%m-%Y");
-define("DATE_FORMAT_NORMAL", 0);
-define("DATE_FORMAT_WEEKDAY", 1);
 
-/**
- * day definitions
- */
-$first_things_first_day_definitions = array(
-    "LABEL_SUNDAY",
-    "LABEL_MONDAY",
-    "LABEL_TUESDAY",
-    "LABEL_WEDNESDAY",
-    "LABEL_THURSDAY",
-    "LABEL_FRIDAY",
-    "LABEL_SATERDAY"
-);
-
-/**
- * format in which a date is stored in database
- */
+# format in which a date is stored in database
 define("DB_DATE_FORMAT", "%Y-%m-%d");
 define("DB_DATETIME_FORMAT", "%Y-%m-%d %H:%M:%S");
-define("DB_NULL_DATETIME", "1970-01-01 00:00:00");
 
-/**
- * database datatypes
- */
-define("DB_DATATYPE_BOOL", "TINYINT");
-define("DB_DATATYPE_DATETIME", "DATETIME NOT NULL");
-define("DB_DATATYPE_DATE", "DATE NOT NULL");
-define("DB_DATATYPE_ID", "INT NOT NULL AUTO_INCREMENT");
-define("DB_DATATYPE_USERNAME", "VARCHAR(20) NOT NULL");
-define("DB_DATATYPE_TEXTLINE", "VARCHAR(100) NOT NULL");
-define("DB_DATATYPE_TEXTMESSAGE", "MEDIUMTEXT NOT NULL");
-define("DB_DATATYPE_INT", "INT NOT NULL");
-define("DB_DATATYPE_PASSWORD", "CHAR(32) BINARY NOT NULL");
-
-/**
- * database fieldnames
- */
+# other database definitions
 define("DB_CREATOR_FIELD_NAME", "_creator");
-define("DB_TS_CREATED_FIELD_NAME", "_ts_created");
+define("DB_CREATED_FIELD_NAME", "_created");
 define("DB_MODIFIER_FIELD_NAME", "_modifier");
-define("DB_TS_MODIFIED_FIELD_NAME", "_ts_modified");
+define("DB_MODIFIED_FIELD_NAME", "_modified");
 define("DB_ID_FIELD_NAME", "_id");
 define("DB_ARCHIVED_FIELD_NAME", "_archived");
-define("DB_ARCHIVER_FIELD_NAME", "_archiver");
-define("DB_TS_ARCHIVED_FIELD_NAME", "_ts_archived");
 
-/**
- * general separator
- */
+# general separator
 define("GENERAL_SEPARATOR", "***");
 
-/**
- * a false return string
- */
-define("FALSE_RETURN_STRING", "<<FaLsE>>");
 
-/** 
- * user permissions
- */
-define("PERMISSION_CAN_EDIT_LIST", 1);
-define("PERMISSION_CANNOT_EDIT_LIST", 0);
-define("PERMISSION_CAN_CREATE_LIST", 1);
-define("PERMISSION_CANNOT_CREATE_LIST", 0);
-define("PERMISSION_IS_ADMIN", 1);
-define("PERMISSION_ISNOT_ADMIN", 0);
+# define all possible user actions
+# each define is the actual name of a function
 
-/**
- * this array contains all supported field types
- * this array is of the following structure
- *   field_name => (database_definition, html_definition, input check)
- */
+# portal actions
+define("ACTION_GET_PORTAL_PAGE", "get_portal_page");
+
+# login actions
+define("ACTION_GET_LOGIN_PAGE", "get_login_page");
+define("ACTION_LOGIN", "login");
+define("ACTION_LOGOUT", "logout");
+
+# list actions
+define("ACTION_GET_LIST_PAGE", "get_list_page");
+define("ACTION_GET_LIST_CONTENT", "get_list_content");
+define("ACTION_GET_LIST_ROW", "get_list_row");
+define("ACTION_UPDATE_LIST_ROW", "update_list_row");
+define("ACTION_ADD_LIST_ROW", "add_list_row");
+define("ACTION_DEL_LIST_ROW", "del_list_row");
+define("ACTION_CANCEL_LIST_ACTION", "cancel_list_action");
+
+# list note actions
+define("ACTION_NEXT_NOTE", "get_next_note");
+define("ACTION_PREVIOUS_NOTE", "get_previous_note");
+define("ACTION_ADD_NOTE", "add_note");
+
+# listbuilder actions
+define("ACTION_GET_LISTBUILDER_PAGE", "action_get_listbuilder_page");
+define("ACTION_ADD_LISTBUILDER_ROW", "action_add_listbuilder_row");
+define("ACTION_MOVE_LISTBUILDER_ROW", "action_move_listbuilder_row");
+define("ACTION_DEL_LISTBUILDER_ROW", "action_del_listbuilder_row");
+define("ACTION_REFRESH_LISTBUILDER", "action_refresh_listbuilder");
+define("ACTION_CREATE_LIST", "action_create_list");
+
+# this array contains a description for each action
+# this array is of the following structure
+#   action => (load_list, can_read, can_write)
+$firstthingsfirst_action_descriptions = array(
+    ACTION_GET_PORTAL_PAGE      => array(0, 1, 0),
+    ACTION_GET_LOGIN_PAGE       => array(0, 0, 0),
+    ACTION_LOGIN                => array(0, 0, 0),
+    ACTION_LOGOUT               => array(0, 0, 0),
+    ACTION_GET_LIST_PAGE        => array(1, 1, 0),
+    ACTION_GET_LIST_CONTENT     => array(1, 1, 0),
+    ACTION_GET_LIST_ROW         => array(1, 1, 1),
+    ACTION_UPDATE_LIST_ROW      => array(1, 1, 1),
+    ACTION_ADD_LIST_ROW         => array(1, 1, 1),
+    ACTION_DEL_LIST_ROW         => array(1, 1, 1),
+    ACTION_NEXT_NOTE            => array(1, 1, 1),
+    ACTION_PREVIOUS_NOTE        => array(1, 1, 1),
+    ACTION_ADD_NOTE             => array(1, 1, 1),
+    ACTION_GET_LISTBUILDER_PAGE => array(0, 1, 1),
+    ACTION_ADD_LISTBUILDER_ROW  => array(0, 1, 1),
+    ACTION_MOVE_LISTBUILDER_ROW => array(0, 1, 1),
+    ACTION_DEL_LISTBUILDER_ROW  => array(0, 1, 1),
+    ACTION_REFRESH_LISTBUILDER  => array(0, 1, 1),
+    ACTION_CREATE_LIST          => array(0, 1, 1)
+);
+
+# this array contains all supported field types
+# this array is of the following structure
+#   field_name => (database_definition, html_definition)
 $firstthingsfirst_field_descriptions = array(
-#    "LABEL_DEFINITION_NUMBER"        => array(
-#        DB_DATATYPE_INT,
-#        "input type=text size=\"10\" maxlength=\"10\"",
-#        "is_number"
-#    ),
+    "LABEL_DEFINITION_NUMBER"        => array(
+        "int not null",
+        "input type=text size=10 maxlength=10"
+    ),
     "LABEL_DEFINITION_AUTO_NUMBER"   => array(
-        DB_DATATYPE_ID,
-        "input type=text size=\"10\" maxlength=\"10\" readonly",
-        "is_number"
+        "int not null auto_increment",
+        "input type=text size=10 maxlength=10 readonly"
     ),
     "LABEL_DEFINITION_DATE"          => array(
-        DB_DATATYPE_DATE,
-        "input type=text size=\"10\" maxlength=\"10\"",
-        "is_not_empty is_date"
+        "date",
+        "input type=text size=10 maxlength=10"
     ),
     "LABEL_DEFINITION_AUTO_DATE"     => array(
-        DB_DATATYPE_DATE,
-        "input type=text size=\"10\" maxlength=\"10\" readonly",
-        "is_date"
+        "date",
+        "input type=text size=10 maxlength=10 readonly"
     ),
     "LABEL_DEFINITION_TEXT_LINE"     => array(
-        DB_DATATYPE_TEXTLINE,
-        "input type=text size=\"40\" maxlenght=\"100\"",
-        "",
+        "tinytext not null",
+        "input type=text size=40"
     ),
     "LABEL_DEFINITION_TEXT_FIELD"    => array(
-        DB_DATATYPE_TEXTMESSAGE,
-        "textarea cols=40 rows=3",
-        ""
+        "mediumtext not null",
+        "textarea cols=40 rows=3"
     ),
     "LABEL_DEFINITION_NOTES_FIELD" => array(
-        DB_DATATYPE_INT,
-        "",
+        "int not null",
         ""
     ),
     "LABEL_DEFINITION_SELECTION"     => array(
-        DB_DATATYPE_TEXTMESSAGE,
-        "select",
-        ""
+        "tinytext not null",
+        "select"
     )
 );
 

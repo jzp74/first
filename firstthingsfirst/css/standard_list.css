@@ -15,6 +15,9 @@
     float: none;
     padding: 7px 4px 7px 4px;
     text-align: center;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
     }    
     
 /*  defines table that contains list contents */
@@ -23,10 +26,14 @@
     float: none;
     margin: 2px 0px 2px 0px;
     color: rgb(0, 0, 102);
+    text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
     }
 
 #list_contents tr {
-    background-color: rgb(227, 225, 250);
+    background-color: rgb(250, 216, 216);
     }
     
 #list_contents th {
@@ -39,7 +46,7 @@
     }
 
 #list_contents tbody tr:hover {
-    background-color: rgb(235, 234, 250);
+    background-color: rgb(250, 230, 230);
     }
     
 /*  defines list pages below the list contents */
@@ -48,6 +55,9 @@
     float: none;
     padding: 7px 4px 11px 4px;
     text-align: center;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
     }
     
 /*  defines pane that contains list row contents */
@@ -56,15 +66,20 @@
     float: none;
     padding: 10px 0px 2px 0px;
     background-color: rgb(238, 246, 238);
-    border-left: 2px solid rgb(208, 239, 208);
-    border-right: 2px solid rgb(208, 239, 208);
-    border-bottom: 2px solid rgb(208, 239, 208);
+    text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
     }
     
 /*  defines table that contains contents of one list row */
 #list_row_contents {
     float: none;
     color: rgb(0, 0, 102);
+    text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
     }
     
 #list_row_contents th {
@@ -89,6 +104,33 @@
     vertical-align: top;
     }
 
-#list_row_contents select, #list_row_contents input, #list_row_contents textarea { 
+#list_row_contents select { 
+    padding: 1px 1px 3px 0px;
+    background-color: rgb(255, 255, 255);
     border: 1px solid rgb(208, 239, 208);
+    text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
     }
+
+#list_row_contents input { 
+    padding: 1px 5px 3px 5px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(208, 239, 208);
+    text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    }
+
+#list_row_contents textarea { 
+    padding: 1px 5px 3px 5px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(208, 239, 208);
+    text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    }
+

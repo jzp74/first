@@ -1,51 +1,21 @@
 <?php
 
-/**
- * This file contains all php code that is used to generate list notes html 
- *
- * @package HTML_FirstThingsFirst
- * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
- * @license http://www.opensource.org/licenses/gpl-license.php
- */
+
+# This file contains all php code that is used to generate list notes html 
+# TODO add explicit info logging for all actions
 
 
-/**
- * definition of 'get_next_note' action
- */
-define("ACTION_NEXT_NOTE", "get_next_note");
-$firstthingsfirst_action_description[ACTION_NEXT_NOTE] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_get_previous_note");
-
-/**
- * definition of 'get_previous_note' action
- */
-define("ACTION_PREVIOUS_NOTE", "get_previous_note");
-$firstthingsfirst_action_description[ACTION_PREVIOUS_NOTE] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_get_next_note");
-
-/**
- * definition of 'add_note' action
- */
-define("ACTION_ADD_NOTE", "add_note");
-$firstthingsfirst_action_description[ACTION_ADD_NOTE] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_add_note");
-
-
-/**
- * hide the current note and show the previous note (by changing classnames in DOM)
- * this function is registered in xajax
- * @param int $this_id id of current note
- * @param int previous_id id of previous note
- * @return xajaxResponse every xajax registered function needs to return this object
- */
+# hide the current note and show the previous note (by changing classnames)
+# this function is registered in xajax
+# int this_id: the id of the current note
+# int previous_id: the id of the previous note
 function action_get_previous_note ($this_id, $previous_id)
 {
     global $logging;
     global $user;
     global $response;
     
-    $logging->info("ACTION: get previous note (this_id=".$this_id.", previous_id=".$previous_id.")");
+    $logging->debug("ACTION: get previous note");
 
     # hide the current note
     $response->addAssign($this_id, "className", "invisible_collapsed");
@@ -58,20 +28,17 @@ function action_get_previous_note ($this_id, $previous_id)
     return $response;
 }
 
-/**
- * hide the current note and show the next note (by changing classnames in DOM)
- * this function is registered in xajax
- * @param int $this_id id of current note
- * @param int next_id id of next note
- * @return xajaxResponse every xajax registered function needs to return this object
- */
+# hide the current note and show the next note (by changing classnames)
+# this function is registered in xajax
+# int this_id: the id of the current note
+# int next_id: the id of the next note
 function action_get_next_note ($this_id, $next_id)
 {
     global $logging;
     global $user;
     global $response;
     
-    $logging->info("ACTION: get next note (this_id=".$this_id.", next_id=".$next_id.")");
+    $logging->debug("ACTION: get next note");
     
     # hide the current note
     $response->addAssign($this_id, "className", "invisible_collapsed");
@@ -84,13 +51,8 @@ function action_get_next_note ($this_id, $next_id)
     return $response;
 }
 
-/**
- * add a note to the DOM
- * this function is registered in xajax
- * @param string $db_field_name is used to generate id's
- * @param int $this_id id of current note
- * @return xajaxResponse every xajax registered function needs to return this object
- */
+# add a note to the dom
+# this function is registered in xajax
 function action_add_note ($db_field_name, $this_id)
 {
     global $logging;
@@ -100,7 +62,7 @@ function action_add_note ($db_field_name, $this_id)
     $this_td_id = $db_field_name."_".$this_id;
     $next_td_id = $db_field_name."_0";
     
-    $logging->info("ACTION: add note (db_field_name=".$db_field_name.", this_id=".$this_id.")");
+    $logging->debug("ACTION: add note");
 
     # change the link of this_id from 'add' to 'next'
     $next_html_str = get_button("xajax_action_get_next_note('".$this_td_id."', '".$next_td_id."')", BUTTON_NEXT_NOTE);
@@ -117,14 +79,12 @@ function action_add_note ($db_field_name, $this_id)
     return $response;
 }
 
-/**
- * generate html for a number of notes
- * this function is called when user edits or adds a row
- * @param string $db_field_name name of the field that contains the notes
- * @param array $notes_array array of notes. each notes is also an array
- * @param bool $new_note add new note to list of notes and show this new note
- * @return string resulting html
- */
+# generate html for a number of notes
+# this function is called when user edits or adds a row
+# TODO add labels for this function
+# string field_name: name of the field that contains the notes
+# array notes_array: array of notes. each notes is also an array
+# bool new_note: add new note to list of notes and show this new note
 function get_list_row_notes ($db_field_name, $notes_array)
 {
     global $logging;
@@ -170,19 +130,17 @@ function get_list_row_notes ($db_field_name, $notes_array)
     return $html_str;
 }
 
-/**
- * generate html for one note
- * this function is called only by function get_list_row_notes
- * @todo list of arguments is too long
- * @param string $db_field_name name of the field that contains this note
- * @param string $this_id id of this note
- * @param string $previous_id id of previous note (set to -1 when no previous note exists)
- * @param string $next_id id next note (set to -1 when no next note exists, set to 0 when a new note can be added)
- * @param array $note_array array describing a single note
- * @return string resulting html
- */
+# generate html for one note
+# this function is called only by function get_list_row_notes
+# TODO list of arguments is too long
+# string db_field_name: name of the field that contains this note
+# string this_id: id of this note
+# string previous_id: id of previous note (set to -1 when no previous note exists)
+# string next_id: id next note (set to -1 when no next note exists, set to 0 when a new note can be added)
+# array note_array: array describing a single note
 function get_list_row_note ($db_field_name, $this_id, $previous_id, $next_id, $note_array)
 {
+    global $firstthingsfirst_date_string;
     global $logging;
 
     $html_str = "";
@@ -203,8 +161,8 @@ function get_list_row_note ($db_field_name, $this_id, $previous_id, $next_id, $n
     # display info about the creator of this note only when it is not a new note
     if ($this_id != 0)
     {
-        $html_str .= "                                        <p>&nbsp;".$note_array[DB_CREATOR_FIELD_NAME]."&nbsp;".LABEL_AT."&nbsp;";
-        $html_str .= get_date_str(DATE_FORMAT_WEEKDAY, $note_array[DB_TS_CREATED_FIELD_NAME])."</p>\n";
+        $html_str .= "                                        <p>&nbsp;".$note_array["_creator"]."&nbsp;".LABEL_AT."&nbsp;";
+        $html_str .= strftime($firstthingsfirst_date_string, (strtotime($note_array["_created"])))."</p>\n";
     }
     else
         $html_str .= "                                        <p>&nbsp;".LABEL_NEW_NOTE."</p>\n";

@@ -7,10 +7,6 @@
     padding: 0px 0px 0px 0px;
     border: none;
     z-index: 10;
-    font-family: verdana;
-    font-size: 12px;
-    text-decoration: none;
-    text-align: left;
     }
 
 /*  define style for ALL links (aka buttons) */
@@ -22,29 +18,6 @@ a, a:link, a:visited {
 
 a:hover { 
     text-decoration: underline;
-    }
-
-/*  defines standard tags */
-em, strong {
-    font-size: inherit;
-    font-family: inherit;
-    }
-    
-/*  defines a standard input */
-input, select, textarea {
-    background-color: rgb(255, 255, 255);
-    text-align: left;
-    font-family: verdana;
-    font-size: small;
-    font-weight: normal;
-    }
-    
-input, textarea {
-    padding: 1px 5px 3px 5px;
-    }
-    
-select {
-    padding: 1px 1px 3px 0px;
     }
 
 /*  defines an inactive button */
@@ -61,7 +34,7 @@ select {
 
 /*  defines the html overall style of a page */
 html, body {
-    height: 100%;
+	height: 100%;
     background-color: rgb(255, 255, 255);
     }
 
@@ -82,8 +55,12 @@ html, body {
     position: absolute;
     top: 18px;
     left: 0px;
-    background-color: rgb(5, 114, 197);
+    background-color: rgb(157, 181, 222);
     color: rgb(255, 255, 255);
+    text-align: left;
+    font-family: verdana;
+    font-size: x-small;
+    font-weight: normal;
     z-index: 20;
     }
     
@@ -106,18 +83,17 @@ html, body {
 #header_text {
     float: left;
     padding: 4px 0px 4px 6px;
-    font-size: 10px;
 }    
 
 /*  defines the body which has borders on both sides and stretches to the bottom of the page */
 #outer_body {
-    min-height: 100%;
-    height: auto !important;
-    height: 100%;
-    margin: 0px 16px -38px 16px;
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0px 16px -38px 16px;
     background-color: rgb(255, 255, 255);
-    border-left: 6px solid rgb(5, 114, 197);
-    border-right: 6px solid rgb(5, 114, 197);
+    border-left: 6px solid rgb(157, 181, 222);
+    border-right: 6px solid rgb(157, 181, 222);
     }    
 
 /*  this style is used only to prevent content to disappear under the header
@@ -126,6 +102,9 @@ html, body {
     width: 100%;
     padding: 22px 0px 4px 0px;
     visibility: hidden;
+    font-family: verdana;
+    font-size: x-small;
+    font-weight: normal;
     }
 
 /*  container for all page contents */
@@ -135,35 +114,23 @@ html, body {
 /*  defines the title of a page */    
 #page_title {
     padding: 4px 0px 4px 0px;
-    background-color: rgb(5, 114, 197);
+    background-color: rgb(157, 181, 222);
     color: rgb(255, 255, 255);
     font-family: arial black;    
-    font-size: 32px;
+    font-size: x-large;
     font-weight: bold;
     text-align: center;
     }
 
-/*  defines the navigation container */
-#navigation_container {
-    padding: 4px 0px 4px 4px;
-    background-color: rgb(5, 114, 197);
-    color: rgb(255, 255, 255);
-}
-
-#navigation_container a, #navigation_container a:link, #navigation_container a:visited {
-    color: rgb(112, 193, 255);
-    }
-
-/*  defines hte navigation links */
-#navigation {
-    display: inline-block;
-    float: left;
-    }
-
 /*  defines the login status of a user */    
 #login_status {
-    display: inline-block;
-    float: right;
+    padding: 4px 0px 4px 0px;
+    background-color: rgb(157, 181, 222);
+    color: rgb(255, 255, 255);
+    text-align: right;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
     }
 
 /*  this style is used only to prevent content to disappear under the footer
@@ -177,10 +144,12 @@ html, body {
 /*  defines the footer of all pages */
 #footer {
     height: 20px;
-    background-color: rgb(5, 114, 197);
+    background-color: rgb(157, 181, 222);
     color: rgb(255, 255, 255);
     text-align: center;
+    font-family: verdana;
     font-size: 12px;
+    font-weight: normal;
     }
 
 /* defines the white margins on both side of the footer */
@@ -201,7 +170,6 @@ html, body {
 
 #footer_text {
     padding: 2px 0px 0px 0px;
-    text-align: center;
 }    
     
 /*  defines the white margin at the bottom of the page */
@@ -214,162 +182,39 @@ html, body {
 #action_pane {
     display: block;
     float: none;
-    padding: 14px 12px 14px 12px;
+    padding: 14px 12px 8px 12px;
     color: rgb(0, 0, 102);
     }
 
 /*  defines the action bar that contains a number of actions (hrefs) */
 #action_bar {
-    display: block;
     float: none;
     background-color: rgb(208, 239, 208);
-    padding: 4px 2px 4px 2px;
+    text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
     }
     
-#action_bar_left {
-    display: inline;
-    padding: 0px 4px 0px 4px;
+#action_bar p {
+    padding: 4px 0px 4px 0px;
     }
 
-#action_bar_right {
-    display: inline;
-    position: absolute;
-    right: 40px;
+#action_bar p span span {
+    padding: 4px 2px 4px 2px;
+    background-color: rgb(238, 246, 238);
     }
 
 #action_bar select { 
     padding: 1px 1px 3px 0px;
     background-color: rgb(255, 255, 255);
+    text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
     }    
 
 #clear_margin {
     clear: both;
     visibility: hidden;
-    }
-
-/*  defines the explanation below the title for this portal */
-#portal_explanation {
-    padding: 12px auto 12px auto;
-    background-color: rgb(5, 114, 197);
-    color: rgb(255, 255, 255);
-    font-family: arial black;    
-    font-size: 14px;
-    text-align: center;
-    }
-    
-/*  defines the pane that contains the portal overview */
-#portal_overview_pane {
-    display: inline-block;
-    float: none;
-    padding: 10px 10px 6px 10px;
-    color: rgb(0, 0, 102);
-    }
-
-/*  defines table that contains portal lists */
-#portal_overview {
-    float: none;
-    width: 100%;
-    padding: 0px 0px 0px 0px;
-    color: rgb(0, 0, 102);
-    }
-
-#portal_overview tr {
-    background-color: rgb(227, 225, 250);
-    }
-    
-#portal_overview th {
-    padding: 4px 4px 4px 4px;
-    }
-
-#portal_overview td {
-    padding: 4px 4px 4px 4px;
-    vertical-align: top;
-    }
-
-#portal_overview tbody tr:hover {
-    background-color: rgb(235, 234, 250);
-    }
-
-/*  defines the pane that contains the login overview */
-#login_pane {
-    margin: 16px 10px 10px 10px;
-    text-align: center;
-    }
-
-/*  defines the login overview */
-#login_overview {
-    margin: 0px auto 0px auto;
-    padding: 12px 16px 12px 16px;
-    background-color: rgb(235, 234, 250);
-    color: rgb(0, 0, 102);
-    border: 2px solid rgb(227, 225, 250);
-    }
-    
-#login_overview td {
-    padding: 4px 4px 4px 4px;
-    vertical-align: top;
-    }
-
-#login_overview input { 
-    padding: 1px 5px 3px 5px;
-    border: 1px solid rgb(227, 225, 250);
-    }
-    
-/*  defines the new user settings pane */
-#add_user_pane {
-    display: inline-block;
-    float: none;
-    margin: 12px 12px 6px 12px;
-    color: rgb(0, 0, 102);
-    }
-
-/*  defines the title of the new user settings */
-#add_user_title {
-    padding: 2px 3px 2px 3px;
-    background-color: rgb(227, 225, 250);
-    font-family: arial black;    
-    font-size: 16px;
-    font-weight: normal;
-    }
-
-/*  defines the pane that containes new user settings */    
-#add_user_definition {
-    display: inline-block;
-    float: none;
-    background-color: rgb(235, 234, 250);
-    border: 2px solid rgb(227, 225, 250);
-    }
-
-/*  defines the table that contains the general settings */    
-#add_user_definition_table {
-    float: none;
-    }
-
-#add_user_definition_table td {
-    padding: 4px 4px 4px 4px;
-    vertical-align: top;
-    }
-
-#add_user_definition_table input, #add_user_definition_table textarea { 
-    border: 1px solid rgb(227, 225, 250);
-    }
-    
-/*  defines error messages */
-#error_message {
-    color: rgb(255, 0, 0);
-    margin: 4px 10px 0px 10px;
-    padding: 6px 6px 6px 6px;
-    border: 1px solid rgb(255, 0, 0);
-    font-size: 11px;
-    font-weight: bold;
-    }
-
-/*  defines info messages */
-#info_message {
-    color: rgb(0, 0, 102);
-    margin: 4px 10px 0px 10px;
-    padding: 6px 6px 6px 6px;
-    border: 1px solid rgb(0, 0, 102);
-    font-size: 11px;
-    font-weight: bold;
     }

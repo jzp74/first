@@ -372,6 +372,12 @@ define("LABEL_LIST_CREATOR", "created by");
 define("LABEL_LIST_MODIFIER", "modified by");
 
 /**
+ * portal label
+ * definition of 'confirm delete' label
+ */
+define("LABEL_CONFIRM_DELETE", "Are you sure you want to delete this list?");
+
+/**
  * login label
  * definition of 'none' label
  */

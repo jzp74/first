@@ -145,7 +145,7 @@ function action_get_list_tables ()
         $html_str .= "                        <td ".get_query_link("action=get_list_page&list=".$list_table_description[0])."><strong>".$list_table_description[4];
         $html_str .= "</strong>&nbsp;".LABEL_AT."&nbsp;<strong>".get_date_str(DATE_FORMAT_NORMAL, $list_table_description[5])."</strong></td>\n";
         $html_str .= "                        <td width=\"1%\">".get_query_button("action=get_listbuilder_page&list=".$list_table_description[0], BUTTON_MODIFY);
-        $html_str .= "&nbsp;&nbsp;".get_button("xajax_action_del_list_table('".$list_table_description[0]."')", BUTTON_DELETE)."</td>\n";
+        $html_str .= "&nbsp;&nbsp;".get_button_confirm("xajax_action_del_list_table('".$list_table_description[0]."')", LABEL_CONFIRM_DELETE, BUTTON_DELETE)."</td>\n";
         $html_str .= "                    </tr>\n";
     }
     if (!count($list_table_descriptions))

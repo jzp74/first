@@ -162,6 +162,17 @@ function get_button ($func_str, $name_str)
 }
 
 /**
+ * get html for an active button (button calls a javascript function and prompt a confirm button)
+ * @param string $func_str contains the complete js function name and all its parameters
+ * @param string $name_str contains the name of the button
+ * @return string html containing button
+ */
+function get_button_confirm ($func_str, $confirm_str, $name_str)
+{
+    return "<a href=\"javascript:void(0);\" onclick=\"if (confirm('".$confirm_str."')) { ".$func_str." }\">".$name_str."</a>";
+}
+
+/**
  * get html for an active link_button (button calls index.php with specified query string)
  * @param string $query_str contains the query string
  * @param string $name_str contains the name of the button

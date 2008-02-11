@@ -95,11 +95,8 @@ function action_get_list_page ($list_title)
     if (!check_preconditions(ACTION_GET_LIST_PAGE))
         return $response;
     
-    # set the right list_table_description
-    $list_table_description->select($list_title);
-
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
-    $html_str .= "        <div id=\"page_title\">".$list_table_description->get_title()."</div>\n\n";
+    $html_str .= "        <div id=\"page_title\">".$list_title."</div>\n\n";
     $html_str .= "        <div id=\"navigation_container\">\n";
     $html_str .= "            <div id=\"navigation\">&nbsp;".get_query_button("action=get_portal_page", BUTTON_PORTAL)."</div>\n";
     $html_str .= "            <div id=\"login_status\">&nbsp;</div>&nbsp\n";
@@ -117,7 +114,7 @@ function action_get_list_page ($list_title)
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
 
     # set list content
-    action_get_list_content ($list_title, "", LISTTABLELISTTABLE_UNKWOWN_PAGE);
+    action_get_list_content ($list_title, "", DATABASETABLE_UNKWOWN_PAGE);
     
     # set login status, action bar and footer
     set_login_status();
@@ -144,7 +141,6 @@ function action_get_list_content ($list_title, $order_by_field, $page)
     global $list_state;
     global $user;
     global $response;
-    global $list_table_description;
     global $list_table;
     
     $html_str = "";
@@ -154,13 +150,11 @@ function action_get_list_content ($list_title, $order_by_field, $page)
     if (!check_preconditions(ACTION_GET_LIST_CONTENT))
         return $response;
 
-    # set the right list_table_description
-    $list_table_description->select($list_title);
-
-    # we'll first get the necessary data from database
-    $definition = $list_table_description->get_definition();
-    $field_names = $list_table->get_field_names();
-    $rows = $list_table->select($order_by_field, $page, 0);
+    # set the correct list
+    $list_table->set($list_title);
+    $field_names = $list_table->get_user_field_names();
+    $fields = $list_table->get_fields();
+    $rows = $list_table->select($order_by_field, $page);
     if (strlen($list_table->get_error_str()) > 0)
     {
         $result->set_error_str($list_table->get_error_str());
@@ -176,11 +170,11 @@ function action_get_list_content ($list_title, $order_by_field, $page)
         $current_page = $list_state->get_current_page();
 
     # then we'll add some summary information, except when all pages have to be displayed
-    if ($page != LISTTABLELISTTABLE_ALL_PAGES)
+    if ($page != DATABASETABLE_ALL_PAGES)
         $html_str .= "            <div id=\"list_pages_top\">".LABEL_PAGE." ".$current_page." ".LABEL_OF." ".$total_pages."</div>\n\n";
     
     # then we'll start with the table definition, different table when all pages have to be displayed
-    if ($page != LISTTABLELISTTABLE_ALL_PAGES)
+    if ($page != DATABASETABLE_ALL_PAGES)
         $html_str .= "            <table id=\"list_contents\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
     else
         $html_str .= "            <table id=\"list_contents\" align=\"left\">\n";
@@ -192,11 +186,14 @@ function action_get_list_content ($list_title, $order_by_field, $page)
         $html_str .= "                        <th>".get_button("xajax_action_get_list_content('".$list_title."', '".$field_name."', ".$current_page.")", $field_name)."</th>\n";
 
     # display extra column for actions, except when all pages have to be displayed
-    if ($page != LISTTABLELISTTABLE_ALL_PAGES)
+    if ($page != DATABASETABLE_ALL_PAGES)
         $html_str .= "                        <th>&nbsp</th>\n";
     $html_str .= "                    </tr>\n";
     $html_str .= "                </thead>\n";
     $html_str .= "                <tbody>\n";
+    
+    $logging->debug("rows: ".$rows);
+    $logging->log_array($rows, "rows");
     
     # now all the rows
     $row_number = 0;
@@ -214,13 +211,13 @@ function action_get_list_content ($list_title, $order_by_field, $page)
             $db_field_name = $list_table->_get_db_field_name($field_name);
             $value = $row[$db_field_name];
             
-            if (stristr($definition[$db_field_name][0], "DATE"))
+            if (stristr($fields[$db_field_name][1], "DATE"))
             {
                 $date_string = get_date_str(DATE_FORMAT_WEEKDAY, $value);
                 $html_str .= "                        <td onclick=\"xajax_action_get_list_row('".$list_title."', &quot;".$key_string."&quot;)\">";
                 $html_str .= $date_string."</td>\n";
             }
-            else if ($definition[$db_field_name][0] == "LABEL_DEFINITION_NOTES_FIELD")
+            else if ($fields[$db_field_name][1] == "LABEL_DEFINITION_NOTES_FIELD")
             {
                 $html_str .= "                        <td onclick=\"xajax_action_get_list_row('".$list_title."', &quot;".$key_string."&quot;)\">";
                 if (count($value) > 0)
@@ -237,7 +234,7 @@ function action_get_list_content ($list_title, $order_by_field, $page)
                     $html_str .= "-";
                 $html_str .= "                        </td>\n";
             }
-            else if ($definition[$db_field_name][0] == "LABEL_DEFINITION_TEXT_FIELD")
+            else if ($fields[$db_field_name][1] == "LABEL_DEFINITION_TEXT_FIELD")
             {
                 $html_str .= "                        <td onclick=\"xajax_action_get_list_row('".$list_title."', &quot;".$key_string."&quot;)\">";
                 $html_str .= nl2br($value)."</td>\n";
@@ -251,7 +248,7 @@ function action_get_list_content ($list_title, $order_by_field, $page)
         }
         
         # add the archive link, except when all pages have to be displayed
-        if ($page != LISTTABLELISTTABLE_ALL_PAGES)
+        if ($page != DATABASETABLE_ALL_PAGES)
             $html_str .= "                        <td width=\"1%\" onclick=\"xajax_action_archive_list_row('".$list_title."', &quot;".$key_string."&quot;)\">".get_button("", BUTTON_ARCHIVE)."</td>\n";
         $html_str .= "                    </tr>\n";
         $row_number += 1;
@@ -271,7 +268,7 @@ function action_get_list_content ($list_title, $order_by_field, $page)
     $html_str .= "            </table>\n\n";
     
     # add navigation links, except when all pages have to be shown
-    if ($page != LISTTABLELISTTABLE_ALL_PAGES)
+    if ($page != DATABASETABLE_ALL_PAGES)
     {
         $html_str .= "            <div id=\"list_pages_bottom\">";
         # display 1 pagenumber when there is only one page (or none)
@@ -344,7 +341,6 @@ function action_get_list_row ($list_title, $key_string)
     global $result;    
     global $user;
     global $response;
-    global $list_table_description;
     global $list_table;
     global $firstthingsfirst_field_descriptions;
     global $firstthingsfirst_date_string;
@@ -356,10 +352,10 @@ function action_get_list_row ($list_title, $key_string)
     if (!check_preconditions(ACTION_GET_LIST_ROW))
         return $response;
 
-    # set the right list_table_description
-    $list_table_description->select($list_title);
-    $field_names = $list_table->get_field_names();
-    $definition = $list_table_description->get_definition();
+    # set the correct list
+    $list_table->set($list_title);
+    $field_names = $list_table->get_user_field_names();
+    $fields = $list_table->get_fields();
 
     # get list row when key string has been given
     if (strlen($key_string))
@@ -382,7 +378,7 @@ function action_get_list_row ($list_title, $key_string)
     $html_str .= "            </div> <!-- action_bar -->\n\n";
        
     # then the form and table definition
-    $html_str .= "\n                <div id=\"list_row_contens_pane\">\n\n";
+    $html_str .= "\n                <div id=\"list_row_contents_pane\">\n\n";
     $html_str .= "                    <form id=\"row_form\">\n";
     $html_str .= "                        <table id=\"list_row_contents\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
     $html_str .= "                            <tbody>\n";
@@ -392,8 +388,8 @@ function action_get_list_row ($list_title, $key_string)
     {
         $field_name = $field_names[$i];
         $db_field_name = $list_table->_get_db_field_name($field_names[$i]);        
-        $field_type = $definition[$db_field_name][0];
-        $field_options = $definition[$db_field_name][2];
+        $field_type = $fields[$db_field_name][1];
+        $field_options = $fields[$db_field_name][2];
         $logging->debug("row (name=".$field_name." db_name=".$db_field_name." type=".$field_type.")");
         
         # replace all " chars with &quot
@@ -511,7 +507,6 @@ function action_get_print_list ($list_title)
     global $result;    
     global $user;
     global $response;
-    global $list_table_description;
     
     $html_str = "";
 
@@ -520,11 +515,8 @@ function action_get_print_list ($list_title)
     if (!check_preconditions(ACTION_GET_LIST_PAGE))
         return $response;
     
-    # set the right list_table_description
-    $list_table_description->select($list_title);
-
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
-    $html_str .= "        <div id=\"page_title\">".$list_table_description->get_title()."</div>\n\n";
+    $html_str .= "        <div id=\"page_title\">".$list_title."</div>\n\n";
     $html_str .= "        <div id=\"list_content_pane\">\n\n";
     $html_str .= "        </div> <!-- list_content_pane -->\n\n";
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
@@ -562,7 +554,6 @@ function action_update_list_row ($list_title, $key_string, $form_values)
     global $result;    
     global $user;
     global $response;
-    global $list_table_description;
     global $list_table;
     global $firstthingsfirst_field_descriptions;
     
@@ -574,9 +565,6 @@ function action_update_list_row ($list_title, $key_string, $form_values)
 
     if (!check_preconditions(ACTION_UPDATE_LIST_ROW))
         return $response;
-
-    # set the right list_table_description
-    $list_table_description->select($list_title);
 
     foreach ($name_keys as $name_key)
     {
@@ -649,10 +637,13 @@ function action_update_list_row ($list_title, $key_string, $form_values)
             $new_form_values[$db_field_name] = $new_form_value;
     }
     
+    # set the correct list
+    $list_table->set($list_title);
+
     # display error when insertion returns false
     if (!$list_table->update($key_string, $new_form_values))
     {
-        $logging->warn("insert returns false (".$last_name_key.")");
+        $logging->warn("insert returns false");
         $result->set_error_str($list_table->get_error_str());
         $result->set_error_element(end($name_keys));
         
@@ -662,10 +653,10 @@ function action_update_list_row ($list_title, $key_string, $form_values)
     $html_str .= get_action_bar($list_title, "");
     $result->set_result_str($html_str);    
 
-    $response->addRemove("list_row_contens_pane");
+    $response->addRemove("list_row_contents_pane");
     $response->addAssign("action_bar", "innerHTML", $result->get_result_str());
 
-    # refresh list and footer and remove 
+    # refresh list and footer
     action_get_list_content($list_title, "", 0);
     set_footer(get_list_footer());
 
@@ -687,7 +678,6 @@ function action_add_list_row ($list_title, $form_values)
     global $result;    
     global $user;
     global $response;
-    global $list_table_description;
     global $list_table;
     global $firstthingsfirst_field_descriptions;
     
@@ -699,9 +689,6 @@ function action_add_list_row ($list_title, $form_values)
 
     if (!check_preconditions(ACTION_ADD_LIST_ROW))
         return $response;
-
-    # set the right list_table_description
-    $list_table_description->select($list_title);
 
     foreach ($name_keys as $name_key)
     {
@@ -770,21 +757,23 @@ function action_add_list_row ($list_title, $form_values)
             $new_form_values[$db_field_name] = $new_form_value;            
     }
     
+    # set the correct list
+    $list_table->set($list_title);
+
     # display error when insertion returns false
     if (!$list_table->insert($new_form_values))
     {
-        $logging->warn("insert returns false (".$last_name_key.")");
+        $logging->warn("insert returns false");
         $result->set_error_str($list_table->get_error_str());
         $result->set_error_element("list_content_pane");
         
-        if (!check_postconditions())
-            return $response;
+        return $response;
     }
     
     $html_str .= get_action_bar($list_title, "");
     $result->set_result_str($html_str);    
 
-    $response->addRemove("list_row_contens_pane");
+    $response->addRemove("list_row_contents_pane");
     $response->addAssign("action_bar", "innerHTML", $result->get_result_str());
 
     # refresh list and footer
@@ -809,7 +798,6 @@ function action_archive_list_row ($list_title, $key_string)
     global $result;    
     global $user;
     global $response;
-    global $list_table_description;
     global $list_table;
     
     $logging->info("ACTION: archive list row (list_title=".$list_title.", key_string=".$key_string.")");
@@ -817,8 +805,8 @@ function action_archive_list_row ($list_title, $key_string)
     if (!check_preconditions(ACTION_ARCHIVE_LIST_ROW))
         return $response;
 
-    # set the right list_table_description
-    $list_table_description->select($list_title);
+    # set the correct list
+    $list_table->set($list_title);
 
     # display error when archive returns false
     if (!$list_table->archive($key_string))
@@ -855,7 +843,6 @@ function action_del_list_row ($list_title, $key_string)
     global $result;    
     global $user;
     global $response;
-    global $list_table_description;
     global $list_table;
     
     $logging->info("ACTION: delete list row (list_title=".$list_title.", key_string=".$key_string.")");
@@ -863,8 +850,8 @@ function action_del_list_row ($list_title, $key_string)
     if (!check_preconditions(ACTION_DEL_LIST_ROW))
         return $response;
 
-    # set the right list_table_description
-    $list_table_description->select($list_title);
+    # set the correct list
+    $list_table->set($list_title);
 
     # display error when delete returns false
     if (!$list_table->delete($key_string))
@@ -913,7 +900,7 @@ function action_cancel_list_action ($list_title)
 
     # remove any error messages
     $response->addRemove("error_message");
-    $response->addRemove("list_row_contens_pane");
+    $response->addRemove("list_row_contents_pane");
     $response->addAssign("action_bar", "innerHTML", $result->get_result_str());
 
     $logging->trace("canceled list action");
@@ -958,17 +945,18 @@ function get_action_bar ($list_title, $action)
  */
 function get_list_footer ()
 {
-    global $list_table_description;
+    global $list_table;
     global $logging;
 
     $logging->trace("getting list_footer");
     
     $html_str = "";
+    $creator_modifier_array = $list_table->get_creator_modifier_array();
     
-    $html_str .= LABEL_CREATED_BY." <strong>".$list_table_description->get_creator();
-    $html_str .= "</strong> ".LABEL_AT." <strong>".$list_table_description->get_created();
-    $html_str .= "</strong>, ".LABEL_LAST_MODIFICATION_BY." <strong>".$list_table_description->get_modifier();
-    $html_str .= "</strong> ".LABEL_AT." <strong>".$list_table_description->get_modified()."</strong>";
+    $html_str .= LABEL_CREATED_BY." <strong>".$creator_modifier_array[DB_CREATOR_FIELD_NAME];
+    $html_str .= "</strong> ".LABEL_AT." <strong>".$creator_modifier_array[DB_TS_CREATED_FIELD_NAME];
+    $html_str .= "</strong>, ".LABEL_LAST_MODIFICATION_BY." <strong>".$creator_modifier_array[DB_MODIFIER_FIELD_NAME];
+    $html_str .= "</strong> ".LABEL_AT." <strong>".$creator_modifier_array[DB_TS_MODIFIED_FIELD_NAME]."</strong>";
         
     $logging->trace("got list_footer");
 

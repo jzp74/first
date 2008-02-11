@@ -11,6 +11,22 @@
 
 
 /**
+ * definition of archived (show non archived records)
+ */
+define("LISTSTATE_SELECT_NON_ARCHIVED", 1);
+
+/**
+ * definition of archived (show only archived records)
+ */
+define("LISTSTATE_SELECT_ARCHIVED", 2);
+
+/**
+ * definition of archived (show both archived and non archived records)
+ */
+define("LISTSTATE_SELECT_BOTH_ARCHIVED", 3);
+
+
+/**
  * This class contains the state of a specific list
  * List specific data is passed to User object and stored in session
  *
@@ -29,13 +45,25 @@ class ListState
     * @var string
     */
     protected $order_by_field;
-
+    
     /**
     * order list ascending by order_by_field when value is TRUE
     * @var bool
     */
     protected $order_ascending;
-    
+
+    /**
+    * indicates if only archived records should be selected
+    * @var bool
+    */
+    protected $archived;
+        
+    /**
+    * selection filter array (db_field_names and values)
+    * @var array
+    */
+    protected $filter_array;
+
     /**
     * current page
     * @var int
@@ -107,6 +135,24 @@ class ListState
     }
 
     /**
+    * get value of archived attribute
+    * @return string value of archived attribute
+    */
+    function get_archived ()
+    {
+        return $this->archived;
+    }
+
+    /**
+    * get value of filter_array attribute
+    * @return array value of filter_array attribute
+    */
+    function get_filter_array ()
+    {
+        return $this->filter_array;
+    }
+
+    /**
     * get value of total_pages attribute
     * @return int value of total_pages attribute
     */
@@ -155,6 +201,26 @@ class ListState
     }
 
     /**
+    * set value of archived attribute
+    * @param int $archived value of archived attribute
+    * @return void
+    */
+    function set_archived ($archived)
+    {
+        $this->archived = $archived;
+    }
+    
+    /**
+    * set value of filter_array attribute
+    * @param int filter_array value of filter_array attribute
+    * @return void
+    */
+    function set_filter_array ($filter_array)
+    {
+        $this->filter_array = $filter_array;
+    }
+    
+    /**
     * set value of total_pages attribute
     * @param int $total_pages value of total_pages attribute
     * @return void
@@ -185,6 +251,8 @@ class ListState
         $this->list_title = "no title has been set";
         $this->order_by_field = "";
         $this->order_ascending = 1;
+        $this->archived = LISTSTATE_SELECT_NON_ARCHIVED;
+        $this->filter_array = array();
         $this->total_pages = 1;
         $this->current_page = 1;
     }
@@ -202,6 +270,8 @@ class ListState
         $this->list_title = $list_title;
         $this->order_by_field = $list_state_array['order_by_field'];
         $this->order_ascending = $list_state_array['order_ascending'];
+        $this->archived = $list_state_array['archived'];
+        $this->filter_array = $list_state_array['filter_array'];
         $this->total_pages = $list_state_array['total_pages'];
         $this->current_page = $list_state_array['current_page'];
 
@@ -220,6 +290,8 @@ class ListState
 
         $list_state_array['order_by_field'] = $this->order_by_field;
         $list_state_array['order_ascending'] = $this->order_ascending;
+        $list_state_array['archived'] = $this->archived;
+        $list_state_array['filter_array'] = $this->filter_array;
         $list_state_array['total_pages'] = $this->total_pages;
         $list_state_array['current_page'] = $this->current_page;
         

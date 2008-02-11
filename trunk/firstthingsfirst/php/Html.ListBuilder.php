@@ -85,14 +85,14 @@ function action_get_listbuilder_page ($list_title)
 
     # load list details when list title has been given
     if (strlen($list_title))
-        $list_table_description->select($list_title);
+        $row = $list_table_description->select_row($list_title);
             
     $html_str = "";
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
     
     # different page title when list title has been given
     if (strlen($list_title))
-        $html_str .= "        <div id=\"page_title\">".LABEL_MODIFY_LIST." '".$list_title."'</div>\n\n";
+        $html_str .= "        <div id=\"page_title\">".LABEL_MODIFY_LIST." '".$row[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."'</div>\n\n";
     else        
         $html_str .= "        <div id=\"page_title\">".LABEL_CONFIGURE_NEW_LIST."</div>\n\n";
     
@@ -112,7 +112,7 @@ function action_get_listbuilder_page ($list_title)
     if (strlen($list_title))
     {
         $html_str .= "                            <td id=\"listbuilder_list_title_id\"><input size=\"20\" maxlength=\"100\"";
-        $html_str .= " id=\"listbuilder_list_title\" value=\"".$list_table_description->get_title()."\" type=\"text\"></td>\n";
+        $html_str .= " id=\"listbuilder_list_title\" value=\"".$row[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."\" type=\"text\"></td>\n";
     }
     else
         $html_str .= "                            <td id=\"listbuilder_list_title_id\"><input size=\"20\" maxlength=\"100\" id=\"listbuilder_list_title\" type=\"text\"></td>\n";
@@ -126,7 +126,7 @@ function action_get_listbuilder_page ($list_title)
     if (strlen($list_title))
     {
         $html_str .= "                            <td id=\"listbuilder_list_description_id\"><textarea cols=\"40\" rows=\"4\"";
-        $html_str .= " id=\"listbuilder_list_description\">".$list_table_description->get_description()."</textarea></td>\n";
+        $html_str .= " id=\"listbuilder_list_description\">".$row[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME]."</textarea></td>\n";
     }
     else
         $html_str .= "                            <td id=\"listbuilder_list_description_id\"><textarea cols=\"40\" rows=\"4\" id=\"listbuilder_list_description\"></textarea></td>\n";
@@ -156,7 +156,7 @@ function action_get_listbuilder_page ($list_title)
     
     # only show one link when list title had been given
     if (strlen($list_title))
-        $html_str .= "                <p>&nbsp;".get_button("xajax_action_modify_list('".$list_title."', document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value)", BUTTON_MODIFY_LIST)."</p>\n";
+        $html_str .= "                <p>&nbsp;".get_button("xajax_action_modify_list('".$row[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."', document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value)", BUTTON_MODIFY_LIST)."</p>\n";
     else
     {
         $html_str .= "                <p>&nbsp;".get_select("add_select", "add_it", "")."\n";
@@ -355,6 +355,7 @@ function action_refresh_listbuilder ($definition)
 /**
  * modify an existing list
  * this function is registered in xajax
+ * @todo this function uses a query to alter table
  * @param string $former_title former title of this list
  * @param string $title title of the new list
  * @param string $description description of the new list
@@ -368,18 +369,16 @@ function action_modify_list ($former_title, $title, $description)
     global $list_table_description;
     global $list_table;
     
+    $list_table_note = new ListTableNote ($title);
+    
     $logging->info("ACTION: modify list (former_title=".$former_title.", title=".$title.")");
 
     if (!check_preconditions(ACTION_MODIFY_LIST))
         return $response;
         
     # set the right list_table_description
-    $list_table_description->select($former_title);
+    $row = $list_table_description->select_row($former_title);
     
-    # get table name
-    $list_table->set();
-    $former_table_name = $list_table->get_table_name();
-
     # check if title has been given
     if (strlen($title) == 0)
     {
@@ -406,15 +405,23 @@ function action_modify_list ($former_title, $title, $description)
         return $response;
     }
 
-    $list_table_description->set_title($title);
-    $list_table_description->set_description($description);
-    
+    $name_values_array = array();
+    $name_values_array[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME] = $title;
+    $name_values_array[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME] = $description;
+    if ($list_table_description->update($former_title, $name_values_array) == FALSE)
+    {
+        set_error_message("listbuilder_pane", ERROR_DATABASE_PROBLEM);
+
+        return $response;
+    }
+
     if (strcmp($former_title, $title))
     {
         $logging->trace("list title has changed");
         
-        $list_table->set();
-        $new_table_name = $list_table->get_table_name();
+        # rename listtable database table
+        $former_table_name = $list_table->_convert_list_name_to_table_name($former_title);
+        $new_table_name = $list_table->_convert_list_name_to_table_name($title);
         $query = "ALTER TABLE ".$former_table_name." RENAME ".$new_table_name;
         $result_object = $database->query($query);
         if ($result_object == FALSE)
@@ -424,9 +431,21 @@ function action_modify_list ($former_title, $title, $description)
 
             return $response;
         }
+        
+        # rename listtablenote database table
+        $former_table_name = $list_table_note->_convert_list_name_to_table_name($former_title);
+        $new_table_name = $list_table_note->_convert_list_name_to_table_name($title);
+        $query = "ALTER TABLE ".$former_table_name." RENAME ".$new_table_name;
+        $result_object = $database->query($query);
+        if ($result_object == FALSE)
+        {
+            $logging->error($database->get_error_str());
+            set_error_message("listbuilder_pane", ERROR_DATABASE_PROBLEM);
+
+            return $response;
+        }                
     }
 
-    $list_table_description->update();
     set_info_message("listbuilder_pane", LABEL_LIST_MODIFICATIONS_DONE);
     
     $logging->trace("modified list");
@@ -437,6 +456,7 @@ function action_modify_list ($former_title, $title, $description)
 /**
  * create a new list
  * this function is registered in xajax
+ * @todo check if all fields are unique
  * @param string $title title of the new list
  * @param string $description description of the new list
  * @param array $definition defintion of current list that is being build
@@ -539,13 +559,26 @@ function action_create_list ($title, $description, $definition)
             $new_definition[$field_name] = array($field_type, 0, $field_options);
     }
     
-    $list_table_description->set_title($title);
-    $list_table_description->set_description($description);
-    $list_table_description->set_definition($new_definition);
-    if ($list_table_description->insert())
-        set_info_message("listbuilder_pane", LABEL_NEW_LIST_CREATED);
-    else
+    $name_values_array = array();
+    $name_values_array[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME] = $title;
+    $name_values_array[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME] = $description;
+    $name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = $new_definition;
+
+    if ($list_table_description->insert($name_values_array) == FALSE)
+    {
         set_error_message("listbuilder_pane", $list_table_description->get_error_str());
+            
+        return $response;
+    }
+    $list_table->set($title);
+    if ($list_table->create() == FALSE)
+    {
+        set_error_message("listbuilder_pane", $list_table->get_error_str());        
+       
+        return $response;
+    }
+
+    set_info_message("listbuilder_pane", LABEL_NEW_LIST_CREATED);
     
     $logging->trace("created list");
 
@@ -579,10 +612,13 @@ function get_select ($id, $name, $selection)
     
     foreach ($field_types as $field_type)
     {
-        $html_str .= "                                <option value=\"".$field_type."\"";
-        if ($field_type == $selection)
-            $html_str .= " selected";
-        $html_str .= ">".constant($field_type)."</option>\n";
+        if ($firstthingsfirst_field_descriptions[$field_type][3])
+        {
+            $html_str .= "                                <option value=\"".$field_type."\"";
+            if ($field_type == $selection)
+                $html_str .= " selected";
+            $html_str .= ">".constant($field_type)."</option>\n";
+        }
     }
     $html_str .= "                            </select>";
     

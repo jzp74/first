@@ -39,7 +39,7 @@ function check_preconditions ($action)
     }
         
     # check if edit_list permission is required
-    if ($can_edit_list && !$user->get_edit_list())
+    if ($can_edit_list && !$user->get_can_edit_list())
     {
         action_get_login_page();
         $logging->warn("user needs edit_list permission (action=".$action.")");
@@ -48,7 +48,7 @@ function check_preconditions ($action)
     }
     
     # check if create_list permission is required
-    if ($can_create_list && !$user->get_create_list())
+    if ($can_create_list && !$user->get_can_create_list())
     {
         action_get_login_page();
         $logging->warn("user needs create_list permission (action=".$action.")");
@@ -57,7 +57,7 @@ function check_preconditions ($action)
     }
 
     # check if read permission is required
-    if ($is_admin && !$user->get_admin())
+    if ($is_admin && !$user->get_is_admin())
     {
         action_get_login_page();
         $logging->warn("user needs admin permission (action=".$action.")");

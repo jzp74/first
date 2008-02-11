@@ -159,7 +159,7 @@ function action_add_user ($definition)
         return $response;
     }
 
-    if (!$user->add($name, $pw, $edit_list, $create_list))
+    if (!$user->insert($name, $pw, $edit_list, $create_list))
         set_error_message("add_user_pane", $user->get_error_str());
     else
         set_info_message("add_user_pane", LABEL_USER_ADDED);

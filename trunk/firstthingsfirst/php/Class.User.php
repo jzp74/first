@@ -23,7 +23,55 @@ define("USER_ID_RESET_VALUE", -1);
 /**
  * definition of name of an empty (non initialized) User object
  */
-define("USER_NAME_RESET_VALUE", "_");
+define("USER_NAME_RESET_VALUE", "-system-");
+
+/**
+ * definition of name field name
+ */
+define("USER_NAME_FIELD_NAME", "_name");
+
+/**
+ * definition of pw field name
+ */
+define("USER_PW_FIELD_NAME", "_pw");
+
+/**
+ * definition of edit_list field name
+ */
+define("USER_CAN_EDIT_LIST_FIELD_NAME", "_edit_list");
+
+/**
+ * definition of create_list field name
+ */
+define("USER_CAN_CREATE_LIST_FIELD_NAME", "_create_list");
+
+/**
+ * definition of admin field name
+ */
+define("USER_IS_ADMIN_FIELD_NAME", "_admin");
+
+/**
+ * definition of times_login field name
+ */
+define("USER_TIMES_LOGIN_FIELD_NAME", "_times_login");
+
+/**
+ * definition of fields
+ */
+$class_user_fields = array(
+    DB_ID_FIELD_NAME => array(LABEL_LIST_ID, "LABEL_DEFINITION_AUTO_NUMBER", ""),
+    USER_NAME_FIELD_NAME => array(LABEL_USER_NAME, "LABEL_DEFINITION_USERNAME", DATABASETABLE_UNIQUE_FIELD),
+    USER_PW_FIELD_NAME => array(LABEL_USER_PW, "LABEL_DEFINITION_PASSWORD", ""),
+    USER_CAN_EDIT_LIST_FIELD_NAME => array(LABEL_USER_CAN_EDIT_LIST, "LABEL_DEFINITION_BOOL", ""),
+    USER_CAN_CREATE_LIST_FIELD_NAME => array(LABEL_USER_CAN_CREATE_LIST, "LABEL_DEFINITION_BOOL", ""),
+    USER_IS_ADMIN_FIELD_NAME => array(LABEL_USER_IS_ADMIN, "LABEL_DEFINITION_BOOL", ""),
+    USER_TIMES_LOGIN_FIELD_NAME => array(LABEL_USER_TIMES_LOGIN, "LABEL_DEFINITION_NUMBER", ""),
+);
+
+/**
+ * definition of metadata
+ */
+define("USER_METADATA", "-11");
 
 
 /**
@@ -32,14 +80,8 @@ define("USER_NAME_RESET_VALUE", "_");
  *
  * @package Class_FirstThingsFirst
  */
-class User
+class User extends UserDatabaseTable
 {
-    /**
-    * error string, contains last known error
-    * @var string
-    */
-    protected $error_str;
-
     /**
     * reference to global json object
     * @var Services_JSON
@@ -63,13 +105,16 @@ class User
     {
         # these variables are assumed to be globally available
         global $json;
-        global $database;
         global $logging;
+        global $database;
         
+        # call parent __construct()
+        parent::__construct();
+
         # set global references for this object
         $this->_json =& $json;
-        $this->_database =& $database;
         $this->_log =& $logging;
+        $this->_database =& $database;
         
         # start a session
         session_cache_limiter('private, must-revalidate');
@@ -80,37 +125,15 @@ class User
         if ($this->is_login())
         {
             $this->_log->debug("user session is still active (name=".$this->get_name().")");
-            $this->page = ACTION_GET_PORTAL;
-            $this->page_title = "-";
+            $this->set();
         }
         else
+        {
             $this->reset();
+            $this->set();
+        }
         
         $this->_log->trace("constructed new User object");
-    }
-
-    /**
-    * overwrite __toString() function
-    * @todo function seems to be obsolete
-    * @return void
-    */
-    function __toString ()
-    {
-        $str = "User: id=\"".$this->get_id()."\", ";
-        $str .= "name=\"".$this->get_name()."\", ";
-        $str .= "edit_list=\"".$this->get_edit_list()."\", ";
-        $str .= "create_list=\"".$this->get_create_list()."\", ";
-        $str .= "admin=\"".$this->get_admin()."\", ";
-        return $str;
-    }
-
-    /**
-    * get value of error_str attribute
-    * @return string value of error_str attribute
-    */
-    function get_error_str ()
-    {
-        return $this->error_str;
     }
 
     /**
@@ -133,29 +156,29 @@ class User
 
     /**
     * get value of SESSION variable edit_list.
-    * @return bool value of SESSION variable edit_list.
+    * @return bool value of SESSION variable can_edit_list.
     */
-    function get_edit_list ()
+    function get_can_edit_list ()
     {
-        return $_SESSION["edit_list"];
+        return $_SESSION["can_edit_list"];
     }
 
     /**
     * get value of SESSION variable create_list.
-    * @return bool value of SESSION variable create_list.
+    * @return bool value of SESSION variable can_create_list.
     */
-    function get_create_list ()
+    function get_can_create_list ()
     {
-        return $_SESSION["create_list"];
+        return $_SESSION["can_create_list"];
     }
 
     /**
     * get value of SESSION variable admin.
-    * @return bool value of SESSION variable admin.
+    * @return bool value of SESSION variable is_admin.
     */
-    function get_admin ()
+    function get_is_admin ()
     {
-        return $_SESSION["admin"];
+        return $_SESSION["is_admin"];
     }
 
     /**
@@ -212,43 +235,33 @@ class User
     }
     
     /**
-    * set value of SESSION variable created
-    * @param string $created datetime at which current user was created
-    * @return void
-    */
-    function set_created ($created)
-    {
-        $_SESSION["created"] = $created;
-    }
-    
-    /**
-    * set value of SESSION variable edit_list
+    * set value of SESSION variable can_edit_list
     * @param bool $permission indicates if current user is allowed to edit a list
     * @return void
     */
-    function set_edit_list ($permission)
+    function set_can_edit_list ($permission)
     {
-        $_SESSION["edit_list"] = $permission;
+        $_SESSION["can_edit_list"] = $permission;
     }
 
     /**
-    * set value of SESSION variable create_list
+    * set value of SESSION variable can_create_list
     * @param bool $permission indicates if current user is allowed to create a new list
     * @return void
     */
-    function set_create_list ($permission)
+    function set_can_create_list ($permission)
     {
-        $_SESSION["create_list"] = $permission;
+        $_SESSION["can_create_list"] = $permission;
     }
 
     /**
-    * set value of SESSION variable admin
+    * set value of SESSION variable is_admin
     * @param bool $permission indicates if current user is has admin privileges
     * @return void
     */
-    function set_admin ($permission)
+    function set_is_admin ($permission)
     {
-        $_SESSION["admin"] = $permission;
+        $_SESSION["is_admin"] = $permission;
     }
 
     /**
@@ -298,46 +311,26 @@ class User
         $this->set_id(USER_ID_RESET_VALUE);
         $this->set_name(USER_NAME_RESET_VALUE);
         $this->set_times_login("0");
-        $this->set_edit_list("0");
-        $this->set_create_list("0");
-        $this->set_admin("0");
+        $this->set_can_edit_list("0");
+        $this->set_can_create_list("0");
+        $this->set_is_admin("0");
         $this->set_login("0");
     }
 
     /**
-    * create new database table that contains all users
-    * @return bool indicates if table has been created
+    * set attributes to initial values
+    * @return void
     */
-    function create ()
+    function set ()
     {
-        $this->_log->trace("creating table for Users (table=".USER_TABLE_NAME.")");
+        global $class_user_fields;
         
-        $query = "CREATE TABLE ".USER_TABLE_NAME." (";
-        $query .= DB_ID_FIELD_NAME." ".DB_DATATYPE_ID.", ";
-        $query .= "_name ".DB_DATATYPE_USERNAME.", ";
-        $query .= "_pw ".DB_DATATYPE_PASSWORD.", ";
-        $query .= DB_TS_CREATED_FIELD_NAME." ".DB_DATATYPE_DATETIME.", ";
-        $query .= "_edit_list ".DB_DATATYPE_BOOL.", ";
-        $query .= "_create_list ".DB_DATATYPE_BOOL.", ";
-        $query .= "_admin ".DB_DATATYPE_BOOL.", ";
-        $query .= "_times_login ".DB_DATATYPE_INT.", ";
-        $query .= "_ts_last_login ".DB_DATATYPE_DATETIME.", ";
-        $query .= "PRIMARY KEY (".DB_ID_FIELD_NAME."), ";
-        $query .= "UNIQUE KEY _name (_name)) ";
-
-        $result = $this->_database->query($query);
-        if ($result == FALSE)
-        {
-            $this->_log->error("could not create table in database for user");
-            $this->_log->error("database error: ".$this->_database->get_error_str());
-            $this->error_str = ERROR_DATABASE_PROBLEM;
-            
-            return FALSE;
-        }
+        $this->_log->trace("setting User");
         
-        $this->_log->info("created table for Users (table=".USER_TABLE_NAME.")");
+        # call parent set()
+        parent::set(USER_TABLE_NAME, $class_user_fields, USER_METADATA);
 
-        return TRUE;
+        $this->_log->trace("set User");
     }
 
     /**
@@ -364,80 +357,55 @@ class User
         $this->_log->trace("login (name=".$name.")");
         
         if ($this->is_login())
-        {
-            $this->_log->warn("user already logged in (name=".$name.")");
-            return FALSE;
-        }
+            $this->logout();
             
         # create user admin the first time user admin tries to login    
         if ($name == "admin" && !$this->exists("admin"))
         {
             $this->_log->info("first time login for admin");
-            if (!$this->add($name, $firstthingsfirst_admin_passwd, 1, 1, 1))
+            if (!$this->insert($name, $firstthingsfirst_admin_passwd, 1, 1, 1))
                 return FALSE;
         }
 
-        $password = md5($pw);
-        $query = "SELECT ".DB_ID_FIELD_NAME.", _name, _pw, ".DB_TS_CREATED_FIELD_NAME.", _edit_list, ";
-        $query .= "_create_list, _admin, _times_login, _ts_last_login FROM ".USER_TABLE_NAME." WHERE _name=\"".$name."\"";
-        $result = $this->_database->query($query);
-        $row = $this->_database->fetch($result);
+        # create key_string
+        $key_string = USER_NAME_FIELD_NAME."='".$name."'";
+
+        $row = parent::select_row($key_string);
+        if (count($row) == 0)
+            return FALSE;
         
-        if ($row != FALSE)
-        {
-            $db_id = $row[0];
-            $db_name = $row[1];
-            $db_password = $row[2];
-            $db_created = $row[3];
-            $db_edit_list = $row[4];
-            $db_create_list = $row[5];
-            $db_admin = $row[6];
-            $times_login = $row[7] + 1;
-            $last_login = $row[8];
+        $password = md5($pw);
+        $db_password = $row[USER_PW_FIELD_NAME];
             
-            if ($db_password == $password)
-            {
-                # set session parameters
-                $this->set_id($db_id);
-                $this->set_name($db_name);
-                $this->set_created($db_created);
-                $this->set_edit_list($db_edit_list);
-                $this->set_create_list($db_create_list);
-                $this->set_admin($db_admin);
-                $this->set_times_login($times_login);
-                $this->set_login(1);
+        if ($db_password == $password)
+        {
+            # set session parameters
+            $this->set_id($row[DB_ID_FIELD_NAME]);
+            $this->set_name($row[USER_NAME_FIELD_NAME]);
+            $this->set_can_edit_list($row[USER_CAN_EDIT_LIST_FIELD_NAME]);
+            $this->set_can_create_list($row[USER_CAN_CREATE_LIST_FIELD_NAME]);
+            $this->set_is_admin($row[USER_IS_ADMIN_FIELD_NAME]);
+            $this->set_times_login($row[USER_TIMES_LOGIN_FIELD_NAME] + 1);
+            $this->set_login(1);
                 
-                # update the number of times this user has logged in
-                $query = "UPDATE ".USER_TABLE_NAME." SET _times_login=\"".$times_login."\", _ts_last_login=\"".strftime(DB_DATETIME_FORMAT)."\" where _name=\"".$name."\"";
-                $result = $this->_database->query($query);
-                if ($result == FALSE)
-                {
-                    $this->_log->error("could not update _times_login (name=".$name.")");
-                    $this->_log->error("database error: ".$this->_database->get_error_str());
-                    $this->error_str = ERROR_DATABASE_PROBLEM;
-                    
-                    return FALSE;
-                }
-                else
-                {
-                    $this->_log->debug("user logged in (name=".$name.")");
-                
-                    return TRUE;
-                }
-            }
-            else
-            {        
-                $this->_log->warn("passwords do not match (name=".$name."), user is not logged in");
-                $this->error_str = ERROR_INCORRECT_NAME_PASSWORD;
-                
+            $name_values_array = array();
+            $name_values_array[USER_TIMES_LOGIN_FIELD_NAME] = ($row[USER_TIMES_LOGIN_FIELD_NAME] + 1);
+            
+            # update the number of times this user has logged in
+            if (parent::update($key_string, $name_values_array) == FALSE)
                 return FALSE;
+            else
+            {
+                $this->_log->debug("user logged in (name=".$name.")");
+            
+                return TRUE;
             }
         }
         else
-        {
+        {        
             $this->_log->warn("passwords do not match (name=".$name."), user is not logged in");
             $this->error_str = ERROR_INCORRECT_NAME_PASSWORD;
-                    
+            
             return FALSE;
         }
     } 
@@ -450,7 +418,7 @@ class User
     {
         $name = $this->get_name();
         
-        $this->_log->trace("log out");
+        $this->_log->trace("log out (name=".$name.")");
         
         $this->reset();
 
@@ -464,45 +432,28 @@ class User
     */
     function exists ($name)
     {
-        $query = "SELECT _name FROM ".USER_TABLE_NAME." WHERE _name=\"".$name."\"";
-        $result = $this->_database->query($query);
-        $row = $this->_database->fetch($result);
-        
-        $this->_log->trace("checking if user exists (name=".$name.")");
-        
-        if ($row != FALSE)
+        # create key_string
+        $key_string = USER_NAME_FIELD_NAME."='".$name."'";
+
+        $row = parent::select_row($key_string);
+        if (count($row) > 0)
         {
-            if ($row[0] == $name)
-            {
-                $this->_log->debug("user already exists (name=".$name.")");
+            $this->_log->debug("user already exists (name=".$name.")");
                 
-                return TRUE;
-            }
-            else
-            {
-                $this->_log->debug("user does not exist (name=".$name.")");
-                
-                return FALSE;
-            }
+            return TRUE;
         }
-        else if (strlen($this->_database->get_error_str()) == 0)
+        else if (strlen($this->get_error_str()) == 0)
         {
             $this->_log->debug("user does not exist (name=".$name.")");
                 
             return FALSE;
         }
         else
-        {
-            $this->_log->error("could not select (name=".$name.")");
-            $this->_log->error("database error: ".$this->_database->get_error_str());
-            $this->error_str = ERROR_DATABASE_PROBLEM;
-            
             return FALSE;
-        }
     }                    
 
     /**
-    * add a new user to database
+    * insert a new user to database
     * @param string $name name of new user
     * @param string $pw password of new user
     * @param bool $edit_list indicates if new user is allowed to edit a list (FALSE if not provided)
@@ -510,42 +461,28 @@ class User
     * @param bool $is_admin indicates if current user is has admin privileges (FALSE if not provided)
     * @return bool indicates if user has been added
     */
-    function add ($name, $pw, $edit_list = 0, $create_list = 0, $is_admin = 0)
+    function insert ($name, $pw, $can_edit_list = 0, $can_create_list = 0, $is_admin = 0)
     {
+        $name_values_array = array();
         $password = md5($pw);
 
-        $this->_log->trace("add user (name=".$name.")");
+        $this->_log->trace("insert user (name=".$name.")");
         
-        # create table if it does not yet exists
-        if (!$this->_database->table_exists(USER_TABLE_NAME))
-            $this->create();
+        $name_values_array[USER_NAME_FIELD_NAME] = $name;
+        $name_values_array[USER_PW_FIELD_NAME] = $password;
+        $name_values_array[USER_CAN_EDIT_LIST_FIELD_NAME] = $can_edit_list;
+        $name_values_array[USER_CAN_CREATE_LIST_FIELD_NAME] = $can_create_list;
+        $name_values_array[USER_IS_ADMIN_FIELD_NAME] = $is_admin;
+        $name_values_array[USER_TIMES_LOGIN_FIELD_NAME] = 0;
         
-        # check if user already exists
-        if ($this->exists($name))
-        {
-            $this->error_str = ERROR_DUPLICATE_USER_NAME;
-            
+        if (parent::insert($name_values_array) == FALSE)
             return FALSE;
-        }
-
-        $query = "INSERT INTO ".USER_TABLE_NAME." VALUES (0, \"".$name."\", \"".$password."\", \"".strftime(DB_DATETIME_FORMAT)."\", ";
-        $query .= $edit_list.", ".$create_list.", ".$is_admin.", 0, \"".strftime(DB_DATETIME_FORMAT)."\")";
-        $result = $this->_database->insertion_query($query);
-        if ($result == FALSE)
-        {
-            $this->_log->error("could not add user (name=".$name.")");
-            $this->_log->error("database error: ".$this->_database->get_error_str());
-            $this->error_str = ERROR_DATABASE_PROBLEM;
-            
-            return FALSE;
-        }
-        else
-        {
-            $this->_log->info("user added (name=".$name.")");
         
-            return TRUE;
-        }
+        $this->_log->info("user added (name=".$name.")");
+        
+        return TRUE;
     }
+
 }
 
 ?>

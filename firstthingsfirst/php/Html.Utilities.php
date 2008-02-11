@@ -114,7 +114,7 @@ function is_date ($field_name, $str)
         $month = intval($date_parts[0]);
         $day = intval($date_parts[1]);
         $year = intval($date_parts[2]);
-        $logging->debug("found us date (DD-MM-YYYY): ".$day."-".$month."-".$year);
+        $logging->trace("found us date (DD-MM-YYYY): ".$day."-".$month."-".$year);
     }
     else
     {
@@ -129,18 +129,18 @@ function is_date ($field_name, $str)
         
         $day = intval($date_parts[0]);
         $month = intval($date_parts[1]);
-        $logging->debug("found eu date (DD-MM-YYYY): ".$day."-".$month."-".$year);
+        $logging->trace("found eu date (DD-MM-YYYY): ".$day."-".$month."-".$year);
     }
 
     # rewrite 2 digit year
     if ($year < 100)
     {
         $century = (int)(idate("Y") / 100);
-        $logging->debug("found century: ".$century);
+        $logging->trace("found century: ".$century);
         $year = ($century * 100) + $year;
     }
     
-    $logging->debug("checking date (DD-MM-YYYY): ".$day."-".$month."-".$year);
+    $logging->trace("checking date (DD-MM-YYYY): ".$day."-".$month."-".$year);
     if (!checkdate($month, $day, $year))
         return FALSE_RETURN_STRING;
  
@@ -161,7 +161,7 @@ function get_date_str ($format, $value)
     global $firstthingsfirst_date_string;
     global $first_things_first_day_definitions;
     
-    $logging->debug("get_date_str (format=".$format.", value=".$value.")");
+    $logging->trace("get_date_str (format=".$format.", value=".$value.")");
     
     if ($format == DATE_FORMAT_NORMAL)
         return strftime($firstthingsfirst_date_string, (strtotime($value)));
@@ -169,7 +169,7 @@ function get_date_str ($format, $value)
     {
         # get weekday
         $weekday = strftime("%w", (strtotime($value)));
-        $logging->debug("found weekday (weekday=".$weekday.")");
+        $logging->trace("found weekday (weekday=".$weekday.")");
         # get normal date format
         $date_str = strftime($firstthingsfirst_date_string, (strtotime($value)));
         

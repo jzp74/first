@@ -132,7 +132,7 @@ class Database
         if (!db_link)
             return FALSE;
     
-        $this->_log->trace("query database (query=".$query.")");
+        $this->_log->debug("query database (query=".$query.")");
     
         $result = mysql_query($query, $db_link);
         $this->error_str = mysql_error($db_link);
@@ -152,7 +152,7 @@ class Database
         if (!db_link)
             return FALSE;
      
-        $this->_log->trace("insertion query (query=".$query.")");
+        $this->_log->debug("insertion query (query=".$query.")");
     
         $result = mysql_query($query, $db_link);
         
@@ -171,13 +171,19 @@ class Database
     /**
     * get next row from result of last query
     * be sure to call the query function or the insertion_query function first
+    * @todo sometimes this function yields a non empty array when nothing is found (how come???)
     * @param resource $result result of query or insertion_query function call
     * @return array|bool array containing one table row or FALSE in case of any error
     */
     function fetch ($result)
     {
         if ($result != FALSE)
-            return mysql_fetch_array($result);
+        {
+            $row = mysql_fetch_array($result);
+            if (count($row) == 0 || (count($row) == 1 && count($row[0]) == 0))
+                return array();
+            return $row;
+        }
         else
         {
             $this->_log->error("cannot fetch: result is FALSE");
@@ -195,7 +201,7 @@ class Database
     {
         $query = "SHOW TABLES";
 
-        $this->_log->trace("check if table exists (table=".$table.")");
+        $this->_log->debug("check if table exists (table=".$table.")");
 
         $result = $this->query($query);
         

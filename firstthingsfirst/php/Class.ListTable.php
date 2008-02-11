@@ -16,19 +16,9 @@
 define("LISTTABLE_TABLE_NAME_PREFIX", $firstthingsfirst_db_table_prefix."listtable_");
 
 /**
- * definition of name of an empty (non initialized) ListTable object
+ * definition of prefix that is used for all user-defined field names
  */
-define("LISTTABLELISTTABLE_EMPTY", "_LISTTABLE_EMPTY__");
-
-/**
- * definition of an unknown page (used only in select() function)
- */
-define("LISTTABLELISTTABLE_UNKWOWN_PAGE", 0);
-
-/**
- * definition of all pages (used only in select() function)
- */
-define("LISTTABLELISTTABLE_ALL_PAGES", -1);
+define("LISTTABLE_FIELD_PREFIX", "_user_defined_");
 
 
 /**
@@ -37,76 +27,23 @@ define("LISTTABLELISTTABLE_ALL_PAGES", -1);
  *
  * @package Class_FirstThingsFirst
  */
-class ListTable
+class ListTable extends UserDatabaseTable
 {
     /**
-    * name of the table in which entries of this ListTable are stored
-    * @var string
+    * title of this ListTable
     */
-    protected $table_name;
+    protected $list_title;
     
     /**
-    * array containing all user defined field names
+    * array containing the following strings:
+    *  creator of this ListTable
+    *  creation datetime of this ListTable
+    *  modifier of this ListTable
+    *  modified datetime of this ListTable
     * @var array
     */
-    protected $field_names;
-    
-    /**
-    * array containing the database field names
-    * values in this array are derived from $field_names field
-    * @var array
-    */
-    protected $db_field_names;
-    
-    /**
-    * array containing the database text type field names
-    * values in this array are derived from $field_names field
-    * @var array
-    */
-    protected $db_text_field_names;    
-    
-    /**
-    * error string, contains last known error
-    * @var string
-    */
-    protected $error_str;
+    protected $creator_modifier_array;
 
-    /**
-    * reference to global json object
-    * @var Services_JSON
-    */
-    protected $_json;
-    
-    /**
-    * reference to global result object
-    * @var Result
-    */
-    protected $_result;
-
-    /**
-    * reference to global logging object
-    * @var Logging
-    */
-    protected $_log;
-    
-    /**
-    * reference to global database object
-    * @var Database
-    */
-    protected $_database;
-    
-    /**
-    * reference to global list_state object
-    * @var ListState
-    */
-    protected $_list_state;
-
-    /**
-    * reference to global user object
-    * @var User
-    */
-    protected $_user;
-    
     /**
     * reference to global list_table_description object
     * @var ListTableDescription
@@ -114,74 +51,27 @@ class ListTable
     protected $_list_table_description;
 
     /**
-    * reference to global list_table_item_notes object
+    * reference to list_table_note object (object is initialized in set() function)
     * @var ListTableItemNotes
     */
-    protected $_list_table_item_notes;
+    protected $_list_table_note;
 
     /**
     * overwrite __construct() function
     * @return void
     */
     function __construct ()
-    {
+    {        
         # these variables are assumed to be globally available
-        global $json;
-        global $result;
-        global $logging;        
-        global $database;
-        global $list_state;
-        global $user;
         global $list_table_description;
-        global $list_table_item_notes;
+        
+        # call parent __construct()
+        parent::__construct();
         
         # set global references for this object
-        $this->_json =& $json;
-        $this->_result =& $result;
-        $this->_log =& $logging;
-        $this->_database =& $database;
-        $this->_list_state =& $list_state;
-        $this->_user =& $user;
         $this->_list_table_description =& $list_table_description;
-        $this->_list_table_item_notes =& $list_table_item_notes;
 
-        # copy attributes from given ListTableDescription only when a valid ListTableDescription has been given
-        $this->set();
-        
-        $this->_log->trace("constructed new ListTable object (title=".$this->table_name.")");
-    }
-    
-    /**
-    * overwrite __toString() function
-    * @todo function seems to be obsolete
-    * @return void
-    */
-    function __toString ()
-    {
-        $str = "ListTable: table_name=\"".$this->table_name."\", ";
-        $str .= "field_names[0]=\"".$this->field_names[0]."\", ";
-        
-        return $str;
-    }
-    
-    /**
-    * check if datetime complies with standard database datetime format YYYY-MM-DD
-    * @param $date_string string string datetime representation
-    * @return bool indicates if datetime complies with standard database datetime format
-    */
-    function _check_datetime ($date_str)
-    {
-        $date_parts = explode("-", $date_str);
-        $year = intval($date_parts[0]);
-        $month = intval($date_parts[1]);
-        $day = intval($date_parts[2]);
-        
-        $this->_log->trace("checking datetime (date_str=".$date_str.")");
-        
-        if (!checkdate($month, $day, $year))
-            return FALSE;
-        
-        return TRUE;
+        $this->_log->trace("constructed new ListTable object");
     }
     
     /**
@@ -191,9 +81,9 @@ class ListTable
     */
     function _get_field_name ($db_field_name)
     {
-        if ((strlen($db_field_name) > strlen(LISTTABLEDESCRIPTION_FIELD_PREFIX)) &&
-            (substr_compare($db_field_name, LISTTABLEDESCRIPTION_FIELD_PREFIX, 0, strlen(LISTTABLEDESCRIPTION_FIELD_PREFIX)) == 0))
-            return str_replace("__", " ", substr($db_field_name, strlen(LISTTABLEDESCRIPTION_FIELD_PREFIX)));
+        if ((strlen($db_field_name) > strlen(LISTTABLE_FIELD_PREFIX)) &&
+            (substr_compare($db_field_name, LISTTABLE_FIELD_PREFIX, 0, strlen(LISTTABLE_FIELD_PREFIX)) == 0))
+            return str_replace("__", " ", substr($db_field_name, strlen(LISTTABLE_FIELD_PREFIX)));
         else
             return substr($db_field_name, 1);
     }
@@ -209,136 +99,72 @@ class ListTable
         if ($field_name == "id")
             return DB_ID_FIELD_NAME;
         else
-            return LISTTABLEDESCRIPTION_FIELD_PREFIX.str_replace(" ", "__", $field_name);
+            return LISTTABLE_FIELD_PREFIX.str_replace(" ", "__", $field_name);
     }
 
     /**
-    * return key string of given ListTableItem
-    * @param $list_table_item array array containing all field values of a ListTableItem
-    * @return string the key string
+    * convert list_title to table_name
+    * @param $list_title string title of ListTable
+    * @return string table_name
     */
-    function _get_key_string ($list_table_item)
+    function _convert_list_name_to_table_name ($list_title)
     {
-        return DB_ID_FIELD_NAME."='".$list_table_item[DB_ID_FIELD_NAME]."'";
+        return LISTTABLE_TABLE_NAME_PREFIX.strtolower(str_replace(" ", "_", $list_title));
     }
     
     /**
-    * return string containing only the key field values
-    * @param $list_table_item array array containing all field values of a ListTableItem
-    * @return string the key field values
+    * get value of list_title attribute
+    * @return string value of list_title attribute
     */
-    function _get_key_values_string ($list_table_item)
-    {        
-        return "_".$list_table_item[DB_ID_FIELD_NAME];
-    }
-
-    /**
-    * get value of table_name attribute
-    * @return string value of table_name attribute
-    */
-    function get_table_name ()
+    function get_list_title ()
     {
-        return $this->table_name;
+        return $this->list_title;
     }
 
     /**
-    * get value of field_names attribute
-    * @return string value of field_names attribute
+    * get value of creator_modifier_array attribute
+    * @return string value of creator_modifier_array attribute
     */
-    function get_field_names ()
+    function get_creator_modifier_array ()
     {
-        return $this->field_names;
+        return $this->creator_modifier_array;
     }
 
     /**
-    * get value of db_field_names attribute
-    * @return string value of db_field_names attribute
-    */
-    function get_db_field_names ()
-    {
-        return $this->db_field_names;
-    }
-
-    /**
-    * get value of db_text_field_names attribute
-    * @return string value of db_text_field_names attribute
-    */
-    function get_db_text_field_names ()
-    {
-        return $this->db_text_field_names;
-    }
-
-    /**
-    * get value of error_str attribute
-    * @return string value of error_str attribute
-    */
-    function get_error_str ()
-    {
-        return $this->error_str;
-    }
-
-    /**
-    * reset attributes to initial values
+    * set attributes (initiate this object)
     * @return void
     */
-    function reset ()
-    {
-        $this->_log->trace("resetting ListTable");
-
-        $this->table_name = LISTTABLE_EMPTY;
-        $this->field_names = array();
-        $this->db_field_names = array();
-        $this->db_text_field_names = array();
-        $this->_list_state->reset();
-        $this->error_str = "";
-    }
-
-    /**
-    * set attributes to match with _list_table_description attribute (initiate this object)
-    * reset all attributes when _list_table_description is not valid
-    * @return void
-    */
-    function set ()
+    function set ($list_title)
     {
         $this->_log->trace("setting ListTable");
 
-        $this->field_names = array();
-        $this->db_text_field_names = array();        
-        $definition = $this->_list_table_description->get_definition();
-
-        if ($this->_list_table_description->is_valid())
-        {
-            $this->table_name = LISTTABLE_TABLE_NAME_PREFIX.strtolower(str_replace(" ", "_", $this->_list_table_description->get_title()));
-            $this->db_field_names = array_keys($this->_list_table_description->get_definition());
-            foreach ($this->db_field_names as $db_field_name)
-            {
-                array_push($this->field_names, $this->_get_field_name($db_field_name));
-                
-                # get the text fields
-                $field_type = $definition[$db_field_name][0];
-                if (stristr($field_type, "TEXT"))
-                    array_push($this->db_text_field_names, $db_field_name);
-            }
-            
-            $this->_list_state->set_list_title($this->_list_table_description->get_title());            
-            $this->_list_table_item_notes->set();
-            
-            $this->_log->trace("set ListTable (table_name=".$this->table_name.")");
-        }
-        else
-            $this->reset();
-    }
-    
-    /**
-    * check if _list_table_description is valid
-    * @return bool indicates if _list_table_description is valid
-    */
-    function is_valid ()
-    {
-        if ($this->table_name != LISTTABLE_EMPTY && count($this->field_names))
-            return TRUE;
+        $fields = array();
+        $this->creator_modifier_array = array();
         
-        return FALSE;
+        $row = $this->_list_table_description->select_row($list_title);
+        $list_table_description_id = $row[DB_ID_FIELD_NAME];
+        $definition = $row[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME];
+
+        # set list_title
+        $this->list_title = $list_title;
+        # set creator_modifier_value
+        $this->creator_modifier_array[DB_CREATOR_FIELD_NAME] = $row[DB_CREATOR_FIELD_NAME];
+        $this->creator_modifier_array[DB_TS_CREATED_FIELD_NAME] = $row[DB_TS_CREATED_FIELD_NAME];
+        $this->creator_modifier_array[DB_MODIFIER_FIELD_NAME] = $row[DB_MODIFIER_FIELD_NAME];
+        $this->creator_modifier_array[DB_TS_MODIFIED_FIELD_NAME] = $row[DB_TS_MODIFIED_FIELD_NAME];
+
+        $table_name = $this->_convert_list_name_to_table_name($list_title);
+        $db_field_names = array_keys($definition);
+        foreach ($db_field_names as $db_field_name)
+            $fields[$db_field_name] = array($this->_get_field_name($db_field_name), $definition[$db_field_name][0], $definition[$db_field_name][2]);
+        
+        # call parent set()
+        parent::set($table_name, $fields, "111");
+
+        # initialize ListTableNote
+        $this->_list_table_note = new ListTableNote ($list_title);
+            
+        $this->_log->trace("set ListTable (table_name=".$this->table_name.")");
     }
     
     /**
@@ -350,235 +176,82 @@ class ListTable
     {
         global $firstthingsfirst_field_descriptions;
         
-        $this->_log->trace("creating TableList (table=".$this->table_name.")");
+        $this->_log->trace("creating ListTable (table=".$this->table_name.")");
         
-        if ($this->_database->table_exists($this->table_name))
-        {
-            if ($force)
-            {
-                $this->_log->debug("dropping table (table=".$this->table_name.")");
-                $query = "DROP TABLE ".$this->table_name;
-                $result = $this->_database->query($query);
-                if ($result == FALSE)
-                {
-                    $this->_log->error("could not drop table");
-                    $this->_log->error("database error: ".$this->_database->get_error_str());
-                    $this->error_str = ERROR_DATABASE_PROBLEM;
-                    
-                    return FALSE;
-                }
-            }
-            else
-            {
-                $this->_log->warn("table (table=".$this->table_name.") already exists and (force=FALSE)");
-                $this->_log->error("database error: ".$this->_database->get_error_str());
-                $this->error_str = ERROR_DUPLICATE_LIST_NAME;
-                
-                return FALSE;
-            }
-        }
-
-        $query = "CREATE TABLE ".$this->table_name."(";
-        foreach ($this->db_field_names as $db_field_name)
-        {
-            $field_name = $this->_get_field_name($db_field_name);
-            $definition = $this->_list_table_description->get_definition();
-            $field_definition = $definition[$db_field_name];
-            $this->_log->debug("found field (name=".$field_name." def=".$field_definition[0].")");
-            $query .= $db_field_name." ".$firstthingsfirst_field_descriptions[$field_definition[0]][0].", ";        
-        }
-        
-        # add hidden fields
-        $query .= DB_ARCHIVED_FIELD_NAME." ".DB_DATATYPE_BOOL." , ";
-        $query .= DB_ARCHIVER_FIELD_NAME." ".DB_DATATYPE_USERNAME." , ";
-        $query .= DB_TS_ARCHIVED_FIELD_NAME." ".DB_DATATYPE_DATETIME.", ";
-        $query .= DB_CREATOR_FIELD_NAME." ".DB_DATATYPE_USERNAME.", ";
-        $query .= DB_TS_CREATED_FIELD_NAME." ".DB_DATATYPE_DATETIME.", ";
-        $query .= DB_MODIFIER_FIELD_NAME." ".DB_DATATYPE_USERNAME.", ";
-        $query .= DB_TS_MODIFIED_FIELD_NAME." ".DB_DATATYPE_DATETIME.", ";
-
-        $query .= "PRIMARY KEY (".DB_ID_FIELD_NAME."))";
-        $result = $this->_database->query($query);
-        if ($result == FALSE)
-        {
-            $this->_log->error("could not create table");
-            $this->_log->error("database error: ".$this->_database->get_error_str());
-            $this->error_str = ERROR_DATABASE_PROBLEM;
-            
+        # call parent create()
+        if (parent::create($force) == FALSE)
             return FALSE;
-        }
         
-        $this->_log->info("created TableList (table=".$this->table_name.")");
+        # create table for notes only if a notes field exists
+        $found_notes_field = FALSE;
+        foreach($this->fields as $field)
+        {
+            if ($field[1] == "LABEL_DEFINITION_NOTES_FIELD")
+                $found_notes_field = TRUE;
+        }
+        if ($found_notes_field)
+            if ($this->_list_table_note->create() == FALSE)
+                return FALSE;
+        
+        $this->_log->trace("created ListTable");
         
         return TRUE;
     }
 
     /**
-    * select a fixed number of ListTableItems (a page) from database
+    * select a fixed number of records (a page) from database
     * @todo reset order_ascending when user orders on new field
-    * @param $order_by_field string order ListTableItems by this fieldname
+    * @param $order_by_field string order records by this fieldname
     * @param $page int the page number to select
-    * @param $archived int indicates if archived ListTableItems or normal ListTableItems should be selected
-    * @return array array containing the ListTableItems (each ListTableItem is an array)
+    * @return array array containing the records (each ListTableItem is an array)
     */
-    function select ($order_by_field, $page, $archived)
+    function select ($order_by_field, $page)
     {
         global $firstthingsfirst_field_descriptions;
-        global $firstthingsfirst_list_page_entries;
 
-        $definition = $this->_list_table_description->get_definition();
-        $db_field_names = $this->get_db_field_names();
-
-        $this->_log->trace("selecting ListTable (order_by_field=".$order_by_field.", page=".$page.", archived=".$archived.")");
-
-        # blank error_str
-        $this->error_str = "";
-
-        if (!$this->_database->table_exists($this->table_name))
-        {
-            $this->_log->error("TableList does not exist in database");
-            $this->error_str = ERROR_DATABASE_PROBLEM;
-            
-            return array();
-        }
-
-        # get list_state from session
-        $this->_user->get_list_state($this->_list_state->get_list_title());
-
-        if (!strlen($order_by_field))
-        {
-            # no order_by_field had been given
-            if (strlen($this->_list_state->get_order_by_field()))
-            {
-                # order by previously given field
-                $order_by_field = $this->_list_state->get_order_by_field();
-            }
-            else
-            {
-                # no field to order by has been given previously
-                # order by first field of this ListTable
-                $order_by_field = $this->db_field_names[0];
-                $this->_list_state->set_order_by_field($order_by_field);
-            }
-        }
-        else
-        {
-            # order by field has been provided
-            # set order by field attribute value and reverse order
-            $this->_list_state->set_order_by_field($this->_get_db_field_name($order_by_field));
-            $order_by_field = $this->_get_db_field_name($order_by_field);
-
-            if ($this->_list_state->get_order_ascending())
-                $this->_list_state->set_order_ascending(0);
-            else
-                $this->_list_state->set_order_ascending(1);
-        }
-    
-        # get the number of entries
-        $query = "SELECT COUNT(*) FROM ".$this->table_name." WHERE ".DB_ARCHIVED_FIELD_NAME."=0";
-        if ($archived)
-            $query = "SELECT COUNT(*) FROM ".$this->table_name." WHERE ".DB_ARCHIVED_FIELD_NAME."=1";
-        $result = $this->_database->query($query);
-        if ($result != FALSE)
-        {
-            $total_pages_array = $this->_database->fetch($result);
-            $total_pages = floor($total_pages_array[0]/$firstthingsfirst_list_page_entries);
-            if (($total_pages_array[0]%$firstthingsfirst_list_page_entries) != 0)
-                $total_pages += 1;
-            $this->_list_state->set_total_pages($total_pages);
-            $this->_log->debug("found total pages (total_pages=".$total_pages.")");
-        }
-        else 
-        {
-            $this->_log->error("could not get number of ListTable entries from database");
-            $this->_log->error("database error: ".$this->_database->get_error_str());
-            $this->error_str = ERROR_DATABASE_PROBLEM;
-            
-            return array();
-        }
-        
-        if ($page == LISTTABLELISTTABLE_UNKWOWN_PAGE)
-            $page = $this->_list_state->get_current_page();
-        if ($page > $total_pages)
-            $page = $total_pages;
-        if ($total_pages == 0)
-            $page = 1;
-            
-        $rows = array();
-        $query = "SELECT ".implode($this->db_field_names, ", ")." FROM ".$this->table_name." WHERE ".DB_ARCHIVED_FIELD_NAME."=0";
-        if ($archived)
-            $query = "SELECT ".implode($this->db_field_names, ", ")." FROM ".$this->table_name." WHERE ".DB_ARCHIVED_FIELD_NAME."=1";
-        $query .= " ORDER BY ".$order_by_field;
-        if ($this->_list_state->get_order_ascending() == 1)
-            $query .= " ASC";
-        else
-            $query .= " DESC";
-        # only limit the number of entries when user does not want all pages
-        if ($page != LISTTABLELISTTABLE_ALL_PAGES)
-        {
-            $limit_from = ($page - 1) * $firstthingsfirst_list_page_entries;
-            $query .= " LIMIT ".$limit_from.", ".$firstthingsfirst_list_page_entries;
-        }
-
-        $result = $this->_database->query($query);
-        if ($result != FALSE)
-        {
-            while ($row = $this->_database->fetch($result))
-            {
-                # decode text field
-                foreach ($this->db_text_field_names as $text_field_name)
-                    $row[$text_field_name] = html_entity_decode($row[$text_field_name], ENT_QUOTES);
-                array_push($rows, $row);
-            }
-        }
-        else 
-        {
-            $this->_log->error("could not read ListTable rows from table");
-            $this->_log->error("database error: ".$this->_database->get_error_str());
-            $this->error_str = ERROR_DATABASE_PROBLEM;
-            
-            return array();
-        }
-        
-        # get field names of note fields
-        $note_fields_array = array();        
-        foreach($db_field_names as $db_field_name)
-        {
-            if ($definition[$db_field_name][0] == "LABEL_DEFINITION_NOTES_FIELD")
-                array_push($note_fields_array, $db_field_name);
-        }
-        $this->_log->log_array($note_fields_array, "note_fields");
-
-        # get notes 
         $rows_with_notes = array();       
-        foreach($rows as $row)
+
+        $this->_log->trace("selecting ListTable (order_by_field=".$order_by_field.", page=".$page.")");
+
+        # call parent select()
+        $rows = parent::select($order_by_field, $page, $this->db_field_names);
+        
+        if (count($rows) != 0)
         {
-            foreach($note_fields_array as $note_field)
+            # get field names of note fields
+            $note_fields_array = array();
+            foreach($this->db_field_names as $db_field_name)
             {
-                if ($row[$note_field] > 0)
+                if ($this->fields[$db_field_name][1] == "LABEL_DEFINITION_NOTES_FIELD")
+                    array_push($note_fields_array, $db_field_name);
+            }
+
+            # get notes 
+            foreach($rows as $row)
+            {
+                foreach($note_fields_array as $note_field)
                 {
-                    $result = $this->_list_table_item_notes->select($row[DB_ID_FIELD_NAME], $note_field);
-                    if (count($result) == 0 || count($result) != $row[$note_field])
+                    if ($row[$note_field] > 0)
                     {
-                        $this->_log->warn("unexpected number of notes found");
-                        $row[$note_field] = $result;
+                        $result = $this->_list_table_note->select($row[DB_ID_FIELD_NAME], $note_field);
+                        if (count($result) == 0 || count($result) != $row[$note_field])
+                        {
+                            $this->_log->warn("unexpected number of notes found");
+                            $row[$note_field] = $result;
+                        }
+                        else
+                            $row[$note_field] = $result;
                     }
                     else
-                        $row[$note_field] = $result;
+                        $row[$note_field] = array();
                 }
-                else
-                    $row[$note_field] = array();
+                array_push($rows_with_notes, $row);
             }
-            array_push($rows_with_notes, $row);
         }
+        else
+            return $rows;
 
-        if ($page != LISTTABLELISTTABLE_ALL_PAGES)
-            $this->_list_state->set_current_page($page);
-
-        # store list_state to session
-        $this->_user->set_list_state();
-
-        $this->_log->trace("read ListTable (from=".$limit_from.")");
+        $this->_log->trace("selected ListTable (from=".$limit_from.")");
     
         return $rows_with_notes;
     }
@@ -590,124 +263,59 @@ class ListTable
     */
     function select_row ($key_string)
     {
-        $definition = $this->_list_table_description->get_definition();
-        $db_field_names = $this->get_db_field_names();
-
         $this->_log->trace("selecting ListTable row (key_string=".$key_string.")");
 
-        # blank error_str
-        $this->error_str = "";
+        # call parent select_row()
+        $row = parent::select_row($key_string, $this->db_field_names);
 
-        if (!$this->_database->table_exists($this->table_name))
+        if (count($row) != 0)
         {
-            $this->_log->error("TableList does not exist in database");
-            $this->error_str = ERROR_DATABASE_PROBLEM;
-            return array();
-        }
-
-        $query = "SELECT * FROM ".$this->table_name." WHERE ".$key_string;
-
-        $result = $this->_database->query($query);
-        if ($result != FALSE)
-        {
-            $row = $this->_database->fetch($result);
-            if (count($row))
+            # get notes
+            foreach($this->db_field_names as $db_field_name)
             {
-                # decode text field
-                foreach ($this->db_text_field_names as $text_field_name)
-                    $row[$text_field_name] = html_entity_decode($row[$text_field_name], ENT_QUOTES);
-                
-                # get notes
-                foreach($db_field_names as $db_field_name)
+                if ($this->fields[$db_field_name][1] == "LABEL_DEFINITION_NOTES_FIELD")
                 {
-                    $this->_log->debug("field=".$db_field_name.", def=".$definition[$db_field_name][0].", val=".$row[$db_field_name].")");
-                    if ($definition[$db_field_name][0] == "LABEL_DEFINITION_NOTES_FIELD")
+                    if ($row[$db_field_name] > 0)
                     {
-                        if ($row[$db_field_name] > 0)
+                        $result = $this->_list_table_note->select($row[DB_ID_FIELD_NAME], $db_field_name);
+                        if (count($result) == 0 || count($result) != $row[$db_field_name])
                         {
-                            $result = $this->_list_table_item_notes->select($row[DB_ID_FIELD_NAME], $db_field_name);
-                            if (count($result) == 0 || count($result) != $row[$db_field_name])
-                            {
-                                $this->_log->warn("unexpected number of notes found");
-                                $row[$db_field_name] = $result;
-                            }
-                            else
-                                $row[$db_field_name] = $result;
+                            $this->_log->warn("unexpected number of notes found");
+                            $row[$db_field_name] = $result;
                         }
                         else
-                            $row[$db_field_name] = array();
+                            $row[$db_field_name] = $result;
                     }
+                    else
+                        $row[$db_field_name] = array();
                 }
-                $this->_log->trace("read ListTable row");
-                
-                return $row;
             }
-            else
-            {
-                $this->_log->error("fetching from database yielded no results");
-                $this->_log->error("database error: ".$this->_database->get_error_str());
-                $this->error_str = ERROR_DATABASE_PROBLEM;
-            
-                return array();
-            }                
+            $this->_log->trace("read ListTable row");
+                
+            return $row;
         }
         else
-        {
-            $this->_log->error("could not read ListTable row from table");
-            $this->_log->error("database error: ".$this->_database->get_error_str());
-            $this->error_str = ERROR_DATABASE_PROBLEM;
-            
-            return array();
-        }
+            return $row;
     }
     
     /**
-    * add a new ListTableItem to database
-    * @param $name_values array array containing name-values of the ListTableItem
-    * @return bool indicates if ListTableItem has been added
+    * add a new record to database
+    * @param $name_values_array array array containing name-values of the ListTableItem
+    * @return bool indicates if new record was added
     */
     function insert ($name_values)
     {
-        $values = array();
-        $keys = array_keys($name_values);
-        $definition = $this->_list_table_description->get_definition();
+        $db_field_names = array_keys($name_values);
         $all_notes_array = array();
         
         $this->_log->trace("inserting into ListTable");
 
-        if (!$this->_database->table_exists($this->table_name))
+        foreach ($db_field_names as $db_field_name)
         {
-            $this->_log->error("TableList does not exist in database");
-            $this->error_str = ERROR_DATABASE_PROBLEM;
-            
-            return FALSE;
-        }
-
-        foreach ($keys as $array_key)
-        {
-            $value = $name_values[$array_key];
             $notes_array = array();
+            $value = $name_values[$db_field_name];
             
-            # encode text field
-            foreach ($this->db_text_field_names as $text_field_name)
-            {
-                if ($array_key == $text_field_name)
-                    $value = htmlentities($value, ENT_QUOTES);
-            }
-            
-            if (stristr($definition[$array_key][0], "DATE"))
-            {
-                if (!$this->_check_datetime($value))
-                {
-                    $this->_log->error("given date string is incorrect (".$value.")");
-                    $this->error_str = ERROR_DATE_WRONG_FORMAT;
-                    
-                    return FALSE;
-                }
-                else
-                    array_push($values, "'".$value."'");
-            }
-            else if ($definition[$array_key][0] == "LABEL_DEFINITION_NOTES_FIELD")
+            if ($this->fields[$db_field_name][1] == "LABEL_DEFINITION_NOTES_FIELD")
             {
                 foreach ($value as $note)
                 {
@@ -715,40 +323,25 @@ class ListTable
                         $this->_log->debug("found an empty note (field=".$array_key.")");
                     else
                     {
-                        array_push($notes_array, array($array_key, $note[1]));
+                        array_push($notes_array, array($db_field_name, $note[1]));
                     }
                 }
-                array_push($values, count($notes_array));
+                $name_values[$db_field_name] = count($notes_array);
                 array_push($all_notes_array, $notes_array);
             }
-            else
-                array_push($values, "'".$value."'");
         }
         
-        $query = "INSERT INTO ".$this->table_name." VALUES (0, ".implode($values, ", ");
-        $query .= ", 0, \"\", \"".DB_NULL_DATETIME."\", "; # new entries are not archived
-        $query .= "\"".$this->_user->get_name()."\", ";
-        $query .= "\"".strftime(DB_DATETIME_FORMAT)."\", ";
-        $query .= "\"".$this->_user->get_name()."\", ";
-        $query .= "\"".strftime(DB_DATETIME_FORMAT)."\")";
-        
-        $result = $this->_database->insertion_query($query);
-        if ($result == FALSE)
-        {
-            $this->_log->error("could not add entry to ListTable");
-            $this->_log->error("database error: ".$this->_database->get_error_str());
-            $this->error_str = ERROR_DATABASE_PROBLEM;
-            
+        $result = parent::insert($name_values);
+        if ($result == 0)
             return FALSE;
-        }
-        
+                
         # insert notes
         foreach ($all_notes_array as $notes_array)
             foreach ($notes_array as $note_array)
-                $this->_list_table_item_notes->insert($result, $note_array[0], $note_array[1]);
+                $this->_list_table_note->insert($result, $note_array[0], $note_array[1]);
                 
         # update list table description (date modified)
-        $this->_list_table_description->update();
+        $this->_list_table_description->update($this->list_title);
 
         $this->_log->trace("inserted into ListTable");
         
@@ -758,82 +351,40 @@ class ListTable
     /**
     * update an existing ListTableItem in database
     * @param $key_string string unique identifier of ListTableItem
-    * @param $name_values array array containing name-values of the ListTableItem
+    * @param $name_values_array array array containing name-values of the ListTableItem
     * @return bool indicates if ListTableItem has been updated
     */
-    function update ($key_string, $name_values)
+    function update ($key_string, $name_values_array)
     {
-        $values = array();
-        $keys = array_keys($name_values);
-        $definition = $this->_list_table_description->get_definition();
+        $db_field_names = array_keys($name_values_array);
         $all_notes_array = array();
 
         $this->_log->trace("updating ListTable (key_string=".$key_string.")");
-        
-        if (!$this->_database->table_exists($this->table_name))
+
+        foreach ($db_field_names as $db_field_name)
         {
-            $this->_log->error("TableList does not exist in database");
-            $this->error_str = ERROR_DATABASE_PROBLEM;
-            
-            return FALSE;
-        }
-        
-        foreach ($keys as $array_key)
-        {
-            $value = $name_values[$array_key];
+            $value = $name_values_array[$db_field_name];
             $notes_array = array();
             
-            # encode text field
-            foreach ($this->db_text_field_names as $text_field_name)
-            {
-                if ($array_key == $text_field_name)
-                    $value = htmlentities($value, ENT_QUOTES);
-            }
-
-            if (stristr($definition[$array_key][0], "DATE"))
-            {
-                if (!$this->_check_datetime($value))
-                {
-                    $this->_log->error("given date string is not correct (".$value.")");
-                    $this->error_str = ERROR_DATE_WRONG_FORMAT;
-                    
-                    return FALSE;
-                }
-                else
-                    array_push($values, $array_key."='".$value."'");
-            }
-            else if ($definition[$array_key][0] == "LABEL_DEFINITION_NOTES_FIELD")
+            if ($this->fields[$db_field_name][1] == "LABEL_DEFINITION_NOTES_FIELD")
             {
                 foreach ($value as $note)
                 {
                     if ($note[1] == "")
-                        $this->_log->warn("found an empty note (field=".$array_key.")");
+                        $this->_log->debug("found an empty note (field=".$db_field_name.")");
                     else
                     {
-                        array_push($notes_array, array($array_key, $note[0], $note[1]));
+                        array_push($notes_array, array($db_field_name, $note[0], $note[1]));
                     }
                 }
-                array_push($values, $array_key."=".count($notes_array));
+                $name_values_array[$db_field_name] = count($notes_array);
                 array_push($all_notes_array, $notes_array);
             }
-            else
-                array_push($values, $array_key."='".$value."'");
         }
         
-        $query = "UPDATE ".$this->table_name." SET ".implode($values, ", ");
-        $query .= ", ".DB_MODIFIER_FIELD_NAME."=\"".$this->_user->get_name()."\", ";
-        $query .= DB_TS_MODIFIED_FIELD_NAME."=\"".strftime(DB_DATETIME_FORMAT)."\"";
-        $query .= " WHERE ".$key_string;
-        $result = $this->_database->query($query);
-        if ($result == FALSE)
-        {
-            $this->_log->error("could not update entry of ListTable (key_string=".$key_string.")");
-            $this->_log->error("database error: ".$this->_database->get_error_str());
-            $this->error_str = ERROR_DATABASE_PROBLEM;
-            
+        if(parent::update($key_string, $name_values_array) == FALSE)
             return FALSE;
-        }
-        
+                
         # get the id of this row
         $query = "SELECT ".DB_ID_FIELD_NAME." FROM ".$this->table_name." WHERE ".$key_string;
         $result = $this->_database->query($query);
@@ -855,69 +406,20 @@ class ListTable
                 if ($note_array[1] == 0)
                 {
                     $this->_log->debug("found a new note");
-                    $this->_list_table_item_notes->insert($row_id[0], $note_array[0], $note_array[2]);
+                    $this->_list_table_note->insert($row_id[0], $note_array[0], $note_array[2]);
                 }
                 else
                 {
                     $this->_log->debug("update existing note");
-                    $this->_list_table_item_notes->update($row_id[0], $note_array[0], $note_array[1], $note_array[2]);
+                    $this->_list_table_note->update($note_array[1], $note_array[2]);
                 }
             }
         }
 
         # update list table description (date modified)
-        $this->_list_table_description->update();
+        $this->_list_table_description->update($this->list_title);
 
         $this->_log->trace("updated entry of ListTable");
-        
-        return TRUE;
-    }
-
-    /**
-    * archive an existing ListTableItem in database
-    * @param $key_string string unique identifier of ListTableItem to be archived
-    * @return bool indicates if ListTableItem has been archived
-    */
-    function archive ($key_string)
-    {
-        $definition = $this->_list_table_description->get_definition();
-        $field_names = $this->get_field_names();
-        
-        $this->_log->trace("archiving from ListTable (key_string=".$key_string.")");
-
-        if (!$this->_database->table_exists($this->table_name))
-        {
-            $this->_log->error("TableList does not exist in database");
-            $this->error_str = ERROR_DATABASE_PROBLEM;
-            
-            return FALSE;
-        }
-
-        # select row from database to see if it really exists
-        $name_values = $this->select_row($key_string);
-        if (count($name_values) == 0)
-        {
-            $this->_log->error("entry does not exist in TableList");
-            $this->error_str = ERROR_DATABASE_PROBLEM;
-            
-            return FALSE;
-        }
-        
-        $query = "UPDATE ".$this->table_name." SET ".DB_ARCHIVED_FIELD_NAME."=1, ";
-        $query .= DB_ARCHIVER_FIELD_NAME."=\"".$this->_user->get_name()."\", ";
-        $query .= DB_TS_ARCHIVED_FIELD_NAME."=\"".strftime(DB_DATETIME_FORMAT)."\" WHERE ".$key_string;
-        $result = $this->_database->query($query);
-
-        if ($result == FALSE)
-        {
-            $this->_log->error("could not archive entry from ListTable");
-            $this->_log->error("database error: ".$this->_database->get_error_str());
-            $this->error_str = ERROR_DATABASE_PROBLEM;
-            
-            return FALSE;
-        }
-
-        $this->_log->trace("archived from ListTable");
         
         return TRUE;
     }
@@ -929,92 +431,56 @@ class ListTable
     * @return bool indicates if ListTableItem has been deleted
     */
     function delete ($key_string)
-    {
-        $definition = $this->_list_table_description->get_definition();
-        $field_names = $this->get_field_names();
-        
+    {        
         $this->_log->trace("deleting from ListTable (key_string=".$key_string.")");
 
-        if (!$this->_database->table_exists($this->table_name))
-        {
-            $this->_log->error("TableList does not exist in database");
-            $this->error_str = ERROR_DATABASE_PROBLEM;
-            
+        # get the id of this record
+        $row = self::select_row($key_string);
+        if (count($row) == 0)
             return FALSE;
-        }
-
-        # select row from database to see if it really exists
-        $name_values = $this->select_row($key_string);
-        if (count($name_values) == 0)
-        {
-            $this->_log->error("entry does not exist in TableList");
-            $this->error_str = ERROR_DATABASE_PROBLEM;
+        $row_id = $row[DB_ID_FIELD_NAME];
             
+        if (parent::delete($key_string) == FALSE)
             return FALSE;
-        }
 
         # delete all notes for this row
-        $this->_list_table_item_notes->delete($name_values[DB_ID_FIELD_NAME]);
-
-        $query = "DELETE FROM ".$this->table_name." WHERE ".$key_string;
-        $result = $this->_database->query($query);
-
-        if ($result == FALSE)
-        {
-            $this->_log->error("could not delete entry to ListTable");
-            $this->_log->error("database error: ".$this->_database->get_error_str());
-            $this->error_str = ERROR_DATABASE_PROBLEM;
-            
-            return FALSE;
-        }
+        $this->_list_table_note->delete($row_id);
 
         # update list table description (date modified)
-        $this->_list_table_description->update();
+        $this->_list_table_description->update($this->list_title);
 
         $this->_log->trace("deleted from ListTable");
         
         return TRUE;
     }
-    
+
     /**
     * remove database table of current ListTable object
-    * remove all connected ListTableItemNotes objects
+    * remove corresponding database table of ListTableNote object
+    * remove corresponding ListTableDescription record
     * @return bool indicates if database table has been removed
     */
     function drop ()
     {
         $this->_log->trace("drop ListTable (table_name=".$this->table_name.")");
         
-        if (!$this->_database->table_exists($this->table_name))
-        {
-            $this->_log->error("TableList does not exist in database");
-            $this->error_str = ERROR_DATABASE_PROBLEM;
+        # remove ListTableDescription record
+        if (!$this->list_table_description->delete($list_title))
             return FALSE;
-        }
-
-        # delete all notes for this list_table
-        if (!$this->_list_table_item_notes->delete())
-        {
-            $this->error_str = $this->_list_table_item_notes->get_error_str();
-            
+        
+        # call parent drop()
+        if (!parent::drop())
             return FALSE;
-        }
-                    
-        $query = "DROP TABLE ".$this->table_name;
-        $result = $this->_database->query($query);
-        if ($result == FALSE)
-        {
-            $this->_log->error("could not drop ListTable");
-            $this->_log->error("database error: ".$this->_database->get_error_str());
-            $this->error_str = ERROR_DATABASE_PROBLEM;
-            
+        
+        # remove database table of ListTableNote object
+        if ($this->list_table_note->drop())
             return FALSE;
-        }
 
         $this->_log->info("dropped ListTable (table_name=".$this->table_name.")");
         
         return TRUE;
     }
+    
 }
 
 ?>

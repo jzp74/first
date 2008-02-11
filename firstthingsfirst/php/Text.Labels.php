@@ -78,18 +78,6 @@ define("LABEL_LAST_MODIFICATION_BY", "last modification by");
 
 /**
  * shared field definition
- * definition of number
- */
-define("LABEL_DEFINITION_NUMBER", "number&nbsp;&nbsp;");
-
-/**
- * shared field definition
- * definition of automatic number
- */
-define("LABEL_DEFINITION_AUTO_NUMBER", "automatic number&nbsp;&nbsp;");
-
-/**
- * shared field definition
  * definition of date
  */
 define("LABEL_DEFINITION_DATE", "date&nbsp;&nbsp;");
@@ -123,6 +111,42 @@ define("LABEL_DEFINITION_NOTES_FIELD", "notes field&nbsp;&nbsp;");
  * definition of selection box
  */
 define("LABEL_DEFINITION_SELECTION", "selection box&nbsp;&nbsp;");
+
+/**
+ * user label
+ * definition of name name
+ */
+define("LABEL_USER_NAME", "name");
+
+/**
+ * user pw
+ * definition of password name
+ */
+define("LABEL_USER_PW", "password");
+
+/**
+ * user label
+ * definition of can_edit name
+ */
+define("LABEL_USER_CAN_EDIT_LIST", "can edit list");
+
+/**
+ * user label
+ * definition of can_create name
+ */
+define("LABEL_USER_CAN_CREATE_LIST", "can create list");
+
+/**
+ * user label
+ * definition of is_admin name
+ */
+define("LABEL_USER_IS_ADMIN", "is admin");
+
+/**
+ * user label
+ * definition of times_login name
+ */
+define("LABEL_USER_TIMES_LOGIN", "has logged in");
 
 /**
  * add user label
@@ -349,15 +373,27 @@ define("LABEL_USER", "user");
 
 /**
  * portal label
+ * definition of 'list id' label
+ */
+define("LABEL_LIST_ID", "id");
+
+/**
+ * portal label
  * definition of 'list name' label
  */
 define("LABEL_LIST_NAME", "name");
 
 /**
- * login label
+ * portal label
  * definition of 'description' label
  */
 define("LABEL_LIST_DESCRIPTION", "description");
+
+/**
+ * portal label
+ * definition of 'description' label
+ */
+define("LABEL_LIST_DEFINITION", "definition");
 
 /**
  * portal label

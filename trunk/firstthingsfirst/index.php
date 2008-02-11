@@ -25,10 +25,12 @@ require_once("php/Text.Labels.php");
 require_once("php/Class.Result.php");
 require_once("php/Class.Database.php");
 require_once("php/Class.ListState.php");
+require_once("php/Class.DatabaseTable.php");
+require_once("php/Class.UserDatabaseTable.php");
 require_once("php/Class.User.php");
 require_once("php/Class.ListTableDescription.php");
 require_once("php/Class.ListTable.php");
-require_once("php/Class.ListTableItemNotes.php");
+require_once("php/Class.ListTableNote.php");
 
 /**
  * Initialize xajax
@@ -51,10 +53,9 @@ class EmptyClass {}
 
 
 /**
- * dummy initialisations
+ * dummy initialisation
  */
 $list_table = new EmptyClass();
-$list_table_item_remarks = new EmptyClass();
 
 /**
  * create global objects
@@ -67,7 +68,6 @@ $list_state = new ListState();
 $user = new User();
 $list_table_description = new ListTableDescription();
 $list_table = new ListTable();
-$list_table_item_notes = new ListTableItemNotes();
 $response = new xajaxResponse();
 
 /**

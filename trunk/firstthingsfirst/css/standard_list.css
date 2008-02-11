@@ -51,7 +51,7 @@
     }
     
 /*  defines pane that contains list row contents */
-#list_row_contens_pane {
+#list_row_contents_pane {
     display: inline-block;
     float: none;
     padding: 10px 0px 2px 0px;

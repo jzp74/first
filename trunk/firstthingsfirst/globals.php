@@ -53,14 +53,18 @@ define("DB_DATATYPE_PASSWORD", "CHAR(32) BINARY NOT NULL");
 /**
  * database fieldnames
  */
+define("DB_ID_FIELD_NAME", "_id");
+define("DB_ARCHIVER_FIELD_NAME", "_archiver");
+define("DB_TS_ARCHIVED_FIELD_NAME", "_ts_archived");
 define("DB_CREATOR_FIELD_NAME", "_creator");
 define("DB_TS_CREATED_FIELD_NAME", "_ts_created");
 define("DB_MODIFIER_FIELD_NAME", "_modifier");
 define("DB_TS_MODIFIED_FIELD_NAME", "_ts_modified");
-define("DB_ID_FIELD_NAME", "_id");
-define("DB_ARCHIVED_FIELD_NAME", "_archived");
-define("DB_ARCHIVER_FIELD_NAME", "_archiver");
-define("DB_TS_ARCHIVED_FIELD_NAME", "_ts_archived");
+define("DB_ARCHIVED_FIELD_NAME", "_archived"); # todo remove this define
+# this fieldname is only used in select queries and contains the current page
+define("DB_CURRENT_PAGE", "_current_page");
+# this fieldname is only used in select queries and contains the number of pages
+define("DB_TOTAL_PAGES", "_total_pages");
 
 /**
  * general separator
@@ -88,45 +92,77 @@ define("PERMISSION_ISNOT_ADMIN", 0);
  *   field_name => (database_definition, html_definition, input check)
  */
 $firstthingsfirst_field_descriptions = array(
-#    "LABEL_DEFINITION_NUMBER"        => array(
-#        DB_DATATYPE_INT,
-#        "input type=text size=\"10\" maxlength=\"10\"",
-#        "is_number"
-#    ),
+    "LABEL_DEFINITION_BOOL"        => array(
+        DB_DATATYPE_BOOL,
+        "input type=checkbox",
+        "",
+        0
+    ),
+    "LABEL_DEFINITION_NUMBER"        => array(
+        DB_DATATYPE_INT,
+        "input type=text size=\"10\" maxlength=\"10\"",
+        "is_number",
+        0
+    ),
     "LABEL_DEFINITION_AUTO_NUMBER"   => array(
         DB_DATATYPE_ID,
         "input type=text size=\"10\" maxlength=\"10\" readonly",
-        "is_number"
+        "is_number",
+        0
     ),
     "LABEL_DEFINITION_DATE"          => array(
         DB_DATATYPE_DATE,
         "input type=text size=\"10\" maxlength=\"10\"",
-        "is_not_empty is_date"
+        "is_not_empty is_date",
+        1
+    ),
+    "LABEL_DEFINITION_DATETIME"      => array(
+        DB_DATATYPE_DATETIME,
+        "input type=text size=\"20\" maxlength=\"20\"",
+        "is_not_empty is_date",
+        0
     ),
     "LABEL_DEFINITION_AUTO_DATE"     => array(
         DB_DATATYPE_DATE,
         "input type=text size=\"10\" maxlength=\"10\" readonly",
-        "is_date"
+        "is_date",
+        1
+    ),
+    "LABEL_DEFINITION_USERNAME"     => array(
+        DB_DATATYPE_USERNAME,
+        "input type=text size=\"20\" maxlenght=\"20\"",
+        "",
+        0
+    ),
+    "LABEL_DEFINITION_PASSWORD"     => array(
+        DB_DATATYPE_PASSWORD,
+        "input type=text size=\"20\" maxlenght=\"20\"",
+        "",
+        0
     ),
     "LABEL_DEFINITION_TEXT_LINE"     => array(
         DB_DATATYPE_TEXTLINE,
         "input type=text size=\"40\" maxlenght=\"100\"",
         "",
+        1
     ),
     "LABEL_DEFINITION_TEXT_FIELD"    => array(
         DB_DATATYPE_TEXTMESSAGE,
         "textarea cols=40 rows=3",
-        ""
+        "",
+        1
     ),
     "LABEL_DEFINITION_NOTES_FIELD" => array(
         DB_DATATYPE_INT,
         "",
-        ""
+        "",
+        1
     ),
     "LABEL_DEFINITION_SELECTION"     => array(
         DB_DATATYPE_TEXTMESSAGE,
         "select",
-        ""
+        "",
+        1
     )
 );
 

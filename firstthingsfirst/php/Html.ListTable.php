@@ -18,6 +18,13 @@ $firstthingsfirst_action_description[ACTION_GET_LIST_PAGE] = array(PERMISSION_CA
 $xajax->registerFunction("action_get_list_page");
 
 /**
+ * definition of 'get_list_print_page' action
+ */
+define("ACTION_GET_LIST_PRINT_PAGE", "get_list_print_page");
+$firstthingsfirst_action_description[ACTION_GET_LIST_PRINT_PAGE] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$xajax->registerFunction("action_get_list_print_page");
+
+/**
  * definition of 'get_list_content' action
  */
 define("ACTION_GET_LIST_CONTENT", "get_list_content");
@@ -25,46 +32,39 @@ $firstthingsfirst_action_description[ACTION_GET_LIST_CONTENT] = array(PERMISSION
 $xajax->registerFunction("action_get_list_content");
 
 /**
- * definition of 'get_list_row' action
+ * definition of 'get_list_record' action
  */
-define("ACTION_GET_LIST_ROW", "get_list_row");
-$firstthingsfirst_action_description[ACTION_GET_LIST_ROW] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_get_list_row");
+define("ACTION_GET_LIST_RECORD", "get_list_record");
+$firstthingsfirst_action_description[ACTION_GET_LIST_RECORD] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$xajax->registerFunction("action_get_list_record");
 
 /**
- * definition of 'get_list_row' action
+ * definition of 'insert_list_record' action
  */
-define("ACTION_GET_PRINT_LIST", "get_print_list");
-$firstthingsfirst_action_description[ACTION_GET_PRINT_LIST] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_get_print_list");
+define("ACTION_INSERT_LIST_RECORD", "insert_list_record");
+$firstthingsfirst_action_description[ACTION_INSERT_LIST_RECORD] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$xajax->registerFunction("action_insert_list_record");
 
 /**
- * definition of 'update_list_row' action
+ * definition of 'update_list_record' action
  */
-define("ACTION_UPDATE_LIST_ROW", "update_list_row");
-$firstthingsfirst_action_description[ACTION_UPDATE_LIST_ROW] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_update_list_row");
+define("ACTION_UPDATE_LIST_RECORD", "update_list_record");
+$firstthingsfirst_action_description[ACTION_UPDATE_LIST_RECORD] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$xajax->registerFunction("action_update_list_record");
 
 /**
- * definition of 'add_list_row' action
+ * definition of 'archive_list_record' action
  */
-define("ACTION_ADD_LIST_ROW", "add_list_row");
-$firstthingsfirst_action_description[ACTION_ADD_LIST_ROW] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_add_list_row");
+define("ACTION_ARCHIVE_LIST_RECORD", "archive_list_record");
+$firstthingsfirst_action_description[ACTION_ARCHIVE_LIST_RECORD] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$xajax->registerFunction("action_archive_list_record");
 
 /**
- * definition of 'archive_list_row' action
+ * definition of 'del_list_record' action
  */
-define("ACTION_ARCHIVE_LIST_ROW", "archive_list_row");
-$firstthingsfirst_action_description[ACTION_ARCHIVE_LIST_ROW] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_archive_list_row");
-
-/**
- * definition of 'del_list_row' action
- */
-define("ACTION_DEL_LIST_ROW", "del_list_row");
-$firstthingsfirst_action_description[ACTION_DEL_LIST_ROW] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_del_list_row");
+define("ACTION_DELETE_LIST_RECORD", "delete_list_record");
+$firstthingsfirst_action_description[ACTION_DELETE_LIST_RECORD] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$xajax->registerFunction("action_delete_list_record");
 
 /**
  * definition of 'cancel_list_action' action
@@ -72,6 +72,15 @@ $xajax->registerFunction("action_del_list_row");
 define("ACTION_CANCEL_LIST_ACTION", "cancel_list_action");
 $firstthingsfirst_action_description[ACTION_CANCEL_LIST_PAGE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 $xajax->registerFunction("action_cancel_list_action");
+
+/**
+ * configuration of HtlmTable
+ */
+$list_table_configuration = array(
+    HTML_TABLE_NAVIGATION_PORTAL => TRUE,
+    HTML_TABLE_JS_NAME_PREFIX => "list_",
+    HTML_TABLE_CSS_NAME_PREFIX => "database_table_"
+);
 
 
 /**
@@ -83,414 +92,39 @@ $xajax->registerFunction("action_cancel_list_action");
 function action_get_list_page ($list_title)
 {
     global $logging;
-    global $result;    
-    global $user;
-    global $response;
-    global $list_table_description;
+    global $list_table_configuration;
     
-    $html_str = "";
-
     $logging->info("ACTION: get list page (list_title=".$list_title.")");
 
-    if (!check_preconditions(ACTION_GET_LIST_PAGE))
+    # create necessary objects
+    $result = new Result();
+    $response = new xajaxResponse();
+    $list_table = new ListTable($list_title);
+    $html_list_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
+    
+    if (!check_preconditions(ACTION_GET_LIST_PAGE, $response))
         return $response;
     
-    $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
-    $html_str .= "        <div id=\"page_title\">".$list_title."</div>\n\n";
-    $html_str .= "        <div id=\"navigation_container\">\n";
-    $html_str .= "            <div id=\"navigation\">&nbsp;".get_query_button("action=get_portal_page", BUTTON_PORTAL)."</div>\n";
-    $html_str .= "            <div id=\"login_status\">&nbsp;</div>&nbsp\n";
-    $html_str .= "        </div> <!-- navigation_container -->\n\n";    
-    $html_str .= "        <div id=\"list_content_pane\">\n\n";
-    $html_str .= "        </div> <!-- list_content_pane -->\n\n";
-    $html_str .= "        <div id=\"action_pane\">\n\n";
-    $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
-    $html_str .= "            </div> <!-- action_bar -->\n\n";
-    $html_str .= "        </div> <!-- action_pane -->\n\n";           
-    $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
-
-    $result->set_result_str($html_str);    
-    
+    # set page
+    $html_list_table->get_page($list_title, "", $result);    
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
 
-    # set list content
-    action_get_list_content ($list_title, "", DATABASETABLE_UNKWOWN_PAGE);
+    # set content
+    $html_list_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $response->addAssign("database_table_content_pane", "innerHTML", $result->get_result_str());
+
+    # set login status
+    set_login_status($response);
     
-    # set login status, action bar and footer
-    set_login_status();
-    set_action_bar(get_action_bar($list_title, ""));
-    set_footer(get_list_footer());
+    # set action pane
+    $html_str = $html_list_table->get_action_bar($list_title, "");
+    $response->addAssign("action_pane", "innerHTML", $html_str);
+    
+    # set footer
+    $html_str = get_footer($list_table->get_creator_modifier_array()); 
+    set_footer($html_str, $response);
 
     $logging->trace("got list page");
-
-    return $response;
-}
-
-/**
- * get html only for the content of current list (called then sorts or changes pages)
- * this function is registered in xajax
- * @param string $list_title title of list
- * @param string $order_by_field name of field by which this list needs to be ordered
- * @param int $page page to be shown (show first page when 0 is given)
- * @return xajaxResponse every xajax registered function needs to return this object
- */
-function action_get_list_content ($list_title, $order_by_field, $page)
-{
-    global $logging;
-    global $result;
-    global $list_state;
-    global $user;
-    global $response;
-    global $list_table;
-    
-    $html_str = "";
-    
-    $logging->info("ACTION: get list content (list_title=".$list_title.", order_by_field=".$order_by_field.", page=".$page.")");
-
-    if (!check_preconditions(ACTION_GET_LIST_CONTENT))
-        return $response;
-
-    # set the correct list
-    $list_table->set($list_title);
-    $field_names = $list_table->get_user_field_names();
-    $fields = $list_table->get_fields();
-    $rows = $list_table->select($order_by_field, $page);
-    if (strlen($list_table->get_error_str()) > 0)
-    {
-        $result->set_error_str($list_table->get_error_str());
-        $result->set_error_element("list_content_pane");
-        # no return statement here because we want the complete page to be displayed
-    }
-    
-    # use the params that have been set by _list_table->select()
-    $total_pages = $list_state->get_total_pages();
-    if ($total_pages == 0)
-        $current_page = 0;
-    else
-        $current_page = $list_state->get_current_page();
-
-    # then we'll add some summary information, except when all pages have to be displayed
-    if ($page != DATABASETABLE_ALL_PAGES)
-        $html_str .= "            <div id=\"list_pages_top\">".LABEL_PAGE." ".$current_page." ".LABEL_OF." ".$total_pages."</div>\n\n";
-    
-    # then we'll start with the table definition, different table when all pages have to be displayed
-    if ($page != DATABASETABLE_ALL_PAGES)
-        $html_str .= "            <table id=\"list_contents\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
-    else
-        $html_str .= "            <table id=\"list_contents\" align=\"left\">\n";
-    
-    # now the first row containing the field names
-    $html_str .= "                <thead>\n";
-    $html_str .= "                    <tr>\n";
-    foreach ($field_names as $field_name)
-        $html_str .= "                        <th>".get_button("xajax_action_get_list_content('".$list_title."', '".$field_name."', ".$current_page.")", $field_name)."</th>\n";
-
-    # display extra column for actions, except when all pages have to be displayed
-    if ($page != DATABASETABLE_ALL_PAGES)
-        $html_str .= "                        <th>&nbsp</th>\n";
-    $html_str .= "                    </tr>\n";
-    $html_str .= "                </thead>\n";
-    $html_str .= "                <tbody>\n";
-    
-    $logging->debug("rows: ".$rows);
-    $logging->log_array($rows, "rows");
-    
-    # now all the rows
-    $row_number = 0;
-    foreach ($rows as $row)
-    {
-        # build key string for this row
-        $key_string = $list_table->_get_key_string($row);
-        $key_values_string = $list_table->_get_key_values_string($row);
-    
-        $html_str .= "                    <tr id=\"".$key_values_string."\">\n";
-        $col_number = 0;
-        
-        foreach ($field_names as $field_name)
-        {
-            $db_field_name = $list_table->_get_db_field_name($field_name);
-            $value = $row[$db_field_name];
-            
-            if (stristr($fields[$db_field_name][1], "DATE"))
-            {
-                $date_string = get_date_str(DATE_FORMAT_WEEKDAY, $value);
-                $html_str .= "                        <td onclick=\"xajax_action_get_list_row('".$list_title."', &quot;".$key_string."&quot;)\">";
-                $html_str .= $date_string."</td>\n";
-            }
-            else if ($fields[$db_field_name][1] == "LABEL_DEFINITION_NOTES_FIELD")
-            {
-                $html_str .= "                        <td onclick=\"xajax_action_get_list_row('".$list_title."', &quot;".$key_string."&quot;)\">";
-                if (count($value) > 0)
-                {
-                    $html_str .= "\n";
-                    foreach ($value as $note_array)
-                    {
-                        $html_str .= "                            <p>".$note_array[DB_CREATOR_FIELD_NAME]."&nbsp;".LABEL_AT."&nbsp;";
-                        $html_str .= get_date_str(DATE_FORMAT_NORMAL, $note_array[DB_TS_CREATED_FIELD_NAME]).": ";
-                        $html_str .= $note_array["_note"]."</p>\n";
-                    }
-                }
-                else
-                    $html_str .= "-";
-                $html_str .= "                        </td>\n";
-            }
-            else if ($fields[$db_field_name][1] == "LABEL_DEFINITION_TEXT_FIELD")
-            {
-                $html_str .= "                        <td onclick=\"xajax_action_get_list_row('".$list_title."', &quot;".$key_string."&quot;)\">";
-                $html_str .= nl2br($value)."</td>\n";
-            }            
-            else
-            {
-                $html_str .= "                        <td onclick=\"xajax_action_get_list_row('".$list_title."', &quot;".$key_string."&quot;)\">";
-                $html_str .= $value."</td>\n";
-            }
-            $col_number += 1;
-        }
-        
-        # add the archive link, except when all pages have to be displayed
-        if ($page != DATABASETABLE_ALL_PAGES)
-            $html_str .= "                        <td width=\"1%\" onclick=\"xajax_action_archive_list_row('".$list_title."', &quot;".$key_string."&quot;)\">".get_button("", BUTTON_ARCHIVE)."</td>\n";
-        $html_str .= "                    </tr>\n";
-        $row_number += 1;
-    }
-    
-    if ($total_pages == 0)
-    {
-        $html_str .= "                    <tr>\n";
-        foreach ($field_names as $field_name)
-            $html_str .= "                        <td>".LABEL_MINUS."</td>\n";
-            $html_str .= "                        <td>&nbsp</td>\n";
-        $html_str .= "                    </tr>\n";
-    }
-    
-    # end table definition
-    $html_str .= "                </tbody>\n";
-    $html_str .= "            </table>\n\n";
-    
-    # add navigation links, except when all pages have to be shown
-    if ($page != DATABASETABLE_ALL_PAGES)
-    {
-        $html_str .= "            <div id=\"list_pages_bottom\">";
-        # display 1 pagenumber when there is only one page (or none)
-        if ($total_pages == 0 || $total_pages == 1)
-        {
-                $html_str .= LABEL_PAGE.": <strong>".$total_pages."</strong>";
-        }
-        # pagenumber display algorithm for 2 or more pages
-        else
-        {
-            # display previous page link
-            if ($current_page > 1)
-                $html_str .= get_button("xajax_action_get_list_content('".$list_title."', '', ".($current_page - 1).")", "&laquo;&nbsp;".BUTTON_PREVIOUS_PAGE)."&nbsp;&nbsp;";
-        
-            # display first pagenumber
-            if ($current_page == 1)
-                $html_str .= " <strong>1</strong>";
-            else
-                $html_str .= " ".get_button("xajax_action_get_list_content('".$list_title."', '', 1)", 1);
-            # display middle pagenumbers
-            for ($cnt = 2; $cnt<$total_pages; $cnt += 1)
-            {
-                if ($cnt == ($current_page - 2))
-                    $html_str .= " <strong>...<strong>";
-                else if ($cnt == ($current_page - 1))
-                    $html_str .= " ".get_button("xajax_action_get_list_content('".$list_title."', '', ".$cnt.")", $cnt);
-                else if ($cnt == $current_page)
-                    $html_str .= " <strong>".$cnt."</strong>";
-                else if ($cnt == ($current_page + 1))
-                    $html_str .= " ".get_button("xajax_action_get_list_content('".$list_title."', '', ".$cnt.")", $cnt);
-                if ($cnt == ($current_page + 2))
-                    $html_str .= " <strong>...<strong>";
-            }
-            # display last pagenumber
-            if ($current_page == $total_pages)
-                $html_str .= "  <strong>".$total_pages."</strong>";
-            else
-                $html_str .= "  ".get_button("xajax_action_get_list_content('".$list_title."', '', ".$total_pages.")", $total_pages);
-
-            # display next page link
-            if ($current_page < $total_pages)
-                $html_str .= "&nbsp;&nbsp;".get_button("xajax_action_get_list_content('".$list_title."', '', ".($current_page + 1).")", BUTTON_NEXT_PAGE."&nbsp;&raquo;");        
-        }
-    }
-    
-    $html_str .= "</div>\n\n        ";
-    
-    $result->set_result_str($html_str);    
-
-    $response->addAssign("list_content_pane", "innerHTML", $result->get_result_str());
-
-    if (!check_postconditions())
-        return $response;
-    
-    $logging->trace("got list content");
-
-    return $response;
-}
-
-/**
- * get html of one specified row (called when user edits or adds a row)
- * this function is registered in xajax
- * @param string $list_title title of list
- * @param string $key_string comma separated name value pairs
- * @return xajaxResponse every xajax registered function needs to return this object
- */
-function action_get_list_row ($list_title, $key_string)
-{
-    global $logging;
-    global $result;    
-    global $user;
-    global $response;
-    global $list_table;
-    global $firstthingsfirst_field_descriptions;
-    global $firstthingsfirst_date_string;
-    
-    $html_str = "";
-    
-    $logging->info("ACTION: get list row (list_title=".$list_title.", key_string=".$key_string.")");
-
-    if (!check_preconditions(ACTION_GET_LIST_ROW))
-        return $response;
-
-    # set the correct list
-    $list_table->set($list_title);
-    $field_names = $list_table->get_user_field_names();
-    $fields = $list_table->get_fields();
-
-    # get list row when key string has been given
-    if (strlen($key_string))
-    {
-        $row = $list_table->select_row($key_string);
-        if (strlen($list_table->get_error_str()) > 0)
-        {
-            $result->set_error_str($list_table->get_error_str());
-            $result->set_error_element("list_content_pane");
-            # no return statement here because we want the complete page to be displayed
-        }
-    }
-
-    # start with the action bar
-    $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
-    if (strlen($key_string))
-        $html_str .= get_action_bar($list_title, "edit");
-    else
-        $html_str .= get_action_bar($list_title, "add");
-    $html_str .= "            </div> <!-- action_bar -->\n\n";
-       
-    # then the form and table definition
-    $html_str .= "\n                <div id=\"list_row_contents_pane\">\n\n";
-    $html_str .= "                    <form id=\"row_form\">\n";
-    $html_str .= "                        <table id=\"list_row_contents\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
-    $html_str .= "                            <tbody>\n";
-
-    # add table row for each field type
-    for ($i=0; $i<count($field_names); $i++)
-    {
-        $field_name = $field_names[$i];
-        $db_field_name = $list_table->_get_db_field_name($field_names[$i]);        
-        $field_type = $fields[$db_field_name][1];
-        $field_options = $fields[$db_field_name][2];
-        $logging->debug("row (name=".$field_name." db_name=".$db_field_name." type=".$field_type.")");
-        
-        # replace all " chars with &quot
-        $row[$db_field_name] = str_replace('"', '&quot', $row[$db_field_name]);
-        
-        # only add non auto_increment field types
-        if (!stristr($firstthingsfirst_field_descriptions[$field_type][0], "auto_increment"))
-        {
-            $html_str .= "                                <tr id=\"".$db_field_name."\">\n";
-            $html_str .= "                                    <th>".$field_name."</th>\n";
-            
-            if ($field_type != "LABEL_DEFINITION_NOTES_FIELD")
-            {
-                $html_str .= "                                    <td id=\"".$db_field_name.GENERAL_SEPARATOR.$field_type.GENERAL_SEPARATOR."0";
-                $html_str .= "\"><".$firstthingsfirst_field_descriptions[$field_type][1];
-                # create a name tag
-                $html_str .= " name=".$db_field_name.GENERAL_SEPARATOR.$field_type.GENERAL_SEPARATOR."0";
-            }
-            
-            # add initial value
-            if (strlen($key_string))
-            {
-                if (stristr($field_type, "DATE"))
-                {
-                    $date_string = get_date_str(DATE_FORMAT_NORMAL, $row[$db_field_name]);
-                    $html_str .= " value=\"".$date_string."\"";
-                }
-                else if ($field_type == "LABEL_DEFINITION_TEXT_FIELD")
-                    $html_str .= ">".$row[$db_field_name]."</textarea";
-                else if ($field_type == "LABEL_DEFINITION_SELECTION")
-                {
-                    $html_str .= ">";
-                    $option_list = explode("|", $field_options);
-                    foreach ($option_list as $option)
-                    {
-                        $html_str .= "\n                                        <option value=\"".$option."\"";
-                        if ($option == $row[$db_field_name])
-                            $html_str .= " selected";
-                        $html_str .= ">".$option."</option>";
-                    }
-                    $html_str .= "\n                                    </select";
-                }
-                else if ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
-                {
-                    $html_str .= get_list_row_notes($db_field_name, $row[$db_field_name]);
-                }
-                else
-                    $html_str .= " value=\"".$row[$db_field_name]."\"";
-            }
-            else
-            {
-                if ($field_type == "LABEL_DEFINITION_AUTO_DATE")
-                    $html_str .= " value=\"".strftime($firstthingsfirst_date_string)."\"";
-                elseif ($field_type == "LABEL_DEFINITION_TEXT_FIELD")
-                    $html_str .= "></textarea";
-                elseif ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
-                    $html_str .= get_list_row_notes($db_field_name, array());
-                elseif ($field_type == "LABEL_DEFINITION_SELECTION")
-                {
-                    $html_str .= ">";
-                    $option_list = explode("|", $field_options);
-                    foreach ($option_list as $option)
-                        $html_str .= "\n                                        <option value=\"".$option."\">".$option."</option>\n";
-                    $html_str .= "\n                                    </select";
-                }
-                else
-                    $html_str .= " value=\"\"";
-            }
-            if ($field_type != "LABEL_DEFINITION_NOTES_FIELD")
-                $html_str .= "></td>\n";
-            $html_str .= "                                </tr>\n";
-        }
-    }
-        
-    # add link to confirm contents to database
-    $html_str .= "                                <tr align=\"left\">\n";
-    $html_str .= "                                    <td colspan=2>";
-
-    if (!strlen($key_string))
-        $html_str .= get_button("xajax_action_add_list_row('".$list_title."', xajax.getFormValues('row_form'))", BUTTON_ADD);
-    else
-        $html_str .= get_button("xajax_action_update_list_row('".$list_title."', &quot;".$key_string."&quot;, xajax.getFormValues('row_form'))", BUTTON_COMMIT);
-
-    $html_str .= "&nbsp;&nbsp;".get_button("xajax_action_cancel_list_action ('".$list_title."')", BUTTON_CANCEL);
-    $html_str .= "</td>\n";
-    $html_str .= "                                </tr>\n";
-
-    # end form and table definition
-    $html_str .= "                            </tbody>\n";
-    $html_str .= "                        </table> <!-- list_row_contents -->\n";
-    $html_str .= "                    </form> <!-- row_form -->\n\n";
-    $html_str .= "                </div> <!-- list_row_contents_pane -->\n\n            ";
-    
-    $result->set_result_str($html_str);    
-
-    $response->addAssign("action_pane", "innerHTML", $result->get_result_str());
-
-    if (!check_postconditions())
-        return $response;
-
-    $logging->trace("got list row");
 
     return $response;
 }
@@ -501,35 +135,33 @@ function action_get_list_row ($list_title, $key_string)
  * @param string $list_title title of list
  * @return xajaxResponse every xajax registered function needs to return this object
  */
-function action_get_print_list ($list_title)
+function action_get_list_print_page ($list_title)
 {
     global $logging;
-    global $result;    
-    global $user;
-    global $response;
+    global $list_table_configuration;
     
-    $html_str = "";
-
     $logging->info("ACTION: get print list (list_title=".$list_title.")");
 
-    if (!check_preconditions(ACTION_GET_LIST_PAGE))
-        return $response;
-    
-    $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
-    $html_str .= "        <div id=\"page_title\">".$list_title."</div>\n\n";
-    $html_str .= "        <div id=\"list_content_pane\">\n\n";
-    $html_str .= "        </div> <!-- list_content_pane -->\n\n";
-    $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
+    # create necessary objects
+    $result = new Result();
+    $response = new xajaxResponse();
+    $list_table = new ListTable($list_title);
+    $html_list_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
 
-    $result->set_result_str($html_str);    
-    
+    if (!check_preconditions(ACTION_GET_LIST_PAGE, $response))
+        return $response;
+        
+    # set page
+    $html_list_table->get_print_page($list_title, "", $result);
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
 
-    # set list content
-    action_get_list_content ($list_title, "", -1);
-    
+    # set content
+    $html_list_table->get_content($list_title, "", DATABASETABLE_ALL_PAGES, $result);
+    $response->addAssign("database_table_content_pane", "innerHTML", $result->get_result_str());
+        
     # set footer
-    set_footer(get_list_footer());
+    $html_str = get_footer($list_table->get_creator_modifier_array()); 
+    set_footer($html_str, $response);
 
     # print this page
     $response->AddScriptCall("window.print()");
@@ -541,29 +173,99 @@ function action_get_print_list ($list_title)
 }
 
 /**
- * update a row from current list
+ * get html for the records of a ListTable
+ * this function is registered in xajax
+ * @param string $list_title title of list
+ * @param string $order_by_field name of field by which this list needs to be ordered
+ * @param int $page page to be shown (show first page when 0 is given)
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
+function action_get_list_content ($list_title, $order_by_field, $page)
+{
+    global $logging;
+    global $list_table_configuration;
+    
+    $logging->info("ACTION: get list content (list_title=".$list_title.", order_by_field=".$order_by_field.", page=".$page.")");
+
+    # create necessary objects
+    $result = new Result();
+    $response = new xajaxResponse();
+    $list_table = new ListTable($list_title);
+    $html_list_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
+
+    if (!check_preconditions(ACTION_GET_LIST_CONTENT, $response))
+        return $response;
+
+    # set content
+    $html_list_table->get_content($list_title, $order_by_field, $page, $result);
+    $response->addAssign("database_table_content_pane", "innerHTML", $result->get_result_str());
+
+    $logging->trace("got list content");
+
+    return $response;
+}
+
+/**
+ * get html of one specified record (called when user edits or inserts a record)
  * this function is registered in xajax
  * @param string $list_title title of list
  * @param string $key_string comma separated name value pairs
- * @param array $form_values values of new row (array of name value pairs)
  * @return xajaxResponse every xajax registered function needs to return this object
  */
-function action_update_list_row ($list_title, $key_string, $form_values)
+function action_get_list_record ($list_title, $key_string)
 {
     global $logging;
-    global $result;    
-    global $user;
-    global $response;
-    global $list_table;
+    global $list_table_configuration;
+    
+    $logging->info("ACTION: get list record (list_title=".$list_title.", key_string=".$key_string.")");
+
+    # create necessary objects
+    $result = new Result();
+    $response = new xajaxResponse();
+    $list_table = new ListTable($list_title);
+    $html_list_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
+
+    if (!check_preconditions(ACTION_GET_LIST_RECORD, $response))
+        return $response;
+
+    # remove any error messages
+    $response->addRemove("error_message");
+
+    # set action pane
+    $html_list_table->get_record($list_title, $key_string, $result);
+    $response->addAssign("action_pane", "innerHTML", $result->get_result_str());
+
+    $logging->trace("got list record");
+
+    return $response;
+}
+
+/**
+ * insert a record to current list
+ * this function is registered in xajax
+ * @param string $list_title title of list
+ * @param array $form_values values of new record (array of name value pairs)
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
+function action_insert_list_record ($list_title, $form_values)
+{
+    global $logging;
+    global $list_table_configuration;
     global $firstthingsfirst_field_descriptions;
     
     $html_str = "";
     $name_keys = array_keys($form_values);
     $new_form_values = array();
     
-    $logging->info("ACTION: update list row (list_title=".$list_title.", key_string=".$key_string.")");
+    $logging->info("ACTION: insert list record (list_title=".$list_title.")");
 
-    if (!check_preconditions(ACTION_UPDATE_LIST_ROW))
+    # create necessary objects
+    $result = new Result();
+    $response = new xajaxResponse();
+    $list_table = new ListTable($list_title);
+    $html_list_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
+
+    if (!check_preconditions(ACTION_INSERT_LIST_RECORD, $response))
         return $response;
 
     foreach ($name_keys as $name_key)
@@ -580,41 +282,110 @@ function action_update_list_row ($list_title, $key_string, $form_values)
         $new_form_value = $form_values[$name_key];
 
         # check field values
-        foreach ($check_functions as $check_function)
-        {            
-            if ($check_function == "is_not_empty")
-            {
-                $new_form_value = is_not_empty($name_key, $form_values[$name_key]);
-                if ($new_form_value == FALSE_RETURN_STRING)
-                {
-                    set_error_message($name_key, ERROR_NO_FIELD_VALUE_GIVEN);
+        $result_str = check_string($check_functions, $db_field_name, $form_values[$name_key]);
+        if (strlen($result_str) > 0)
+        {
+            set_error_message($result_str);
+            
+            return $response;
+        }
 
-                    return $response;
-                }
-            }
-            else if ($check_function == "is_number")
+        if ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
+        {
+            $new_note_array = array($field_number, $form_values[$name_key]);
+            
+            if (array_key_exists($db_field_name, $new_form_values))
             {
-                $new_form_value = is_number($name_key, $form_values[$name_key]);
-                if ($new_form_value == FALSE_RETURN_STRING)
-                {
-                    set_error_message($name_key, ERROR_NO_NUMBER_GIVEN);
-
-                    return $response;
-                }
+                $notes_array = $new_form_values[$db_field_name];
+                array_push($notes_array, $new_note_array);
+                $new_form_values[$db_field_name] = $notes_array;
             }
-            else if ($check_function == "is_date")
-            {
-                $new_form_value = is_date($name_key, $form_values[$name_key]);
-                if ($new_form_value == FALSE_RETURN_STRING)
-                {
-                    set_error_message($name_key, ERROR_DATE_WRONG_FORMAT);
+            else
+                $new_form_values[$db_field_name] = array($new_note_array);
+        }
+        else
+            $new_form_values[$db_field_name] = $new_form_value;            
+    }
+    
+    # remove any error messages
+    $response->addRemove("error_message");
+    
+    # display error when insertion returns false
+    if (!$list_table->insert($new_form_values))
+    {
+        $logging->warn("insert list record returns false");
+        set_error_message("database_table_content_pane", $list_table->get_error_str());
+        
+        return $response;
+    }
+    
+    # set content
+    $html_list_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $response->addAssign("database_table_content_pane", "innerHTML", $result->get_result_str());
+    
+    # set action pane
+    $html_str = $html_list_table->get_action_bar($list_title, "");
+    $response->addAssign("action_pane", "innerHTML", $html_str);
+    
+    # set footer
+    $html_str = get_footer($list_table->get_creator_modifier_array()); 
+    set_footer($html_str, $response);
 
-                    return $response;
-                }
-            }
-            else if (strlen($check_function))
-                $logging->trace("unknown check function (function=".$check_function.", $field_type=".$field_type.")"); 
-        }   
+    $logging->trace("inserted list record");
+
+    return $response;
+}
+
+/**
+ * update a record from current list
+ * this function is registered in xajax
+ * @param string $list_title title of list
+ * @param string $key_string comma separated name value pairs
+ * @param array $form_values values of new record (array of name value pairs)
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
+function action_update_list_record ($list_title, $key_string, $form_values)
+{
+    global $logging;
+    global $list_table_configuration;
+    global $firstthingsfirst_field_descriptions;
+    
+    $html_str = "";
+    $name_keys = array_keys($form_values);
+    $new_form_values = array();
+    
+    $logging->info("ACTION: update list record (list_title=".$list_title.", key_string=".$key_string.")");
+
+    # create necessary objects
+    $result = new Result();
+    $response = new xajaxResponse();
+    $list_table = new ListTable($list_title);
+    $html_list_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
+
+    if (!check_preconditions(ACTION_UPDATE_LIST_RECORD, $response))
+        return $response;
+
+    foreach ($name_keys as $name_key)
+    {
+        $value_array = explode(GENERAL_SEPARATOR, $name_key);
+        $db_field_name = $value_array[0];
+        $field_type = $value_array[1];
+        $field_number = $value_array[2];
+        $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][2]);
+        
+        $logging->debug("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
+        
+        # set new value to the old value
+        $new_form_value = $form_values[$name_key];
+
+        # check field values
+        $result_str = check_string($check_functions, $db_field_name, $form_values[$name_key]);
+        if (strlen($result_str) > 0)
+        {
+            set_error_message($result_str);
+            
+            return $response;
+        }
 
         if ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
         {
@@ -637,240 +408,127 @@ function action_update_list_row ($list_title, $key_string, $form_values)
             $new_form_values[$db_field_name] = $new_form_value;
     }
     
-    # set the correct list
-    $list_table->set($list_title);
+    # remove any error messages
+    $response->addRemove("error_message");
 
     # display error when insertion returns false
     if (!$list_table->update($key_string, $new_form_values))
     {
-        $logging->warn("insert returns false");
-        $result->set_error_str($list_table->get_error_str());
-        $result->set_error_element(end($name_keys));
+        $logging->warn("update list record returns false");
+        set_error_message(end($name_keys), $list_table->get_error_str());
         
         return $response;
     }
     
-    $html_str .= get_action_bar($list_title, "");
-    $result->set_result_str($html_str);    
+    # set content
+    $html_list_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $response->addAssign("database_table_content_pane", "innerHTML", $result->get_result_str());
+    
+    # set action pane
+    $html_str = $html_list_table->get_action_bar($list_title, "");
+    $response->addAssign("action_pane", "innerHTML", $html_str);
+    
+    # set footer
+    $html_str = get_footer($list_table->get_creator_modifier_array()); 
+    set_footer($html_str, $response);
 
-    $response->addRemove("list_row_contents_pane");
-    $response->addAssign("action_bar", "innerHTML", $result->get_result_str());
-
-    # refresh list and footer
-    action_get_list_content($list_title, "", 0);
-    set_footer(get_list_footer());
-
-    $logging->trace("updated list row");
+    $logging->trace("updated list record");
 
     return $response;
 }
 
 /**
- * add a row to current list
- * this function is registered in xajax
- * @param string $list_title title of list
- * @param array $form_values values of new row (array of name value pairs)
- * @return xajaxResponse every xajax registered function needs to return this object
- */
-function action_add_list_row ($list_title, $form_values)
-{
-    global $logging;
-    global $result;    
-    global $user;
-    global $response;
-    global $list_table;
-    global $firstthingsfirst_field_descriptions;
-    
-    $html_str = "";
-    $name_keys = array_keys($form_values);
-    $new_form_values = array();
-    
-    $logging->info("ACTION: add list row (list_title=".$list_title.")");
-
-    if (!check_preconditions(ACTION_ADD_LIST_ROW))
-        return $response;
-
-    foreach ($name_keys as $name_key)
-    {
-        $value_array = explode(GENERAL_SEPARATOR, $name_key);
-        $db_field_name = $value_array[0];
-        $field_type = $value_array[1];
-        $field_number = $value_array[2];
-        $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][2]);
-        
-        $logging->debug("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
-        
-        # set new value to the old value
-        $new_form_value = $form_values[$name_key];
-
-        # check field values
-        foreach ($check_functions as $check_function)
-        {            
-            if ($check_function == "is_not_empty")
-            {
-                $new_form_value = is_not_empty($name_key, $form_values[$name_key]);
-                if ($new_form_value == FALSE_RETURN_STRING)
-                {
-                    set_error_message($name_key, ERROR_NO_FIELD_VALUE_GIVEN);
-
-                    return $response;
-                }
-            }
-            else if ($check_function == "is_number")
-            {
-                $new_form_value = is_number($name_key, $form_values[$name_key]);
-                if ($new_form_value == FALSE_RETURN_STRING)
-                {
-                    set_error_message($name_key, ERROR_NO_NUMBER_GIVEN);
-
-                    return $response;
-                }
-            }
-            else if ($check_function == "is_date")
-            {
-                $new_form_value = is_date($name_key, $form_values[$name_key]);
-                if ($new_form_value == FALSE_RETURN_STRING)
-                {
-                    set_error_message($name_key, ERROR_DATE_WRONG_FORMAT);
-
-                    return $response;
-                }
-            }
-            else if (strlen($check_function))
-                $logging->warn("unknown check function (function=".$check_function.", $field_type=".$field_type.")"); 
-        }   
-
-        if ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
-        {
-            $new_note_array = array($field_number, $form_values[$name_key]);
-            
-            if (array_key_exists($db_field_name, $new_form_values))
-            {
-                $notes_array = $new_form_values[$db_field_name];
-                array_push($notes_array, $new_note_array);
-                $new_form_values[$db_field_name] = $notes_array;
-            }
-            else
-                $new_form_values[$db_field_name] = array($new_note_array);
-        }
-        else
-            $new_form_values[$db_field_name] = $new_form_value;            
-    }
-    
-    # set the correct list
-    $list_table->set($list_title);
-
-    # display error when insertion returns false
-    if (!$list_table->insert($new_form_values))
-    {
-        $logging->warn("insert returns false");
-        $result->set_error_str($list_table->get_error_str());
-        $result->set_error_element("list_content_pane");
-        
-        return $response;
-    }
-    
-    $html_str .= get_action_bar($list_title, "");
-    $result->set_result_str($html_str);    
-
-    $response->addRemove("list_row_contents_pane");
-    $response->addAssign("action_bar", "innerHTML", $result->get_result_str());
-
-    # refresh list and footer
-    action_get_list_content($list_title, "", 0);
-    set_footer(get_list_footer());
-
-    $logging->trace("added list row");
-
-    return $response;
-}
-
-/**
- * archive a row from current list
+ * archive a record from current list
  * this function is registered in xajax
  * @param string $list_title title of list
  * @param string $key_string comma separated name value pairs
  * @return xajaxResponse every xajax registered function needs to return this object
  */
-function action_archive_list_row ($list_title, $key_string)
+function action_archive_list_record ($list_title, $key_string)
 {
     global $logging;
-    global $result;    
-    global $user;
-    global $response;
-    global $list_table;
+    global $list_table_configuration;
     
-    $logging->info("ACTION: archive list row (list_title=".$list_title.", key_string=".$key_string.")");
+    $logging->info("ACTION: archive list record (list_title=".$list_title.", key_string=".$key_string.")");
 
-    if (!check_preconditions(ACTION_ARCHIVE_LIST_ROW))
+    # create necessary objects
+    $result = new Result();
+    $response = new xajaxResponse();
+    $list_table = new ListTable($list_title);
+    $html_list_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
+
+    if (!check_preconditions(ACTION_ARCHIVE_LIST_RECORD, $response))
         return $response;
 
-    # set the correct list
-    $list_table->set($list_title);
+    # remove any error messages
+    $response->addRemove("error_message");
 
     # display error when archive returns false
     if (!$list_table->archive($key_string))
     {
-        $logging->warn("archive returns false");
-        $result->set_error_str($list_table->get_error_str());
-        $result->set_error_element("list_content_pane");
-        
-        if (!check_postconditions())
-            return $response;
+        $logging->warn("archive list record returns false");
+        set_error_message("database_table_content_pane", $list_table->get_error_str());
+                
+        return $response;
     }
 
-    $response->addAssign("list_content_pane", "innerHTML", $result->get_result_str());
+    # set content
+    $html_list_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE);
+    $response->addAssign("database_table_content_pane", "innerHTML", $result->get_result_str());
+    
+    # set footer
+    $html_str = get_footer($list_table->get_creator_modifier_array()); 
+    set_footer($html_str, $response);
 
-    # refresh list and footer
-    action_get_list_content($list_title, "", 0);
-    set_footer(get_list_footer());
-
-    $logging->trace("archived list row");
+    $logging->trace("archived list record");
 
     return $response;
 }
 
 /**
- * delete a row from current list
+ * delete a record from current list
  * this function is registered in xajax
  * @param string $list_title title of list
  * @param string $key_string comma separated name value pairs
  * @return xajaxResponse every xajax registered function needs to return this object
  */
-function action_del_list_row ($list_title, $key_string)
+function action_delete_list_record ($list_title, $key_string)
 {
     global $logging;
-    global $result;    
-    global $user;
-    global $response;
-    global $list_table;
+    global $list_table_configuration;
     
-    $logging->info("ACTION: delete list row (list_title=".$list_title.", key_string=".$key_string.")");
+    $logging->info("ACTION: delete list record (list_title=".$list_title.", key_string=".$key_string.")");
 
-    if (!check_preconditions(ACTION_DEL_LIST_ROW))
+    # create necessary objects
+    $result = new Result();
+    $response = new xajaxResponse();
+    $list_table = new ListTable($list_title);
+    $html_list_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
+
+    if (!check_preconditions(ACTION_DELETE_LIST_RECORD, $response))
         return $response;
 
-    # set the correct list
-    $list_table->set($list_title);
+    # remove any error messages
+    $response->addRemove("error_message");
 
     # display error when delete returns false
     if (!$list_table->delete($key_string))
     {
-        $logging->warn("delete returns false");
-        $result->set_error_str($list_table->get_error_str());
-        $result->set_error_element("list_content_pane");
-        
-        if (!check_postconditions())
-            return $response;
+        $logging->warn("delete list record returns false");
+        set_error_message("database_table_content_pane", $list_table->get_error_str());
+                
+        return $response;
     }
 
-    $response->addAssign("list_content_pane", "innerHTML", $result->get_result_str());
+    # set content
+    $html_list_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE);
+    $response->addAssign("database_table_content_pane", "innerHTML", $result->get_result_str());
+    
+    # set footer
+    $html_str = get_footer($list_table->get_creator_modifier_array()); 
+    set_footer($html_str, $response);
 
-    # refresh list and footer
-    action_get_list_content($list_title, "", 0);
-    set_footer(get_list_footer());
-
-    $logging->trace("archived list row");
+    $logging->trace("deleted list record");
 
     return $response;
 }
@@ -884,24 +542,24 @@ function action_del_list_row ($list_title, $key_string)
 function action_cancel_list_action ($list_title)
 {
     global $logging;
-    global $result;    
-    global $user;
-    global $response;
+    global $list_table_configuration;
     
-    $html_str = "";
-
     $logging->info("ACTION: cancel list action (list_title=".$list_title.")");
 
-    if (!check_preconditions(ACTION_CANCEL_LIST_ACTION))
-        return $response;
+    # create necessary objects
+    $response = new xajaxResponse();
+    $list_table = new ListTable($list_title);
+    $html_list_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
 
-    $html_str .= get_action_bar($list_title, "");
-    $result->set_result_str($html_str);    
+    if (!check_preconditions(ACTION_CANCEL_LIST_ACTION, $response))
+        return $response;
 
     # remove any error messages
     $response->addRemove("error_message");
-    $response->addRemove("list_row_contents_pane");
-    $response->addAssign("action_bar", "innerHTML", $result->get_result_str());
+
+    # set action pane
+    $html_str = $html_list_table->get_action_bar($list_title, "");
+    $response->addAssign("action_pane", "innerHTML", $html_str);
 
     $logging->trace("canceled list action");
 
@@ -909,56 +567,23 @@ function action_cancel_list_action ($list_title)
 }
 
 /**
- * return html for the action bar
- * @param string $list_title title of list
- * @param string $action highlight given action in the action bar (highlight none when action is empty)
+ * get html for footer
  * @return string returned html
  */
-function get_action_bar ($list_title, $action)
+function get_footer ($creator_modifier_array)
 {
     global $logging;
-
-    $logging->trace("get action bar (list_title=".$list_title.", action=".$action.")");
+    
+    $logging->trace("getting footer");
 
     $html_str = "";
 
-    $html_str .= "\n\n               <div id=\"action_bar_left\">";
-    if ($action == "edit")
-        $html_str .= "<strong>".LABEL_EDIT_ROW."</strong>";
-    else if ($action == "add")
-        $html_str .= "<strong>".LABEL_ADD_ROW."</strong>";
-    else
-        $html_str .= get_button("xajax_action_get_list_row('".$list_title."', '')", BUTTON_ADD_ROW);
-    $html_str .= "</div>\n";
-    $html_str .= "               <div id=\"action_bar_right\">";
-    $html_str .= get_query_button_new_window("action=get_print_list&list=".$list_title, BUTTON_PRINT_LIST);
-    $html_str .= "</div>\n\n           ";
-    
-    $logging->trace("got action bar");
-    
-    return $html_str;
-}
-
-/**
- * return html for the footer of a list page
- * @return string returned html
- */
-function get_list_footer ()
-{
-    global $list_table;
-    global $logging;
-
-    $logging->trace("getting list_footer");
-    
-    $html_str = "";
-    $creator_modifier_array = $list_table->get_creator_modifier_array();
-    
     $html_str .= LABEL_CREATED_BY." <strong>".$creator_modifier_array[DB_CREATOR_FIELD_NAME];
     $html_str .= "</strong> ".LABEL_AT." <strong>".$creator_modifier_array[DB_TS_CREATED_FIELD_NAME];
     $html_str .= "</strong>, ".LABEL_LAST_MODIFICATION_BY." <strong>".$creator_modifier_array[DB_MODIFIER_FIELD_NAME];
     $html_str .= "</strong> ".LABEL_AT." <strong>".$creator_modifier_array[DB_TS_MODIFIED_FIELD_NAME]."</strong>";
-        
-    $logging->trace("got list_footer");
+    
+    $logging->trace("got footer");
 
     return $html_str;
 }

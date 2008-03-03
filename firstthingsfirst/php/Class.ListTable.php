@@ -45,33 +45,52 @@ class ListTable extends UserDatabaseTable
     protected $creator_modifier_array;
 
     /**
-    * reference to global list_table_description object
+    * list_table_description object
     * @var ListTableDescription
     */
     protected $_list_table_description;
 
     /**
-    * reference to list_table_note object (object is initialized in set() function)
+    * list_table_note object
     * @var ListTableItemNotes
     */
     protected $_list_table_note;
 
     /**
     * overwrite __construct() function
+    * @param $list_title string name of this list
     * @return void
     */
-    function __construct ()
+    function __construct ($list_title)
     {        
-        # these variables are assumed to be globally available
-        global $list_table_description;
+        $fields = array();
+        $this->creator_modifier_array = array();
         
-        # call parent __construct()
-        parent::__construct();
-        
-        # set global references for this object
-        $this->_list_table_description =& $list_table_description;
+        $this->_list_table_description = new ListTableDescription();
+        $record = $this->_list_table_description->select_record($list_title);
+        $_list_table_description_id = $record[DB_ID_FIELD_NAME];
+        $definition = $record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME];
 
-        $this->_log->trace("constructed new ListTable object");
+        # set list_title
+        $this->list_title = $list_title;
+        # set creator_modifier_value
+        $this->creator_modifier_array[DB_CREATOR_FIELD_NAME] = $record[DB_CREATOR_FIELD_NAME];
+        $this->creator_modifier_array[DB_TS_CREATED_FIELD_NAME] = $record[DB_TS_CREATED_FIELD_NAME];
+        $this->creator_modifier_array[DB_MODIFIER_FIELD_NAME] = $record[DB_MODIFIER_FIELD_NAME];
+        $this->creator_modifier_array[DB_TS_MODIFIED_FIELD_NAME] = $record[DB_TS_MODIFIED_FIELD_NAME];
+
+        $table_name = $this->_convert_list_name_to_table_name($list_title);
+        $db_field_names = array_keys($definition);
+        foreach ($db_field_names as $db_field_name)
+            $fields[$db_field_name] = array($this->_get_field_name($db_field_name), $definition[$db_field_name][0], $definition[$db_field_name][2]);
+        
+        # call parent construct()
+        parent::__construct($table_name, $fields, "111");
+
+        # initialize ListTableNote
+        $this->_list_table_note = new ListTableNote ($list_title);
+            
+        $this->_log->debug("constructed new ListTable object (table_name=".$this->table_name.")");
     }
     
     /**
@@ -129,44 +148,25 @@ class ListTable extends UserDatabaseTable
     {
         return $this->creator_modifier_array;
     }
-
+    
     /**
-    * set attributes (initiate this object)
-    * @return void
+    * get value of list_table_description attribute
+    * @return ListTableDescription value of list_table_description attribute
     */
-    function set ($list_title)
+    function get_list_table_description ()
     {
-        $this->_log->trace("setting ListTable");
-
-        $fields = array();
-        $this->creator_modifier_array = array();
-        
-        $row = $this->_list_table_description->select_row($list_title);
-        $list_table_description_id = $row[DB_ID_FIELD_NAME];
-        $definition = $row[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME];
-
-        # set list_title
-        $this->list_title = $list_title;
-        # set creator_modifier_value
-        $this->creator_modifier_array[DB_CREATOR_FIELD_NAME] = $row[DB_CREATOR_FIELD_NAME];
-        $this->creator_modifier_array[DB_TS_CREATED_FIELD_NAME] = $row[DB_TS_CREATED_FIELD_NAME];
-        $this->creator_modifier_array[DB_MODIFIER_FIELD_NAME] = $row[DB_MODIFIER_FIELD_NAME];
-        $this->creator_modifier_array[DB_TS_MODIFIED_FIELD_NAME] = $row[DB_TS_MODIFIED_FIELD_NAME];
-
-        $table_name = $this->_convert_list_name_to_table_name($list_title);
-        $db_field_names = array_keys($definition);
-        foreach ($db_field_names as $db_field_name)
-            $fields[$db_field_name] = array($this->_get_field_name($db_field_name), $definition[$db_field_name][0], $definition[$db_field_name][2]);
-        
-        # call parent set()
-        parent::set($table_name, $fields, "111");
-
-        # initialize ListTableNote
-        $this->_list_table_note = new ListTableNote ($list_title);
-            
-        $this->_log->trace("set ListTable (table_name=".$this->table_name.")");
+        return $this->_list_table_description;
     }
     
+    /**
+    * get value of list_table_note attribute
+    * @return ListTableDescription value of list_table_note attribute
+    */
+    function get_list_table_note ()
+    {
+        return $this->_list_table_note;
+    }
+
     /**
     * create new database table for current ListTable object
     * @param $force bool indicates if existing database table should be removed (FALSE if not provided)
@@ -209,14 +209,14 @@ class ListTable extends UserDatabaseTable
     {
         global $firstthingsfirst_field_descriptions;
 
-        $rows_with_notes = array();       
+        $records_with_notes = array();       
 
         $this->_log->trace("selecting ListTable (order_by_field=".$order_by_field.", page=".$page.")");
 
         # call parent select()
-        $rows = parent::select($order_by_field, $page, $this->db_field_names);
+        $records = parent::select($order_by_field, $page, $this->db_field_names);
         
-        if (count($rows) != 0)
+        if (count($records) != 0)
         {
             # get field names of note fields
             $note_fields_array = array();
@@ -227,75 +227,75 @@ class ListTable extends UserDatabaseTable
             }
 
             # get notes 
-            foreach($rows as $row)
+            foreach($records as $record)
             {
                 foreach($note_fields_array as $note_field)
                 {
-                    if ($row[$note_field] > 0)
+                    if ($record[$note_field] > 0)
                     {
-                        $result = $this->_list_table_note->select($row[DB_ID_FIELD_NAME], $note_field);
-                        if (count($result) == 0 || count($result) != $row[$note_field])
+                        $result = $this->_list_table_note->select($record[DB_ID_FIELD_NAME], $note_field);
+                        if (count($result) == 0 || count($result) != $record[$note_field])
                         {
                             $this->_log->warn("unexpected number of notes found");
-                            $row[$note_field] = $result;
+                            $record[$note_field] = $result;
                         }
                         else
-                            $row[$note_field] = $result;
+                            $record[$note_field] = $result;
                     }
                     else
-                        $row[$note_field] = array();
+                        $record[$note_field] = array();
                 }
-                array_push($rows_with_notes, $row);
+                array_push($records_with_notes, $record);
             }
         }
         else
-            return $rows;
+            return $records;
 
         $this->_log->trace("selected ListTable (from=".$limit_from.")");
     
-        return $rows_with_notes;
+        return $records_with_notes;
     }
     
     /**
-    * select exactly one ListTableItem from database
+    * select exactly one record from database
     * @param $key_string string unique identifier of requested ListTableItem
     * @return array array containing exactly one ListTableItem (which is an array)
     */
-    function select_row ($key_string)
+    function select_record ($key_string)
     {
-        $this->_log->trace("selecting ListTable row (key_string=".$key_string.")");
+        $this->_log->trace("selecting record form ListTable (key_string=".$key_string.")");
 
-        # call parent select_row()
-        $row = parent::select_row($key_string, $this->db_field_names);
+        # call parent select_record()
+        $record = parent::select_record($key_string, $this->db_field_names);
 
-        if (count($row) != 0)
+        if (count($record) != 0)
         {
             # get notes
             foreach($this->db_field_names as $db_field_name)
             {
                 if ($this->fields[$db_field_name][1] == "LABEL_DEFINITION_NOTES_FIELD")
                 {
-                    if ($row[$db_field_name] > 0)
+                    if ($record[$db_field_name] > 0)
                     {
-                        $result = $this->_list_table_note->select($row[DB_ID_FIELD_NAME], $db_field_name);
-                        if (count($result) == 0 || count($result) != $row[$db_field_name])
+                        $result = $this->_list_table_note->select($record[DB_ID_FIELD_NAME], $db_field_name);
+                        if (count($result) == 0 || count($result) != $record[$db_field_name])
                         {
                             $this->_log->warn("unexpected number of notes found");
-                            $row[$db_field_name] = $result;
+                            $record[$db_field_name] = $result;
                         }
                         else
-                            $row[$db_field_name] = $result;
+                            $record[$db_field_name] = $result;
                     }
                     else
-                        $row[$db_field_name] = array();
+                        $record[$db_field_name] = array();
                 }
             }
-            $this->_log->trace("read ListTable row");
+            $this->_log->trace("selected record form ListTable record");
                 
-            return $row;
+            return $record;
         }
         else
-            return $row;
+            return $record;
     }
     
     /**
@@ -308,7 +308,7 @@ class ListTable extends UserDatabaseTable
         $db_field_names = array_keys($name_values);
         $all_notes_array = array();
         
-        $this->_log->trace("inserting into ListTable");
+        $this->_log->trace("inserting record into ListTable");
 
         foreach ($db_field_names as $db_field_name)
         {
@@ -343,7 +343,7 @@ class ListTable extends UserDatabaseTable
         # update list table description (date modified)
         $this->_list_table_description->update($this->list_title);
 
-        $this->_log->trace("inserted into ListTable");
+        $this->_log->trace("inserted record into ListTable");
         
         return TRUE;
     }
@@ -359,7 +359,7 @@ class ListTable extends UserDatabaseTable
         $db_field_names = array_keys($name_values_array);
         $all_notes_array = array();
 
-        $this->_log->trace("updating ListTable (key_string=".$key_string.")");
+        $this->_log->trace("updating record from ListTable (key_string=".$key_string.")");
 
         foreach ($db_field_names as $db_field_name)
         {
@@ -385,7 +385,7 @@ class ListTable extends UserDatabaseTable
         if(parent::update($key_string, $name_values_array) == FALSE)
             return FALSE;
                 
-        # get the id of this row
+        # get the id of this record
         $query = "SELECT ".DB_ID_FIELD_NAME." FROM ".$this->table_name." WHERE ".$key_string;
         $result = $this->_database->query($query);
         if ($result == FALSE)
@@ -396,7 +396,7 @@ class ListTable extends UserDatabaseTable
             
             return FALSE;
         }
-        $row_id = $this->_database->fetch($result);
+        $record_id = $this->_database->fetch($result);
                 
         # insert new notes and update existing notes
         foreach ($all_notes_array as $notes_array)
@@ -406,7 +406,7 @@ class ListTable extends UserDatabaseTable
                 if ($note_array[1] == 0)
                 {
                     $this->_log->debug("found a new note");
-                    $this->_list_table_note->insert($row_id[0], $note_array[0], $note_array[2]);
+                    $this->_list_table_note->insert($record_id[0], $note_array[0], $note_array[2]);
                 }
                 else
                 {
@@ -419,7 +419,7 @@ class ListTable extends UserDatabaseTable
         # update list table description (date modified)
         $this->_list_table_description->update($this->list_title);
 
-        $this->_log->trace("updated entry of ListTable");
+        $this->_log->trace("updated record of ListTable");
         
         return TRUE;
     }
@@ -432,24 +432,24 @@ class ListTable extends UserDatabaseTable
     */
     function delete ($key_string)
     {        
-        $this->_log->trace("deleting from ListTable (key_string=".$key_string.")");
+        $this->_log->trace("deleting record from ListTable (key_string=".$key_string.")");
 
         # get the id of this record
-        $row = self::select_row($key_string);
-        if (count($row) == 0)
+        $record = self::select_record($key_string);
+        if (count($record) == 0)
             return FALSE;
-        $row_id = $row[DB_ID_FIELD_NAME];
+        $record_id = $record[DB_ID_FIELD_NAME];
             
         if (parent::delete($key_string) == FALSE)
             return FALSE;
 
-        # delete all notes for this row
-        $this->_list_table_note->delete($row_id);
+        # delete all notes for this record
+        $this->_list_table_note->delete($record_id);
 
         # update list table description (date modified)
         $this->_list_table_description->update($this->list_title);
 
-        $this->_log->trace("deleted from ListTable");
+        $this->_log->trace("deleted record from ListTable");
         
         return TRUE;
     }
@@ -465,17 +465,25 @@ class ListTable extends UserDatabaseTable
         $this->_log->trace("drop ListTable (table_name=".$this->table_name.")");
         
         # remove ListTableDescription record
-        if (!$this->list_table_description->delete($list_title))
+        if ($this->_list_table_description->delete($this->list_title) == FALSE)
+        {
+            $this->error_str = $this->_list_table_description->get_error_str();
+            
             return FALSE;
-        
-        # call parent drop()
-        if (!parent::drop())
-            return FALSE;
+        }
         
         # remove database table of ListTableNote object
-        if ($this->list_table_note->drop())
+        if ($this->_list_table_note->drop() == FALSE)
+        {
+            $this->error_str = $this->_list_table_note->get_error_str();
+            
             return FALSE;
+        }
 
+        # call parent drop()
+        if (parent::drop() == FALSE)
+            return FALSE;
+        
         $this->_log->info("dropped ListTable (table_name=".$this->table_name.")");
         
         return TRUE;

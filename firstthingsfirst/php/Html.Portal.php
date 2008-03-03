@@ -25,11 +25,11 @@ $firstthingsfirst_action_description[ACTION_GET_LIST_TABLES] = array(PERMISSION_
 $xajax->registerFunction("action_get_list_tables");
 
 /**
- * definition of 'del_list_table' action
+ * definition of 'delete_list_table' action
  */
-define("ACTION_DEL_LIST_TABLE", "del_list_table");
-$firstthingsfirst_action_description[ACTION_DEL_LIST_TABLE] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_del_list_table");
+define("ACTION_DELETE_LIST_TABLE", "delete_list_table");
+$firstthingsfirst_action_description[ACTION_DELETE_LIST_TABLE] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$xajax->registerFunction("action_delete_list_table");
 
 
 /**
@@ -40,15 +40,17 @@ $xajax->registerFunction("action_del_list_table");
 function action_get_portal_page ()
 {
     global $logging;
-    global $result;
     global $user;
-    global $response;
     global $firstthingsfirst_portal_title;
     global $firstthingsfirst_portal_intro_text;
 
     $logging->info("ACTION: get portal page");
 
-    if (!check_preconditions(ACTION_GET_PORTAL_PAGE))
+    # create necessary objects
+    $result = new Result();
+    $response = new xajaxResponse();
+
+    if (!check_preconditions(ACTION_GET_PORTAL_PAGE, $response))
         return $response;
     
     $html_str = "";
@@ -71,15 +73,13 @@ function action_get_portal_page ()
     $html_str .= "        </div> <!-- action_pane -->\n\n";           
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
 
-    $result->set_result_str($html_str);    
-
-    $response->addAssign("main_body", "innerHTML", $result->get_result_str());
+    $response->addAssign("main_body", "innerHTML", $html_str);
 
     # get list tables
-    action_get_list_tables();
+    action_get_list_tables($result, $response);
 
-    set_login_status();
-    set_footer("&nbsp;");
+    set_login_status($response);
+    set_footer("&nbsp;", $response);
 
     $logging->trace("got portal page");
 
@@ -88,24 +88,24 @@ function action_get_portal_page ()
 
 /**
  * get the html for an overview of all ListTable objects contained in database
+ * @param $result Result result object
+ * @param $response xajaxResponse response object
  * @return void
  */
-function action_get_list_tables ()
+function action_get_list_tables ($result, $response)
 {
     global $logging;
-    global $result;
     global $database;
-    global $response;
-    global $list_table_description;
     
     $logging->info("ACTION: get list tables");
 
     $html_str = "";
 
-    if (!check_preconditions(ACTION_GET_LIST_PAGES))
+    if (!check_preconditions(ACTION_GET_LIST_PAGES, $response))
         return $response;
 
     # get all list_tables from database
+    $list_table_description = new ListTableDescription();
     $list_table_descriptions = $list_table_description->select("", DATABASETABLE_UNKWOWN_PAGE);
     if (count($list_table_descriptions) == 0)
     {
@@ -144,7 +144,7 @@ function action_get_list_tables ()
         $html_str .= "><strong>".$list_table_description[DB_MODIFIER_FIELD_NAME]."</strong>&nbsp;".LABEL_AT."&nbsp;<strong>";
         $html_str .= get_date_str(DATE_FORMAT_NORMAL, $list_table_description[DB_TS_MODIFIED_FIELD_NAME])."</strong></td>\n";
         $html_str .= "                        <td width=\"1%\">".get_query_button("action=get_listbuilder_page&list=".$list_table_description[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], BUTTON_MODIFY);
-        $html_str .= "&nbsp;&nbsp;".get_button_confirm("xajax_action_del_list_table('".$list_table_description[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."')", LABEL_CONFIRM_DELETE, BUTTON_DELETE)."</td>\n";
+        $html_str .= "&nbsp;&nbsp;".get_button_confirm("xajax_action_delete_list_table('".$list_table_description[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."')", LABEL_CONFIRM_DELETE, BUTTON_DELETE)."</td>\n";
         $html_str .= "                    </tr>\n";
     }
     if (!count($list_table_descriptions))
@@ -165,7 +165,7 @@ function action_get_list_tables ()
 
     $response->addAssign("portal_overview_pane", "innerHTML", $result->get_result_str());
 
-    if (!check_postconditions())
+    if (!check_postconditions($result, $response))
         return $response;
 
     $logging->trace("got list_tables");
@@ -180,26 +180,32 @@ function action_get_list_tables ()
  * @return xajaxResponse every xajax registered function needs to return this object
  */
 
-function action_del_list_table ($list_title)
+function action_delete_list_table ($list_title)
 {
     global $logging;
     global $response;
-    global $list_table_description;
-    global $list_table;
     
     $logging->info("ACTION: delete list table (list_title=".$list_title.")");
 
-    if (!check_preconditions(ACTION_DEL_LIST_TABLE))
+    # create necessary objects
+    $result = new Result();
+    $response = new xajaxResponse();
+    $list_table = new ListTable ($list_title);
+
+    if (!check_preconditions(ACTION_DELETE_LIST_TABLE, $response))
         return $response;
 
     # delete the list table
-    if (!$list_table_description->delete($list_title))
-        set_error_message("portal_overview_pane", $list_table_description->get_error_str());
-    $list_table->set($title);
     if (!$list_table->drop())
-        set_error_message("portal_overview_pane", $list_table_description->get_error_str());
+    {
+        set_error_message("portal_overview_pane", $list_table->get_error_str(), $response);
+        
+        return $response;
+    }
 
-    action_get_list_tables();
+    action_get_list_tables($result, $response);
+    
+    $logging->trace("deleted list table");
     
     return $response;
 }

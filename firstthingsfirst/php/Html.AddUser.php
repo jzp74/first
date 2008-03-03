@@ -33,13 +33,14 @@ $xajax->registerFunction("action_add_user");
 function action_get_add_user_page ()
 {
     global $logging;
-    global $result;    
     global $user;
-    global $response;
     
     $logging->info("ACTION: get add user page");
 
-    if (!check_preconditions(ACTION_GET_ADD_USER_PAGE))
+    # create necessary objects
+    $response = new xajaxResponse();
+
+    if (!check_preconditions(ACTION_GET_ADD_USER_PAGE, $response))
         return $response;
             
     $html_str = "";
@@ -92,12 +93,10 @@ function action_get_add_user_page ()
     $html_str .= "        </div> <!-- action_pane -->\n\n";           
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
     
-    $result->set_result_str($html_str);   
-        
-    $response->addAssign("main_body", "innerHTML", $result->get_result_str());
+    $response->addAssign("main_body", "innerHTML", $html_str);
 
-    set_login_status();
-    set_footer("&nbsp;");
+    set_login_status($response);
+    set_footer("&nbsp;", $response);
     
     $logging->trace("got add user page");
 
@@ -113,9 +112,7 @@ function action_get_add_user_page ()
 function action_add_user ($definition)
 {
     global $logging;
-    global $result;
     global $user;
-    global $response;
     
     $name = $definition['user_definition_name'];
     $pw = $definition['user_definition_password'];
@@ -130,22 +127,25 @@ function action_add_user ($definition)
 
     $logging->info("ACTION: add user (name=".$name.", edit_list=".$edit_list.", create_list=".$create_list.")");
 
-    if (!check_preconditions(ACTION_ADD_USER))
+    # create necessary objects
+    $response = new xajaxResponse();
+
+    if (!check_preconditions(ACTION_ADD_USER, $response))
         return $response;
     
     # check if name has been given
     if (strlen($name) == 0)
     {
         $logging->warn("no user name given");
-        set_error_message("user_definition_name_id", ERROR_NO_USER_NAME_GIVEN);
+        set_error_message("user_definition_name_id", ERROR_NO_USER_NAME_GIVEN, $response);
         
         return $response;
     }
     
     # check if title is well formed
-    if (is_well_formed_string("user name", $name) == FALSE_RETURN_STRING)
+    if (str_is_well_formed("user name", $name) == FALSE_RETURN_STRING)
     {
-        set_error_message("user_definition_name_id", ERROR_NOT_WELL_FORMED_STRING);
+        set_error_message("user_definition_name_id", ERROR_NOT_WELL_FORMED_STRING, $response);
         
         return $response;
     }
@@ -154,15 +154,15 @@ function action_add_user ($definition)
     if (strlen($pw) == 0)
     {
         $logging->warn("no password given");
-        set_error_message("user_definition_password_id", ERROR_NO_PASSWORD_GIVEN);
+        set_error_message("user_definition_password_id", ERROR_NO_PASSWORD_GIVEN, $response);
         
         return $response;
     }
 
     if (!$user->insert($name, $pw, $edit_list, $create_list))
-        set_error_message("add_user_pane", $user->get_error_str());
+        set_error_message("add_user_pane", $user->get_error_str(), $response);
     else
-        set_info_message("add_user_pane", LABEL_USER_ADDED);
+        set_info_message("add_user_pane", LABEL_USER_ADDED, $response);
 
     $logging->trace("added user");
 

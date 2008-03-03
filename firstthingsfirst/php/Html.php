@@ -13,12 +13,12 @@
 /**
  * test if user is logged in and has permissions for given action
  * @param string $action the action for which user permissions have to be checked
+ * @param $response xajaxResponse response object
  * @return bool indicated if user has permission for given action
  */
-function check_preconditions ($action)
+function check_preconditions ($action, $response)
 {
     global $logging;
-    global $result;
     global $user;
     global $firstthingsfirst_action_description;
     
@@ -32,7 +32,8 @@ function check_preconditions ($action)
     # check if user is logged in
     if (!$user->is_login())
     {
-        action_get_login_page();
+        $html_str = get_login_page_html();
+        $response->addAssign("main_body", "innerHTML", $html_str);
         $logging->warn("user is not logged in (action=".$action.")");
 
         return FALSE;
@@ -41,7 +42,8 @@ function check_preconditions ($action)
     # check if edit_list permission is required
     if ($can_edit_list && !$user->get_can_edit_list())
     {
-        action_get_login_page();
+        $html_str = get_login_page_html();
+        $response->addAssign("main_body", "innerHTML", $html_str);
         $logging->warn("user needs edit_list permission (action=".$action.")");
 
         return FALSE;
@@ -50,7 +52,8 @@ function check_preconditions ($action)
     # check if create_list permission is required
     if ($can_create_list && !$user->get_can_create_list())
     {
-        action_get_login_page();
+        $html_str = get_login_page_html();
+        $response->addAssign("main_body", "innerHTML", $html_str);
         $logging->warn("user needs create_list permission (action=".$action.")");
 
         return FALSE;
@@ -59,29 +62,27 @@ function check_preconditions ($action)
     # check if read permission is required
     if ($is_admin && !$user->get_is_admin())
     {
-        action_get_login_page();
+        action_get_login_page($response);
         $logging->warn("user needs admin permission (action=".$action.")");
 
         return FALSE;
     }
 
-    $result->reset();
-    
     $logging->trace("checked preconditions");
     
     return TRUE;
 }
 
 /**
- * test if an error has been set and show the error on screen if an error has been set
+ * test if an error has been set in result and show the error on screen if an error has been set
+ * @param $result Result result object
+ * @param $response xajaxResponse response object
  * @return bool indicated if an error has been set
  */
-function check_postconditions ()
+function check_postconditions ($result, $response)
 {
     global $logging;
-    global $result;
     global $user;
-    global $response;
         
     $logging->trace("check postconditions");
     
@@ -110,12 +111,12 @@ function check_postconditions ()
  * show an error on screen
  * @param string $error_element DOM element in which error has to be shown
  * @param string $error_str the error string
+ * @param $response xajaxResponse response object
  * @return void
  */
-function set_error_message ($error_element, $error_str)
+function set_error_message ($error_element, $error_str, $response)
 {
     global $logging;
-    global $response;
     
     $logging->trace("set error (element=".$error_element.")");
     
@@ -132,12 +133,12 @@ function set_error_message ($error_element, $error_str)
  * show an info message on screen
  * @param string $info_element DOM element in which info message has to be shown
  * @param string $info_str the info string
+ * @param $response xajaxResponse response object
  * @return void
  */
-function set_info_message ($info_element, $info_str)
+function set_info_message ($info_element, $info_str, $response)
 {
     global $logging;
-    global $response;
     
     $logging->trace("set info (element=".$info_element.")");
     
@@ -215,33 +216,14 @@ function get_query_link ($query_str)
 }
 
 /**
- * set html in the action bar
- * @param string $html_str html for the action bar
- * return void
- */
-function set_action_bar ($html_str)
-{
-    global $logging;
-    global $response;
-    
-    $logging->trace("setting action bar");
-        
-    $response->addAssign("action_bar", "innerHTML", $html_str);
-
-    $logging->trace("set action bar");
-
-    return;
-}
-
-/**
  * set html in the footer
  * @param string $html_str html for the footer
+ * @param $response xajaxResponse response object
  * return void
  */
-function set_footer ($html_str)
+function set_footer ($html_str, $response)
 {
     global $logging;
-    global $response;
     
     $logging->trace("setting footer");
         

@@ -119,13 +119,13 @@ function action_add_note ($db_field_name, $this_id)
 
 /**
  * generate html for a number of notes
- * this function is called when user edits or adds a row
+ * this function is called when user edits or adds a record
  * @param string $db_field_name name of the field that contains the notes
  * @param array $notes_array array of notes. each notes is also an array
  * @param bool $new_note add new note to list of notes and show this new note
  * @return string resulting html
  */
-function get_list_row_notes ($db_field_name, $notes_array)
+function get_list_record_notes ($db_field_name, $notes_array)
 {
     global $logging;
     
@@ -133,7 +133,7 @@ function get_list_row_notes ($db_field_name, $notes_array)
     $previous_id = -1;
     $next_id = -1;
 
-    $logging->trace("getting list_row_notes (db_field_name=".$db_field_name.", count_notes=".count(notes_array).")");
+    $logging->trace("getting list_record_notes (db_field_name=".$db_field_name.", count_notes=".count(notes_array).")");
 
     for ($note=0; $note<count($notes_array); $note++)
     {
@@ -152,27 +152,27 @@ function get_list_row_notes ($db_field_name, $notes_array)
             $next_id = 0;
         
         # get html for this note
-        $html_str .= get_list_row_note($db_field_name, $note_array[DB_ID_FIELD_NAME], $previous_id, $next_id, $note_array);
+        $html_str .= get_list_record_note($db_field_name, $note_array[DB_ID_FIELD_NAME], $previous_id, $next_id, $note_array);
     }
     
     # add a visible new note when there are no other notes
     if (count($notes_array) == 0)
-        $html_str .= get_list_row_note($db_field_name, 0, -1, -1, array());
+        $html_str .= get_list_record_note($db_field_name, 0, -1, -1, array());
     # add an invisible new note (IE hack because IE doesn't allow appending to tables)
     else
     {
         $last_note_array = end($notes_array);
-        $html_str .= get_list_row_note($db_field_name, 0, $last_note_array[DB_ID_FIELD_NAME], -1, array());
+        $html_str .= get_list_record_note($db_field_name, 0, $last_note_array[DB_ID_FIELD_NAME], -1, array());
     }
     
-    $logging->trace("got list_row_notes");
+    $logging->trace("got list_record_notes");
     
     return $html_str;
 }
 
 /**
  * generate html for one note
- * this function is called only by function get_list_row_notes
+ * this function is called only by function get_list_record_notes
  * @todo list of arguments is too long
  * @param string $db_field_name name of the field that contains this note
  * @param string $this_id id of this note
@@ -181,7 +181,7 @@ function get_list_row_notes ($db_field_name, $notes_array)
  * @param array $note_array array describing a single note
  * @return string resulting html
  */
-function get_list_row_note ($db_field_name, $this_id, $previous_id, $next_id, $note_array)
+function get_list_record_note ($db_field_name, $this_id, $previous_id, $next_id, $note_array)
 {
     global $logging;
 
@@ -196,7 +196,7 @@ function get_list_row_note ($db_field_name, $this_id, $previous_id, $next_id, $n
     $previous_td_id = $db_field_name."_".$previous_id;
     $next_td_id = $db_field_name."_".$next_id;
 
-    $logging->trace("getting list_row_note (this_id=".$this_id.", previous_id=".$previous_id.", next_id=".$next_id.")");
+    $logging->trace("getting list_record_note (this_id=".$this_id.", previous_id=".$previous_id.", next_id=".$next_id.")");
 
     $html_str .= "                                    <td id=\"".$td_id."\" class=\"".$class_name."\">\n";
     
@@ -236,7 +236,7 @@ function get_list_row_note ($db_field_name, $this_id, $previous_id, $next_id, $n
     $html_str .= "                                        </div>\n";
     $html_str .= "                                    </td>\n";
     
-    $logging->trace("got list_row_note");
+    $logging->trace("got list_record_note");
     
     return $html_str;
 }

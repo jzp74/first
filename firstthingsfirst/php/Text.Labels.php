@@ -242,13 +242,13 @@ define("LABEL_OF", "of");
  * listtable label
  * definition of user message: enter details and commit new row
  */
-define("LABEL_ADD_ROW", "enter list item details");
+define("LABEL_ADD_RECORD", "enter list item details");
 
 /**
  * listtable label
  * definition of user message: enter and commit changes
  */
-define("LABEL_EDIT_ROW", "enter list item modifications");
+define("LABEL_EDIT_RECORD", "enter list item modifications");
 
 
 /**

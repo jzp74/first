@@ -74,16 +74,23 @@ class ListTableNote extends DatabaseTable
         # these variables are assumed to be globally available
         global $user;
         global $list_state;
-
-        # call parent __construct()
-        parent::__construct();
+        global $class_listtablenote_fields;
 
         $this->_user =& $user;
         $this->_list_state =& $list_state;
         
-        $this->set($list_title);
+        $table_name = $this->_convert_list_name_to_table_name($list_title);
 
-        $this->_log->trace("constructed new ListTableNote object");
+        # set correct foreign_key
+        $fields_array = $class_listtablenote_fields[LISTTABLENOTE_FIELD_NAME_FIELD_NAME];
+        $foreign_key = DATABASETABLE_FOREIGN_FIELD." (".LISTTABLENOTE_RECORD_ID_FIELD_NAME.") REFERENCES ";
+        $foreign_key .= LISTTABLE_TABLE_NAME_PREFIX.strtolower(str_replace(" ", "_", $list_title))."(".DB_ID_FIELD_NAME.") ON DELETE CASCADE";
+        $class_listtablenote_fields[LISTTABLENOTE_FIELD_NAME_FIELD_NAME][2] = $foreign_key;
+        
+        # call parent __construct()
+        parent::__construct($table_name, $class_listtablenote_fields, LISTTABLENOTE_METADATA);
+
+        $this->_log->debug("constructed new ListTableNote object");
     }
         
     /**
@@ -95,32 +102,7 @@ class ListTableNote extends DatabaseTable
     {
         return LISTTABLENOTE_TABLE_NAME.strtolower(str_replace(" ", "_", $list_title));
     }
-    
-    /**
-    * set attributes (initiate this object)
-    * @todo foreign key handling should be refactored
-    * @return void
-    */
-    function set ($list_title)
-    {
-        global $class_listtablenote_fields;
         
-        $this->_log->trace("setting ListTableNote");
-
-        $table_name = $this->_convert_list_name_to_table_name($list_title);
-
-        # set correct foreign_key
-        $fields_array = $class_listtablenote_fields[LISTTABLENOTE_FIELD_NAME_FIELD_NAME];
-        $foreign_key = DATABASETABLE_FOREIGN_FIELD." (".LISTTABLENOTE_RECORD_ID_FIELD_NAME.") REFERENCES ";
-        $foreign_key .= LISTTABLE_TABLE_NAME_PREFIX.strtolower(str_replace(" ", "_", $list_title))."(".DB_ID_FIELD_NAME.") ON DELETE CASCADE";
-        $class_listtablenote_fields[LISTTABLENOTE_FIELD_NAME_FIELD_NAME][2] = $foreign_key;
-        
-        # call parent set()
-        parent::set($table_name, $class_listtablenote_fields, LISTTABLENOTE_METADATA);
-
-        $this->_log->trace("set ListTableNote");
-    }
-    
     /**
     * select all notes for a specific field of a specific ListTable record
     * @param $record_id int unique identifier of a ListTable record
@@ -136,13 +118,13 @@ class ListTableNote extends DatabaseTable
         $filter_array[LISTTABLENOTE_RECORD_ID_FIELD_NAME] = $record_id;
         $filter_array[LISTTABLENOTE_FIELD_NAME_FIELD_NAME] = $field_name;
 
-        $rows = parent::select("", 0, LISTSTATE_SELECT_BOTH_ARCHIVED, $filter_array, DATABASETABLE_ALL_PAGES);
-        if (count($rows) == 0)
+        $records = parent::select("", 0, LISTSTATE_SELECT_BOTH_ARCHIVED, $filter_array, DATABASETABLE_ALL_PAGES);
+        if (count($records) == 0)
             return array();
         
         $this->_log->trace("selected ListTableNote");
         
-        return $rows;
+        return $records;
     }
     
     /**

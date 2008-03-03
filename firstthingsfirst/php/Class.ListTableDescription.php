@@ -59,47 +59,19 @@ define("LISTTABLEDESCRIPTION_METADATA", "-11");
 class ListTableDescription extends UserDatabaseTable
 {
     /**
-    * reference to global list_state object
-    * @var ListState
-    */
-    protected $_list_table;
-    
-    /**
     * overwrite __construct() function
     * @return void
     */
     function __construct ()
     {
-        # these variables are assumed to be globally available
-        global $list_table;
-        
-        # call parent __construct()
-        parent::__construct();
-        
-        # set global references for this object
-        $this->_list_table =& $list_table;
-
-        $this->set();
-
-        $this->_log->trace("constructed new ListTableDescription object");
-    }
-                
-    /**
-    * set attributes to initial values
-    * @return void
-    */
-    function set ()
-    {
         global $class_listtabledescription_fields;
         
-        $this->_log->trace("setting ListTableDescription");
+        # call parent __construct()
+        parent::__construct(LISTTABLEDESCRIPTION_TABLE_NAME, $class_listtabledescription_fields, LISTTABLEDESCRIPTION_METADATA);
         
-        # call parent set()
-        parent::set(LISTTABLEDESCRIPTION_TABLE_NAME, $class_listtabledescription_fields, LISTTABLEDESCRIPTION_METADATA);
-
-        $this->_log->trace("set ListTableDescription");
+        $this->_log->debug("constructed new ListTableDescription object");
     }
-
+                
     /**
     * select a fixed number of records from database
     * @param $order_by_field string order records by this db_field_name
@@ -110,22 +82,22 @@ class ListTableDescription extends UserDatabaseTable
     {
         $this->_log->trace("selecting ListTableDescription (order_by_field=".$order_by_field.", page=".$page.")");
 
-        $rows = parent::select($order_by_field, $page);
-        if (count($rows) == 0)
+        $records = parent::select($order_by_field, $page);
+        if (count($records) == 0)
             return array();
         
-        $new_rows = array();
-        foreach ($rows as $row)
+        $new_records = array();
+        foreach ($records as $record)
         {            
             # convert several values
-            $row[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME] = html_entity_decode($row[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME], ENT_QUOTES);
-            $row[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = (array)$this->_json->decode(html_entity_decode($row[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME], ENT_QUOTES));
-            array_push($new_rows, $row);
+            $record[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME] = html_entity_decode($record[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME], ENT_QUOTES);
+            $record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = (array)$this->_json->decode(html_entity_decode($record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME], ENT_QUOTES));
+            array_push($new_records, $record);
         }
         
         $this->_log->trace("selected ListTableDescription");
         
-        return $new_rows;
+        return $new_records;
     }
 
     /**
@@ -133,24 +105,24 @@ class ListTableDescription extends UserDatabaseTable
     * @param $title string title of ListTableDescription
     * @return array array containing the ListTableDescription object
     */
-    function select_row ($title)
+    function select_record ($title)
     {
-        $this->_log->trace("selecting ListTableDescription row (title=".$title.")");
+        $this->_log->trace("selecting ListTableDescription record (title=".$title.")");
         
         # create key_string
         $key_string = LISTTABLEDESCRIPTION_TITLE_FIELD_NAME."='".$title."'";
         
-        $row = parent::select_row($key_string);
-        if (count($row) == 0)
+        $record = parent::select_record($key_string);
+        if (count($record) == 0)
             return array();
         
         # convert several values
-        $row[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME] = html_entity_decode($row[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME], ENT_QUOTES);
-        $row[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = (array)$this->_json->decode(html_entity_decode($row[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME], ENT_QUOTES));
+        $record[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME] = html_entity_decode($record[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME], ENT_QUOTES);
+        $record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = (array)$this->_json->decode(html_entity_decode($record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME], ENT_QUOTES));
 
-        $this->_log->trace("selected ListTableDescription row (title=\"".$title."\")");
+        $this->_log->trace("selected ListTableDescription record (title=\"".$title."\")");
 
-        return $row;
+        return $record;
     }
     
     /**
@@ -164,8 +136,8 @@ class ListTableDescription extends UserDatabaseTable
 
         $this->_log->trace("inserting ListTableDescription (title=".$title.")");
         
-        $row = parent::select_row(LISTTABLEDESCRIPTION_TITLE_FIELD_NAME."='".$title."'");
-        if (count($row) > 0)
+        $record = parent::select_record(LISTTABLEDESCRIPTION_TITLE_FIELD_NAME."='".$title."'");
+        if (count($record) > 0)
         {
             $this->_log->error("this is a duplicate list");
             $this->error_str = ERROR_DUPLICATE_LIST_NAME;
@@ -214,7 +186,7 @@ class ListTableDescription extends UserDatabaseTable
     */
     function delete ($title)
     {
-        $this->_log->trace("deleting ListTableDescription from database (title=".title.")");
+        $this->_log->trace("deleting ListTableDescription from database (title=".$title.")");
 
         # create key_string
         $key_string = LISTTABLEDESCRIPTION_TITLE_FIELD_NAME."='".$title."'";

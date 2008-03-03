@@ -85,7 +85,7 @@ class Database
         $this->database =& $firstthingsfirst_db_schema;
         $this->error_str = "";
 
-        $this->_log->trace("constructed new Database object");        
+        $this->_log->debug("constructed new Database object");        
     }
 
     /**

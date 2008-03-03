@@ -77,12 +77,6 @@ class ListState
     protected $total_pages;
 
     /**
-    * reference to global json object
-    * @var Services_JSON
-    */
-    protected $_json;
-    
-    /**
     * reference to global logging object
     * @var Logging
     */
@@ -95,16 +89,14 @@ class ListState
     function __construct ()
     {
         # these variables are assumed to be globally available
-        global $json;
         global $logging;
         
         # set global references for this object
-        $this->_json =& $json;
         $this->_log =& $logging;
 
         $this->reset();
         
-        $this->_log->trace("constructed new ListState object");
+        $this->_log->debug("constructed new ListState object");
     }
 
     /**

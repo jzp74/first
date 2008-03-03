@@ -18,11 +18,11 @@ $firstthingsfirst_action_description[ACTION_GET_LISTBUILDER_PAGE] = array(PERMIS
 $xajax->registerFunction("action_get_listbuilder_page");
 
 /**
- * definition of 'add_listbuilder_row' action
+ * definition of 'insert_listbuilder_row' action
  */
-define("ACTION_ADD_LISTBUILDER_ROW", "add_listbuilder_row");
-$firstthingsfirst_action_description[ACTION_ADD_LISTBUILDER_ROW] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_add_listbuilder_row");
+define("ACTION_INSERT_LISTBUILDER_ROW", "insert_listbuilder_row");
+$firstthingsfirst_action_description[ACTION_INSERT_LISTBUILDER_ROW] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$xajax->registerFunction("action_insert_listbuilder_row");
 
 /**
  * definition of 'move_listbuilder_row' action
@@ -32,11 +32,11 @@ $firstthingsfirst_action_description[ACTION_MOVE_LISTBUILDER_ROW] = array(PERMIS
 $xajax->registerFunction("action_move_listbuilder_row");
 
 /**
- * definition of 'del_listbuilder_row' action
+ * definition of 'delete_listbuilder_row' action
  */
-define("ACTION_DEL_LISTBUILDER_ROW", "del_listbuilder_row");
-$firstthingsfirst_action_description[ACTION_DEL_LISTBUILDER_ROW] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_del_listbuilder_row");
+define("ACTION_DELETE_LISTBUILDER_ROW", "delete_listbuilder_row");
+$firstthingsfirst_action_description[ACTION_DELETE_LISTBUILDER_ROW] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$xajax->registerFunction("action_delete_listbuilder_row");
 
 /**
  * definition of 'refresh_listbuilder' action
@@ -69,10 +69,7 @@ $xajax->registerFunction("action_create_list");
 function action_get_listbuilder_page ($list_title)
 {
     global $logging;
-    global $result;    
     global $user;
-    global $response;
-    global $list_table_description;
     global $firstthingsfirst_field_descriptions;
     
     $field_types = array_keys($firstthingsfirst_field_descriptions);
@@ -80,19 +77,25 @@ function action_get_listbuilder_page ($list_title)
 
     $logging->info("ACTION: get listbuilder page");
 
-    if (!check_preconditions(ACTION_GET_LISTBUILDER_PAGE))
+    # create necessary objects
+    $response = new xajaxResponse();
+
+    if (!check_preconditions(ACTION_GET_LISTBUILDER_PAGE, $response))
         return $response;
 
     # load list details when list title has been given
     if (strlen($list_title))
-        $row = $list_table_description->select_row($list_title);
+    {
+        $list_table_description = new ListTableDescription();
+        $record = $list_table_description->select_record($list_title);
+    }
             
     $html_str = "";
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
     
     # different page title when list title has been given
     if (strlen($list_title))
-        $html_str .= "        <div id=\"page_title\">".LABEL_MODIFY_LIST." '".$row[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."'</div>\n\n";
+        $html_str .= "        <div id=\"page_title\">".LABEL_MODIFY_LIST." '".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."'</div>\n\n";
     else        
         $html_str .= "        <div id=\"page_title\">".LABEL_CONFIGURE_NEW_LIST."</div>\n\n";
     
@@ -112,7 +115,7 @@ function action_get_listbuilder_page ($list_title)
     if (strlen($list_title))
     {
         $html_str .= "                            <td id=\"listbuilder_list_title_id\"><input size=\"20\" maxlength=\"100\"";
-        $html_str .= " id=\"listbuilder_list_title\" value=\"".$row[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."\" type=\"text\"></td>\n";
+        $html_str .= " id=\"listbuilder_list_title\" value=\"".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."\" type=\"text\"></td>\n";
     }
     else
         $html_str .= "                            <td id=\"listbuilder_list_title_id\"><input size=\"20\" maxlength=\"100\" id=\"listbuilder_list_title\" type=\"text\"></td>\n";
@@ -126,7 +129,7 @@ function action_get_listbuilder_page ($list_title)
     if (strlen($list_title))
     {
         $html_str .= "                            <td id=\"listbuilder_list_description_id\"><textarea cols=\"40\" rows=\"4\"";
-        $html_str .= " id=\"listbuilder_list_description\">".$row[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME]."</textarea></td>\n";
+        $html_str .= " id=\"listbuilder_list_description\">".$record[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME]."</textarea></td>\n";
     }
     else
         $html_str .= "                            <td id=\"listbuilder_list_description_id\"><textarea cols=\"40\" rows=\"4\" id=\"listbuilder_list_description\"></textarea></td>\n";
@@ -143,10 +146,8 @@ function action_get_listbuilder_page ($list_title)
         $html_str .= "            <div id=\"listbuilder_definition_title\">".LABEL_DEFINE_TABLE_FIELDS."</div>\n\n";
         $html_str .= "            <div id=\"listbuilder_definition_pane\">\n\n";
 
-        $result->set_result_str($html_str);    
-        get_field_definition_table($definition);
+        $html_str .= get_field_definition_table($definition);
 
-        $html_str = "";            
         $html_str .= "           </div> <!-- listbuilder_definition_pane -->\n\n";
     }
 
@@ -156,27 +157,22 @@ function action_get_listbuilder_page ($list_title)
     
     # only show one link when list title had been given
     if (strlen($list_title))
-        $html_str .= "                <p>&nbsp;".get_button("xajax_action_modify_list('".$row[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."', document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value)", BUTTON_MODIFY_LIST)."</p>\n";
+        $html_str .= "                <p>&nbsp;".get_button("xajax_action_modify_list('".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."', document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value)", BUTTON_MODIFY_LIST)."</p>\n";
     else
     {
         $html_str .= "                <p>&nbsp;".get_select("add_select", "add_it", "")."\n";
-        $html_str .= "                ".get_button("xajax_action_add_listbuilder_row(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'))", BUTTON_ADD_FIELD)."\n";
+        $html_str .= "                ".get_button("xajax_action_insert_listbuilder_row(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'))", BUTTON_ADD_FIELD)."\n";
         $html_str .= "                &nbsp;&nbsp;".get_button("xajax_action_create_list(document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value, xajax.getFormValues('database_definition_form'))", BUTTON_CREATE_LIST)."</p>\n";
     }
     
     $html_str .= "            </div> <!-- action_bar -->\n\n";    
     $html_str .= "        </div> <!-- action_pane -->\n\n";           
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
-    
-    $result->set_result_str($html_str);   
-    
-    if (!check_postconditions())
-        return $reponse;
-    
-    $response->addAssign("main_body", "innerHTML", $result->get_result_str());
+        
+    $response->addAssign("main_body", "innerHTML", $html_str);
 
-    set_login_status();
-    set_footer("&nbsp;");
+    set_login_status($response);
+    set_footer("&nbsp;", $response);
     
     $logging->trace("got listbuilder page");
 
@@ -190,30 +186,27 @@ function action_get_listbuilder_page ($list_title)
  * @param array $definition defintion of current list that is being build
  * @return xajaxResponse every xajax registered function needs to return this object
  */
-function action_add_listbuilder_row ($field_type, $definition)
+function action_insert_listbuilder_row ($field_type, $definition)
 {
     global $logging;
-    global $result;    
     global $user;
-    global $response;
     
     $new_row = array($field_type, "", "");
     # get rid of keynames
     $new_definition = array_merge(array_values($definition), $new_row);
 
-    $logging->info("ACTION: add listbuilder row (field_type=".$field_type.")");
+    $logging->info("ACTION: insert listbuilder row (field_type=".$field_type.")");
 
-    if (!check_preconditions(ACTION_GET_LISTBUILDER_PAGE))
+    # create necessary objects
+    $response = new xajaxResponse();
+
+    if (!check_preconditions(ACTION_INSERT_LISTBUILDER_ROW, $response))
         return $response;
 
-    get_field_definition_table($new_definition);
-    
-    if (!check_postconditions())
-        return $reponse;
-    
-    $response->addAssign("listbuilder_definition_pane", "innerHTML", $result->get_result_str());
+    $html_str = get_field_definition_table($new_definition);    
+    $response->addAssign("listbuilder_definition_pane", "innerHTML", $html_str);
 
-    $logging->trace("added listbuilder row");
+    $logging->trace("inserted listbuilder row");
 
     return $response;
 }
@@ -229,9 +222,7 @@ function action_add_listbuilder_row ($field_type, $definition)
 function action_move_listbuilder_row ($row_number, $direction, $definition)
 {
     global $logging;
-    global $result;    
     global $user;
-    global $response;
     
     $backup_definition = array();
     # get rid of keynames
@@ -239,7 +230,10 @@ function action_move_listbuilder_row ($row_number, $direction, $definition)
 
     $logging->info("ACTION: move listbuilder row (row_number=".$field_type.", $direction=".$direction.")");
 
-    if (!check_preconditions(ACTION_MOVE_LISTBUILDER_ROW))
+    # create necessary objects
+    $response = new xajaxResponse();
+
+    if (!check_preconditions(ACTION_MOVE_LISTBUILDER_ROW, $response))
         return $response;
 
     # store values of given row number
@@ -268,12 +262,8 @@ function action_move_listbuilder_row ($row_number, $direction, $definition)
         $new_definition[$position_to + $position] = $backup_definition[$position];
     }
             
-    get_field_definition_table($new_definition);
-    
-    if (!check_postconditions())
-        return $reponse;
-    
-    $response->addAssign("listbuilder_definition_pane", "innerHTML", $result->get_result_str());
+    $html_str = get_field_definition_table($new_definition);    
+    $response->addAssign("listbuilder_definition_pane", "innerHTML", $html_str);
 
     $logging->trace("moved listbuilder row");
 
@@ -287,12 +277,10 @@ function action_move_listbuilder_row ($row_number, $direction, $definition)
  * @param array $definition defintion of current list that is being build
  * @return xajaxResponse every xajax registered function needs to return this object
  */
-function action_del_listbuilder_row ($row_number, $definition)
+function action_delete_listbuilder_row ($row_number, $definition)
 {
     global $logging;
-    global $result;    
     global $user;
-    global $response;
     
     # get rid of keynames
     $backup_definition = array_values($definition);
@@ -300,7 +288,10 @@ function action_del_listbuilder_row ($row_number, $definition)
 
     $logging->info("ACTION: delete listbuilder row (row=".$row_number.")");
 
-    if (!check_preconditions(ACTION_DEL_LISTBUILDER_ROW))
+    # create necessary objects
+    $response = new xajaxResponse();
+
+    if (!check_preconditions(ACTION_DEL_LISTBUILDER_ROW, $response))
         return $response;
     
     for ($position = 0; $position < count($backup_definition); $position += 1)
@@ -310,12 +301,8 @@ function action_del_listbuilder_row ($row_number, $definition)
             array_push($new_definition, $backup_definition[$position]);
     }
 
-    get_field_definition_table($new_definition);
-
-    if (!check_postconditions())
-        return $reponse;
-    
-    $response->addAssign("listbuilder_definition_pane", "innerHTML", $result->get_result_str());
+    $html_str = get_field_definition_table($new_definition);    
+    $response->addAssign("listbuilder_definition_pane", "innerHTML", $html_str);
 
     $logging->trace("deleted listbuilder row");
 
@@ -331,21 +318,18 @@ function action_del_listbuilder_row ($row_number, $definition)
 function action_refresh_listbuilder ($definition)
 {
     global $logging;
-    global $result;    
     global $user;
-    global $response;
     
     $logging->info("ACTION: refresh listbuilder");
 
-    if (!check_preconditions(ACTION_REFRESH_LISTBUILDER))
+    # create necessary objects
+    $response = new xajaxResponse();
+
+    if (!check_preconditions(ACTION_REFRESH_LISTBUILDER, $response))
         return $response;
 
-    get_field_definition_table(array_values($definition));
-
-    if (!check_postconditions())
-        return $reponse;
-    
-    $response->addAssign("listbuilder_definition_pane", "innerHTML", $result->get_result_str());
+    $html_str = get_field_definition_table(array_values($definition));    
+    $response->addAssign("listbuilder_definition_pane", "innerHTML", $html_str);
 
     $logging->trace("refreshed listbuilder");
 
@@ -365,33 +349,35 @@ function action_modify_list ($former_title, $title, $description)
 {
     global $database;
     global $logging;
-    global $response;
-    global $list_table_description;
-    global $list_table;
-    
-    $list_table_note = new ListTableNote ($title);
     
     $logging->info("ACTION: modify list (former_title=".$former_title.", title=".$title.")");
 
-    if (!check_preconditions(ACTION_MODIFY_LIST))
+    $list_table = new ListTable ($former_title);
+    $list_table_description = $list_table->get_list_table_description();
+    $list_table_note = $list_table->get_list_table_note();
+    
+    # create necessary objects
+    $response = new xajaxResponse();
+
+    if (!check_preconditions(ACTION_MODIFY_LIST, $response))
         return $response;
         
     # set the right list_table_description
-    $row = $list_table_description->select_row($former_title);
+    $record = $list_table_description->select_record($former_title);
     
     # check if title has been given
     if (strlen($title) == 0)
     {
         $logging->warn("no title given");
-        set_error_message("listbuilder_list_title_id", ERROR_NO_TITLE_GIVEN);
+        set_error_message("listbuilder_list_title_id", ERROR_NO_TITLE_GIVEN, $response);
         
         return $response;
     }
     
     # check if title is well formed
-    if (is_well_formed_string("title", $title) == FALSE_RETURN_STRING)
+    if (str_is_well_formed("title", $title) == FALSE_RETURN_STRING)
     {
-        set_error_message("listbuilder_list_title_id", ERROR_NOT_WELL_FORMED_STRING);
+        set_error_message("listbuilder_list_title_id", ERROR_NOT_WELL_FORMED_STRING, $response);
         
         return $response;
     }
@@ -400,7 +386,7 @@ function action_modify_list ($former_title, $title, $description)
     if (strlen($description) == 0)
     {
         $logging->warn("no description given");
-        set_error_message("listbuilder_list_description_id", ERROR_NO_DESCRIPTION_GIVEN);
+        set_error_message("listbuilder_list_description_id", ERROR_NO_DESCRIPTION_GIVEN, $response);
         
         return $response;
     }
@@ -410,7 +396,7 @@ function action_modify_list ($former_title, $title, $description)
     $name_values_array[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME] = $description;
     if ($list_table_description->update($former_title, $name_values_array) == FALSE)
     {
-        set_error_message("listbuilder_pane", ERROR_DATABASE_PROBLEM);
+        set_error_message("listbuilder_pane", ERROR_DATABASE_PROBLEM, $response);
 
         return $response;
     }
@@ -427,26 +413,38 @@ function action_modify_list ($former_title, $title, $description)
         if ($result_object == FALSE)
         {
             $logging->error($database->get_error_str());
-            set_error_message("listbuilder_pane", ERROR_DATABASE_PROBLEM);
+            set_error_message("listbuilder_pane", ERROR_DATABASE_PROBLEM, $response);
 
             return $response;
         }
         
-        # rename listtablenote database table
-        $former_table_name = $list_table_note->_convert_list_name_to_table_name($former_title);
-        $new_table_name = $list_table_note->_convert_list_name_to_table_name($title);
-        $query = "ALTER TABLE ".$former_table_name." RENAME ".$new_table_name;
-        $result_object = $database->query($query);
-        if ($result_object == FALSE)
+        # check if list_table contains a notes field
+        $found_note = FALSE;
+        $fields = $list_table->get_fields();
+        foreach ($fields as $field)
         {
-            $logging->error($database->get_error_str());
-            set_error_message("listbuilder_pane", ERROR_DATABASE_PROBLEM);
-
-            return $response;
+            if ($field[1] == "LABEL_DEFINITION_NOTES_FIELD")
+                $found_note = TRUE;
+        }
+        
+        # rename listtablenote database table only if list_table contains a notes field
+        if ($found_note == TRUE)
+        {
+            $former_table_name = $list_table_note->_convert_list_name_to_table_name($former_title);
+            $new_table_name = $list_table_note->_convert_list_name_to_table_name($title);
+            $query = "ALTER TABLE ".$former_table_name." RENAME ".$new_table_name;
+            $result_object = $database->query($query);
+            if ($result_object == FALSE)
+            {
+                $logging->error($database->get_error_str());
+                set_error_message("listbuilder_pane", ERROR_DATABASE_PROBLEM, $response);
+    
+                return $response;
+            }
         }                
     }
 
-    set_info_message("listbuilder_pane", LABEL_LIST_MODIFICATIONS_DONE);
+    set_info_message("listbuilder_pane", LABEL_LIST_MODIFICATIONS_DONE, $response);
     
     $logging->trace("modified list");
 
@@ -465,9 +463,6 @@ function action_modify_list ($former_title, $title, $description)
 function action_create_list ($title, $description, $definition)
 {
     global $logging;
-    global $response;
-    global $list_table_description;
-    global $list_table;
     
     # get rid of keynames
     $definition_values = array_values($definition);
@@ -476,22 +471,25 @@ function action_create_list ($title, $description, $definition)
 
     $logging->info("ACTION: create list (title=".$title.")");
 
-    if (!check_preconditions(ACTION_CREATE_LIST))
+    # create necessary objects
+    $response = new xajaxResponse();
+
+    if (!check_preconditions(ACTION_CREATE_LIST, $response))
         return $response;
     
     # check if title has been given
     if (strlen($title) == 0)
     {
         $logging->warn("no title given");
-        set_error_message("listbuilder_list_title_id", ERROR_NO_TITLE_GIVEN);
+        set_error_message("listbuilder_list_title_id", ERROR_NO_TITLE_GIVEN, $response);
         
         return $response;
     }
     
     # check if title is well formed
-    if (is_well_formed_string("title", $title) == FALSE_RETURN_STRING)
+    if (str_is_well_formed("title", $title) == FALSE_RETURN_STRING)
     {
-        set_error_message("listbuilder_list_title_id", ERROR_NOT_WELL_FORMED_STRING);
+        set_error_message("listbuilder_list_title_id", ERROR_NOT_WELL_FORMED_STRING, $response);
         
         return $response;
     }
@@ -500,7 +498,7 @@ function action_create_list ($title, $description, $definition)
     if (strlen($description) == 0)
     {
         $logging->warn("no description given");
-        set_error_message("listbuilder_list_description_id", ERROR_NO_DESCRIPTION_GIVEN);
+        set_error_message("listbuilder_list_description_id", ERROR_NO_DESCRIPTION_GIVEN, $response);
         
         return $response;
     }
@@ -511,7 +509,7 @@ function action_create_list ($title, $description, $definition)
             $field_type = "LABEL_DEFINITION_AUTO_NUMBER";
         else
             $field_type = $definition_values[$position * 3];
-        $field_name = $list_table->_get_db_field_name($definition_values[($position * 3) + 1]);
+        $field_name = ListTable::_get_db_field_name($definition_values[($position * 3) + 1]);
         $field_options = $definition_values[($position * 3) + 2];
         $logging->debug("found field (name=".$field_name." type=".$field_type." options=".$field_options.")");
         
@@ -519,15 +517,15 @@ function action_create_list ($title, $description, $definition)
         if (strlen($definition_values[($position * 3) + 1]) == 0)
         {
             $logging->warn("no field name given");
-            set_error_message($definition_keys[($position * 3) + 1], ERROR_NO_FIELD_NAME_GIVEN);
+            set_error_message($definition_keys[($position * 3) + 1], ERROR_NO_FIELD_NAME_GIVEN, $response);
         
             return $response;
         }
         
         # check if title is well formed
-        if (is_well_formed_string("field", $definition_values[($position * 3) + 1]) == FALSE_RETURN_STRING)
+        if (str_is_well_formed("field", $definition_values[($position * 3) + 1]) == FALSE_RETURN_STRING)
         {
-            set_error_message($definition_keys[($position * 3) + 1], ERROR_NOT_WELL_FORMED_STRING);
+            set_error_message($definition_keys[($position * 3) + 1], ERROR_NOT_WELL_FORMED_STRING, $response);
         
             return $response;
         }
@@ -539,14 +537,14 @@ function action_create_list ($title, $description, $definition)
             if (strlen($definition_values[($position * 3) + 2]) == 0)
             {
                 $logging->warn("no options given");
-                set_error_message($definition_keys[($position * 3) + 2], ERROR_NO_FIELD_OPTIONS_GIVEN);
+                set_error_message($definition_keys[($position * 3) + 2], ERROR_NO_FIELD_OPTIONS_GIVEN, $response);
         
                 return $response;
             }
             # check if options string is well formed
-            if (is_well_formed_string("field", $definition_values[($position * 3) + 2], 1) == FALSE_RETURN_STRING)
+            if (str_is_well_formed("field", $definition_values[($position * 3) + 2], 1) == FALSE_RETURN_STRING)
             {
-                set_error_message($definition_keys[($position * 3) + 2], ERROR_NOT_WELL_FORMED_SELECTION_STRING);
+                set_error_message($definition_keys[($position * 3) + 2], ERROR_NOT_WELL_FORMED_SELECTION_STRING, $response);
             
                 return $response;
             }
@@ -564,21 +562,25 @@ function action_create_list ($title, $description, $definition)
     $name_values_array[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME] = $description;
     $name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = $new_definition;
 
+    # insert new description
+    $list_table_description = new ListTableDescription();
     if ($list_table_description->insert($name_values_array) == FALSE)
     {
-        set_error_message("listbuilder_pane", $list_table_description->get_error_str());
+        set_error_message("listbuilder_pane", $list_table_description->get_error_str(), $response);
             
         return $response;
     }
-    $list_table->set($title);
+
+    # create new list_table
+    $list_table = new ListTable($title);
     if ($list_table->create() == FALSE)
     {
-        set_error_message("listbuilder_pane", $list_table->get_error_str());        
+        set_error_message("listbuilder_pane", $list_table->get_error_str(), $response);        
        
         return $response;
     }
 
-    set_info_message("listbuilder_pane", LABEL_NEW_LIST_CREATED);
+    set_info_message("listbuilder_pane", LABEL_NEW_LIST_CREATED, $response);
     
     $logging->trace("created list");
 
@@ -628,15 +630,13 @@ function get_select ($id, $name, $selection)
 }
 
 /**
- * return the html for a tabel that contains the current current list that is being build
+ * return the html for a tabel that contains current list that is being build
  * @param array $definition defintion of current list that is being build
- * @return void
+ * @return string html of current list
  */
 function get_field_definition_table ($definition)
 {
     global $logging;
-    global $result;
-    global $list_table_description;
 
     $logging->trace("getting field definition table");
 
@@ -707,7 +707,7 @@ function get_field_definition_table ($definition)
         
         # the seventh column - delete
         if ($row > 0)
-            $html_str .= "                                <td width=\"1%\">".get_button("xajax_action_del_listbuilder_row(".$row.", xajax.getFormValues('database_definition_form'))", BUTTON_DELETE)."</td>\n";
+            $html_str .= "                                <td width=\"1%\">".get_button("xajax_action_delete_listbuilder_row(".$row.", xajax.getFormValues('database_definition_form'))", BUTTON_DELETE)."</td>\n";
         else
             $html_str .= "                                <td width=\"1%\"><p style=\"visibility: hidden;\">".BUTTON_DELETE."</p></td>\n";
     
@@ -717,12 +717,10 @@ function get_field_definition_table ($definition)
     $html_str .= "                        </tbody>\n";
     $html_str .= "                    </table> <!-- listbuilder_general_settings -->\n";
     $html_str .= "                </form> <!-- database_definition_form -->\n\n";
-    
-    $result->set_result_str($html_str);   
-    
+        
     $logging->trace("got field definition table");
 
-    return;
+    return $html_str;
 }
 
 ?>

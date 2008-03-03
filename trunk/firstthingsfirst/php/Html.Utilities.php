@@ -11,16 +11,58 @@
 
 
 /**
+ * perform a number of test functions on given string
+ * @param array $check_functions array containing names of zero or more test functions
+ * @param string $field_name name of field that contains this string
+ * @param string $str string on which to perform tests
+ * @return bool indicates if string is empty
+ */
+function check_field ($check_functions, $field_name, $str)
+{
+    global $logging;
+
+    $logging->trace("check_field (field_name=".$field_name.", str=".$str.")");
+
+    foreach ($check_functions as $check_function)
+    {            
+        if ($check_function == "str_is_not_empty")
+        {
+            $result_str = str_is_not_empty($field_name, $str);
+            if ($result_str == FALSE_RETURN_STRING)
+                return ERROR_NO_FIELD_VALUE_GIVEN;
+        }
+        else if ($check_function == "str_is_number")
+        {
+            $result_str = str_is_number($field_name, $str);
+            if ($result_str == FALSE_RETURN_STRING)
+                return ERROR_NO_NUMBER_GIVEN;
+        }
+        else if ($check_function == "str_is_date")
+        {
+            $result_str = str_is_date($field_name, $str);
+            if ($result_str == FALSE_RETURN_STRING)
+                return ERROR_DATE_WRONG_FORMAT;
+        }
+        else if (strlen($check_function))
+            $logging->warn("unknown check function (function=".$check_function.", $field_name=".$field_name.")");
+    }
+    
+    $logging->trace("check_field");
+
+    return "";
+}   
+
+/**
  * test if given string is not empty
  * @param string $field_name name of field that contains this string
  * @param string $str string to test
  * @return bool indicates if string is empty
  */
-function is_not_empty ($field_name, $str)
+function str_is_not_empty ($field_name, $str)
 {
     global $logging;
 
-    $logging->trace("is_not_empty (field_name=".$field_name.", str=".$str.")");
+    $logging->trace("str_is_not_empty (field_name=".$field_name.", str=".$str.")");
     
     if (strlen($str) == 0)
     {
@@ -29,7 +71,7 @@ function is_not_empty ($field_name, $str)
         return FALSE_RETURN_STRING;
     }
     
-    $logging->trace("is_not_empty");
+    $logging->trace("str_is_not_empty");
 
     return $str;
 }
@@ -41,7 +83,7 @@ function is_not_empty ($field_name, $str)
  * @param string $str string to test
  * @return bool indicates if string is a number
  */
-function is_number ($field_name, $str)
+function str_is_number ($field_name, $str)
 {
     global $logging;
 
@@ -59,11 +101,11 @@ function is_number ($field_name, $str)
  * @param string $use_pipe_char bool indicates if pipe character is permitted (standard: false)
  * @return bool indicates if string is well formed
  */
-function is_well_formed_string ($field_name, $str, $use_pipe_char=0)
+function str_is_well_formed ($field_name, $str, $use_pipe_char=0)
 {
     global $logging;
 
-    $logging->trace("is_well_formed_string (field_name=".$field_name.", str=".$str.", use_pipe_char=".$use_pipe_char.")");
+    $logging->trace("str_is_well_formed (field_name=".$field_name.", str=".$str.", use_pipe_char=".$use_pipe_char.")");
     
     if ($use_pipe_char == 0)
     {
@@ -86,7 +128,7 @@ function is_well_formed_string ($field_name, $str, $use_pipe_char=0)
         }
     }
     
-    $logging->trace("is_well_formed_string");
+    $logging->trace("str_is_well_formed");
 
     return $str;
 }
@@ -97,7 +139,7 @@ function is_well_formed_string ($field_name, $str, $use_pipe_char=0)
  * @param string $str string to test
  * @return bool indicates if string is empty
  */
-function is_date ($field_name, $str)
+function str_is_date ($field_name, $str)
 {
     global $logging;
     global $firstthingsfirst_date_string;

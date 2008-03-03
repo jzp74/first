@@ -32,6 +32,8 @@ require_once("php/Class.ListTableDescription.php");
 require_once("php/Class.ListTable.php");
 require_once("php/Class.ListTableNote.php");
 
+require_once("php/Class.HtmlDatabaseTable.php");
+
 /**
  * Initialize xajax
  */
@@ -46,29 +48,14 @@ require_once("php/Html.ListTable.php");
 require_once("php/Html.ListTableItemNotes.php");
 require_once("php/Html.ListBuilder.php");
 
-/**
- * needed to initialise several classes
- */
-class EmptyClass {}
-
-
-/**
- * dummy initialisation
- */
-$list_table = new EmptyClass();
 
 /**
  * create global objects
  */
-$json = new Services_JSON();
 $logging = new Logging($firstthingsfirst_loglevel, $firstthingsfirst_logfile);
-$result = new Result();
 $database = new Database();
 $list_state = new ListState();
 $user = new User();
-$list_table_description = new ListTableDescription();
-$list_table = new ListTable();
-$response = new xajaxResponse();
 
 /**
  * register process_url function
@@ -89,7 +76,6 @@ function process_url ()
 {
     global $logging;
     global $user;
-    global $response;
     
     $logging->trace("PROCESS_URL (request_uri=".$_SERVER[REQUEST_URI].")");
     
@@ -101,38 +87,36 @@ function process_url ()
     
     # show portal page
     if ($action == ACTION_GET_PORTAL_PAGE)
-        action_get_portal_page();
+        return action_get_portal_page();
     # show or print list page
     else if ($action == ACTION_GET_LIST_PAGE)
     {
         if (isset($_GET['list']))
-            action_get_list_page($_GET['list']);
+            return action_get_list_page($_GET['list']);
         else
-            action_get_portal_page();
+            return action_get_portal_page();
     }
-    else if ($action == ACTION_GET_PRINT_LIST)
+    else if ($action == ACTION_GET_LIST_PRINT_PAGE)
     {
         if (isset($_GET['list']))
-            action_get_print_list($_GET['list']);
+            return action_get_list_print_page($_GET['list']);
         else
-            action_get_portal_page();
+            return action_get_portal_page();
     }
     # show add user page
     else if ($action == ACTION_GET_ADD_USER_PAGE)
-        action_get_add_user_page();
+        return action_get_add_user_page();
     # show list builder page
     else if ($action == ACTION_GET_LISTBUILDER_PAGE)
     {
         if (isset($_GET['list']))
-            action_get_listbuilder_page($_GET['list']);
+            return action_get_listbuilder_page($_GET['list']);
         else
-            action_get_listbuilder_page("");
+            return action_get_listbuilder_page("");
     }
     # show portal page in all other instances
     else
-        action_get_portal_page();
-
-    return $response;
+        return action_get_portal_page();
 }
 
 ?>
@@ -147,7 +131,7 @@ function process_url ()
 <link rel="shortcut icon" href="images/favicon.ico">
 <link rel="stylesheet" href="css/standard.css">
 <link rel="stylesheet" href="css/standard_listbuilder.css">
-<link rel="stylesheet" href="css/standard_list.css">
+<link rel="stylesheet" href="css/standard_database_table.css">
 <link rel="stylesheet" href="css/standard_print.css" media="print">
 
 <?php $xajax->printJavascript("xajax"); ?>
@@ -166,7 +150,7 @@ function process_url ()
 
     <div id="main_body">
 
-        <script language="javaScript">xajax_process_url()</script>
+        <script language="javascript">xajax_process_url()</script>
             
     </div> <!-- main_body -->
 

@@ -17,7 +17,7 @@ require_once("php/Class.ListState.php");
 require_once("php/Class.User.php");
 require_once("php/Class.ListTableDescription.php");
 require_once("php/Class.ListTable.php");
-require_once("php/Class.ListTableItemNotes.php");
+require_once("php/Class.ListTableNote.php");
 
 
 # initialisations
@@ -38,7 +38,7 @@ $list_state = new ListState();
 $user = new User();
 $list_table_description = new ListTableDescription();
 $list_table = new ListTable();
-$list_table_item_notes = new ListTableItemNotes();
+$list_table_note = new ListTableNote();
 
 
 # cleanup tables and entries created during this test
@@ -252,7 +252,7 @@ dump_line("&nbsp;&nbsp;&nbsp;<em>".$str."</em>");
 dump_test("change second note of first notes field of entry 1");
 $note_field = $results[$notes1_field][1];
 $note_array = array($note_field["_id"], $note_field["_note"]." changed");
-if ($list_table_item_notes->update($results["_id"], $notes1_field, $note_field["_id"], $note_field["_note"]." changed"))
+if ($list_table_note->update($results["_id"], $notes1_field, $note_field["_id"], $note_field["_note"]." changed"))
     dump_greenline("ok");
 else
     fatal();

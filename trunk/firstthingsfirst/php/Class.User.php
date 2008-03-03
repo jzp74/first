@@ -83,12 +83,6 @@ define("USER_METADATA", "-11");
 class User extends UserDatabaseTable
 {
     /**
-    * reference to global json object
-    * @var Services_JSON
-    */
-    protected $_json;
-    
-    /**
     * reference to global logging object
     * @var Logging
     */
@@ -104,15 +98,14 @@ class User extends UserDatabaseTable
     function __construct ()
     {
         # these variables are assumed to be globally available
-        global $json;
         global $logging;
         global $database;
+        global $class_user_fields;
         
         # call parent __construct()
-        parent::__construct();
+        parent::__construct(USER_TABLE_NAME, $class_user_fields, USER_METADATA);
 
         # set global references for this object
-        $this->_json =& $json;
         $this->_log =& $logging;
         $this->_database =& $database;
         
@@ -123,17 +116,11 @@ class User extends UserDatabaseTable
         # reset relevant session parameters
         
         if ($this->is_login())
-        {
             $this->_log->debug("user session is still active (name=".$this->get_name().")");
-            $this->set();
-        }
         else
-        {
             $this->reset();
-            $this->set();
-        }
         
-        $this->_log->trace("constructed new User object");
+        $this->_log->debug("constructed new User object");
     }
 
     /**
@@ -318,22 +305,6 @@ class User extends UserDatabaseTable
     }
 
     /**
-    * set attributes to initial values
-    * @return void
-    */
-    function set ()
-    {
-        global $class_user_fields;
-        
-        $this->_log->trace("setting User");
-        
-        # call parent set()
-        parent::set(USER_TABLE_NAME, $class_user_fields, USER_METADATA);
-
-        $this->_log->trace("set User");
-    }
-
-    /**
     * check if current user is logged in
     * @return bool indicates if current user is logged in
     */
@@ -370,26 +341,26 @@ class User extends UserDatabaseTable
         # create key_string
         $key_string = USER_NAME_FIELD_NAME."='".$name."'";
 
-        $row = parent::select_row($key_string);
-        if (count($row) == 0)
+        $record = parent::select_record($key_string);
+        if (count($record) == 0)
             return FALSE;
         
         $password = md5($pw);
-        $db_password = $row[USER_PW_FIELD_NAME];
+        $db_password = $record[USER_PW_FIELD_NAME];
             
         if ($db_password == $password)
         {
             # set session parameters
-            $this->set_id($row[DB_ID_FIELD_NAME]);
-            $this->set_name($row[USER_NAME_FIELD_NAME]);
-            $this->set_can_edit_list($row[USER_CAN_EDIT_LIST_FIELD_NAME]);
-            $this->set_can_create_list($row[USER_CAN_CREATE_LIST_FIELD_NAME]);
-            $this->set_is_admin($row[USER_IS_ADMIN_FIELD_NAME]);
-            $this->set_times_login($row[USER_TIMES_LOGIN_FIELD_NAME] + 1);
+            $this->set_id($record[DB_ID_FIELD_NAME]);
+            $this->set_name($record[USER_NAME_FIELD_NAME]);
+            $this->set_can_edit_list($record[USER_CAN_EDIT_LIST_FIELD_NAME]);
+            $this->set_can_create_list($record[USER_CAN_CREATE_LIST_FIELD_NAME]);
+            $this->set_is_admin($record[USER_IS_ADMIN_FIELD_NAME]);
+            $this->set_times_login($record[USER_TIMES_LOGIN_FIELD_NAME] + 1);
             $this->set_login(1);
                 
             $name_values_array = array();
-            $name_values_array[USER_TIMES_LOGIN_FIELD_NAME] = ($row[USER_TIMES_LOGIN_FIELD_NAME] + 1);
+            $name_values_array[USER_TIMES_LOGIN_FIELD_NAME] = ($record[USER_TIMES_LOGIN_FIELD_NAME] + 1);
             
             # update the number of times this user has logged in
             if (parent::update($key_string, $name_values_array) == FALSE)
@@ -435,8 +406,8 @@ class User extends UserDatabaseTable
         # create key_string
         $key_string = USER_NAME_FIELD_NAME."='".$name."'";
 
-        $row = parent::select_row($key_string);
-        if (count($row) > 0)
+        $record = parent::select_record($key_string);
+        if (count($record) > 0)
         {
             $this->_log->debug("user already exists (name=".$name.")");
                 

@@ -54,8 +54,6 @@ class Result
         $this->_log =& $logging;
 
         $this->reset();
-        
-        $this->_log->trace("constructed new Result object");
     }
 
     /**
@@ -112,7 +110,7 @@ class Result
     */
     function set_result_str ($str)
     {
-        $this->result_str .= $str;
+        $this->result_str = $str;
     }
     
     /**

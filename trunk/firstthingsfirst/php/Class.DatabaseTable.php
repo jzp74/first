@@ -105,18 +105,6 @@ class DatabaseTable
     protected $error_str;
 
     /**
-    * reference to global json object
-    * @var Services_JSON
-    */
-    protected $_json;
-    
-    /**
-    * reference to global result object
-    * @var Result
-    */
-    protected $_result;
-
-    /**
     * reference to global logging object
     * @var Logging
     */
@@ -130,25 +118,51 @@ class DatabaseTable
     
     /**
     * overwrite __construct() function
+    * @param $table_name string table name of this DatabaseTable object
+    * @param $fields array array containing all database fields of this DatabaseTable object
+    * @param $metadat_str string string indicating which metadata should be stored for this DatabaseTable object
     * @return void
     */
-    function __construct ()
+    function __construct ($table_name, $fields, $metadata_str)
     {
         # these variables are assumed to be globally available
-        global $json;
-        global $result;
         global $logging;        
         global $database;
+        global $firstthingsfirst_db_table_prefix;
         
         # set global references for this object
-        $this->_json =& $json;
-        $this->_result =& $result;
         $this->_log =& $logging;
         $this->_database =& $database;
 
-        self::reset();
+        $this->user_field_names = array();
+        $this->db_text_field_names = array();
         
-        $this->_log->trace("constructed new DatabaseTable object");
+        $this->table_name = $table_name;
+        $this->fields = $fields;
+        $this->db_field_names = array_keys($fields);
+
+        foreach ($this->db_field_names as $db_field_name)
+        {
+            $this->_log->trace("found field (field_name=".$fields[$db_field_name][0].", field_type=".$fields[$db_field_name][1].", field_options=".$fields[$db_field_name][2].")");
+            $user_field_name = $fields[$db_field_name][0];
+            $user_fields[$db_field_name] = $user_field_name; 
+            $field_type = $fields[$db_field_name][1];
+            array_push($this->user_field_names, $user_field_name);
+            $this->user_fields[$user_field_name] = $db_field_name;
+            if (stristr($field_type, "TEXT"))
+                array_push($this->db_text_field_names, $db_field_name);            
+        }
+        
+        if (strlen($metadata_str) != 3)
+        {
+            $this->_log->error("metadata_str should be exactly 3 characters long");
+            $this->reset();
+            
+            return FALSE;
+        }
+        $this->metadata_str = $metadata_str;                
+        
+        $this->_log->debug("constructed DatabaseTable (table_name=".$this->table_name.", metadata_str=".$metadata_str.")");
     }
         
     /**
@@ -269,52 +283,6 @@ class DatabaseTable
         $this->error_str = "";
     }
 
-    /**
-    * set attributes (initiate this object)
-    * @param $table_name string table name of this DatabaseTable object
-    * @param $fields array array containing all database fields of this DatabaseTable object
-    * @param $metadat_str string string indicating which metadata should be stored for this DatabaseTable object
-    * @return void
-    */
-    function set ($table_name, $fields, $metadata_str)
-    {
-        global $firstthingsfirst_db_table_prefix;
-        
-        $this->user_field_names = array();
-        $this->db_text_field_names = array();
-        
-        $this->_log->trace("setting DatabaseTable (table_name=".$table_name.", metadata_str=".$metadata_str.")");
-
-        $this->table_name = $table_name;
-        $this->fields = $fields;
-        $this->db_field_names = array_keys($fields);
-
-        foreach ($this->db_field_names as $db_field_name)
-        {
-            $this->_log->trace("found field (field_name=".$fields[$db_field_name][0].", field_type=".$fields[$db_field_name][1].", field_options=".$fields[$db_field_name][2].")");
-            $user_field_name = $fields[$db_field_name][0];
-            $user_fields[$db_field_name] = $user_field_name; 
-            $field_type = $fields[$db_field_name][1];
-            array_push($this->user_field_names, $user_field_name);
-            $this->user_fields[$user_field_name] = $db_field_name;
-            if (stristr($field_type, "TEXT"))
-                array_push($this->db_text_field_names, $db_field_name);            
-        }
-        
-        if (strlen($metadata_str) != 3)
-        {
-            $this->_log->error("metadata_str should be exactly 3 characters long");
-            $this->reset();
-            
-            return FALSE;
-        }
-        $this->metadata_str = $metadata_str;
-        
-        $this->_log->trace("set DatabaseTable (table_name=".$this->table_name.")");
-        
-        return TRUE;
-    }
-    
     /**
     * create new database table for current DatabaseTable object
     * @param $force bool indicates if existing database table should be removed (FALSE if not provided)
@@ -570,7 +538,7 @@ class DatabaseTable
     * @param $key_string string unique identifier of requested record
     * @return array array containing exactly one record (which is an array)
     */
-    function select_row ($key_string, $db_field_names = array())
+    function select_record ($key_string, $db_field_names = array())
     {
         $this->_log->trace("selecting DatabaseTable row (key_string=".$key_string.")");
 
@@ -715,14 +683,14 @@ class DatabaseTable
         $result = $this->_database->insertion_query($query);
         if ($result == 0)
         {
-            $this->_log->error("could not add entry to DatabaseTable");
+            $this->_log->error("could not insert record to DatabaseTable");
             $this->_log->error("database error: ".$this->_database->get_error_str());
             $this->error_str = ERROR_DATABASE_PROBLEM;
             
             return 0;
         }
         
-        $this->_log->trace("inserted into DatabaseTable (result=".$result.")");
+        $this->_log->trace("inserted record into DatabaseTable (result=".$result.")");
         
         return $result;
     }
@@ -739,7 +707,7 @@ class DatabaseTable
         $values = array();
         $db_field_names = array_keys($name_values_array);
 
-        $this->_log->trace("updating DatabaseTable (key_string=".$key_string.", user_name=".$user_name.")");
+        $this->_log->trace("updating record of DatabaseTable (key_string=".$key_string.", user_name=".$user_name.")");
         
         if (!$this->_database->table_exists($this->table_name))
         {
@@ -797,14 +765,14 @@ class DatabaseTable
         $result = $this->_database->query($query);
         if ($result == FALSE)
         {
-            $this->_log->error("could not update entry of DatabaseTable (key_string=".$key_string.")");
+            $this->_log->error("could not update record of DatabaseTable (key_string=".$key_string.")");
             $this->_log->error("database error: ".$this->_database->get_error_str());
             $this->error_str = ERROR_DATABASE_PROBLEM;
             
             return FALSE;
         }
         
-        $this->_log->trace("updated entry of DatabaseTable");
+        $this->_log->trace("updated record of DatabaseTable");
         
         return TRUE;
     }
@@ -817,7 +785,7 @@ class DatabaseTable
     */
     function archive ($key_string, $user_name)
     {
-        $this->_log->trace("archiving from DatabaseTable (key_string=".$key_string.", user_name=".$user_name.")");
+        $this->_log->trace("archiving record from DatabaseTable (key_string=".$key_string.", user_name=".$user_name.")");
 
         if ($this->metadata_str[0] == DATABASETABLE_METADATA_FALSE)
         {
@@ -827,7 +795,7 @@ class DatabaseTable
         }
             
         # select row from database to see if it really exists
-        $row = self::select_row($key_string);
+        $row = self::select_record($key_string);
         if (count($row) == 0)
             return FALSE;
         
@@ -838,14 +806,14 @@ class DatabaseTable
 
         if ($result == FALSE)
         {
-            $this->_log->error("could not archive entry from DatabaseTable");
+            $this->_log->error("could not archive record from DatabaseTable");
             $this->_log->error("database error: ".$this->_database->get_error_str());
             $this->error_str = ERROR_DATABASE_PROBLEM;
             
             return FALSE;
         }
 
-        $this->_log->trace("archived from DatabaseTable");
+        $this->_log->trace("archived record from DatabaseTable");
         
         return TRUE;
     }
@@ -857,10 +825,10 @@ class DatabaseTable
     */
     function delete ($key_string)
     {
-        $this->_log->trace("deleting from DatabaseTable (key_string=".$key_string.")");
+        $this->_log->trace("deleting record from DatabaseTable (key_string=".$key_string.")");
 
         # select row from database to see if it really exists
-        $row = self::select_row($key_string);
+        $row = self::select_record($key_string);
         if (count($row) == 0)
             return FALSE;
 
@@ -869,14 +837,14 @@ class DatabaseTable
 
         if ($result == FALSE)
         {
-            $this->_log->error("could not delete entry to DatabaseTable");
+            $this->_log->error("could not delete record to DatabaseTable");
             $this->_log->error("database error: ".$this->_database->get_error_str());
             $this->error_str = ERROR_DATABASE_PROBLEM;
             
             return FALSE;
         }
 
-        $this->_log->trace("deleted from DatabaseTable");
+        $this->_log->trace("deleted record from DatabaseTable");
         
         return TRUE;
     }

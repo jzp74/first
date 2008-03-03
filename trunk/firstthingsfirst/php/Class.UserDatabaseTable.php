@@ -18,6 +18,12 @@
 class UserDatabaseTable extends DatabaseTable
 {
     /**
+    * json object
+    * @var Services_JSON
+    */
+    protected $_json;
+    
+    /**
     * reference to global list_state object
     * @var ListState
     */
@@ -31,24 +37,29 @@ class UserDatabaseTable extends DatabaseTable
     
     /**
     * overwrite __construct() function
+    * @param $table_name string table name of this DatabaseTable object
+    * @param $fields array array containing all database fields of this DatabaseTable object
+    * @param $metadat_str string string indicating which metadata should be stored for this DatabaseTable object
     * @return void
     */
-    function __construct ()
+    function __construct ($table_name, $fields, $metadata_str)
     {
         # these variables are assumed to be globally available
         global $list_state;
         global $user;
         
         # call parent __construct()
-        parent::__construct();
+        parent::__construct($table_name, $fields, $metadata_str);
         
         # set global references for this object
         $this->_list_state =& $list_state;
         $this->_user =& $user;
+        
+        $this->_json = new Services_JSON();
 
         self::reset();
         
-        $this->_log->trace("constructed new UserDatabaseTable object");
+        $this->_log->debug("constructed UserDatabaseTable (table_name=".$this->table_name.", metadata_str=".$metadata_str.")");
     }
 
     /**
@@ -141,14 +152,14 @@ class UserDatabaseTable extends DatabaseTable
     */
     function insert ($name_values_array)
     {
-        $this->_log->trace("inserting into UserDatabaseTable");
+        $this->_log->trace("inserting record into UserDatabaseTable");
         
         # call parent insert()
         $result = parent::insert($name_values_array, $this->_user->get_name());
         if ($result == 0)
             return 0;
 
-        $this->_log->trace("inserted into UserDatabaseTable (result=".$result.")");
+        $this->_log->trace("inserted record into UserDatabaseTable (result=".$result.")");
         
         return $result;
     }
@@ -161,13 +172,13 @@ class UserDatabaseTable extends DatabaseTable
     */
     function update ($key_string, $name_values_array = array())
     {
-        $this->_log->trace("updating UserDatabaseTable (key_string=".$key_string.")");
+        $this->_log->trace("updating record from UserDatabaseTable (key_string=".$key_string.")");
         
         # call parent update()
         if (parent::update($key_string, $this->_user->get_name(), $name_values_array) == FALSE)
             return FALSE;
 
-        $this->_log->trace("updated UserDatabaseTable");
+        $this->_log->trace("updated record from UserDatabaseTable");
         
         return TRUE;
     }
@@ -179,13 +190,13 @@ class UserDatabaseTable extends DatabaseTable
     */
     function archive ($key_string)
     {
-        $this->_log->trace("archiving from DatabaseTable (key_string=".$key_string.")");
+        $this->_log->trace("archiving record from UserDatabaseTable (key_string=".$key_string.")");
 
         # call parent archive()
-        if (parent::archive($key_string, $this->_user->get_name()) == FALSE);
+        if (parent::archive($key_string, $this->_user->get_name()) == FALSE)
             return FALSE;
 
-        $this->_log->trace("archived from DatabaseTable");
+        $this->_log->trace("archived record from UserDatabaseTable");
         
         return TRUE;
     }

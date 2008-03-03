@@ -23,13 +23,35 @@ $xajax->registerFunction("action_logout");
 function action_get_login_page ()
 {
     global $logging;
-    global $result;    
     global $user;
-    global $response;
 
-    $logging->info("ACTION: get login page ".$firstthingsfirst_db_table_prefix[strlen($firstthingsfirst_db_table_prefix) - 1]);
+    $logging->info("ACTION: get login page");
     
+    # create necessary objects
+    $response = new xajaxResponse();
+
+    $html_str = get_login_page_html();
+    $response->addAssign("main_body", "innerHTML", $html_str);
+
+    set_footer("", $response);
+
+    $logging->trace("got login page");
+
+    return $response;
+}
+
+/**
+ * get html for login page
+ * @return string html for login page
+ */
+function get_login_page_html ()
+{
+    global $logging;
+
+    $logging->trace("get login page html");
+
     $html_str = "";
+ 
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
     $html_str .= "        <div id=\"page_title\">".LABEL_PLEASE_LOGIN."</div>\n\n";
     $html_str .= "        <div id=\"login_pane\">\n\n";
@@ -51,15 +73,9 @@ function action_get_login_page ()
     $html_str .= "        </div> <!-- login_pane -->\n\n";
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
 
-    $result->set_result_str($html_str);    
+    $logging->trace("got login page html");
 
-    $response->addAssign("main_body", "innerHTML", $result->get_result_str());
-
-    set_footer("");
-
-    $logging->trace("got login page");
-
-    return $response;
+    return $html_str;
 }
 
 /**
@@ -72,11 +88,12 @@ function action_get_login_page ()
 function action_login ($user_name, $password)
 {
     global $logging;
-    global $result;    
     global $user;
-    global $response;
     
     $logging->info("ACTION: login (user_name=".$user_name.")");
+
+    # create necessary objects
+    $response = new xajaxResponse();
 
     if (strlen($user_name) == 0)
     {
@@ -119,18 +136,16 @@ function action_login ($user_name, $password)
 function action_logout ()
 {
     global $logging;
-    global $result;    
     global $user;
-    global $response;
     
     $logging->info("ACTION: logout");
 
-    $user->logout();
-    set_login_status();
+    # create necessary objects
+    $response = new xajaxResponse();
 
-    if (!check_postconditions())
-        return $reponse;
-    
+    $user->logout();
+    set_login_status($response);
+
     $logging->trace("user is logged out");
 
     return $response;
@@ -138,6 +153,7 @@ function action_logout ()
 
 /**
  * get html to display the login status of a user
+ * @param $response xajaxResponse response object
  * @return string html for login status
  */
 function get_login_status ()
@@ -172,10 +188,9 @@ function get_login_status ()
  * set login status
  * @return void
  */
-function set_login_status ()
+function set_login_status ($response)
 {
     global $logging;
-    global $response;
     
     $logging->trace("setting login status");
         

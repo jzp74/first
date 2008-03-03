@@ -101,31 +101,31 @@ $firstthingsfirst_field_descriptions = array(
     "LABEL_DEFINITION_NUMBER"        => array(
         DB_DATATYPE_INT,
         "input type=text size=\"10\" maxlength=\"10\"",
-        "is_number",
+        "str_is_number",
         0
     ),
     "LABEL_DEFINITION_AUTO_NUMBER"   => array(
         DB_DATATYPE_ID,
         "input type=text size=\"10\" maxlength=\"10\" readonly",
-        "is_number",
+        "str_is_number",
         0
     ),
     "LABEL_DEFINITION_DATE"          => array(
         DB_DATATYPE_DATE,
         "input type=text size=\"10\" maxlength=\"10\"",
-        "is_not_empty is_date",
+        "str_is_not_empty str_is_date",
         1
     ),
     "LABEL_DEFINITION_DATETIME"      => array(
         DB_DATATYPE_DATETIME,
         "input type=text size=\"20\" maxlength=\"20\"",
-        "is_not_empty is_date",
+        "str_is_not_empty str_is_date",
         0
     ),
     "LABEL_DEFINITION_AUTO_DATE"     => array(
         DB_DATATYPE_DATE,
         "input type=text size=\"10\" maxlength=\"10\" readonly",
-        "is_date",
+        "str_is_date",
         1
     ),
     "LABEL_DEFINITION_USERNAME"     => array(

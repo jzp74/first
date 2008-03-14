@@ -36,6 +36,26 @@ define("DATABASETABLE_UNKWOWN_PAGE", 0);
 define("DATABASETABLE_ALL_PAGES", -1);
 
 /**
+ * definition of metadata archive slot
+ */
+define("DATABASETABLE_METADATA_ENABLE_ARCHIVE", 0);
+
+/**
+ * definition of metadata create slot
+ */
+define("DATABASETABLE_METADATA_ENABLE_CREATE", 1);
+
+/**
+ * definition of metadata modify slot
+ */
+define("DATABASETABLE_METADATA_ENABLE_MODIFY", 2);
+
+/**
+ * definition of metadata archive slot
+ */
+define("DATABASETABLE_METADATA_ENABLE_", 2);
+
+/**
  * definition of metadata_str FALSE indicator
  */
 define("DATABASETABLE_METADATA_FALSE", "-");
@@ -57,7 +77,7 @@ class DatabaseTable
     /**
     * array containing all fields that form a single record
     * this array is of the following structure:
-    *  db_field_name => (field_name, field_type, field_options)
+    *  db_field_name => (user_field_name, field_type, field_options)
     * @var array
     */
     protected $fields;
@@ -71,7 +91,7 @@ class DatabaseTable
     protected $user_fields;
     
     /**
-    * array containing all none-empty field names
+    * array containing all field names
     * @var array
     */
     protected $user_field_names;
@@ -260,6 +280,15 @@ class DatabaseTable
     }
 
     /**
+    * get value of metadata_str attribute
+    * @return string value of metadata_str attribute
+    */
+    function get_metadata_str ()
+    {
+        return $this->metadata_str;
+    }
+
+    /**
     * get value of error_str attribute
     * @return string value of error_str attribute
     */
@@ -335,19 +364,19 @@ class DatabaseTable
                     $query_postfix .= ", ".$field_options;
         }
         # add archiver name and datetime
-        if ($this->metadata_str[0] != DATABASETABLE_METADATA_FALSE)
+        if ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] != DATABASETABLE_METADATA_FALSE)
         {
             $query .= DB_ARCHIVER_FIELD_NAME." ".DB_DATATYPE_USERNAME.", ";
             $query .= DB_TS_ARCHIVED_FIELD_NAME." ".DB_DATATYPE_DATETIME.", ";
         }
         # add creator name and datetime
-        if ($this->metadata_str[1] != DATABASETABLE_METADATA_FALSE)
+        if ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_CREATE] != DATABASETABLE_METADATA_FALSE)
         {
             $query .= DB_CREATOR_FIELD_NAME." ".DB_DATATYPE_USERNAME.", ";
             $query .= DB_TS_CREATED_FIELD_NAME." ".DB_DATATYPE_DATETIME.", ";
         }
         # add modifier name and datetime
-        if ($this->metadata_str[2] != DATABASETABLE_METADATA_FALSE)
+        if ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_MODIFY] != DATABASETABLE_METADATA_FALSE)
         {
             $query .= DB_MODIFIER_FIELD_NAME." ".DB_DATATYPE_USERNAME.", ";
             $query .= DB_TS_MODIFIED_FIELD_NAME." ".DB_DATATYPE_DATETIME.", ";
@@ -406,7 +435,7 @@ class DatabaseTable
     
         # build WHERE clause for queries
         # add archived clause
-        if ($this->metadata_str[0] != DATABASETABLE_METADATA_FALSE)
+        if ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] != DATABASETABLE_METADATA_FALSE)
         {
             if ($this->_list_state->get_archived() == LISTSTATE_SELECT_NON_ARCHIVED)
                 $query_where_clause = " WHERE ".DB_TS_ARCHIVED_FIELD_NAME."='".DB_NULL_DATETIME."'";
@@ -419,7 +448,7 @@ class DatabaseTable
         $first_clause = TRUE;
         foreach ($filter_array_keys as $filter_array_key)
         {
-            if (($first_clause == TRUE) && ($this->metadata_str[0] == DATABASETABLE_METADATA_FALSE))
+            if (($first_clause == TRUE) && ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] == DATABASETABLE_METADATA_FALSE))
             {
                 $query_where_clause .= " WHERE ".$filter_array_key."='".$filter_array[$filter_array_key]."'";
                 $first_clause = FALSE;
@@ -465,19 +494,19 @@ class DatabaseTable
         
         $query = "SELECT ".implode($db_field_names, ", ");
         # add archiver name and datetime
-        if ($this->metadata_str[0] != DATABASETABLE_METADATA_FALSE)
+        if ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] != DATABASETABLE_METADATA_FALSE)
         {
             $query .= ", ".DB_ARCHIVER_FIELD_NAME;
             $query .= ", ".DB_TS_ARCHIVED_FIELD_NAME;
         }
         # add creator name and datetime
-        if ($this->metadata_str[1] != DATABASETABLE_METADATA_FALSE)
+        if ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_CREATE] != DATABASETABLE_METADATA_FALSE)
         {
             $query .= ", ".DB_CREATOR_FIELD_NAME;
             $query .= ", ".DB_TS_CREATED_FIELD_NAME;
         }
         # add modifier name and datetime
-        if ($this->metadata_str[2] != DATABASETABLE_METADATA_FALSE)
+        if ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_MODIFY] != DATABASETABLE_METADATA_FALSE)
         {
             $query .= ", ".DB_MODIFIER_FIELD_NAME;
             $query .= ", ".DB_TS_MODIFIED_FIELD_NAME;
@@ -555,19 +584,19 @@ class DatabaseTable
         
         $query = "SELECT ".implode($db_field_names, ", ");
         # add archiver name and datetime
-        if ($this->metadata_str[0] != DATABASETABLE_METADATA_FALSE)
+        if ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] != DATABASETABLE_METADATA_FALSE)
         {
             $query .= ", ".DB_ARCHIVER_FIELD_NAME;
             $query .= ", ".DB_TS_ARCHIVED_FIELD_NAME;
         }
         # add creator name and datetime
-        if ($this->metadata_str[1] != DATABASETABLE_METADATA_FALSE)
+        if ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_CREATE] != DATABASETABLE_METADATA_FALSE)
         {
             $query .= ", ".DB_CREATOR_FIELD_NAME;
             $query .= ", ".DB_TS_CREATED_FIELD_NAME;
         }
         # add modifier name and datetime
-        if ($this->metadata_str[2] != DATABASETABLE_METADATA_FALSE)
+        if ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_MODIFY] != DATABASETABLE_METADATA_FALSE)
         {
             $query .= ", ".DB_MODIFIER_FIELD_NAME;
             $query .= ", ".DB_TS_MODIFIED_FIELD_NAME;
@@ -630,7 +659,7 @@ class DatabaseTable
             # check if db_field_name is known
             if ($field_type == "")
             {
-                $this->_log->error("unknown db_field_name (".$db_field_name.")");
+                $this->_log->error("unknown field type (db_field_name=".$db_field_name.")");
                 $this->error_str = ERROR_DATABASE_PROBLEM;
                     
                 return 0;
@@ -661,19 +690,19 @@ class DatabaseTable
         
         $query = "INSERT INTO ".$this->table_name." VALUES (0, ".implode($values, ", ");
         # add archiver name and datetime
-        if ($this->metadata_str[0] != DATABASETABLE_METADATA_FALSE)
+        if ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] != DATABASETABLE_METADATA_FALSE)
         {
             $query .= ", \"\"";
             $query .= ", \"".DB_NULL_DATETIME."\"";
         }
         # add creator name and datetime
-        if ($this->metadata_str[1] != DATABASETABLE_METADATA_FALSE)
+        if ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_CREATE] != DATABASETABLE_METADATA_FALSE)
         {
             $query .= ", \"".$user_name."\"";
             $query .= ", \"".strftime(DB_DATETIME_FORMAT)."\"";
         }
         # add modifier name and datetime
-        if ($this->metadata_str[2] != DATABASETABLE_METADATA_FALSE)
+        if ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_MODIFY] != DATABASETABLE_METADATA_FALSE)
         {
             $query .= ", \"".$user_name."\"";
             $query .= ", \"".strftime(DB_DATETIME_FORMAT)."\"";
@@ -717,9 +746,10 @@ class DatabaseTable
             return FALSE;
         }
         
-        foreach ($db_field_names as $array_key)
+        foreach ($db_field_names as $db_field_name)
         {
-            $value = $name_values_array[$array_key];
+            $value = $name_values_array[$db_field_name];
+            $field_type = $this->fields[$db_field_name][1];
             
             # encode text field
             foreach ($this->db_text_field_names as $text_field_name)
@@ -727,7 +757,7 @@ class DatabaseTable
                 if ($array_key == $text_field_name)
                     $value = htmlentities($value, ENT_QUOTES);
             }
-
+            
             if (stristr($field_type, "DATE"))
             {
                 if (!$this->_check_datetime($value))
@@ -738,13 +768,13 @@ class DatabaseTable
                     return FALSE;
                 }
                 else
-                    array_push($values, $array_key."='".$value."'");
+                    array_push($values, $db_field_name."='".$value."'");
             }
             else
-                array_push($values, $array_key."='".$value."'");
+                array_push($values, $db_field_name."='".$value."'");
         }
         
-        if ((count($values) == 0) && ($this->metadata_str[2] == DATABASETABLE_METADATA_FALSE))
+        if ((count($values) == 0) && ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_MODIFY] == DATABASETABLE_METADATA_FALSE))
         {
             $this->_log->error("no values and modified datetime to update");
             
@@ -756,7 +786,7 @@ class DatabaseTable
         if (count($values) != 0)
             $query .= ", ";
         # add modifier name
-        if ($this->metadata_str[2] != DATABASETABLE_METADATA_FALSE)
+        if ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_MODIFY] != DATABASETABLE_METADATA_FALSE)
         {
             $query .= DB_MODIFIER_FIELD_NAME."=\"".$user_name."\"";
             $query .= ", ".DB_TS_MODIFIED_FIELD_NAME."=\"".strftime(DB_DATETIME_FORMAT)."\"";
@@ -787,7 +817,7 @@ class DatabaseTable
     {
         $this->_log->trace("archiving record from DatabaseTable (key_string=".$key_string.", user_name=".$user_name.")");
 
-        if ($this->metadata_str[0] == DATABASETABLE_METADATA_FALSE)
+        if ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] == DATABASETABLE_METADATA_FALSE)
         {
             $this->_log->warn("archiving not enabled for this DatabaseTable");
             

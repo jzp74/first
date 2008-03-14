@@ -97,7 +97,7 @@ function check_postconditions ($result, $response)
         
         $error_element = $result->get_error_element();
         $error_str = $result->get_error_str();
-        set_error_message($error_element, $error_str);
+        set_error_message($error_element, $error_str, $response);
                 
         return FALSE;
     }

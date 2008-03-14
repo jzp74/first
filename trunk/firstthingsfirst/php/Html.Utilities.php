@@ -15,13 +15,16 @@
  * @param array $check_functions array containing names of zero or more test functions
  * @param string $field_name name of field that contains this string
  * @param string $str string on which to perform tests
- * @return bool indicates if string is empty
+ * @param Result $result rusult of this function
+ * @return void
  */
-function check_field ($check_functions, $field_name, $str)
+function check_field ($check_functions, $field_name, $str, $result)
 {
     global $logging;
 
     $logging->trace("check_field (field_name=".$field_name.", str=".$str.")");
+    
+    $result_str = $str;
 
     foreach ($check_functions as $check_function)
     {            
@@ -29,27 +32,41 @@ function check_field ($check_functions, $field_name, $str)
         {
             $result_str = str_is_not_empty($field_name, $str);
             if ($result_str == FALSE_RETURN_STRING)
-                return ERROR_NO_FIELD_VALUE_GIVEN;
+            {
+                $result->set_error_str(ERROR_NO_FIELD_VALUE_GIVEN);
+                
+                return;
+            }
         }
         else if ($check_function == "str_is_number")
         {
             $result_str = str_is_number($field_name, $str);
             if ($result_str == FALSE_RETURN_STRING)
-                return ERROR_NO_NUMBER_GIVEN;
+            {
+                $result->set_error_str(ERROR_NO_NUMBER_GIVEN);
+                
+                return;
+            }
         }
         else if ($check_function == "str_is_date")
         {
             $result_str = str_is_date($field_name, $str);
             if ($result_str == FALSE_RETURN_STRING)
-                return ERROR_DATE_WRONG_FORMAT;
+            {
+                $result->set_error_str(ERROR_DATE_WRONG_FORMAT);
+                
+                return;
+            }
         }
         else if (strlen($check_function))
             $logging->warn("unknown check function (function=".$check_function.", $field_name=".$field_name.")");
+
+       $result->set_result_str($result_str);
     }
     
     $logging->trace("check_field");
 
-    return "";
+    return;
 }   
 
 /**

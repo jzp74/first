@@ -18,6 +18,13 @@ $firstthingsfirst_action_description[ACTION_GET_PORTAL_PAGE] = array(PERMISSION_
 $xajax->registerFunction("action_get_portal_page");
 
 /**
+ * definition of 'get_list_content' action
+ */
+define("ACTION_GET_PORTAL_CONTENT", "get_portal_content");
+$firstthingsfirst_action_description[ACTION_GET_PORTAL_CONTENT] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$xajax->registerFunction("action_get_portal_content");
+
+/**
  * definition of 'get_list_tables' action
  */
 define("ACTION_GET_LIST_TABLES", "get_list_tables");
@@ -31,146 +38,99 @@ define("ACTION_DELETE_LIST_TABLE", "delete_list_table");
 $firstthingsfirst_action_description[ACTION_DELETE_LIST_TABLE] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 $xajax->registerFunction("action_delete_list_table");
 
+/**
+ * definition of css name prefix
+ */
+define("PORTAL_CSS_NAME_PREFIX", "database_table_");
+
 
 /**
- * set the html for the portal page
+ * configuration of HtlmTable
+ */
+$portal_table_configuration = array(
+    HTML_TABLE_IS_PORTAL_PAGE => TRUE,
+    HTML_TABLE_JS_NAME_PREFIX => "portal_",
+    HTML_TABLE_CSS_NAME_PREFIX => PORTAL_CSS_NAME_PREFIX,
+    HTML_TABLE_DELETE_MODE => HTML_TABLE_DELETE_MODE_ALWAYS
+);
+
+
+/**
+ * set the html for a portal page
  * this function is registered in xajax
  * @return xajaxResponse every xajax registered function needs to return this object
  */
 function action_get_portal_page ()
 {
     global $logging;
-    global $user;
-    global $firstthingsfirst_portal_title;
+    global $portal_table_configuration;
     global $firstthingsfirst_portal_intro_text;
-
-    $logging->info("ACTION: get portal page");
+    
+    $logging->info("ACTION: get list page");
 
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
-
+    $list_table_description = new ListTableDescription();
+    $html_database_table = new HtmlDatabaseTable ($portal_table_configuration, $list_table_description);
+    
     if (!check_preconditions(ACTION_GET_PORTAL_PAGE, $response))
         return $response;
     
-    $html_str = "";
-    $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
-    $html_str .= "        <div id=\"page_title\">".$firstthingsfirst_portal_title."</div>\n\n";
-    $html_str .= "        <div id=\"portal_explanation\">".$firstthingsfirst_portal_intro_text."</div>\n\n";
-    $html_str .= "        <div id=\"navigation_container\">\n";
-    $html_str .= "            <div id=\"navigation\">";
-    if ($user->is_login() && $user->get_is_admin())
-        $html_str .= get_query_button("action=get_add_user_page", BUTTON_ADD_USER);
-    $html_str .= "</div>\n";
-    $html_str .= "            <div id=\"login_status\">&nbsp;</div>&nbsp;\n";
-    $html_str .= "        </div> <!-- navigation_container -->\n\n";    
-    $html_str .= "        <div id=\"portal_overview_pane\">\n\n";
-    $html_str .= "        </div> <!-- portal_overview_pane -->\n\n";
-    $html_str .= "        <div id=\"action_pane\">\n\n";
-    $html_str .= "            <div id=\"action_bar\">\n";
-    $html_str .= "                <p>&nbsp;".get_query_button("action=get_listbuilder_page", BUTTON_CREATE_NEW_LIST)."</p>\n";
-    $html_str .= "            </div> <!-- action_bar -->\n\n";    
-    $html_str .= "        </div> <!-- action_pane -->\n\n";           
-    $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
+    # set page
+    $html_database_table->get_page(LISTTABLEDESCRIPTION_TABLE_NAME, $firstthingsfirst_portal_intro_text, $result);    
+    $response->addAssign("main_body", "innerHTML", $result->get_result_str());
 
-    $response->addAssign("main_body", "innerHTML", $html_str);
+    # set content
+    $html_database_table->get_content(LISTTABLEDESCRIPTION_TABLE_NAME, "", DATABASETABLE_ALL_PAGES, $result);
+    $response->addAssign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
-    # get list tables
-    action_get_list_tables($result, $response);
-
+    # set login status
     set_login_status($response);
-    set_footer("&nbsp;", $response);
+    
+    # set action pane
+    $html_str = $html_database_table->get_action_bar(LISTTABLEDESCRIPTION_TABLE_NAME, "");
+    $response->addAssign("action_pane", "innerHTML", $html_str);
+    
+    # set footer
+    set_footer("", $response);
 
-    $logging->trace("got portal page");
+    $logging->trace("got list page");
 
     return $response;
 }
 
 /**
- * get the html for an overview of all ListTable objects contained in database
- * @param $result Result result object
- * @param $response xajaxResponse response object
- * @return void
+ * get html for the records of all ListTables
+ * this function is registered in xajax
+ * @param string $title title of page
+ * @param string $order_by_field name of field by which this records need to be ordered
+ * @param int $page page to be shown (show first page when 0 is given)
+ * @return xajaxResponse every xajax registered function needs to return this object
  */
-function action_get_list_tables ($result, $response)
+function action_get_portal_content ($title, $order_by_field, $page)
 {
     global $logging;
-    global $database;
+    global $portal_table_configuration;
     
-    $logging->info("ACTION: get list tables");
+    $logging->info("ACTION: get portal content (title=".$title.", order_by_field=".$order_by_field.", page=".$page.")");
 
-    $html_str = "";
-
-    if (!check_preconditions(ACTION_GET_LIST_PAGES, $response))
-        return $response;
-
-    # get all list_tables from database
+    # create necessary objects
+    $result = new Result();
+    $response = new xajaxResponse();
     $list_table_description = new ListTableDescription();
-    $list_table_descriptions = $list_table_description->select("", DATABASETABLE_UNKWOWN_PAGE);
-    if (count($list_table_descriptions) == 0)
-    {
-        $result->set_error_str(ERROR_DATABASE_PROBLEM);
-        $result->set_error_element("portal_overview_pane");
-        # no return statement here because we want the complete page to be displayed
-    }
-    
-    # now create the table
-    $html_str .= "            <table id=\"portal_overview\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
-    
-    # create the table header
-    $html_str .= "                <thead>\n";
-    $html_str .= "                    <tr>\n";
-    $html_str .= "                        <th>".LABEL_LIST_NAME."</th>\n";
-    $html_str .= "                        <th>".LABEL_LIST_DESCRIPTION."</th>\n";
-    $html_str .= "                        <th>".LABEL_LIST_CREATOR."</th>\n";
-    $html_str .= "                        <th>".LABEL_LIST_MODIFIER."</th>\n";
-    $html_str .= "                        <th>&nbsp;</th>\n";
-    $html_str .= "                    </tr>\n";
-    $html_str .= "                </thead>\n";
-    $html_str .= "                <tbody>\n";
-    
-    # add table row for each list
-    foreach($list_table_descriptions as $list_table_description)
-    {
-        $html_str .= "                    <tr>\n";
-        $html_str .= "                        <td ".get_query_link("action=get_list_page&list=".$list_table_description[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]);
-        $html_str .= ">".$list_table_description[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."</td>\n";
-        $html_str .= "                        <td ".get_query_link("action=get_list_page&list=".$list_table_description[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]);
-        $html_str .= ">".$list_table_description[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME]."</td>\n";
-        $html_str .= "                        <td width=\"1%\" ".get_query_link("action=get_list_page&list=".$list_table_description[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME]);
-        $html_str .= "><strong>".$list_table_description[DB_CREATOR_FIELD_NAME]."</strong>&nbsp;".LABEL_AT."&nbsp;<strong>";
-        $html_str .= get_date_str(DATE_FORMAT_NORMAL, $list_table_description[DB_TS_CREATED_FIELD_NAME])."</strong></td>\n";
-        $html_str .= "                        <td width=\"1%\" ".get_query_link("action=get_list_page&list=".$list_table_description[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]);
-        $html_str .= "><strong>".$list_table_description[DB_MODIFIER_FIELD_NAME]."</strong>&nbsp;".LABEL_AT."&nbsp;<strong>";
-        $html_str .= get_date_str(DATE_FORMAT_NORMAL, $list_table_description[DB_TS_MODIFIED_FIELD_NAME])."</strong></td>\n";
-        $html_str .= "                        <td width=\"1%\">".get_query_button("action=get_listbuilder_page&list=".$list_table_description[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], BUTTON_MODIFY);
-        $html_str .= "&nbsp;&nbsp;".get_button_confirm("xajax_action_delete_list_table('".$list_table_description[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."')", LABEL_CONFIRM_DELETE, BUTTON_DELETE)."</td>\n";
-        $html_str .= "                    </tr>\n";
-    }
-    if (!count($list_table_descriptions))
-    {
-        $html_str .= "                    <tr>\n";
-        $html_str .= "                        <td>".LABEL_NONE."</td>\n";
-        $html_str .= "                        <td><em>".LABEL_NO_LISTST_DEFINED."</em></td>\n";
-        $html_str .= "                        <td>".LABEL_NONE."</td>\n";
-        $html_str .= "                        <td>".LABEL_NONE."</td>\n";
-        $html_str .= "                        <td width=\"1%\">&nbsp;</td>\n";
-        $html_str .= "                    </tr>\n";
-    }    
-    
-    $html_str .= "                </tbody>\n";
-    $html_str .= "            </table>  <!-- portal_overview -->\n\n";
-    
-    $result->set_result_str($html_str);    
+    $html_database_table = new HtmlDatabaseTable ($portal_table_configuration, $list_table_description);
 
-    $response->addAssign("portal_overview_pane", "innerHTML", $result->get_result_str());
-
-    if (!check_postconditions($result, $response))
+    if (!check_preconditions(ACTION_GET_PORTAL_CONTENT, $response))
         return $response;
 
-    $logging->trace("got list_tables");
+    # set content
+    $html_database_table->get_content($title, $order_by_field, DATABASETABLE_ALL_PAGES, $result);
+    $response->addAssign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
-    return;
+    $logging->trace("got list content");
+
+    return $response;
 }
 
 /**

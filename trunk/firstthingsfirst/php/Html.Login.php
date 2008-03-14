@@ -98,7 +98,7 @@ function action_login ($user_name, $password)
     if (strlen($user_name) == 0)
     {
         $logging->warn("no user name given");
-        set_error_message("user_name_id", ERROR_NO_USER_NAME_GIVEN);
+        set_error_message("user_name_id", ERROR_NO_USER_NAME_GIVEN, $response);
 
         return $response;
     }
@@ -106,7 +106,7 @@ function action_login ($user_name, $password)
     if (strlen($password) == 0)
     {
         $logging->warn("no password given");
-        set_error_message("password_id", ERROR_NO_PASSWORD_GIVEN);
+        set_error_message("password_id", ERROR_NO_PASSWORD_GIVEN, $response);
 
         return $response;        
     }
@@ -122,7 +122,7 @@ function action_login ($user_name, $password)
     else
     {
         $logging->warn("user could not log in");
-        set_error_message("password_id", $user->get_error_str());
+        set_error_message("password_id", $user->get_error_str(), $response);
         
         return $response;
     }

@@ -74,12 +74,19 @@ $firstthingsfirst_action_description[ACTION_CANCEL_LIST_PAGE] = array(PERMISSION
 $xajax->registerFunction("action_cancel_list_action");
 
 /**
+ * definition of css name prefix
+ */
+define("LIST_CSS_NAME_PREFIX", "database_table_");
+
+
+/**
  * configuration of HtlmTable
  */
 $list_table_configuration = array(
-    HTML_TABLE_NAVIGATION_PORTAL => TRUE,
+    HTML_TABLE_IS_PORTAL_PAGE => FALSE,
     HTML_TABLE_JS_NAME_PREFIX => "list_",
-    HTML_TABLE_CSS_NAME_PREFIX => "database_table_"
+    HTML_TABLE_CSS_NAME_PREFIX => LIST_CSS_NAME_PREFIX,
+    HTML_TABLE_DELETE_MODE => HTML_TABLE_DELETE_MODE_ARCHIVED
 );
 
 
@@ -100,24 +107,24 @@ function action_get_list_page ($list_title)
     $result = new Result();
     $response = new xajaxResponse();
     $list_table = new ListTable($list_title);
-    $html_list_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
     
     if (!check_preconditions(ACTION_GET_LIST_PAGE, $response))
         return $response;
     
     # set page
-    $html_list_table->get_page($list_title, "", $result);    
+    $html_database_table->get_page($list_title, "", $result);    
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
 
     # set content
-    $html_list_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->addAssign("database_table_content_pane", "innerHTML", $result->get_result_str());
+    $html_database_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
     # set login status
     set_login_status($response);
     
     # set action pane
-    $html_str = $html_list_table->get_action_bar($list_title, "");
+    $html_str = $html_database_table->get_action_bar($list_title, "");
     $response->addAssign("action_pane", "innerHTML", $html_str);
     
     # set footer
@@ -146,18 +153,18 @@ function action_get_list_print_page ($list_title)
     $result = new Result();
     $response = new xajaxResponse();
     $list_table = new ListTable($list_title);
-    $html_list_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
 
     if (!check_preconditions(ACTION_GET_LIST_PAGE, $response))
         return $response;
         
     # set page
-    $html_list_table->get_print_page($list_title, "", $result);
+    $html_database_table->get_print_page($list_title, "", $result);
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
 
     # set content
-    $html_list_table->get_content($list_title, "", DATABASETABLE_ALL_PAGES, $result);
-    $response->addAssign("database_table_content_pane", "innerHTML", $result->get_result_str());
+    $html_database_table->get_content($list_title, "", DATABASETABLE_ALL_PAGES, $result);
+    $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
         
     # set footer
     $html_str = get_footer($list_table->get_creator_modifier_array()); 
@@ -176,7 +183,7 @@ function action_get_list_print_page ($list_title)
  * get html for the records of a ListTable
  * this function is registered in xajax
  * @param string $list_title title of list
- * @param string $order_by_field name of field by which this list needs to be ordered
+ * @param string $order_by_field name of field by which this records need to be ordered
  * @param int $page page to be shown (show first page when 0 is given)
  * @return xajaxResponse every xajax registered function needs to return this object
  */
@@ -191,14 +198,14 @@ function action_get_list_content ($list_title, $order_by_field, $page)
     $result = new Result();
     $response = new xajaxResponse();
     $list_table = new ListTable($list_title);
-    $html_list_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
 
     if (!check_preconditions(ACTION_GET_LIST_CONTENT, $response))
         return $response;
 
     # set content
-    $html_list_table->get_content($list_title, $order_by_field, $page, $result);
-    $response->addAssign("database_table_content_pane", "innerHTML", $result->get_result_str());
+    $html_database_table->get_content($list_title, $order_by_field, $page, $result);
+    $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
     $logging->trace("got list content");
 
@@ -223,7 +230,7 @@ function action_get_list_record ($list_title, $key_string)
     $result = new Result();
     $response = new xajaxResponse();
     $list_table = new ListTable($list_title);
-    $html_list_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
 
     if (!check_preconditions(ACTION_GET_LIST_RECORD, $response))
         return $response;
@@ -232,7 +239,7 @@ function action_get_list_record ($list_title, $key_string)
     $response->addRemove("error_message");
 
     # set action pane
-    $html_list_table->get_record($list_title, $key_string, $result);
+    $html_database_table->get_record($list_title, $key_string, $result);
     $response->addAssign("action_pane", "innerHTML", $result->get_result_str());
 
     $logging->trace("got list record");
@@ -263,7 +270,7 @@ function action_insert_list_record ($list_title, $form_values)
     $result = new Result();
     $response = new xajaxResponse();
     $list_table = new ListTable($list_title);
-    $html_list_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
 
     if (!check_preconditions(ACTION_INSERT_LIST_RECORD, $response))
         return $response;
@@ -275,20 +282,20 @@ function action_insert_list_record ($list_title, $form_values)
         $field_type = $value_array[1];
         $field_number = $value_array[2];
         $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][2]);
+        $result->reset();
         
         $logging->debug("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
         
-        # set new value to the old value
-        $new_form_value = $form_values[$name_key];
-
         # check field values
-        $result_str = check_string($check_functions, $db_field_name, $form_values[$name_key]);
-        if (strlen($result_str) > 0)
+        check_field($check_functions, $db_field_name, $form_values[$name_key], $result);
+        if (strlen($result->get_error_str()) > 0)
         {
-            set_error_message($result_str);
+            set_error_message($name_key, $result->get_error_str(), $response);
             
             return $response;
         }
+        # set new value to the old value
+        $new_form_value = $result->get_result_str();
 
         if ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
         {
@@ -314,17 +321,18 @@ function action_insert_list_record ($list_title, $form_values)
     if (!$list_table->insert($new_form_values))
     {
         $logging->warn("insert list record returns false");
-        set_error_message("database_table_content_pane", $list_table->get_error_str());
+        set_error_message(LIST_CSS_NAME_PREFIX."content_pane", $list_table->get_error_str(), $response);
         
         return $response;
     }
     
     # set content
-    $html_list_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->addAssign("database_table_content_pane", "innerHTML", $result->get_result_str());
+    $result->reset();
+    $html_database_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
     # set action pane
-    $html_str = $html_list_table->get_action_bar($list_title, "");
+    $html_str = $html_database_table->get_action_bar($list_title, "");
     $response->addAssign("action_pane", "innerHTML", $html_str);
     
     # set footer
@@ -360,7 +368,7 @@ function action_update_list_record ($list_title, $key_string, $form_values)
     $result = new Result();
     $response = new xajaxResponse();
     $list_table = new ListTable($list_title);
-    $html_list_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
 
     if (!check_preconditions(ACTION_UPDATE_LIST_RECORD, $response))
         return $response;
@@ -372,20 +380,20 @@ function action_update_list_record ($list_title, $key_string, $form_values)
         $field_type = $value_array[1];
         $field_number = $value_array[2];
         $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][2]);
+        $result->reset();
         
         $logging->debug("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
         
-        # set new value to the old value
-        $new_form_value = $form_values[$name_key];
-
         # check field values
-        $result_str = check_string($check_functions, $db_field_name, $form_values[$name_key]);
-        if (strlen($result_str) > 0)
+        check_field($check_functions, $db_field_name, $form_values[$name_key], $result);
+        if (strlen($result->get_error_str()) > 0)
         {
-            set_error_message($result_str);
+            set_error_message($name_key, $result->get_error_str(), $response);
             
             return $response;
         }
+        # set new value to the old value
+        $new_form_value = $result->get_result_str();
 
         if ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
         {
@@ -415,17 +423,18 @@ function action_update_list_record ($list_title, $key_string, $form_values)
     if (!$list_table->update($key_string, $new_form_values))
     {
         $logging->warn("update list record returns false");
-        set_error_message(end($name_keys), $list_table->get_error_str());
+        set_error_message(LIST_CSS_NAME_PREFIX."content_pane", $list_table->get_error_str(), $response);
         
         return $response;
     }
     
     # set content
-    $html_list_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->addAssign("database_table_content_pane", "innerHTML", $result->get_result_str());
+    $result->reset();
+    $html_database_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
     # set action pane
-    $html_str = $html_list_table->get_action_bar($list_title, "");
+    $html_str = $html_database_table->get_action_bar($list_title, "");
     $response->addAssign("action_pane", "innerHTML", $html_str);
     
     # set footer
@@ -455,7 +464,7 @@ function action_archive_list_record ($list_title, $key_string)
     $result = new Result();
     $response = new xajaxResponse();
     $list_table = new ListTable($list_title);
-    $html_list_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
 
     if (!check_preconditions(ACTION_ARCHIVE_LIST_RECORD, $response))
         return $response;
@@ -467,14 +476,14 @@ function action_archive_list_record ($list_title, $key_string)
     if (!$list_table->archive($key_string))
     {
         $logging->warn("archive list record returns false");
-        set_error_message("database_table_content_pane", $list_table->get_error_str());
+        set_error_message(LIST_CSS_NAME_PREFIX."content_pane", $list_table->get_error_str(), $response);
                 
         return $response;
     }
 
     # set content
-    $html_list_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE);
-    $response->addAssign("database_table_content_pane", "innerHTML", $result->get_result_str());
+    $html_database_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE);
+    $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
     # set footer
     $html_str = get_footer($list_table->get_creator_modifier_array()); 
@@ -503,7 +512,7 @@ function action_delete_list_record ($list_title, $key_string)
     $result = new Result();
     $response = new xajaxResponse();
     $list_table = new ListTable($list_title);
-    $html_list_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
 
     if (!check_preconditions(ACTION_DELETE_LIST_RECORD, $response))
         return $response;
@@ -515,14 +524,14 @@ function action_delete_list_record ($list_title, $key_string)
     if (!$list_table->delete($key_string))
     {
         $logging->warn("delete list record returns false");
-        set_error_message("database_table_content_pane", $list_table->get_error_str());
+        set_error_message(LIST_CSS_NAME_PREFIX."content_pane", $list_table->get_error_str(), $response);
                 
         return $response;
     }
 
     # set content
-    $html_list_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE);
-    $response->addAssign("database_table_content_pane", "innerHTML", $result->get_result_str());
+    $html_database_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE);
+    $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
     # set footer
     $html_str = get_footer($list_table->get_creator_modifier_array()); 
@@ -549,7 +558,7 @@ function action_cancel_list_action ($list_title)
     # create necessary objects
     $response = new xajaxResponse();
     $list_table = new ListTable($list_title);
-    $html_list_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
 
     if (!check_preconditions(ACTION_CANCEL_LIST_ACTION, $response))
         return $response;
@@ -558,7 +567,7 @@ function action_cancel_list_action ($list_title)
     $response->addRemove("error_message");
 
     # set action pane
-    $html_str = $html_list_table->get_action_bar($list_title, "");
+    $html_str = $html_database_table->get_action_bar($list_title, "");
     $response->addAssign("action_pane", "innerHTML", $html_str);
 
     $logging->trace("canceled list action");

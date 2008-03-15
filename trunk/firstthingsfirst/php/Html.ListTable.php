@@ -60,7 +60,7 @@ $firstthingsfirst_action_description[ACTION_ARCHIVE_LIST_RECORD] = array(PERMISS
 $xajax->registerFunction("action_archive_list_record");
 
 /**
- * definition of 'del_list_record' action
+ * definition of 'delete_list_record' action
  */
 define("ACTION_DELETE_LIST_RECORD", "delete_list_record");
 $firstthingsfirst_action_description[ACTION_DELETE_LIST_RECORD] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
@@ -482,7 +482,7 @@ function action_archive_list_record ($list_title, $key_string)
     }
 
     # set content
-    $html_database_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE);
+    $html_database_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
     $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
     # set footer
@@ -530,7 +530,7 @@ function action_delete_list_record ($list_title, $key_string)
     }
 
     # set content
-    $html_database_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE);
+    $html_database_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
     $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
     # set footer

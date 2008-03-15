@@ -74,7 +74,7 @@ define("BUTTON_DOWN", "down");
  * shared button
  * definition of 'create user' button
  */
-define("BUTTON_ADD_USER", "create user");
+define("BUTTON_USER_ADMINISTRATION", "user administration");
 
 /**
  * shared button

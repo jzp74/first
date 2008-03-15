@@ -114,6 +114,12 @@ define("LABEL_DEFINITION_SELECTION", "selection box&nbsp;&nbsp;");
 
 /**
  * user label
+ * definition of user admin page title
+ */
+define("LABEL_USER_ADMIN_TITLE", "User Administration");
+
+/**
+ * user label
  * definition of name name
  */
 define("LABEL_USER_NAME", "name");
@@ -128,13 +134,13 @@ define("LABEL_USER_PW", "password");
  * user label
  * definition of can_edit name
  */
-define("LABEL_USER_CAN_EDIT_LIST", "can edit list");
+define("LABEL_USER_CAN_EDIT_LIST", "can edit lists");
 
 /**
  * user label
  * definition of can_create name
  */
-define("LABEL_USER_CAN_CREATE_LIST", "can create list");
+define("LABEL_USER_CAN_CREATE_LIST", "can create lists");
 
 /**
  * user label
@@ -146,7 +152,7 @@ define("LABEL_USER_IS_ADMIN", "is admin");
  * user label
  * definition of times_login name
  */
-define("LABEL_USER_TIMES_LOGIN", "has logged in");
+define("LABEL_USER_TIMES_LOGIN", "# login");
 
 /**
  * add user label

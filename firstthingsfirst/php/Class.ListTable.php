@@ -472,12 +472,21 @@ class ListTable extends UserDatabaseTable
             return FALSE;
         }
         
-        # remove database table of ListTableNote object
-        if ($this->_list_table_note->drop() == FALSE)
+        # drop table for notes only if a notes field exists
+        $found_notes_field = FALSE;
+        foreach($this->fields as $field)
         {
-            $this->error_str = $this->_list_table_note->get_error_str();
+            if ($field[1] == "LABEL_DEFINITION_NOTES_FIELD")
+                $found_notes_field = TRUE;
+        }
+        if ($found_notes_field)
+        {
+            if ($this->_list_table_note->drop() == FALSE)
+            {
+                $this->error_str = $this->_list_table_note->get_error_str();
             
-            return FALSE;
+                return FALSE;
+            }
         }
 
         # call parent drop()

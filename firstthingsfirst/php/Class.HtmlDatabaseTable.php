@@ -112,17 +112,12 @@ class HtmlDatabaseTable
      */
     function get_page ($title, $explanation, $result)
     {
-        global $firstthingsfirst_portal_title;
-        
         $html_str = "";
 
         $this->_log->trace("getting page (title=".$title.")");
 
         $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
-        if ($this->configuration[HTML_TABLE_IS_PORTAL_PAGE] != TRUE)
-            $html_str .= "        <div id=\"page_title\">".$title."</div>\n\n";
-        else
-            $html_str .= "        <div id=\"page_title\">".$firstthingsfirst_portal_title."</div>\n\n";
+        $html_str .= "        <div id=\"page_title\">".$title."</div>\n\n";
         if (strlen($explanation) > 0)
             $html_str .= "        <div id=\"page_explanation\">".$explanation."</div>\n\n";
         $html_str .= "        <div id=\"navigation_container\">\n";
@@ -130,9 +125,11 @@ class HtmlDatabaseTable
         # add various navigation links
         $html_str .= "            <div id=\"navigation\">";
         if ($this->configuration[HTML_TABLE_IS_PORTAL_PAGE] != TRUE)
-            $html_str .= "&nbsp;".get_query_button("action=get_portal_page", BUTTON_PORTAL);
+            $html_str .= get_query_button("action=get_portal_page", BUTTON_PORTAL)."&nbsp;&nbsp;";
+        if ($this->_user->is_login() && $this->_user->get_is_admin())
+            $html_str .= get_query_button("action=get_user_admin_page", BUTTON_USER_ADMINISTRATION);    
         $html_str .= "</div>\n";
-
+        
         $html_str .= "            <div id=\"login_status\">&nbsp;</div>&nbsp\n";
         $html_str .= "        </div> <!-- navigation_container -->\n\n";    
         $html_str .= "        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane\">\n\n";
@@ -294,16 +291,16 @@ class HtmlDatabaseTable
                 $col_number += 1;
             }
         
-            $html_str .= "                        <td width=\"1%\">";
             # only add buttons when not all pages need to be displayed at once
             if ($page != DATABASETABLE_ALL_PAGES)
             {
                 # add buttons for normal lists
                 if ($this->configuration[HTML_TABLE_IS_PORTAL_PAGE] == FALSE)
                 {
+                    $html_str .= "                        <td width=\"1%\">";
                     $metadata_str = $this->_database_table->get_metadata_str();
                     # add the archive button only when this record is not archived
-                    if (strlen($record[DB_ARCHIVER_FIELD_NAME]) == 0)
+                    if (($metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] != DATABASETABLE_METADATA_FALSE) && (strlen($record[DB_ARCHIVER_FIELD_NAME]) == 0))
                         $html_str .= "&nbsp;".get_button("xajax_action_archive_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record('".$list_title."', &quot;".$key_string."&quot;)", BUTTON_ARCHIVE)."&nbsp;";
                     # add the delete link when it should always be displayed
                     if ($this->configuration[HTML_TABLE_DELETE_MODE] == HTML_TABLE_DELETE_MODE_ALWAYS)
@@ -311,18 +308,20 @@ class HtmlDatabaseTable
                     # or add the delete link when record is archived
                     else if ((strlen($record[DB_ARCHIVER_FIELD_NAME]) > 0) && ($this->configuration[HTML_TABLE_DELETE_MODE] == HTML_TABLE_DELETE_MODE_ARCHIVED))
                         $html_str .= "&nbsp;".get_button("xajax_action_delete_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record('".$list_title."', &quot;".$key_string."&quot;)", BUTTON_DELETE)."&nbsp;";
+                    $html_str .= "</td>\n                    </tr>\n";
                 }
             }            
             # add buttons for portal page
             if ($this->configuration[HTML_TABLE_IS_PORTAL_PAGE] == TRUE)
             {
+                $html_str .= "                        <td width=\"1%\">";
                 # add modify button
                 $html_str .= "&nbsp;".get_query_button("action=get_listbuilder_page&list=".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], BUTTON_MODIFY)."&nbsp;";
                 # add delete button
-                $html_str .= "&nbsp;".get_button_confirm("xajax_action_delete_list_table('".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."')", LABEL_CONFIRM_DELETE, BUTTON_DELETE)."&nbsp;";
+                $html_str .= "&nbsp;".get_button_confirm("xajax_action_delete_portal_record('".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."')", LABEL_CONFIRM_DELETE, BUTTON_DELETE)."&nbsp;";
+                $html_str .= "</td>\n                    </tr>\n";
             }
             
-            $html_str .= "</td>\n                    </tr>\n";
             $record_number += 1;
         }
     
@@ -450,7 +449,7 @@ class HtmlDatabaseTable
             # replace all " chars with &quot
             $record[$db_field_name] = str_replace('"', '&quot', $record[$db_field_name]);
         
-            # only add non auto_increment field types
+            # only add non auto_increment field types (check database definition for this)
             if (!stristr($firstthingsfirst_field_descriptions[$field_type][0], "auto_increment"))
             {
                 $html_str .= "                                <tr id=\"".$db_field_name."\">\n";
@@ -464,16 +463,23 @@ class HtmlDatabaseTable
                     $html_str .= " name=".$db_field_name.GENERAL_SEPARATOR.$field_type.GENERAL_SEPARATOR."0";
                 }
             
-                # add initial value
+                # set values from database
                 if (strlen($key_string))
                 {
-                    if (stristr($field_type, "DATE"))
+                    if ($field_type == "LABEL_DEFINITION_BOOL")
+                    {
+                        if ($record[$db_field_name] == "1")
+                            $html_str .= " checked";
+                    }
+                    else if (stristr($field_type, "DATE"))
                     {
                         $date_string = get_date_str(DATE_FORMAT_NORMAL, $record[$db_field_name]);
                         $html_str .= " value=\"".$date_string."\"";
                     }
                     else if ($field_type == "LABEL_DEFINITION_TEXT_FIELD")
                         $html_str .= ">".$record[$db_field_name]."</textarea";
+                    else if ($field_type == "LABEL_DEFINITION_PASSWORD")
+                        $html_str .= " value=\"\"";
                     else if ($field_type == "LABEL_DEFINITION_SELECTION")
                     {
                         $html_str .= ">";
@@ -494,15 +500,18 @@ class HtmlDatabaseTable
                     else
                         $html_str .= " value=\"".$record[$db_field_name]."\"";
                 }
+                # set initial values
                 else
                 {
                     if ($field_type == "LABEL_DEFINITION_AUTO_DATE")
                         $html_str .= " value=\"".strftime($firstthingsfirst_date_string)."\"";
-                    elseif ($field_type == "LABEL_DEFINITION_TEXT_FIELD")
+                    else if ($field_type == "LABEL_DEFINITION_NON_EDIT_NUMBER")
+                        $html_str .=  " value=\"0\"";
+                    else if ($field_type == "LABEL_DEFINITION_TEXT_FIELD")
                         $html_str .= "></textarea";
-                    elseif ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
+                    else if ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
                         $html_str .= get_list_record_notes($db_field_name, array());
-                    elseif ($field_type == "LABEL_DEFINITION_SELECTION")
+                    else if ($field_type == "LABEL_DEFINITION_SELECTION")
                     {
                         $html_str .= ">";
                         $option_list = explode("|", $field_options);

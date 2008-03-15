@@ -30,7 +30,7 @@ function check_field ($check_functions, $field_name, $str, $result)
     {            
         if ($check_function == "str_is_not_empty")
         {
-            $result_str = str_is_not_empty($field_name, $str);
+            $result_str = str_is_not_empty($field_name, $result_str);
             if ($result_str == FALSE_RETURN_STRING)
             {
                 $result->set_error_str(ERROR_NO_FIELD_VALUE_GIVEN);
@@ -40,7 +40,7 @@ function check_field ($check_functions, $field_name, $str, $result)
         }
         else if ($check_function == "str_is_number")
         {
-            $result_str = str_is_number($field_name, $str);
+            $result_str = str_is_number($field_name, $result_str);
             if ($result_str == FALSE_RETURN_STRING)
             {
                 $result->set_error_str(ERROR_NO_NUMBER_GIVEN);
@@ -50,7 +50,7 @@ function check_field ($check_functions, $field_name, $str, $result)
         }
         else if ($check_function == "str_is_date")
         {
-            $result_str = str_is_date($field_name, $str);
+            $result_str = str_is_date($field_name, $result_str);
             if ($result_str == FALSE_RETURN_STRING)
             {
                 $result->set_error_str(ERROR_DATE_WRONG_FORMAT);
@@ -60,10 +60,10 @@ function check_field ($check_functions, $field_name, $str, $result)
         }
         else if (strlen($check_function))
             $logging->warn("unknown check function (function=".$check_function.", $field_name=".$field_name.")");
-
-       $result->set_result_str($result_str);
     }
     
+    $result->set_result_str($result_str);
+
     $logging->trace("check_field");
 
     return;

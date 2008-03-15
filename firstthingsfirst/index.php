@@ -43,7 +43,7 @@ require_once("php/Html.Utilities.php");
 require_once("php/Html.php");
 require_once("php/Html.Login.php");
 require_once("php/Html.Portal.php");
-require_once("php/Html.AddUser.php");
+require_once("php/Html.UserAdministration.php");
 require_once("php/Html.ListTable.php");
 require_once("php/Html.ListTableItemNotes.php");
 require_once("php/Html.ListBuilder.php");
@@ -104,8 +104,8 @@ function process_url ()
             return action_get_portal_page();
     }
     # show add user page
-    else if ($action == ACTION_GET_ADD_USER_PAGE)
-        return action_get_add_user_page();
+    else if ($action == ACTION_GET_USER_ADMIN_PAGE)
+        return action_get_user_admin_page();
     # show list builder page
     else if ($action == ACTION_GET_LISTBUILDER_PAGE)
     {

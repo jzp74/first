@@ -65,7 +65,7 @@ $class_user_fields = array(
     USER_CAN_EDIT_LIST_FIELD_NAME => array(LABEL_USER_CAN_EDIT_LIST, "LABEL_DEFINITION_BOOL", ""),
     USER_CAN_CREATE_LIST_FIELD_NAME => array(LABEL_USER_CAN_CREATE_LIST, "LABEL_DEFINITION_BOOL", ""),
     USER_IS_ADMIN_FIELD_NAME => array(LABEL_USER_IS_ADMIN, "LABEL_DEFINITION_BOOL", ""),
-    USER_TIMES_LOGIN_FIELD_NAME => array(LABEL_USER_TIMES_LOGIN, "LABEL_DEFINITION_NUMBER", ""),
+    USER_TIMES_LOGIN_FIELD_NAME => array(LABEL_USER_TIMES_LOGIN, "LABEL_DEFINITION_NON_EDIT_NUMBER", ""),
 );
 
 /**
@@ -425,31 +425,23 @@ class User extends UserDatabaseTable
 
     /**
     * insert a new user to database
-    * @param string $name name of new user
-    * @param string $pw password of new user
-    * @param bool $edit_list indicates if new user is allowed to edit a list (FALSE if not provided)
-    * @param bool $create_list indicates if current user is allowed to create a new list (FALSE if not provided)
-    * @param bool $is_admin indicates if current user is has admin privileges (FALSE if not provided)
-    * @return bool indicates if user has been added
+    * @param $name_values_array array array containing name-values of the record
+    * @return int number indicates the id of the new record or 0 when no record was added
     */
-    function insert ($name, $pw, $can_edit_list = 0, $can_create_list = 0, $is_admin = 0)
+    function insert ($name_values_array)
     {
-        $name_values_array = array();
-        $password = md5($pw);
+        $this->_log->trace("insert user (name=".$name_values_array[USER_NAME_FIELD_NAME].")");
+        
+        if (strlen($name_values_array[USER_PW_FIELD_NAME]) > 0)
+        {
+            $this->_log->debug("found a password");
+            $name_values_array[USER_PW_FIELD_NAME] = md5($name_values_array[USER_PW_FIELD_NAME]);
+        }
 
-        $this->_log->trace("insert user (name=".$name.")");
-        
-        $name_values_array[USER_NAME_FIELD_NAME] = $name;
-        $name_values_array[USER_PW_FIELD_NAME] = $password;
-        $name_values_array[USER_CAN_EDIT_LIST_FIELD_NAME] = $can_edit_list;
-        $name_values_array[USER_CAN_CREATE_LIST_FIELD_NAME] = $can_create_list;
-        $name_values_array[USER_IS_ADMIN_FIELD_NAME] = $is_admin;
-        $name_values_array[USER_TIMES_LOGIN_FIELD_NAME] = 0;
-        
         if (parent::insert($name_values_array) == FALSE)
             return FALSE;
         
-        $this->_log->info("user added (name=".$name.")");
+        $this->_log->info("user added (name=".$name_values_array[USER_NAME_FIELD_NAME].")");
         
         return TRUE;
     }

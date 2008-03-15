@@ -94,7 +94,7 @@ define("PERMISSION_ISNOT_ADMIN", 0);
 $firstthingsfirst_field_descriptions = array(
     "LABEL_DEFINITION_BOOL"        => array(
         DB_DATATYPE_BOOL,
-        "input type=checkbox",
+        "input type=checkbox value=\"1\"",
         "",
         0
     ),
@@ -106,6 +106,12 @@ $firstthingsfirst_field_descriptions = array(
     ),
     "LABEL_DEFINITION_AUTO_NUMBER"   => array(
         DB_DATATYPE_ID,
+        "input type=text size=\"10\" maxlength=\"10\" readonly",
+        "str_is_number",
+        0
+    ),
+    "LABEL_DEFINITION_NON_EDIT_NUMBER"   => array(
+        DB_DATATYPE_INT,
         "input type=text size=\"10\" maxlength=\"10\" readonly",
         "str_is_number",
         0
@@ -136,8 +142,8 @@ $firstthingsfirst_field_descriptions = array(
     ),
     "LABEL_DEFINITION_PASSWORD"     => array(
         DB_DATATYPE_PASSWORD,
-        "input type=text size=\"20\" maxlenght=\"20\"",
-        "",
+        "input type=password size=\"20\" maxlenght=\"20\"",
+        "str_is_not_empty",
         0
     ),
     "LABEL_DEFINITION_TEXT_LINE"     => array(

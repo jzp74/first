@@ -744,7 +744,7 @@ class xajax
 					}
 					$oResponse = $this->_callFunction($sFunctionName, $aArgs);
 				}
-				if (is_string($sResponse)) {
+				if (is_string($oResponse)) {
 					$oResponse = new xajaxResponse();
 					$oResponse->addAlert("No XML Response Was Returned By Function $sFunctionName.\n\nOutput: ".$oResponse);
 				}

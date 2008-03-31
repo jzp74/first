@@ -70,8 +70,22 @@ $xajax->registerFunction("action_delete_list_record");
  * definition of 'cancel_list_action' action
  */
 define("ACTION_CANCEL_LIST_ACTION", "cancel_list_action");
-$firstthingsfirst_action_description[ACTION_CANCEL_LIST_PAGE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$firstthingsfirst_action_description[ACTION_CANCEL_LIST_ACTION] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 $xajax->registerFunction("action_cancel_list_action");
+
+/**
+ * definition of 'set_list_archive' action
+ */
+define("ACTION_SET_LIST_ARCHIVE", "set_list_archive");
+$firstthingsfirst_action_description[ACTION_SET_LIST_ARCHIVE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$xajax->registerFunction("action_set_list_archive");
+
+/**
+ * definition of 'set_list_filter' action
+ */
+define("ACTION_SET_LIST_FILTER", "set_list_filter");
+$firstthingsfirst_action_description[ACTION_SET_LIST_FILTER] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$xajax->registerFunction("action_set_list_filter");
 
 /**
  * definition of css name prefix
@@ -83,10 +97,11 @@ define("LIST_CSS_NAME_PREFIX", "database_table_");
  * configuration of HtlmTable
  */
 $list_table_configuration = array(
-    HTML_TABLE_IS_PORTAL_PAGE => FALSE,
+    HTML_TABLE_PAGE_TYPE => PAGE_TYPE_LIST,
     HTML_TABLE_JS_NAME_PREFIX => "list_",
     HTML_TABLE_CSS_NAME_PREFIX => LIST_CSS_NAME_PREFIX,
-    HTML_TABLE_DELETE_MODE => HTML_TABLE_DELETE_MODE_ARCHIVED
+    HTML_TABLE_DELETE_MODE => HTML_TABLE_DELETE_MODE_ARCHIVED,
+    HTML_TABLE_RECORD_NAME => LABEL_LIST_RECORD
 );
 
 
@@ -159,7 +174,7 @@ function action_get_list_print_page ($list_title)
         return $response;
         
     # set page
-    $html_database_table->get_print_page($list_title, "", $result);
+    $html_database_table->get_print_page($list_title, $result);
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
 
     # set content
@@ -207,6 +222,10 @@ function action_get_list_content ($list_title, $order_by_field, $page)
     $html_database_table->get_content($list_title, $order_by_field, $page, $result);
     $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
+    # set action pane
+    $html_str = $html_database_table->get_action_bar($list_title, "");
+    $response->addAssign("action_pane", "innerHTML", $html_str);
+
     $logging->trace("got list content");
 
     return $response;
@@ -241,6 +260,11 @@ function action_get_list_record ($list_title, $key_string)
     # set action pane
     $html_database_table->get_record($list_title, $key_string, $result);
     $response->addAssign("action_pane", "innerHTML", $result->get_result_str());
+    
+    # set focus on last input element and then on first input element
+    #$response->addScriptCall("document.record_form_name.elements[document.record_form_name.length].focus()");
+    #$response->addScriptCall("document.record_form_name.elements[0].focus()");
+    $response->addScriptCall("document.getElementById('database_table_record_contents').focus()");
 
     $logging->trace("got list record");
 
@@ -571,6 +595,91 @@ function action_cancel_list_action ($list_title)
     $response->addAssign("action_pane", "innerHTML", $html_str);
 
     $logging->trace("canceled list action");
+
+    return $response;
+}
+
+/**
+ * set list archive state (function is called when user changes his archive selection)
+ * this function is registered in xajax
+ * @param string $list_title title of list
+ * @param string $archive_value archive_value that user has just changed
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
+function action_set_list_archive($list_title, $archive_value)
+{
+    global $logging;
+    global $user;
+    global $list_state;
+    global $list_table_configuration;
+    
+    $logging->info("ACTION: set list archive (list_title=".$list_title.", archive_value=".$archive_value.")");
+
+    # create necessary objects
+    $result = new Result();
+    $response = new xajaxResponse();
+    $list_table = new ListTable($list_title);
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
+
+    if (!check_preconditions(ACTION_SET_LIST_ARCHIVE, $response))
+        return $response;
+
+    # set archive value
+    $user->get_list_state($list_table->get_table_name());
+    $list_state->set_archived($archive_value);
+    $user->set_list_state();
+
+    # remove any error messages
+    $response->addRemove("error_message");
+
+    # set content
+    $html_database_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+
+    $logging->trace("set list archive");
+
+    return $response;
+}
+
+/**
+ * set list filter string (function is called when user hits filter button)
+ * this function is registered in xajax
+ * @param string $list_title title of list
+ * @param string $filter_str filter string that user has set
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
+function action_set_list_filter($list_title, $filter_str)
+{
+    global $logging;
+    global $user;
+    global $list_state;
+    global $list_table_configuration;
+    
+    $logging->info("ACTION: set list filter (list_title=".$list_title.", filter_str=".$filter_str.")");
+
+    # create necessary objects
+    $result = new Result();
+    $response = new xajaxResponse();
+    $list_table = new ListTable($list_title);
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
+
+    if (!check_preconditions(ACTION_SET_LIST_FILTER, $response))
+        return $response;
+
+    # set archive value
+    $user->get_list_state($list_table->get_table_name());
+    $list_state->set_filter_str(ereg_replace("[".EREG_FORBIDDEN_CHARS."]+", "", $filter_str));
+    $list_state->set_filter_str_sql("");
+    $user->set_list_state();
+
+    # remove any error messages
+    $response->addRemove("error_message");
+
+    # set content
+    $html_database_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+
+    $logging->trace("set list filter");
 
     return $response;
 }

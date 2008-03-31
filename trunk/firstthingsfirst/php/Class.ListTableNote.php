@@ -35,9 +35,9 @@ define("LISTTABLENOTE_NOTE_FIELD_NAME", "_note");
  */
 $class_listtablenote_fields = array(
     DB_ID_FIELD_NAME => array(LABEL_LIST_ID, "LABEL_DEFINITION_AUTO_NUMBER", ""),
-    LISTTABLENOTE_RECORD_ID_FIELD_NAME => array(LABEL_DESCRIPTION_ID, "LABEL_DEFINITION_NUMBER", ""),
-    LISTTABLENOTE_FIELD_NAME_FIELD_NAME => array(LABEL_DESCRIPTION_ID, "LABEL_DEFINITION_TEXT_LINE", DATABASETABLE_FOREIGN_FIELD),
-    LISTTABLENOTE_NOTE_FIELD_NAME => array(LABEL_DESCRIPTION_ID, "LABEL_DEFINITION_TEXT_FIELD", ""),
+    LISTTABLENOTE_RECORD_ID_FIELD_NAME => array(LABEL_MINUS, "LABEL_DEFINITION_NUMBER", ""),
+    LISTTABLENOTE_FIELD_NAME_FIELD_NAME => array(LABEL_MINUS, "LABEL_DEFINITION_TEXT_LINE", DATABASETABLE_FOREIGN_FIELD),
+    LISTTABLENOTE_NOTE_FIELD_NAME => array(LABEL_MINUS, "LABEL_DEFINITION_TEXT_FIELD", ""),
 );
 
 /**
@@ -113,12 +113,10 @@ class ListTableNote extends DatabaseTable
     {
         $this->_log->trace("selecting ListTableNote (record_id=".$record_id.", field_name=".$field_name.")");
         
-        # set filter
-        $filter_array = array();
-        $filter_array[LISTTABLENOTE_RECORD_ID_FIELD_NAME] = $record_id;
-        $filter_array[LISTTABLENOTE_FIELD_NAME_FIELD_NAME] = $field_name;
+        # set filter string SQL
+        $filter_str_sql = LISTTABLENOTE_RECORD_ID_FIELD_NAME."='".$record_id."' AND ".LISTTABLENOTE_FIELD_NAME_FIELD_NAME."='".$field_name."'";
 
-        $records = parent::select("", 0, LISTSTATE_SELECT_BOTH_ARCHIVED, $filter_array, DATABASETABLE_ALL_PAGES);
+        $records = parent::select("", 0, LISTSTATE_SELECT_BOTH_ARCHIVED, $filter_str_sql, DATABASETABLE_ALL_PAGES);
         if (count($records) == 0)
             return array();
         

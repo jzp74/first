@@ -7,12 +7,14 @@
  * _user table is updated
  */
 
+require_once("../php/Class.Logging.php");
+
 require_once("../globals.php");
 require_once("../localsettings.php");
 
-require_once("../php/Class.Logging.php");
-require_once("../php/Class.Database.php");
+require_once("../php/Text.Labels.php");
 
+require_once("../php/Class.Database.php");
 require_once("../php/Class.DatabaseTable.php");
 require_once("../php/Class.UserDatabaseTable.php");
 require_once("../php/Class.User.php");

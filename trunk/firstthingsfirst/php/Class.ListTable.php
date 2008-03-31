@@ -212,20 +212,66 @@ class ListTable extends UserDatabaseTable
         $records_with_notes = array();       
 
         $this->_log->trace("selecting ListTable (order_by_field=".$order_by_field.", page=".$page.")");
+        
+        # get list_state from session
+        $this->_user->get_list_state($this->table_name);
+
+        # get field names of note fields
+        $note_fields_array = array();
+        foreach($this->db_field_names as $db_field_name)
+        {
+            if ($this->fields[$db_field_name][1] == "LABEL_DEFINITION_NOTES_FIELD")
+                array_push($note_fields_array, $db_field_name);
+        }
+
+        # set filter
+        $filter_str = $this->_list_state->get_filter_str();
+        $filter_str_sql = $this->_list_state->get_filter_str_sql();        
+        if ((strlen($filter_str) > 0) && (strlen($filter_str_sql) == 0))
+        {
+            $search_fields = array();
+            
+            # select text fields
+            foreach ($this->db_field_names as $db_field_name)
+            {
+                $field_type = $this->fields[$db_field_name][1];
+                if ((stristr($field_type, "TEXT")) || ($field_type == "LABEL_DEFINITION_SELECTION"))
+                    array_push($search_fields, $db_field_name);
+            }
+            
+            # create value conditions
+            if (count($search_fields) > 0)
+            {
+                $filter_str_sql = "(";
+                $num_of_search_fields = count($search_fields);
+                for ($counter = 0; $counter < $num_of_search_fields; $counter++)
+                {
+                    $filter_str_sql .= $search_fields[$counter]." LIKE '%".$filter_str."%'";
+                    if ($counter < ($num_of_search_fields - 1))
+                        $filter_str_sql .= " OR ";
+                }
+                $filter_str_sql .= ")";
+            }
+            
+            # create subquery for note fields
+            if (count($note_fields_array) > 0)
+            {
+                $filter_str_sql = "(".$filter_str_sql." OR (".DB_ID_FIELD_NAME." IN (SELECT DISTINCT ".LISTTABLENOTE_RECORD_ID_FIELD_NAME;
+                $filter_str_sql .= " FROM ".$this->_list_table_note->get_table_name()." WHERE ".LISTTABLENOTE_NOTE_FIELD_NAME;
+                $filter_str_sql .= " LIKE '%".$filter_str."%')))";
+            }
+            
+            $this->_list_state->set_filter_str_sql($filter_str_sql);
+            
+            # store list_state to session
+            $this->_user->set_list_state();
+        }
 
         # call parent select()
         $records = parent::select($order_by_field, $page, $this->db_field_names);
         
         if (count($records) != 0)
         {
-            # get field names of note fields
-            $note_fields_array = array();
-            foreach($this->db_field_names as $db_field_name)
-            {
-                if ($this->fields[$db_field_name][1] == "LABEL_DEFINITION_NOTES_FIELD")
-                    array_push($note_fields_array, $db_field_name);
-            }
-
             # get notes 
             foreach($records as $record)
             {
@@ -236,7 +282,7 @@ class ListTable extends UserDatabaseTable
                         $result = $this->_list_table_note->select($record[DB_ID_FIELD_NAME], $note_field);
                         if (count($result) == 0 || count($result) != $record[$note_field])
                         {
-                            $this->_log->warn("unexpected number of notes found");
+                            $this->_log->warn("unexpected number of notes found (expected=".$record[$note_field].", found=".count($result)."");
                             $record[$note_field] = $result;
                         }
                         else
@@ -251,7 +297,7 @@ class ListTable extends UserDatabaseTable
         else
             return $records;
 
-        $this->_log->trace("selected ListTable (from=".$limit_from.")");
+        $this->_log->trace("selected ListTable");
     
         return $records_with_notes;
     }
@@ -439,12 +485,10 @@ class ListTable extends UserDatabaseTable
         if (count($record) == 0)
             return FALSE;
         $record_id = $record[DB_ID_FIELD_NAME];
-            
+        
+        # delete of record automatically deletes all notes
         if (parent::delete($key_string) == FALSE)
             return FALSE;
-
-        # delete all notes for this record
-        $this->_list_table_note->delete($record_id);
 
         # update list table description (date modified)
         $this->_list_table_description->update($this->list_title);

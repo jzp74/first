@@ -60,6 +60,12 @@ define("LABEL_MINUS", "-");
 
 /**
  * shared label
+ * definition of records
+ */
+define("LABEL_RECORDS", "records");
+
+/**
+ * shared label
  * definition of 'created by' label
  */
 define("LABEL_CREATED_BY", "created by");
@@ -75,6 +81,12 @@ define("LABEL_AT", "at");
  * definition of 'last modification by' label
  */
 define("LABEL_LAST_MODIFICATION_BY", "last modification by");
+
+/**
+ * shared label
+ * definition of name name
+ */
+define("LABEL_USER_NAME", "name");
 
 /**
  * shared field definition
@@ -113,124 +125,82 @@ define("LABEL_DEFINITION_NOTES_FIELD", "notes field&nbsp;&nbsp;");
 define("LABEL_DEFINITION_SELECTION", "selection box&nbsp;&nbsp;");
 
 /**
- * user label
+ * user admin label
  * definition of user admin page title
  */
 define("LABEL_USER_ADMIN_TITLE", "User Administration");
 
 /**
- * user label
- * definition of name name
- */
-define("LABEL_USER_NAME", "name");
-
-/**
- * user pw
+ * user admin label
  * definition of password name
  */
 define("LABEL_USER_PW", "password");
 
 /**
- * user label
+ * user admin label
  * definition of can_edit name
  */
 define("LABEL_USER_CAN_EDIT_LIST", "can edit lists");
 
 /**
- * user label
+ * user admin label
  * definition of can_create name
  */
 define("LABEL_USER_CAN_CREATE_LIST", "can create lists");
 
 /**
- * user label
+ * user admin label
  * definition of is_admin name
  */
 define("LABEL_USER_IS_ADMIN", "is admin");
 
 /**
- * user label
+ * user admin label
  * definition of times_login name
  */
 define("LABEL_USER_TIMES_LOGIN", "# login");
 
 /**
- * add user label
- * definition of add user page name
+ * user admin button
+ * definition of 'add user record' label
  */
-define("LABEL_ADD_USER_PAGE", "Add a new user");
+define("LABEL_USER_ADMIN_RECORD", "user");
 
 /**
- * add user label
- * definition of add user definition
+ * listtable label
+ * definition of 'display' label
  */
-define("LABEL_ADD_USER_DEFINITION", "New user definition");
+define("LABEL_DISPLAY", "display");
 
 /**
- * add user label
- * definition of new user name
+ * listtable label
+ * definition of 'archive' label
  */
-define("LABEL_ADD_USER_NAME", "name of new user");
+define("LABEL_ARCHIVE", "archive");
 
 /**
- * add user label
- * definition of new user field explanation
+ * listtable label
+ * definition of 'filter' label
  */
-define("LABEL_ADD_USER_NAME_EXPLANATION", "");
+define("LABEL_FILTER", "filter");
 
 /**
- * add user label
- * definition of new user password
+ * listtable label
+ * definition of 'normal records' label
  */
-define("LABEL_ADD_USER_PASSWORD", "password of new user");
+define("LABEL_NORMAL_RECORDS", "normal records&nbsp;&nbsp;");
 
 /**
- * add user label
- * definition of add user password explanation
+ * listtable label
+ * definition of 'archived records' label
  */
-define("LABEL_ADD_USER_PASSWORD_EXPLANATION", "");
+define("LABEL_ARCHIVED_RECORDS", "archived records&nbsp;&nbsp;");
 
 /**
- * add user label
- * definition of 'can edit list' label
+ * listtable label
+ * definition of 'list record' label
  */
-define("LABEL_ADD_USER_EDIT_LIST", "can edit list");
-
-/**
- * add user label
- * definition of 'can edit list' explanation
- */
-define("LABEL_ADD_USER_EDIT_LIST_EXPLANATION", "check this box when the new user has permission to add/edit/archive/delete list entries");
-
-/**
- * add user label
- * definition of 'can create new list' label
- */
-define("LABEL_ADD_USER_CREATE_LIST", "can create new list");
-
-/**
- * add user label
- * definition of 'can create new list' explantion
- */
-define("LABEL_ADD_USER_CREATE_LIST_EXPLANATION", "check this box when the new user has permission to create a new list");
-
-/**
- * add user label
- * definition of 'is admin' label
- */
-define("LABEL_ADD_USER_ADMIN", "is admin");
-
-/**
- * add user label
- * definition of 'is admin' explantion
- */
-define("LABEL_ADD_USER_ADMIN_EXPLANATION", "check this box when new user has administrator permissions");
-
-/**
- * add user label
- * definition of success after creation of new user
- */
-define("LABEL_USER_ADDED", "new user added!<br>add another user or return to the portal page");
+define("LABEL_LIST_RECORD", "list record");
 
 /**
  * listtable label
@@ -248,14 +218,13 @@ define("LABEL_OF", "of");
  * listtable label
  * definition of user message: enter details and commit new row
  */
-define("LABEL_ADD_RECORD", "enter list item details");
+define("LABEL_ADD_RECORD", "Enter details and press 'ok'");
 
 /**
  * listtable label
  * definition of user message: enter and commit changes
  */
-define("LABEL_EDIT_RECORD", "enter list item modifications");
-
+define("LABEL_EDIT_RECORD", "Enter modifications and press 'ok'");
 
 /**
  * listtableitemnote label
@@ -358,12 +327,6 @@ define("LABEL_NEW_LIST_CREATED", "new list created!<br>create another new list o
  * definition of 'please' label
  */
 define("LABEL_PLEASE_LOGIN", "Please login");
-
-/**
- * login label
- * definition of 'name' label
- */
-define("LABEL_USER_NAME", "name");
 
 /**
  * login label

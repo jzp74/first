@@ -127,7 +127,7 @@ function str_is_well_formed ($field_name, $str, $use_pipe_char=0)
     if ($use_pipe_char == 0)
     {
         $logging->debug("checking (str=".$str.", pipe char NOT permitted)");
-        if (ereg ("[\"\*'/:<>?|\\&;#]+", $str))
+        if (ereg ("[".EREG_FORBIDDEN_CHARS."|]+", $str))
         {
             $logging->warn($field_name." is not well formed (pipe char NOT permitted)");
         
@@ -137,7 +137,7 @@ function str_is_well_formed ($field_name, $str, $use_pipe_char=0)
     else
     {
         $logging->debug("checking (str=".$str.", pipe char permitted)");
-        if (ereg ("[\"\*'/:<>?\\&;#]+", $str))
+        if (ereg ("[".EREG_FORBIDDEN_CHARS."]+", $str))
         {
             $logging->warn($field_name." is not well formed (pipe char permitted)");
         

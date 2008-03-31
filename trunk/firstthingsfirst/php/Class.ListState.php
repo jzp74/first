@@ -59,10 +59,28 @@ class ListState
     protected $archived;
         
     /**
-    * selection filter array (db_field_names and values)
+    * selection filter str (human readable)
     * @var array
     */
-    protected $filter_array;
+    protected $filter_str;
+
+    /**
+    * selection filter str (sql 'where' clause string)
+    * @var array
+    */
+    protected $filter_str_sql;
+
+    /**
+    * total number of records
+    * @var int
+    */
+    protected $total_records;
+
+    /**
+    * total number of pages
+    * @var int
+    */
+    protected $total_pages;
 
     /**
     * current page
@@ -70,12 +88,6 @@ class ListState
     */
     protected $current_page;
     
-    /**
-    * total number of pages
-    * @var int
-    */
-    protected $total_pages;
-
     /**
     * reference to global logging object
     * @var Logging
@@ -136,12 +148,31 @@ class ListState
     }
 
     /**
-    * get value of filter_array attribute
-    * @return array value of filter_array attribute
+    * get value of filter_str attribute
+    * @return array value of filter_str_sql attribute
     */
-    function get_filter_array ()
+    function get_filter_str ()
     {
-        return $this->filter_array;
+        return $this->filter_str;
+    }
+
+    /**
+    * get value of filter_str_sql attribute
+    * @return array value of filter_str_sql attribute
+    */
+    function get_filter_str_sql ()
+    {
+        $this->_log->debug("get (filter_str_sql=".$this->filter_str_sql.")");
+        return $this->filter_str_sql;
+    }
+
+    /**
+    * get value of total_records attribute
+    * @return int value of total_records attribute
+    */
+    function get_total_records ()
+    {
+        return $this->total_records;
     }
 
     /**
@@ -203,13 +234,34 @@ class ListState
     }
     
     /**
-    * set value of filter_array attribute
-    * @param int filter_array value of filter_array attribute
+    * set value of filter_str attribute
+    * @param int filter_str value of filter_str attribute
     * @return void
     */
-    function set_filter_array ($filter_array)
+    function set_filter_str ($filter_str)
     {
-        $this->filter_array = $filter_array;
+        $this->filter_str = $filter_str;
+    }
+    
+    /**
+    * set value of filter_str_sql attribute
+    * @param int filter_str_sql value of filter_str_sql attribute
+    * @return void
+    */
+    function set_filter_str_sql ($filter_str_sql)
+    {
+        $this->_log->debug("set (filter_str_sql=".$filter_str_sql.")");
+        $this->filter_str_sql = $filter_str_sql;
+    }
+    
+    /**
+    * set value of total_records attribute
+    * @param int $total_records value of total_records attribute
+    * @return void
+    */
+    function set_total_records ($total_records)
+    {
+        $this->total_records = $total_records;
     }
     
     /**
@@ -244,7 +296,9 @@ class ListState
         $this->order_by_field = "";
         $this->order_ascending = 1;
         $this->archived = LISTSTATE_SELECT_NON_ARCHIVED;
-        $this->filter_array = array();
+        $this->filter_str = "";
+        $this->filter_str_sql = "";
+        $this->total_records = 0;
         $this->total_pages = 1;
         $this->current_page = 1;
     }
@@ -263,7 +317,9 @@ class ListState
         $this->order_by_field = $list_state_array['order_by_field'];
         $this->order_ascending = $list_state_array['order_ascending'];
         $this->archived = $list_state_array['archived'];
-        $this->filter_array = $list_state_array['filter_array'];
+        $this->filter_str = $list_state_array['filter_str'];
+        $this->filter_str_sql = $list_state_array['filter_str_sql'];
+        $this->total_records = $list_state_array['total_records'];
         $this->total_pages = $list_state_array['total_pages'];
         $this->current_page = $list_state_array['current_page'];
 
@@ -283,7 +339,9 @@ class ListState
         $list_state_array['order_by_field'] = $this->order_by_field;
         $list_state_array['order_ascending'] = $this->order_ascending;
         $list_state_array['archived'] = $this->archived;
-        $list_state_array['filter_array'] = $this->filter_array;
+        $list_state_array['filter_str'] = $this->filter_str;
+        $list_state_array['filter_str_sql'] = $this->filter_str_sql;
+        $list_state_array['total_records'] = $this->total_records;
         $list_state_array['total_pages'] = $this->total_pages;
         $list_state_array['current_page'] = $this->current_page;
         

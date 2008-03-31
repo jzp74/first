@@ -77,7 +77,7 @@ function process_url ()
     global $logging;
     global $user;
     
-    $logging->trace("PROCESS_URL (request_uri=".$_SERVER[REQUEST_URI].")");
+    $logging->trace("PROCESS_URL (request_uri=".$_SERVER["REQUEST_URI"].")");
     
     # show portal page if no action is set
     if (isset($_GET['action']))

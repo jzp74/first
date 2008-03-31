@@ -14,13 +14,19 @@
  * shared button
  * definition of 'back to portal' button
  */
-define("BUTTON_PORTAL", "back to portal");
+define("BUTTON_PORTAL", "back&nbsp;to&nbsp;portal");
 
 /**
  * shared button
  * definition of 'archive' button
  */
 define("BUTTON_ARCHIVE", "archive");
+
+/**
+ * shared button
+ * definition of 'filter' button
+ */
+define("BUTTON_FILTER", "filter");
 
 /**
  * shared button
@@ -74,7 +80,7 @@ define("BUTTON_DOWN", "down");
  * shared button
  * definition of 'create user' button
  */
-define("BUTTON_USER_ADMINISTRATION", "user administration");
+define("BUTTON_USER_ADMINISTRATION", "user&nbsp;administration");
 
 /**
  * shared button
@@ -92,49 +98,49 @@ define("BUTTON_PREVIOUS_PAGE", "previous");
  * list button
  * definition of 'add row' button
  */
-define("BUTTON_ADD_RECORD", "add list item");
+define("BUTTON_ADD_RECORD", "insert&nbsp;new");
 
 /**
  * list button
  * definition of 'previous note' button
  */
-define("BUTTON_PREVIOUS_NOTE", "previous note");
+define("BUTTON_PREVIOUS_NOTE", "previous&nbsp;note");
 
 /**
  * list button
  * definition of 'next note' button
  */
-define("BUTTON_NEXT_NOTE", "next note");
+define("BUTTON_NEXT_NOTE", "next&nbsp;note");
 
 /**
  * list button
  * definition of 'add note' button
  */
-define("BUTTON_ADD_NOTE", "add note");
+define("BUTTON_ADD_NOTE", "add&nbsp;note");
 
 /**
  * list button
  * definition of 'print this list' button
  */
-define("BUTTON_PRINT_LIST", "print this list");
+define("BUTTON_PRINT_LIST", "print&nbsp;this&nbsp;list");
 
 /**
  * list builder button
  * definition of 'add field' button
  */
-define("BUTTON_ADD_FIELD", "add this field");
+define("BUTTON_ADD_FIELD", "add&nbsp;this&nbsp;field");
 
 /**
  * list builder button
  * definition of 'create list' button
  */
-define("BUTTON_CREATE_LIST", "create this list");
+define("BUTTON_CREATE_LIST", "create&nbsp;this&nbsp;list");
     
 /**
  * list builder button
  * definition of 'modify list' button
  */
-define("BUTTON_MODIFY_LIST", "modify this list");
+define("BUTTON_MODIFY_LIST", "modify&nbsp;this&nbsp;list");
 
 /**
  * login button
@@ -152,6 +158,6 @@ define("BUTTON_LOGOUT", "logout");
  * portal button
  * definition of 'create a new list' button
  */
-define("BUTTON_CREATE_NEW_LIST", "create a new list");
+define("BUTTON_CREATE_NEW_LIST", "create&nbsp;a&nbsp;new&nbsp;list");
 
 ?>

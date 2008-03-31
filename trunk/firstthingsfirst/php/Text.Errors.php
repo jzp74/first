@@ -56,7 +56,7 @@ define("ERROR_NO_PASSWORD_GIVEN", "please enter a password");
  * field check error
  * definition of error that is shown when user has entered a wrong name/password combination
  */
-define("ERROR_INCORRECT_NAME_PASSWORD", "name/password combination incorrect<br>please enter correct name and password");
+define("ERROR_INCORRECT_NAME_PASSWORD", "name/password combination incorrect");
 
 /**
  * field check error
@@ -74,30 +74,30 @@ define("ERROR_NO_DESCRIPTION_GIVEN", "please enter a description for this list")
  * field check error
  * definition of error that is shown when user has entered a forbidden character in a field
  */
-define("ERROR_NOT_WELL_FORMED_STRING", "field contains one or more of the<br>following characters: \" ' * / : < > ? \ | & ; #");
+define("ERROR_NOT_WELL_FORMED_STRING", "field contains one or more of the following characters: \" ' * / : < > ? \ | & ; #");
 
 /**
  * field check error
  * definition of error that is shown when user has entered a forbidden character in a selection field (pipe character is now permitted)
  */
-define("ERROR_NOT_WELL_FORMED_SELECTION_STRING", "selection field contains one or more of the<br>following characters: \" ' * / : < > ? \ & ; #");
+define("ERROR_NOT_WELL_FORMED_SELECTION_STRING", "selection field contains one or more of the following characters: \" ' * / : < > ? \ & ; #");
 
 /**
  * database error
  * definition of unkwown database error
  */
-define("ERROR_DATABASE_PROBLEM", "an unkwown error occurred<br>please check your database settings or contact an administrator");
+define("ERROR_DATABASE_PROBLEM", "an unkwown error occurred please check your database settings or contact an administrator");
 
 /**
  * creation error
  * definition of error that is shown when user tries to create a list with an existing name
  */
-define("ERROR_DUPLICATE_LIST_NAME", "a list with the same name already exists, please choose a different name");
+define("ERROR_DUPLICATE_LIST_NAME", "a list with the same name already exists");
 
 /**
  * creation error
  * definition of error that is shown when user tries to create a user with an existing name
  */
-define("ERROR_DUPLICATE_USER_NAME", "a user with the same name already exists, please choose a different name");
+define("ERROR_DUPLICATE_USER_NAME", "a user with the same name already exists");
 
 ?>

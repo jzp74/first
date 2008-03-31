@@ -65,11 +65,26 @@ define("DB_ARCHIVED_FIELD_NAME", "_archived"); # todo remove this define
 define("DB_CURRENT_PAGE", "_current_page");
 # this fieldname is only used in select queries and contains the number of pages
 define("DB_TOTAL_PAGES", "_total_pages");
+# this fieldname is only used in select queries and contains the number of records
+define("DB_TOTAL_RECORDS", "_total_records");
+
+
+/**
+ * different page type
+ */
+define("PAGE_TYPE_PORTAL", 1);
+define("PAGE_TYPE_LIST", 2);
+define("PAGE_TYPE_USER_ADMIN", 3);
 
 /**
  * general separator
  */
 define("GENERAL_SEPARATOR", "***");
+
+/**
+ * forbidden characters regular expression
+ */
+define("EREG_FORBIDDEN_CHARS", "\"\*'/:<>?\\&;#");
 
 /**
  * a false return string
@@ -137,7 +152,7 @@ $firstthingsfirst_field_descriptions = array(
     "LABEL_DEFINITION_USERNAME"     => array(
         DB_DATATYPE_USERNAME,
         "input type=text size=\"20\" maxlenght=\"20\"",
-        "",
+        "str_is_not_empty",
         0
     ),
     "LABEL_DEFINITION_PASSWORD"     => array(

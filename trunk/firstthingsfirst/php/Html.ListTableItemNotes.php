@@ -43,9 +43,11 @@ function action_get_previous_note ($this_id, $previous_id)
 {
     global $logging;
     global $user;
-    global $response;
     
     $logging->info("ACTION: get previous note (this_id=".$this_id.", previous_id=".$previous_id.")");
+
+    # create necessary objects
+    $response = new xajaxResponse();
 
     # hide the current note
     $response->addAssign($this_id, "className", "invisible_collapsed");
@@ -69,10 +71,12 @@ function action_get_next_note ($this_id, $next_id)
 {
     global $logging;
     global $user;
-    global $response;
     
     $logging->info("ACTION: get next note (this_id=".$this_id.", next_id=".$next_id.")");
     
+    # create necessary objects
+    $response = new xajaxResponse();
+
     # hide the current note
     $response->addAssign($this_id, "className", "invisible_collapsed");
     
@@ -95,15 +99,17 @@ function action_add_note ($db_field_name, $this_id)
 {
     global $logging;
     global $user;
-    global $response;
     
     $this_td_id = $db_field_name."_".$this_id;
     $next_td_id = $db_field_name."_0";
     
     $logging->info("ACTION: add note (db_field_name=".$db_field_name.", this_id=".$this_id.")");
 
+    # create necessary objects
+    $response = new xajaxResponse();
+
     # change the link of this_id from 'add' to 'next'
-    $next_html_str = get_button("xajax_action_get_next_note('".$this_td_id."', '".$next_td_id."')", BUTTON_NEXT_NOTE);
+    $next_html_str = get_href("xajax_action_get_next_note('".$this_td_id."', '".$next_td_id."')", BUTTON_NEXT_NOTE);
     $response->addAssign($db_field_name."_0_next", "innerHTML", $next_html_str);
 
     # hide this note
@@ -133,7 +139,7 @@ function get_list_record_notes ($db_field_name, $notes_array)
     $previous_id = -1;
     $next_id = -1;
 
-    $logging->trace("getting list_record_notes (db_field_name=".$db_field_name.", count_notes=".count(notes_array).")");
+    $logging->trace("getting list_record_notes (db_field_name=".$db_field_name.", count_notes=".count($notes_array).")");
 
     for ($note=0; $note<count($notes_array); $note++)
     {
@@ -195,6 +201,10 @@ function get_list_record_note ($db_field_name, $this_id, $previous_id, $next_id,
     $textarea_id = $db_field_name.GENERAL_SEPARATOR."LABEL_DEFINITION_NOTES_FIELD".GENERAL_SEPARATOR.$this_id;
     $previous_td_id = $db_field_name."_".$previous_id;
     $next_td_id = $db_field_name."_".$next_id;
+    if ($this_id != 0)        
+        $note_str = $note_array["_note"];
+    else
+        $note_str = "";
 
     $logging->trace("getting list_record_note (this_id=".$this_id.", previous_id=".$previous_id.", next_id=".$next_id.")");
 
@@ -210,12 +220,12 @@ function get_list_record_note ($db_field_name, $this_id, $previous_id, $next_id,
         $html_str .= "                                        <p>&nbsp;".LABEL_NEW_NOTE."</p>\n";
     
     $html_str .= "                                        <div>\n";
-    $html_str .= "                                            <textarea cols=40 rows=3 name=\"".$textarea_id."\">".$note_array["_note"]."</textarea>\n";
+    $html_str .= "                                            <textarea cols=40 rows=3 name=\"".$textarea_id."\" class=\"note_text\">".$note_str."</textarea>\n";
     $html_str .= "                                            <div id=\"".$previous_td_id."_previous"."\" style=\"float: left\">&nbsp;";
     
     # display button to go to the previous note
     if ($previous_id != -1)
-        $html_str .= get_button("xajax_action_get_previous_note('".$td_id."', '".$previous_td_id."')", BUTTON_PREVIOUS_NOTE);
+        $html_str .= get_href("xajax_action_get_previous_note('".$td_id."', '".$previous_td_id."')", BUTTON_PREVIOUS_NOTE);
     # display inactive button when there is no previous note
     else
         $html_str .= get_inactive_button(BUTTON_PREVIOUS_NOTE);
@@ -227,7 +237,7 @@ function get_list_record_note ($db_field_name, $this_id, $previous_id, $next_id,
         $html_str .= get_inactive_button(BUTTON_ADD_NOTE);
     # display button to add note when it is possible to add a new note
     else if ($next_id == 0)
-        $html_str .= get_button("xajax_action_add_note('".$db_field_name."', '".$this_id."')", BUTTON_ADD_NOTE);
+        $html_str .= get_href("xajax_action_add_note('".$db_field_name."', '".$this_id."')", BUTTON_ADD_NOTE);
     # display button to go to the next note
     else
         $html_str .= get_button("xajax_action_get_next_note('".$td_id."', '".$next_td_id."')", BUTTON_NEXT_NOTE);

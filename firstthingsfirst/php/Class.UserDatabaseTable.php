@@ -75,6 +75,7 @@ class UserDatabaseTable extends DatabaseTable
 
     /**
     * select a fixed number of records from database
+    * @todo filter sql settings also include note fields. note fields should not be known in this file.
     * @param $order_by_field string order records by this db_field_name
     * @param $page int the page number to select
     * @param $db_field_names array array containing db_field_names to select for each record
@@ -117,24 +118,27 @@ class UserDatabaseTable extends DatabaseTable
         
         $order_ascending = $this->_list_state->get_order_ascending();
         $archived = $this->_list_state->get_archived();
-        $filter_array = $this->_list_state->get_filter_array();
+        $filter_str_sql = $this->_list_state->get_filter_str_sql();        
+                        
         if ($page == DATABASETABLE_UNKWOWN_PAGE)
             $page = $this->_list_state->get_current_page();
         
         # call parent select()
-        $rows = parent::select($order_by_field, $order_ascending, $archived, $filter_array, $page, $this->db_field_names);
+        $rows = parent::select($order_by_field, $order_ascending, $archived, $filter_str_sql, $page, $this->db_field_names);
         
         if ($page != DATABASETABLE_ALL_PAGES)
             $this->_list_state->set_current_page($page);        
         if (count($rows) > 0)
         {
-            $this->_list_state->set_current_page($rows[0][DB_CURRENT_PAGE]);
+            $this->_list_state->set_total_records($rows[0][DB_TOTAL_RECORDS]);
             $this->_list_state->set_total_pages($rows[0][DB_TOTAL_PAGES]);
+            $this->_list_state->set_current_page($rows[0][DB_CURRENT_PAGE]);
         }
         else
         {
-            $this->_list_state->set_current_page(0);
+            $this->_list_state->set_total_records(0);
             $this->_list_state->set_total_pages(0);
+            $this->_list_state->set_current_page(0);
         }
 
         # store list_state to session

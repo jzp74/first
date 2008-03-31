@@ -407,17 +407,15 @@ class DatabaseTable
     * @param $order_by_field string order records by this db_field_name
     * @param $order_ascending int indicates if ordering should be ascending or descending
     * @param $archived int indicates if archived [1], non archived [0] or all records [-1] should be selected
-    * @param $filter_array array selection filter array
+    * @param $filter_str_sql array selection filter array
     * @param $page int the page number to select
     * @param $db_field_names array array containing db_field_names to select for each record
     * @return array array containing the records (each records is an array)
     */
-    function select ($order_by_field, $order_ascending, $archived, $filter_array, $page, $db_field_names = array())
+    function select ($order_by_field, $order_ascending, $archived, $filter_str_sql, $page, $db_field_names = array())
     {
         global $firstthingsfirst_list_page_entries;
         
-        $filter_array_keys = array_keys($filter_array);
-
         $this->_log->trace("selecting DatabaseTable (order_by_field=".$order_by_field.", order_ascending=".$order_ascending.", archived=".$archived.", page=".$page.")");
 
         if (!$this->_database->table_exists($this->table_name))
@@ -435,6 +433,7 @@ class DatabaseTable
     
         # build WHERE clause for queries
         # add archived clause
+        $query_where_clause = "";
         if ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] != DATABASETABLE_METADATA_FALSE)
         {
             if ($this->_list_state->get_archived() == LISTSTATE_SELECT_NON_ARCHIVED)
@@ -444,20 +443,15 @@ class DatabaseTable
             else # LISTSTATE_SELECT_BOTH_ARCHIVED
                 $query_where_clause = " WHERE ".DB_TS_ARCHIVED_FIELD_NAME.">='".DB_NULL_DATETIME."'";
         }
-        # add filter
-        $first_clause = TRUE;
-        foreach ($filter_array_keys as $filter_array_key)
-        {
-            if (($first_clause == TRUE) && ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] == DATABASETABLE_METADATA_FALSE))
-            {
-                $query_where_clause .= " WHERE ".$filter_array_key."='".$filter_array[$filter_array_key]."'";
-                $first_clause = FALSE;
-            }
-            else
-                $query_where_clause .= " AND ".$filter_array_key."='".$filter_array[$filter_array_key]."'";
-        }
+        # add filter string
+        if ((strlen($filter_str_sql) > 0) && ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] == DATABASETABLE_METADATA_FALSE))
+            $query_where_clause .= " WHERE ".$filter_str_sql;
+        else if (strlen($filter_str_sql) > 0)
+            $query_where_clause .= " AND ".$filter_str_sql;
 
         # get the number of records only if user is not requesting all entries
+        $total_records = 0;
+        $total_pages = 0;
         if ($page != DATABASETABLE_ALL_PAGES)
         {
             $query = "SELECT COUNT(*) FROM ".$this->table_name.$query_where_clause;
@@ -465,9 +459,12 @@ class DatabaseTable
             if ($result != FALSE)
             {
                 $total_pages_array = $this->_database->fetch($result);
-                $total_pages = floor($total_pages_array[0]/$firstthingsfirst_list_page_entries);
+                $total_records = $total_pages_array[0];
+                $this->_log->debug("found (total_records=".$total_records.")");
+                $total_pages = floor((int)$total_records / $firstthingsfirst_list_page_entries);
                 if (($total_pages_array[0]%$firstthingsfirst_list_page_entries) != 0)
                     $total_pages += 1;
+                $this->_log->debug("found (total_pages=".$total_pages.")");
             }
             else 
             {
@@ -484,6 +481,7 @@ class DatabaseTable
                 $page = $total_pages;
             if ($total_pages == 0)
                 $page = 1;
+            $this->_log->debug("found (total_pages=".$total_pages.")");
         }
 
         $rows = array();
@@ -512,15 +510,19 @@ class DatabaseTable
             $query .= ", ".DB_TS_MODIFIED_FIELD_NAME;
         }
         # add total number of pages
+        $this->_log->debug("found (total_records=".$total_records.")");
+        $this->_log->debug("found (total_pages=".$total_pages.")");
         if ($page != DATABASETABLE_ALL_PAGES)
         {
-            $query .= ", ".$page." AS '".DB_CURRENT_PAGE."'";
+            $query .= ", ".$total_records." AS '".DB_TOTAL_RECORDS."'";
             $query .= ", ".$total_pages." AS '".DB_TOTAL_PAGES."'";
+            $query .= ", ".$page." AS '".DB_CURRENT_PAGE."'";
         }
         else
         {
-            $query .= ", 1 AS '".DB_CURRENT_PAGE."'";
+            $query .= ", 0 AS '".DB_TOTAL_RECORDS."'";
             $query .= ", 1 AS '".DB_TOTAL_PAGES."'";
+            $query .= ", 1 AS '".DB_CURRENT_PAGE."'";
         }    
         $query .= " FROM ".$this->table_name.$query_where_clause;
         # set order
@@ -556,7 +558,7 @@ class DatabaseTable
             return array();
         }
         
-        $this->_log->trace("selected DatabaseTable (from=".$limit_from.")");
+        $this->_log->trace("selected DatabaseTable");
     
         return $rows;
     }
@@ -668,7 +670,7 @@ class DatabaseTable
             # encode text field
             foreach ($this->db_text_field_names as $text_field_name)
             {
-                if ($array_key == $text_field_name)
+                if ($db_field_name == $text_field_name)
                     $value = htmlentities($value, ENT_QUOTES);
             }
             
@@ -754,7 +756,7 @@ class DatabaseTable
             # encode text field
             foreach ($this->db_text_field_names as $text_field_name)
             {
-                if ($array_key == $text_field_name)
+                if ($db_field_name == $text_field_name)
                     $value = htmlentities($value, ENT_QUOTES);
             }
             

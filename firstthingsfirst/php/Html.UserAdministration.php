@@ -55,8 +55,8 @@ $xajax->registerFunction("action_delete_user_admin_record");
 /**
  * definition of 'cancel_user_admin_action' action
  */
-define("ACTION_CANCEL_USER_ADMINACTION", "cancel_user_admin_action");
-$firstthingsfirst_action_description[ACTION_CANCEL_USER_ADMINPAGE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_IS_ADMIN);
+define("ACTION_CANCEL_USER_ADMIN_ACTION", "cancel_user_admin_action");
+$firstthingsfirst_action_description[ACTION_CANCEL_USER_ADMIN_ACTION] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_IS_ADMIN);
 $xajax->registerFunction("action_cancel_user_admin_action");
 
 
@@ -70,10 +70,11 @@ define("USER_ADMIN_CSS_NAME_PREFIX", "database_table_");
  * configuration of HtlmTable
  */
 $user_admin_table_configuration = array(
-    HTML_TABLE_IS_PORTAL_PAGE => FALSE,
+    HTML_TABLE_PAGE_TYPE => PAGE_TYPE_USER_ADMIN,
     HTML_TABLE_JS_NAME_PREFIX => "user_admin_",
     HTML_TABLE_CSS_NAME_PREFIX => USER_ADMIN_CSS_NAME_PREFIX,
-    HTML_TABLE_DELETE_MODE => HTML_TABLE_DELETE_MODE_ALWAYS
+    HTML_TABLE_DELETE_MODE => HTML_TABLE_DELETE_MODE_ALWAYS,
+    HTML_TABLE_RECORD_NAME => LABEL_USER_ADMIN_RECORD
 );
 
 
@@ -248,7 +249,7 @@ function action_insert_user_admin_record ($title, $form_values)
     {        
         if ($fields[$db_field_name][1] == "LABEL_DEFINITION_BOOL")
         {
-            if ($new_form_values[$db_field_name] == "")
+            if (!isset($new_form_values[$db_field_name]))
             {
                 $logging->debug("found an unset bool field");
                 $new_form_values[$db_field_name] = "0";

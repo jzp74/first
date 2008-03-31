@@ -27,8 +27,8 @@ $xajax->registerFunction("action_get_portal_content");
 /**
  * definition of 'delete_list_table' action
  */
-define("ACTION_DELETE_LIST_PORTAL_RECORD", "delete_portal_record");
-$firstthingsfirst_action_description[ACTION_DELETE_LIST_PORTAL_RECORD] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+define("ACTION_DELETE_PORTAL_RECORD", "delete_portal_record");
+$firstthingsfirst_action_description[ACTION_DELETE_PORTAL_RECORD] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
 $xajax->registerFunction("action_delete_portal_record");
 
 /**
@@ -41,10 +41,11 @@ define("PORTAL_CSS_NAME_PREFIX", "database_table_");
  * configuration of HtlmTable
  */
 $portal_table_configuration = array(
-    HTML_TABLE_IS_PORTAL_PAGE => TRUE,
+    HTML_TABLE_PAGE_TYPE => PAGE_TYPE_PORTAL,
     HTML_TABLE_JS_NAME_PREFIX => "portal_",
     HTML_TABLE_CSS_NAME_PREFIX => PORTAL_CSS_NAME_PREFIX,
-    HTML_TABLE_DELETE_MODE => HTML_TABLE_DELETE_MODE_ALWAYS
+    HTML_TABLE_DELETE_MODE => HTML_TABLE_DELETE_MODE_ALWAYS, # not used in portal
+    HTML_TABLE_RECORD_NAME => LABEL_LIST_RECORD # not used in portal
 );
 
 
@@ -139,7 +140,7 @@ function action_delete_portal_record ($list_title)
     global $logging;
     global $portal_table_configuration;
     
-    $logging->info("ACTION: delete portal record (list_title=".$list_title.", key_string=".$key_string.")");
+    $logging->info("ACTION: delete portal record (list_title=".$list_title.")");
 
     # create necessary objects
     $result = new Result();

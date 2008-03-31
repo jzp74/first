@@ -34,6 +34,7 @@ function check_preconditions ($action, $response)
     {
         $html_str = get_login_page_html();
         $response->addAssign("main_body", "innerHTML", $html_str);
+        set_footer("", $response);
         $logging->warn("user is not logged in (action=".$action.")");
 
         return FALSE;
@@ -44,6 +45,7 @@ function check_preconditions ($action, $response)
     {
         $html_str = get_login_page_html();
         $response->addAssign("main_body", "innerHTML", $html_str);
+        set_footer("", $response);
         $logging->warn("user needs edit_list permission (action=".$action.")");
 
         return FALSE;
@@ -54,15 +56,18 @@ function check_preconditions ($action, $response)
     {
         $html_str = get_login_page_html();
         $response->addAssign("main_body", "innerHTML", $html_str);
+        set_footer("", $response);
         $logging->warn("user needs create_list permission (action=".$action.")");
 
         return FALSE;
     }
 
-    # check if read permission is required
+    # check if admin permission is required
     if ($is_admin && !$user->get_is_admin())
     {
-        action_get_login_page($response);
+        $html_str = get_login_page_html();
+        $response->addAssign("main_body", "innerHTML", $html_str);
+        set_footer("", $response);
         $logging->warn("user needs admin permission (action=".$action.")");
 
         return FALSE;
@@ -152,14 +157,36 @@ function set_info_message ($info_element, $info_str, $response)
 }
 
 /**
- * get html for an active button (button calls a javascript function)
+ * get html for an active href (href calls js function)
+ * @param string $func_str contains the complete js function name and all its parameters
+ * @param string $name_str contains the name of the button
+ * @return string html containing button
+ */
+function get_href ($func_str, $name_str)
+{
+    return "<a href=\"javascript:void(0);\" onclick=\"".$func_str."\">".$name_str."</a>";
+}
+
+/**
+ * get html for an active href (href calls index.php with specified query string)
+ * @param string $query_str contains the query string
+ * @param string $name_str contains the name of the button
+ * @return string html containing button
+ */
+function get_query_href ($query_str, $name_str)
+{
+    return "<a href=\"javascript:void(0);\" onclick=\"window.location='index.php?".$query_str."'\">".$name_str."</a>";
+}
+
+/**
+ * get html for an active button (button calls js function)
  * @param string $func_str contains the complete js function name and all its parameters
  * @param string $name_str contains the name of the button
  * @return string html containing button
  */
 function get_button ($func_str, $name_str)
 {
-    return "<a href=\"javascript:void(0);\" onclick=\"".$func_str."\">".$name_str."</a>";
+    return "<div class=\"button\" onclick=\"".$func_str."\">".$name_str."</div>";
 }
 
 /**
@@ -170,7 +197,7 @@ function get_button ($func_str, $name_str)
  */
 function get_button_confirm ($func_str, $confirm_str, $name_str)
 {
-    return "<a href=\"javascript:void(0);\" onclick=\"if (confirm('".$confirm_str."')) { ".$func_str." }\">".$name_str."</a>";
+    return "<div class=\"button\" onclick=\"if (confirm('".$confirm_str."')) { ".$func_str." }\">".$name_str."</div>";
 }
 
 /**
@@ -181,18 +208,7 @@ function get_button_confirm ($func_str, $confirm_str, $name_str)
  */
 function get_query_button ($query_str, $name_str)
 {
-    return "<a href=\"javascript:void(0);\" onclick=\"window.location='index.php?".$query_str."'\">".$name_str."</a>";
-}
-
-/**
- * get html for an active link_button (button calls index.php with specified query string) and open a new window
- * @param string $query_str contains the query string
- * @param string $name_str contains the name of the button
- * @return string html containing button
- */
-function get_query_button_new_window ($query_str, $name_str)
-{
-    return "<a href=\"javascript:void(0);\" onclick=\"window.open('http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']."?".$query_str."')\">".$name_str."</a>";
+    return "<div class=\"button\" onclick=\"window.location='index.php?".$query_str."'\">".$name_str."</div>";
 }
 
 /**
@@ -203,16 +219,6 @@ function get_query_button_new_window ($query_str, $name_str)
 function get_inactive_button ($name_str)
 {
     return "<span class=\"inactive_button\">".$name_str."</span>";
-}
-
-/**
- * get html for an onclick specification that calls index.php with specified query string
- * @param string $query_str contains the query string
- * @return string html containing link
- */
-function get_query_link ($query_str)
-{
-    return "onclick=\"window.location='index.php?".$query_str."'\"";
 }
 
 /**

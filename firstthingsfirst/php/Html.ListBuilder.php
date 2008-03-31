@@ -100,7 +100,7 @@ function action_get_listbuilder_page ($list_title)
         $html_str .= "        <div id=\"page_title\">".LABEL_CONFIGURE_NEW_LIST."</div>\n\n";
     
     $html_str .= "        <div id=\"navigation_container\">\n";
-    $html_str .= "            <div id=\"navigation\">&nbsp;".get_query_button("action=get_portal_page", BUTTON_PORTAL)."</div>\n";
+    $html_str .= "            <div id=\"navigation\">&nbsp;".get_query_href("action=get_portal_page", BUTTON_PORTAL)."</div>\n";
     $html_str .= "            <div id=\"login_status\">&nbsp;</div>&nbsp\n";
     $html_str .= "        </div> <!-- navigation_container -->\n\n";
     $html_str .= "        <div id=\"listbuilder_pane\">\n\n";
@@ -157,12 +157,12 @@ function action_get_listbuilder_page ($list_title)
     
     # only show one link when list title had been given
     if (strlen($list_title))
-        $html_str .= "                <p>&nbsp;".get_button("xajax_action_modify_list('".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."', document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value)", BUTTON_MODIFY_LIST)."</p>\n";
+        $html_str .= "                <p>".get_href("xajax_action_modify_list('".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."', document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value)", BUTTON_MODIFY_LIST)."</p>\n";
     else
     {
-        $html_str .= "                <p>&nbsp;".get_select("add_select", "add_it", "")."\n";
-        $html_str .= "                ".get_button("xajax_action_insert_listbuilder_row(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'))", BUTTON_ADD_FIELD)."\n";
-        $html_str .= "                &nbsp;&nbsp;".get_button("xajax_action_create_list(document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value, xajax.getFormValues('database_definition_form'))", BUTTON_CREATE_LIST)."</p>\n";
+        $html_str .= "                <p>".get_select("add_select", "add_it", "")."\n";
+        $html_str .= "                &nbsp;".get_href("xajax_action_insert_listbuilder_row(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'))", BUTTON_ADD_FIELD)."\n";
+        $html_str .= "                &nbsp;&nbsp;&nbsp;".get_href("xajax_action_create_list(document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value, xajax.getFormValues('database_definition_form'))", BUTTON_CREATE_LIST)."</p>\n";
     }
     
     $html_str .= "            </div> <!-- action_bar -->\n\n";    
@@ -228,7 +228,7 @@ function action_move_listbuilder_row ($row_number, $direction, $definition)
     # get rid of keynames
     $new_definition = array_values($definition);
 
-    $logging->info("ACTION: move listbuilder row (row_number=".$field_type.", $direction=".$direction.")");
+    $logging->info("ACTION: move listbuilder row (row_number=".$row_number.", $direction=".$direction.")");
 
     # create necessary objects
     $response = new xajaxResponse();

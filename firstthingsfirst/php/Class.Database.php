@@ -129,7 +129,7 @@ class Database
     function query ($query)
     {   
         $db_link = $this->connect();
-        if (!db_link)
+        if (!$db_link)
             return FALSE;
     
         $this->_log->debug("query database (query=".$query.")");
@@ -149,14 +149,14 @@ class Database
     function insertion_query ($query)
     {
         $db_link = $this->connect();
-        if (!db_link)
+        if (!$db_link)
             return FALSE;
      
         $this->_log->debug("insertion query (query=".$query.")");
     
         $result = mysql_query($query, $db_link);
         
-        if (result != FALSE)
+        if ($result != FALSE)
         {
             $result = mysql_insert_id($db_link);
             $this->_log->debug("insert (id=".$result.")");

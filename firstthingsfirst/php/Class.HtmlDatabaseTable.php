@@ -11,9 +11,9 @@
 
 
 /**
- * enable navigation portal page link
+ * definition of page type
  */
-define("HTML_TABLE_IS_PORTAL_PAGE", "html_table_navigation_portal");
+define("HTML_TABLE_PAGE_TYPE", "html_table_page_type");
 
 /**
  * definition of prefix for each css class and each js function
@@ -39,6 +39,11 @@ define("HTML_TABLE_DELETE_MODE_ALWAYS", 0);
  * definition of delete mode archived (only show delete button for archived records)
  */
 define("HTML_TABLE_DELETE_MODE_ARCHIVED", 1);
+
+/**
+ * definition of record name
+ */
+define("HTML_TABLE_RECORD_NAME", "html_table_record_name");
 
 
 /**
@@ -123,11 +128,20 @@ class HtmlDatabaseTable
         $html_str .= "        <div id=\"navigation_container\">\n";
         
         # add various navigation links
+        $portal_link = FALSE;
+        $admin_link = FALSE;
         $html_str .= "            <div id=\"navigation\">";
-        if ($this->configuration[HTML_TABLE_IS_PORTAL_PAGE] != TRUE)
-            $html_str .= get_query_button("action=get_portal_page", BUTTON_PORTAL)."&nbsp;&nbsp;";
-        if ($this->_user->is_login() && $this->_user->get_is_admin())
-            $html_str .= get_query_button("action=get_user_admin_page", BUTTON_USER_ADMINISTRATION);    
+        if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_PORTAL)
+            $portal_link = TRUE;
+        if (($this->_user->is_login() && $this->_user->get_is_admin()) && $this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_USER_ADMIN)
+            $admin_link = TRUE;
+        if ($portal_link || $admin_link)
+            $html_str .= "|&nbsp;";
+        if ($portal_link)
+            $html_str .= get_query_href("action=get_portal_page", BUTTON_PORTAL)."&nbsp;|&nbsp;";
+        if ($admin_link)
+            $html_str .= get_query_href("action=get_user_admin_page", BUTTON_USER_ADMINISTRATION)."&nbsp;|&nbsp;";
+            
         $html_str .= "</div>\n";
         
         $html_str .= "            <div id=\"login_status\">&nbsp;</div>&nbsp\n";
@@ -135,8 +149,6 @@ class HtmlDatabaseTable
         $html_str .= "        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane\">\n\n";
         $html_str .= "        </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane -->\n\n";
         $html_str .= "        <div id=\"action_pane\">\n\n";
-        $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
-        $html_str .= "            </div> <!-- action_bar -->\n\n";
         $html_str .= "        </div> <!-- action_pane -->\n\n";           
         $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
 
@@ -163,7 +175,7 @@ class HtmlDatabaseTable
         $html_str .= "        </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane -->\n\n";
         $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
 
-        $result->set_result_str($html_str);    
+        $result->set_result_str($html_str);
     
         $this->_log->trace("getting print page (title=".$title.")");
 
@@ -180,10 +192,13 @@ class HtmlDatabaseTable
      */
     function get_content ($list_title, $order_by_field, $page, $result)
     {
+        global $firstthingsfirst_list_page_entries;
+        
         $html_str = "";
         $field_names = $this->_database_table->get_user_field_names();
         $fields = $this->_database_table->get_fields();
         $user_fields = $this->_database_table->get_user_fields();
+        $metadata_str = $this->_database_table->get_metadata_str();
 
         $this->_log->trace("get content ($list_title=".$list_title.", $page=".$page.")");
     
@@ -201,20 +216,59 @@ class HtmlDatabaseTable
         $this->_user->get_list_state($this->_database_table->get_table_name());
         $total_pages = $this->_list_state->get_total_pages();
         if ($total_pages == 0)
+        {
+            $total_records = 0;
             $current_page = 0;
+        }
         else
+        {
+            $total_records = $this->_list_state->get_total_records();
             $current_page = $this->_list_state->get_current_page();
+        }
 
-        # add some summary information, except when all pages have to be displayed
+        # add contents top
+        $html_str .= "\n\n            <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top\">\n";
         if ($page != DATABASETABLE_ALL_PAGES)
-            $html_str .= "            <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."pages_top\">".LABEL_PAGE." ".$current_page." ".LABEL_OF." ".$total_pages."</div>\n\n";
-    
+        {
+            $archive_select = FALSE;
+            $filter = FALSE;
+            
+            # add record summary
+            if ($current_page == 0)
+            {
+                $first_record = 0;
+                $last_record = 0;
+            }
+            else
+            {
+                $first_record = ((((int)$current_page - 1) * $firstthingsfirst_list_page_entries) + 1);
+                $last_record = (($first_record + count($records)) - 1);
+            }
+            $html_str .= "                <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."pages_top\">";
+            $html_str .= LABEL_RECORDS." ".$first_record." - ";
+            $html_str .= $last_record." ".LABEL_OF." ".$total_records." ".LABEL_RECORDS."</div>\n";
+            # add archive select mechanism only when list supports archived records
+            if ($metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] != DATABASETABLE_METADATA_FALSE)
+            {
+                $html_str .= $this->get_archive_select($list_title);
+                $archive_select = TRUE;
+            }
+            # add filter only for lists
+            if ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_LIST)
+            {
+                $html_str .= $this->get_filter($list_title);
+                $filter = TRUE;
+            }
+            if (!$archive_select && !$filter)
+                $html_str .= "                &nbsp;\n";
+        }
+        else
+            $html_str .= "                &nbsp;\n";        
+        $html_str .= "            </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top -->\n\n";
+
         # start with the table definition
         # this is a different table when all pages have to be displayed
-        if ($page != DATABASETABLE_ALL_PAGES)
-            $html_str .= "            <table id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
-        else
-            $html_str .= "            <table id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents\" align=\"left\">\n";
+        $html_str .= "            <table id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents\" align=\"left\">\n";
     
         # now the first record containing the field names
         $html_str .= "                <thead>\n";
@@ -222,18 +276,18 @@ class HtmlDatabaseTable
         $field_names_with_length = array();
         foreach ($field_names as $field_name)
         {
+            # replace all space chars with &nbsp
+            $field_name_replaced = str_replace(' ', '&nbsp;', $field_name);
+
             # only display field names that have a length
             if (strlen($field_name) > 0)
             {
                 $db_field_name = $user_fields[$field_name];
-                $html_str .= "                        <th>".get_button("xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."content('".$list_title."', '".$db_field_name."', ".$current_page.")", $field_name)."</th>\n";
+                $html_str .= "                        <th onclick=\"xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."content('".$list_title."', '".$db_field_name."', ".$current_page.")\">".$field_name_replaced."</th>\n";
                 array_push($field_names_with_length, $field_name);
             }
         }
         
-        # display extra column for actions, except when all pages have to be displayed
-        if (($page != DATABASETABLE_ALL_PAGES) || ($this->configuration[HTML_TABLE_IS_PORTAL_PAGE] == TRUE))
-            $html_str .= "                        <th>&nbsp</th>\n";
         $html_str .= "                    </tr>\n";
         $html_str .= "                </thead>\n";
         $html_str .= "                <tbody>\n";
@@ -253,10 +307,10 @@ class HtmlDatabaseTable
             {
                 $db_field_name = $user_fields[$field_name];
                 $value = $record[$db_field_name];
-                if ($this->configuration[HTML_TABLE_IS_PORTAL_PAGE] != TRUE)
+                if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_PORTAL)
                     $onclick_str = "onclick=\"xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record('".$list_title."', &quot;".$key_string."&quot;)\"";
                 else
-                    $onclick_str = get_query_link("action=get_list_page&list=".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]);
+                    $onclick_str = "onclick=\"window.location='index.php?action=get_list_page&list=".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."'\"";
             
                 if (stristr($fields[$db_field_name][1], "DATE"))
                 {
@@ -295,30 +349,42 @@ class HtmlDatabaseTable
             if ($page != DATABASETABLE_ALL_PAGES)
             {
                 # add buttons for normal lists
-                if ($this->configuration[HTML_TABLE_IS_PORTAL_PAGE] == FALSE)
+                if ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_PORTAL)
                 {
-                    $html_str .= "                        <td width=\"1%\">";
-                    $metadata_str = $this->_database_table->get_metadata_str();
                     # add the archive button only when this record is not archived
                     if (($metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] != DATABASETABLE_METADATA_FALSE) && (strlen($record[DB_ARCHIVER_FIELD_NAME]) == 0))
-                        $html_str .= "&nbsp;".get_button("xajax_action_archive_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record('".$list_title."', &quot;".$key_string."&quot;)", BUTTON_ARCHIVE)."&nbsp;";
+                    {
+                        $html_str .= "                        <td width=\"1%\">";
+                        $html_str .= get_button("xajax_action_archive_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record('".$list_title."', &quot;".$key_string."&quot;)", BUTTON_ARCHIVE);
+                        $html_str .= "</td>\n";
+                    }
                     # add the delete link when it should always be displayed
                     if ($this->configuration[HTML_TABLE_DELETE_MODE] == HTML_TABLE_DELETE_MODE_ALWAYS)
-                        $html_str .= "&nbsp;".get_button("xajax_action_delete_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record('".$list_title."', &quot;".$key_string."&quot;)", BUTTON_DELETE)."&nbsp;";
+                    {
+                        $html_str .= "                        <td width=\"1%\">";
+                        $html_str .= get_button("xajax_action_delete_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record('".$list_title."', &quot;".$key_string."&quot;)", BUTTON_DELETE);
+                        $html_str .= "</td>\n";
+                    }
                     # or add the delete link when record is archived
                     else if ((strlen($record[DB_ARCHIVER_FIELD_NAME]) > 0) && ($this->configuration[HTML_TABLE_DELETE_MODE] == HTML_TABLE_DELETE_MODE_ARCHIVED))
-                        $html_str .= "&nbsp;".get_button("xajax_action_delete_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record('".$list_title."', &quot;".$key_string."&quot;)", BUTTON_DELETE)."&nbsp;";
-                    $html_str .= "</td>\n                    </tr>\n";
+                    {
+                        $html_str .= "                        <td width=\"1%\">";
+                        $html_str .= get_button("xajax_action_delete_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record('".$list_title."', &quot;".$key_string."&quot;)", BUTTON_DELETE);
+                        $html_str .= "</td>\n";
+                    }
+                    $html_str .= "                    </tr>\n";
                 }
             }            
             # add buttons for portal page
-            if ($this->configuration[HTML_TABLE_IS_PORTAL_PAGE] == TRUE)
+            if ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_PORTAL)
             {
-                $html_str .= "                        <td width=\"1%\">";
                 # add modify button
-                $html_str .= "&nbsp;".get_query_button("action=get_listbuilder_page&list=".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], BUTTON_MODIFY)."&nbsp;";
+                $html_str .= "                        <td width=\"1%\">";
+                $html_str .= get_query_button("action=get_listbuilder_page&list=".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], BUTTON_MODIFY);
+                $html_str .= "</td>\n";
                 # add delete button
-                $html_str .= "&nbsp;".get_button_confirm("xajax_action_delete_portal_record('".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."')", LABEL_CONFIRM_DELETE, BUTTON_DELETE)."&nbsp;";
+                $html_str .= "                        <td width=\"1%\">";
+                $html_str .= get_button_confirm("xajax_action_delete_portal_record('".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."')", LABEL_CONFIRM_DELETE, BUTTON_DELETE);
                 $html_str .= "</td>\n                    </tr>\n";
             }
             
@@ -338,10 +404,12 @@ class HtmlDatabaseTable
         $html_str .= "                </tbody>\n";
         $html_str .= "            </table>\n\n";
         
+        
         # add navigation links, except when all pages have to be shown
+        $html_str .= "            <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_bottom\">\n";
         if ($page != DATABASETABLE_ALL_PAGES)
         {
-            $html_str .= "            <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."pages_bottom\">";
+            $html_str .= "                <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."pages_bottom\">";
             # display 1 pagenumber when there is only one page (or none)
             if ($total_pages == 0 || $total_pages == 1)
             {
@@ -352,24 +420,24 @@ class HtmlDatabaseTable
             {
                 # display previous page link
                 if ($current_page > 1)
-                    $html_str .= get_button("xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."content('".$list_title."', '', ".($current_page - 1).")", "&laquo;&nbsp;".BUTTON_PREVIOUS_PAGE)."&nbsp;&nbsp;";
+                    $html_str .= get_href("xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."content('".$list_title."', '', ".($current_page - 1).")", "&laquo;&nbsp;".BUTTON_PREVIOUS_PAGE)."&nbsp;&nbsp;";
         
                 # display first pagenumber
                 if ($current_page == 1)
                     $html_str .= " <strong>1</strong>";
                 else
-                    $html_str .= " ".get_button("xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."content('".$list_title."', '', 1)", 1);
+                    $html_str .= " ".get_href("xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."content('".$list_title."', '', 1)", 1);
                 # display middle pagenumbers
                 for ($cnt = 2; $cnt<$total_pages; $cnt += 1)
                 {
                     if ($cnt == ($current_page - 2))
                         $html_str .= " <strong>...<strong>";
                     else if ($cnt == ($current_page - 1))
-                        $html_str .= " ".get_button("xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."content('".$list_title."', '', ".$cnt.")", $cnt);
+                        $html_str .= " ".get_href("xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."content('".$list_title."', '', ".$cnt.")", $cnt);
                     else if ($cnt == $current_page)
                         $html_str .= " <strong>".$cnt."</strong>";
                     else if ($cnt == ($current_page + 1))
-                        $html_str .= " ".get_button("xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."content('".$list_title."', '', ".$cnt.")", $cnt);
+                        $html_str .= " ".get_href("xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."content('".$list_title."', '', ".$cnt.")", $cnt);
                     if ($cnt == ($current_page + 2))
                         $html_str .= " <strong>...<strong>";
                 }
@@ -377,15 +445,17 @@ class HtmlDatabaseTable
                 if ($current_page == $total_pages)
                     $html_str .= "  <strong>".$total_pages."</strong>";
                 else
-                    $html_str .= "  ".get_button("xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."content('".$list_title."', '', ".$total_pages.")", $total_pages);
+                    $html_str .= "  ".get_href("xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."content('".$list_title."', '', ".$total_pages.")", $total_pages);
     
                 # display next page link
                 if ($current_page < $total_pages)
-                    $html_str .= "&nbsp;&nbsp;".get_button("xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."content('".$list_title."', '', ".($current_page + 1).")", BUTTON_NEXT_PAGE."&nbsp;&raquo;");        
+                    $html_str .= "&nbsp;&nbsp;".get_href("xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."content('".$list_title."', '', ".($current_page + 1).")", BUTTON_NEXT_PAGE."&nbsp;&raquo;");        
             }
+            $html_str .= "</div>\n";
         }
-    
-        $html_str .= "</div>\n\n        ";
+        else
+            $html_str .= "                &nbsp;\n";        
+        $html_str .= "            </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_bottom -->\n\n        ";
         
         $result->set_result_str($html_str);
 
@@ -411,7 +481,7 @@ class HtmlDatabaseTable
         $this->_log->trace("getting record (list_title=".$list_title.", key_string=".$key_string.")");
 
         # get list record when key string has been given
-        if (strlen($key_string))
+        if (strlen($key_string) > 0)
         {
             $record = $this->_database_table->select_record($key_string);
             if (strlen($this->_database_table->get_error_str()) > 0)
@@ -423,16 +493,14 @@ class HtmlDatabaseTable
         }
 
         # start with the action bar
-        $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
         if (strlen($key_string))
             $html_str .= $this->get_action_bar($list_title, "edit");
         else
             $html_str .= $this->get_action_bar($list_title, "insert");
-        $html_str .= "            </div> <!-- action_bar -->\n\n";
        
         # then the form and table definition
-        $html_str .= "\n                <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents_pane\">\n\n";
-        $html_str .= "                    <form id=\"record_form\">\n";
+        $html_str .= "\n                <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents_pane\">\n";
+        $html_str .= "                    <form name=\"record_form_name\" id=\"record_form\">\n";
         $html_str .= "                        <table id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
         $html_str .= "                            <tbody>\n";
 
@@ -446,14 +514,21 @@ class HtmlDatabaseTable
             $field_options = $fields[$db_field_name][2];
             $this->_log->debug("record (name=".$field_name." db_name=".$db_field_name." type=".$field_type.")");
         
+            # set empty string if field does not exist (key_string was not set)
+            if (strlen($key_string) == 0)
+                $record[$db_field_name] = "";
+
             # replace all " chars with &quot
             $record[$db_field_name] = str_replace('"', '&quot', $record[$db_field_name]);
         
+            # replace all space chars with &nbsp
+            $field_name_replaced = str_replace(' ', '&nbsp;', $field_names[$i]);
+
             # only add non auto_increment field types (check database definition for this)
             if (!stristr($firstthingsfirst_field_descriptions[$field_type][0], "auto_increment"))
             {
                 $html_str .= "                                <tr id=\"".$db_field_name."\">\n";
-                $html_str .= "                                    <th>".$field_name."</th>\n";
+                $html_str .= "                                    <th>".$field_name_replaced."</th>\n";
             
                 if ($field_type != "LABEL_DEFINITION_NOTES_FIELD")
                 {
@@ -524,27 +599,30 @@ class HtmlDatabaseTable
                 }
                 if ($field_type != "LABEL_DEFINITION_NOTES_FIELD")
                     $html_str .= "></td>\n";
+                    $html_str .= "                                    <td class=\"super_width\">&nbsp;</td>\n";
                 $html_str .= "                                </tr>\n";
             }
         }
         
-        # add link to confirm contents to database
         $html_str .= "                                <tr align=\"left\">\n";
-        $html_str .= "                                    <td colspan=2>";
+        $html_str .= "                                    <td>&nbsp;</td>\n";
+        $html_str .= "                                </tr>\n";
 
+        # end table definition
+        $html_str .= "                            </tbody>\n";
+        $html_str .= "                        </table> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents -->\n";
+
+        # add link to confirm contents to database
+        $html_str .= "                        ";
         if (!strlen($key_string))
             $html_str .= get_button("xajax_action_insert_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record('".$list_title."', xajax.getFormValues('record_form'))", BUTTON_ADD);
         else
             $html_str .= get_button("xajax_action_update_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record('".$list_title."', &quot;".$key_string."&quot;, xajax.getFormValues('record_form'))", BUTTON_COMMIT);
 
         $html_str .= "&nbsp;&nbsp;".get_button("xajax_action_cancel_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."action ('".$list_title."')", BUTTON_CANCEL);
-        $html_str .= "</td>\n";
-        $html_str .= "                                </tr>\n";
 
-        # end form and table definition
-        $html_str .= "                            </tbody>\n";
-        $html_str .= "                        </table> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents -->\n";
-        $html_str .= "                    </form> <!-- record_form -->\n\n";
+        #end form
+        $html_str .= "                    </form> <!-- record_form -->\n";
         $html_str .= "                </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents_pane -->\n\n            ";
     
         $result->set_result_str($html_str);    
@@ -565,31 +643,92 @@ class HtmlDatabaseTable
 
         $html_str = "";
 
-        $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
-        $html_str .= "\n\n               <div id=\"action_bar_left\">";
-
-        if ($this->configuration[HTML_TABLE_IS_PORTAL_PAGE] != TRUE)
+        $html_str .= "\n            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
+        $html_str .= "                ";
+        
+        if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_PORTAL)
         {
             if ($action == "edit")
                 $html_str .= "<strong>".LABEL_EDIT_RECORD."</strong>";
             else if ($action == "insert")
                 $html_str .= "<strong>".LABEL_ADD_RECORD."</strong>";
             else
-                $html_str .= get_button("xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record('".$list_title."', '')", BUTTON_ADD_RECORD);
-            $html_str .= "</div>\n";
-            $html_str .= "               <div id=\"action_bar_right\">";
-            $html_str .= get_query_button_new_window("action=get_list_print_page&list=".$list_title, BUTTON_PRINT_LIST);
-            $html_str .= "</div>\n\n           ";
+                $html_str .= get_href("xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record('".$list_title."', '')", BUTTON_ADD_RECORD.$this->configuration[HTML_TABLE_RECORD_NAME]);
+            if ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_LIST)
+            {
+                $html_str .= "&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"window.open('http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
+                $html_str .= "?action=get_list_print_page&list=".$list_title."')\">".BUTTON_PRINT_LIST."</a>";
+            }
         }
         else
-            $html_str .= get_query_button("action=get_listbuilder_page", BUTTON_CREATE_NEW_LIST)."</div>\n";
+            $html_str .= get_query_href("action=get_listbuilder_page", BUTTON_CREATE_NEW_LIST);
             
-        $html_str .= "            </div> <!-- action_bar -->\n\n";
+        $html_str .= "\n            </div> <!-- action_bar -->\n        ";
     
         $this->_log->trace("got action bar");
     
         return $html_str;
     }
+
+    /**
+     * get html for the archive records selector
+     * @param $list_title string title of list
+     * @return string returned html
+     */
+    function get_archive_select ($list_title)
+    {
+        $this->_log->trace("get archive select");
+
+        $html_str = "";
+        
+        $this->_user->get_list_state($this->_database_table->get_table_name());
+        $archived = $this->_list_state->get_archived();
+        
+        $html_str .= "                <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."archive_select\">".LABEL_DISPLAY."&nbsp;\n";
+        $html_str .= "                    <select id=\"archive_select\"";
+        $html_str .= " onChange=\"xajax_action_set_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."archive('".$list_title."', document.getElementById('archive_select').value);\">\n";
+        $html_str .= "                        <option value=\"".LISTSTATE_SELECT_NON_ARCHIVED."\"";
+        if ($archived == LISTSTATE_SELECT_NON_ARCHIVED)
+            $html_str .= " selected";
+        $html_str .= ">".LABEL_NORMAL_RECORDS."</option>\n";
+        $html_str .= "                        <option value=\"".LISTSTATE_SELECT_ARCHIVED."\"";
+        if ($archived == LISTSTATE_SELECT_ARCHIVED)
+            $html_str .= " selected";
+        $html_str .= ">".LABEL_ARCHIVED_RECORDS."</option>\n";
+        $html_str .= "                    </select>\n";
+        $html_str .= "                </div>\n";    
+
+        $this->_log->trace("got archive select");
+    
+        return $html_str;        
+    }        
+
+    /**
+     * get html for filter
+     * @param $list_title string title of list
+     * @return string returned html
+     */
+    function get_filter ($list_title)
+    {
+        $this->_log->trace("get filter");
+
+        $html_str = "";
+        
+        $this->_user->get_list_state($this->_database_table->get_table_name());
+        $filter_str = $this->_list_state->get_filter_str();
+        
+        $html_str .= "                <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."filter\">\n";
+        $html_str .= "                    <form name=\"filter_form_name\" id=\"filter_form\" ";
+        $html_str .= "onsubmit=\"javascript:xajax_action_set_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."filter('".$list_title."', document.getElementById('filter_str').value); return false;\">\n";
+        $html_str .= "                        ".LABEL_FILTER."&nbsp;&nbsp;<input size=\"34\" maxlength=\"100\" value=\"".$filter_str."\" id=\"filter_str\">&nbsp;&nbsp;";
+        $html_str .= "<input type=submit class=\"button\" value=\"".BUTTON_FILTER."\">\n";
+        $html_str .= "                    </form>\n";
+        $html_str .= "                </div>\n";
+
+        $this->_log->trace("got filter");
+    
+        return $html_str;        
+    }            
 
 }
 

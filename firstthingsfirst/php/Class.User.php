@@ -115,7 +115,7 @@ class User extends UserDatabaseTable
         
         # reset relevant session parameters
         
-        if ($this->is_login())
+        if (isset($_SESSION["login"]))
             $this->_log->debug("user session is still active (name=".$this->get_name().")");
         else
             $this->reset();
@@ -188,7 +188,7 @@ class User extends UserDatabaseTable
         global $list_state;
         
         # for some reason a cast is needed here
-        $list_states = (array)$this->_json->decode(html_entity_decode($_SESSION["list_states"]), ENT_QUOTES);
+        $list_states = (array)$this->_json->decode($_SESSION["list_states"]);
         
         if (array_key_exists($list_title, $list_states))
             $list_state->set($list_title, (array)$list_states[$list_title]); # mind the cast
@@ -280,10 +280,10 @@ class User extends UserDatabaseTable
         global $list_state;
         
         # for some reason a cast is needed here
-        $list_states = (array)$this->_json->decode(html_entity_decode($_SESSION["list_states"]), ENT_QUOTES);
+        $list_states = (array)$this->_json->decode($_SESSION["list_states"]);
 
         $list_states[$list_state->get_list_title()] = $list_state->pass();        
-        $_SESSION["list_states"] = htmlentities($this->_json->encode($list_states), ENT_QUOTES);
+        $_SESSION["list_states"] = $this->_json->encode($list_states);
     }
         
     
@@ -302,6 +302,7 @@ class User extends UserDatabaseTable
         $this->set_can_create_list("0");
         $this->set_is_admin("0");
         $this->set_login("0");
+        $_SESSION["list_states"] = $this->_json->encode(array());
     }
 
     /**
@@ -343,7 +344,11 @@ class User extends UserDatabaseTable
 
         $record = parent::select_record($key_string);
         if (count($record) == 0)
+        {
+            $this->error_str = ERROR_INCORRECT_NAME_PASSWORD;
+            
             return FALSE;
+        }
         
         $password = md5($pw);
         $db_password = $record[USER_PW_FIELD_NAME];
@@ -364,7 +369,11 @@ class User extends UserDatabaseTable
             
             # update the number of times this user has logged in
             if (parent::update($key_string, $name_values_array) == FALSE)
+            {
+                $this->error_str = ERROR_INCORRECT_NAME_PASSWORD;
+                
                 return FALSE;
+            }
             else
             {
                 $this->_log->debug("user logged in (name=".$name.")");
@@ -438,6 +447,14 @@ class User extends UserDatabaseTable
             $name_values_array[USER_PW_FIELD_NAME] = md5($name_values_array[USER_PW_FIELD_NAME]);
         }
 
+        if ($this->exists($name_values_array[USER_NAME_FIELD_NAME]))
+        {
+            $this->_log->error("user already exists");
+            $this->error_str = ERROR_DUPLICATE_USER_NAME;
+            
+            return FALSE;
+        }
+        
         if (parent::insert($name_values_array) == FALSE)
             return FALSE;
         

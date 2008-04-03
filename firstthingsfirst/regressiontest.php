@@ -1,5 +1,7 @@
 <?php
 
+require_once("php/Class.Logging.php");
+
 require_once("globals.php");
 require_once("localsettings.php");
 
@@ -10,54 +12,44 @@ require_once("php/Text.Buttons.php");
 require_once("php/Text.Errors.php");
 require_once("php/Text.Labels.php");
 
-require_once("php/Class.Logging.php");
 require_once("php/Class.Result.php");
 require_once("php/Class.Database.php");
 require_once("php/Class.ListState.php");
+require_once("php/Class.DatabaseTable.php");
+require_once("php/Class.UserDatabaseTable.php");
 require_once("php/Class.User.php");
 require_once("php/Class.ListTableDescription.php");
 require_once("php/Class.ListTable.php");
 require_once("php/Class.ListTableNote.php");
 
 
-# initialisations
-# needed to initialise several classes
-class EmptyClass {}
-
-
-# dummy initialisations
-$list_table = new EmptyClass();
-$list_table_item_remarks = new EmptyClass();
-
 # create global objects
-$json = new Services_JSON();
-$logging = new Logging(LOGGING_INFO, "firstthingsfirst.log");
-$result = new Result();
+$logging = new Logging($firstthingsfirst_loglevel, $firstthingsfirst_logfile);
 $database = new Database();
 $list_state = new ListState();
 $user = new User();
+$result = new Result();
 $list_table_description = new ListTableDescription();
-$list_table = new ListTable();
-$list_table_note = new ListTableNote();
 
 
 # cleanup tables and entries created during this test
 $cleanup = FALSE;
 
+
 # login as admin
 $user->logout();
 $user->login("admin", $firstthingsfirst_admin_passwd);
 
+
 # definitions
 $_title = "testing 1 2 3";
-$_group = "none";
 $_description = "This is a regression test";
-$id_field = $list_table->_get_db_field_name("id");
-$name_field = $list_table->_get_db_field_name("name");
-$description_field = $list_table->_get_db_field_name("description");
-$notes1_field = $list_table->_get_db_field_name("first notes");
-$status_field = $list_table->_get_db_field_name("status");
-$notes2_field = $list_table->_get_db_field_name("second notes");
+$id_field = ListTable::_get_db_field_name("id");
+$name_field = ListTable::_get_db_field_name("name");
+$description_field = ListTable::_get_db_field_name("description");
+$notes1_field = ListTable::_get_db_field_name("first notes");
+$status_field = ListTable::_get_db_field_name("status");
+$notes2_field = ListTable::_get_db_field_name("second notes");
 $_definition = array (
     $id_field => array("LABEL_DEFINITION_AUTO_NUMBER", 1, ""),
     $name_field => array("LABEL_DEFINITION_TEXT_LINE", 0, ""),
@@ -201,28 +193,42 @@ function fatal ()
     exit("<font color=\"red\">nok</font>\n");
 }
 
+
 # start of test
 dump("<h1>Regression Test</h1>");
 
-$list_table_description->set_title($_title);
-$list_table_description->set_description($_description);
-$list_table_description->set_definition($_definition);
+$name_values_array = array();
+$name_values_array[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME] = $_title;
+$name_values_array[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME] = $_description;
+$name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = $_definition;
 
 dump_line("checking if list: ".$_title." exists");
-if ($list_table_description->delete())
-    dump_line("&nbsp;&nbsp;&nbsp;<em>removed list: ".$_title." from database</em>");
+if ($list_table_description->select_record($_title))
+{
+    $list_table = new ListTable($_title);
+    if ($list_table->drop())
+        dump_line("&nbsp;&nbsp;&nbsp;<em>removed list: ".$_title." from database</em>");
+}
 dump_line("");
 
+dump_test("create list description: ".$_title);
+if ($list_table_description->insert($name_values_array))
+    dump_greenline("ok");
+else
+    fatal();
+
+$list_table = new ListTable($_title);
+$list_table_note = new ListTableNote ($_title);
+
 dump_test("create list: ".$_title);
-if ($list_table_description->insert())
+if ($list_table->create())
     dump_greenline("ok");
 else
     fatal();
 
 dump_line("&nbsp;&nbsp;&nbsp;<em>reset list</em>");
-$list_table_description->reset();
 dump_test("reading list: ".$_title);
-if ($list_table_description->select("$_title"))
+if ($list_table_description->select_record($_title))
     dump_greenline("ok");
 else
     fatal();
@@ -235,24 +241,24 @@ foreach ($_name_value_arrays as $name_value_array)
 dump_greenline("ok");
 
 dump_test("reading entry 1 from database");
-$results = $list_table->select_row("_id=1");
+$results = $list_table->select_record("_id=1");
 if (count($results) > 0)
     dump_greenline("ok");
 else
     fatal();
-$field_names = $list_table->get_field_names();
+$user_field_names = $list_table->get_user_field_names();
 $str = "";
-foreach($field_names as $field_name)
+foreach($user_field_names as $user_field_name)
 {
-    $db_field_name = $list_table->_get_db_field_name($field_name);
-    $str .= $field_name."=".$results[$db_field_name].", ";
+    $db_field_name = $list_table->_get_db_field_name($user_field_name);
+    $str .= $user_field_name."=".$results[$db_field_name].", ";
 }
 dump_line("&nbsp;&nbsp;&nbsp;<em>".$str."</em>");
 
 dump_test("change second note of first notes field of entry 1");
 $note_field = $results[$notes1_field][1];
 $note_array = array($note_field["_id"], $note_field["_note"]." changed");
-if ($list_table_note->update($results["_id"], $notes1_field, $note_field["_id"], $note_field["_note"]." changed"))
+if ($list_table_note->update($note_field["_id"], $note_field["_note"]." changed"))
     dump_greenline("ok");
 else
     fatal();
@@ -268,7 +274,7 @@ if ($cleanup)
 {
     dump_line("<br><strong>cleanup database entries from this test</strong>");
     dump_test("removing list: ".$_title." from database");
-    if ($list_table_description->delete())
+    if ($list_table->drop())
         dump_greenline("ok");
     else
         fatal();

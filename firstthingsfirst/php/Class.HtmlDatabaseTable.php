@@ -349,7 +349,7 @@ class HtmlDatabaseTable
             if ($page != DATABASETABLE_ALL_PAGES)
             {
                 # add buttons for normal lists
-                if ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_PORTAL)
+                if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_PORTAL)
                 {
                     # add the archive button only when this record is not archived
                     if (($metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] != DATABASETABLE_METADATA_FALSE) && (strlen($record[DB_ARCHIVER_FIELD_NAME]) == 0))

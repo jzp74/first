@@ -366,7 +366,7 @@ class ListTable extends UserDatabaseTable
                 foreach ($value as $note)
                 {
                     if ($note[1] == "")
-                        $this->_log->debug("found an empty note (field=".$array_key.")");
+                        $this->_log->debug("found an empty note (field=".$db_field_name.")");
                     else
                     {
                         array_push($notes_array, array($db_field_name, $note[1]));

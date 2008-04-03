@@ -15,7 +15,7 @@ $firstthingsfirst_full_pathname = "e:///sites/firstthingsfirst";
 $firstthingsfirst_date_string = DATE_FORMAT_EU;
 
 # maximum numbers of entries per page
-$firstthingsfirst_list_page_entries = 18;
+$firstthingsfirst_list_page_entries = 14;
     
 # database table prefix
 # define a prefix that is unique for this firstthingsfirst instance
@@ -32,9 +32,9 @@ $firstthingsfirst_db_passwd = "password";
 $firstthingsfirst_db_schema = "some_schema";
 
 # loglevel
-# choose between LOGGING_NONE, LOGGING_ERROR, LOGGING_WARN, LOGGING_INFO, LOGGING_DEBUG and LOGGING_TRACE
+# choose between LOGGING_OFF LOGGING_ERROR, LOGGING_WARN, LOGGING_INFO, LOGGING_DEBUG and LOGGING_TRACE
 # make sure you have write privileges on your hosting provider if you want to turn on logging
-$firstthingsfirst_loglevel = LOGGING_TRACE;
+$firstthingsfirst_loglevel = LOGGING_OFF;
 
 # logfile, all logmessages will be written in this file
 $firstthingsfirst_logfile = "firstthingsfirst.log";

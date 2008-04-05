@@ -227,7 +227,9 @@ class HtmlDatabaseTable
         }
 
         # add contents top
-        $html_str .= "\n\n            <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top\">\n";
+        $html_str .= "\n\n            <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top_left\">\n";
+        $html_str .= "                <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top_right\">\n";
+        $html_str .= "                    <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top\">\n";
         if ($page != DATABASETABLE_ALL_PAGES)
         {
             $archive_select = FALSE;
@@ -244,7 +246,7 @@ class HtmlDatabaseTable
                 $first_record = ((((int)$current_page - 1) * $firstthingsfirst_list_page_entries) + 1);
                 $last_record = (($first_record + count($records)) - 1);
             }
-            $html_str .= "                <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."pages_top\">";
+            $html_str .= "                        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."pages_top\">";
             $html_str .= LABEL_RECORDS." ".$first_record." - ";
             $html_str .= $last_record." ".LABEL_OF." ".$total_records." ".LABEL_RECORDS."</div>\n";
             # add archive select mechanism only when list supports archived records
@@ -260,11 +262,13 @@ class HtmlDatabaseTable
                 $filter = TRUE;
             }
             if (!$archive_select && !$filter)
-                $html_str .= "                &nbsp;\n";
+                $html_str .= "                        &nbsp;\n";
         }
         else
-            $html_str .= "                &nbsp;\n";        
-        $html_str .= "            </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top -->\n\n";
+            $html_str .= "                        &nbsp;\n";        
+        $html_str .= "                    </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top -->\n";
+        $html_str .= "                </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top_right -->\n";
+        $html_str .= "            </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top_left -->\n\n";
 
         # start with the table definition
         # this is a different table when all pages have to be displayed
@@ -406,10 +410,12 @@ class HtmlDatabaseTable
         
         
         # add navigation links, except when all pages have to be shown
-        $html_str .= "            <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_bottom\">\n";
+        $html_str .= "            <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_bottom_left\">\n";
+        $html_str .= "                <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_bottom_right\">\n";
+        $html_str .= "                    <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_bottom\">\n";
         if ($page != DATABASETABLE_ALL_PAGES)
         {
-            $html_str .= "                <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."pages_bottom\">";
+            $html_str .= "                        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."pages_bottom\">";
             # display 1 pagenumber when there is only one page (or none)
             if ($total_pages == 0 || $total_pages == 1)
             {
@@ -454,8 +460,10 @@ class HtmlDatabaseTable
             $html_str .= "</div>\n";
         }
         else
-            $html_str .= "                &nbsp;\n";        
-        $html_str .= "            </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_bottom -->\n\n        ";
+            $html_str .= "                        &nbsp;\n";        
+        $html_str .= "                    </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_bottom -->\n";
+        $html_str .= "                </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_bottom_right -->\n";
+        $html_str .= "            </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_bottom_left -->\n\n        ";
         
         $result->set_result_str($html_str);
 
@@ -613,17 +621,21 @@ class HtmlDatabaseTable
         $html_str .= "                        </table> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents -->\n";
 
         # add link to confirm contents to database
-        $html_str .= "                        ";
+        $html_str .= "                        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents_buttons\">\n";
+        $html_str .= "                            ";
         if (!strlen($key_string))
             $html_str .= get_button("xajax_action_insert_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record('".$list_title."', xajax.getFormValues('record_form'))", BUTTON_ADD);
         else
             $html_str .= get_button("xajax_action_update_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record('".$list_title."', &quot;".$key_string."&quot;, xajax.getFormValues('record_form'))", BUTTON_COMMIT);
-
+        $html_str .= "\n                            ";
         $html_str .= "&nbsp;&nbsp;".get_button("xajax_action_cancel_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."action ('".$list_title."')", BUTTON_CANCEL);
+        $html_str .= "\n                        </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents_buttons -->\n";
 
         #end form
         $html_str .= "                    </form> <!-- record_form -->\n";
-        $html_str .= "                </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents_pane -->\n\n            ";
+        $html_str .= "                </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents_pane -->\n";
+        $html_str .= "                <div id=\"action_pane_bottom_left\"></div>\n";
+        $html_str .= "                <div id=\"action_pane_bottom_right\"></div>\n\n            ";
     
         $result->set_result_str($html_str);    
 
@@ -643,7 +655,9 @@ class HtmlDatabaseTable
 
         $html_str = "";
 
-        $html_str .= "\n            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
+        $html_str .= "\n            <div id=\"action_bar_top_left\"></div>\n";
+        $html_str .= "            <div id=\"action_bar_top_right\"></div>\n";
+        $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
         $html_str .= "                ";
         
         if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_PORTAL)
@@ -663,8 +677,12 @@ class HtmlDatabaseTable
         else
             $html_str .= get_query_href("action=get_listbuilder_page", BUTTON_CREATE_NEW_LIST);
             
-        $html_str .= "\n            </div> <!-- action_bar -->\n        ";
-    
+        $html_str .= "\n            </div> <!-- action_bar -->\n";
+        if ($action == "")
+        {
+            $html_str .= "            <div id=\"action_bar_bottom_left\"></div>\n";
+            $html_str .= "            <div id=\"action_bar_bottom_right\"></div>\n        ";
+        }
         $this->_log->trace("got action bar");
     
         return $html_str;
@@ -684,19 +702,20 @@ class HtmlDatabaseTable
         $this->_user->get_list_state($this->_database_table->get_table_name());
         $archived = $this->_list_state->get_archived();
         
-        $html_str .= "                <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."archive_select\">".LABEL_DISPLAY."&nbsp;\n";
-        $html_str .= "                    <select id=\"archive_select\"";
+        $html_str .= "                        ";
+        $html_str .= "<div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."archive_select\">".LABEL_DISPLAY."&nbsp;\n";
+        $html_str .= "                            <select id=\"archive_select\"";
         $html_str .= " onChange=\"xajax_action_set_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."archive('".$list_title."', document.getElementById('archive_select').value);\">\n";
-        $html_str .= "                        <option value=\"".LISTSTATE_SELECT_NON_ARCHIVED."\"";
+        $html_str .= "                                <option value=\"".LISTSTATE_SELECT_NON_ARCHIVED."\"";
         if ($archived == LISTSTATE_SELECT_NON_ARCHIVED)
             $html_str .= " selected";
         $html_str .= ">".LABEL_NORMAL_RECORDS."</option>\n";
-        $html_str .= "                        <option value=\"".LISTSTATE_SELECT_ARCHIVED."\"";
+        $html_str .= "                                <option value=\"".LISTSTATE_SELECT_ARCHIVED."\"";
         if ($archived == LISTSTATE_SELECT_ARCHIVED)
             $html_str .= " selected";
         $html_str .= ">".LABEL_ARCHIVED_RECORDS."</option>\n";
-        $html_str .= "                    </select>\n";
-        $html_str .= "                </div>\n";    
+        $html_str .= "                            </select>\n";
+        $html_str .= "                        </div>\n";    
 
         $this->_log->trace("got archive select");
     
@@ -717,13 +736,13 @@ class HtmlDatabaseTable
         $this->_user->get_list_state($this->_database_table->get_table_name());
         $filter_str = $this->_list_state->get_filter_str();
         
-        $html_str .= "                <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."filter\">\n";
-        $html_str .= "                    <form name=\"filter_form_name\" id=\"filter_form\" ";
+        $html_str .= "                        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."filter\">\n";
+        $html_str .= "                            <form name=\"filter_form_name\" id=\"filter_form\" ";
         $html_str .= "onsubmit=\"javascript:xajax_action_set_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."filter('".$list_title."', document.getElementById('filter_str').value); return false;\">\n";
-        $html_str .= "                        ".LABEL_FILTER."&nbsp;&nbsp;<input size=\"34\" maxlength=\"100\" value=\"".$filter_str."\" id=\"filter_str\">&nbsp;&nbsp;";
+        $html_str .= "                                ".LABEL_FILTER."&nbsp;&nbsp;<input size=\"34\" maxlength=\"100\" value=\"".$filter_str."\" id=\"filter_str\">&nbsp;&nbsp;";
         $html_str .= "<input type=submit class=\"button\" value=\"".BUTTON_FILTER."\">\n";
-        $html_str .= "                    </form>\n";
-        $html_str .= "                </div>\n";
+        $html_str .= "                            </form>\n";
+        $html_str .= "                        </div>\n";
 
         $this->_log->trace("got filter");
     

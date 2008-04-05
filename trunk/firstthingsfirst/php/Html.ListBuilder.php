@@ -153,6 +153,8 @@ function action_get_listbuilder_page ($list_title)
 
     $html_str .= "        </div> <!-- listbuilder_pane -->\n\n";
     $html_str .= "        <div id=\"action_pane\">\n\n";
+    $html_str .= "            <div id=\"action_pane_top_left\"></div>\n";
+    $html_str .= "            <div id=\"action_pane_top_right\"></div>\n";
     $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
     
     # only show one link when list title had been given
@@ -166,6 +168,8 @@ function action_get_listbuilder_page ($list_title)
     }
     
     $html_str .= "            </div> <!-- action_bar -->\n\n";    
+    $html_str .= "            <div id=\"action_pane_bottom_left\"></div>\n";
+    $html_str .= "            <div id=\"action_pane_bottom_right\"></div>\n        ";
     $html_str .= "        </div> <!-- action_pane -->\n\n";           
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
         

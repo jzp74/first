@@ -262,9 +262,8 @@ function action_get_list_record ($list_title, $key_string)
     $response->addAssign("action_pane", "innerHTML", $result->get_result_str());
     
     # set focus on last input element and then on first input element
-    #$response->addScriptCall("document.record_form_name.elements[document.record_form_name.length].focus()");
-    #$response->addScriptCall("document.record_form_name.elements[0].focus()");
-    $response->addScriptCall("document.getElementById('database_table_record_contents').focus()");
+    $response->addScriptCall("document.getElementById('action_pane_bottom_left').blur()");
+    $response->addScriptCall("document.getElementById('action_pane_bottom_left').focus()");
 
     $logging->trace("got list record");
 

@@ -97,18 +97,21 @@ html, body {
     
 /* defines the white margins on both side of the header */
 #header_left_margin, #header_right_margin {
-    width: 16px;
+    width: 23px;
     padding: 4px 0px 4px 0px;
-    background-color: rgb(255, 255, 255);
     z-index: 30;
     }
     
 #header_left_margin {
     float: left;
+    margin: 0px -7px 0px 0px;
+    background: url(../images/standard_header_left.gif) right top no-repeat;
     }
 
 #header_right_margin {
     float: right;
+    margin: 0px 0px 0px -7px;
+    background: url(../images/standard_header_right.gif) left top no-repeat;
     }
 
 #header_text {
@@ -209,7 +212,7 @@ html, body {
 
 /* defines the white margins on both side of the footer */
 #footer_left_margin, #footer_right_margin {
-    width: 16px;
+    width: 23px;
     height: 20px;
     background-color: rgb(255, 255, 255);
     z-index: 30;
@@ -217,10 +220,14 @@ html, body {
     
 #footer_left_margin {
     float: left;
+    margin: 0px -7px 0px 0px;
+    background: url(../images/standard_footer_left.gif) right bottom no-repeat;
     }
 
 #footer_right_margin {
     float: right;
+    margin: 0px 0px 0px -7px;
+    background: url(../images/standard_footer_right.gif) left bottom no-repeat;
     }
 
 #footer_text {
@@ -242,13 +249,59 @@ html, body {
     color: rgb(255, 255, 255);
     }
 
+#action_pane_bottom_left {
+    float: left;
+    height: 7px;
+    width: 7px;
+    margin: -7px 0px 0px 0px;
+    background: url(../images/standard_pane_bottom_left.gif) left bottom no-repeat;
+    }
+
+#action_pane_bottom_right {
+    float: right;
+    height: 7px;
+    width: 7px;
+    margin: -7px 0px 0px 0px;
+    background: url(../images/standard_pane_bottom_right.gif) right bottom no-repeat;
+    }
+    
 /*  defines the action bar that contains a number of actions (hrefs) */
 #action_bar {
     display: block;
     float: none;
+    padding: 8px 8px 8px 8px;
     background-color: rgb(255, 130, 30);
     color: rgb(255, 255, 255);
-    padding: 8px 8px 8px 8px;
+    }
+    
+#action_bar_top_left {
+    float: left;
+    height: 7px;
+    width: 7px;
+    background: url(../images/standard_action_bar_top_left.gif) left top no-repeat;
+    }
+
+#action_bar_top_right {
+    float: right;
+    height: 7px;
+    width: 7px;
+    background: url(../images/standard_action_bar_top_right.gif) right top no-repeat;
+    }
+
+#action_bar_bottom_left {
+    float: left;
+    height: 7px;
+    width: 7px;
+    margin: -7px 0px 0px 0px;
+    background: url(../images/standard_action_bar_bottom_left.gif) left bottom no-repeat;
+    }
+    
+#action_bar_bottom_right {
+    float: right;
+    height: 7px;
+    width: 7px;
+    margin: -7px 0px 0px 0px;
+    background: url(../images/standard_action_bar_bottom_right.gif) right bottom no-repeat;
     }
     
 #action_bar select { 

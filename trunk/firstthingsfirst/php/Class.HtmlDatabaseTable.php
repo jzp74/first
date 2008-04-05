@@ -215,6 +215,8 @@ class HtmlDatabaseTable
         # get list_state properties
         $this->_user->get_list_state($this->_database_table->get_table_name());
         $total_pages = $this->_list_state->get_total_pages();
+        $order_by_field = $fields[$this->_list_state->get_order_by_field()][0];
+        $order_ascending = $this->_list_state->get_order_ascending();
         if ($total_pages == 0)
         {
             $total_records = 0;
@@ -287,7 +289,15 @@ class HtmlDatabaseTable
             if (strlen($field_name) > 0)
             {
                 $db_field_name = $user_fields[$field_name];
-                $html_str .= "                        <th onclick=\"xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."content('".$list_title."', '".$db_field_name."', ".$current_page.")\">".$field_name_replaced."</th>\n";
+                $html_str .= "                        <th onclick=\"xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."content('".$list_title."', '".$db_field_name."', ".$current_page.")\">".$field_name_replaced;
+                if ($order_by_field == $field_name)
+                {
+                    if ($order_ascending)
+                        $html_str .= "<font style=\"font-weight: normal\">&nbsp;&dArr;</font>";
+                    else
+                        $html_str .= "<font style=\"font-weight: normal\">&nbsp;&uArr;</font>";
+                }
+                $html_str .= "</th>\n";
                 array_push($field_names_with_length, $field_name);
             }
         }

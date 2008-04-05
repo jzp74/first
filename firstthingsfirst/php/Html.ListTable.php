@@ -262,8 +262,8 @@ function action_get_list_record ($list_title, $key_string)
     $response->addAssign("action_pane", "innerHTML", $result->get_result_str());
     
     # set focus on last input element and then on first input element
-    $response->addScriptCall("document.getElementById('action_pane_bottom_left').blur()");
-    $response->addScriptCall("document.getElementById('action_pane_bottom_left').focus()");
+    $response->addScriptCall("document.getElementById('focus_on_this_input').blur()");
+    $response->addScriptCall("document.getElementById('focus_on_this_input').focus()");
 
     $logging->trace("got list record");
 
@@ -699,6 +699,7 @@ function get_footer ($creator_modifier_array)
     $html_str .= "</strong> ".LABEL_AT." <strong>".$creator_modifier_array[DB_TS_CREATED_FIELD_NAME];
     $html_str .= "</strong>, ".LABEL_LAST_MODIFICATION_BY." <strong>".$creator_modifier_array[DB_MODIFIER_FIELD_NAME];
     $html_str .= "</strong> ".LABEL_AT." <strong>".$creator_modifier_array[DB_TS_MODIFIED_FIELD_NAME]."</strong>";
+    $html_str .= "<input id=\"focus_on_this_input\" size=\"1\" readonly>";
     
     $logging->trace("got footer");
 

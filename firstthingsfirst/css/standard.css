@@ -234,6 +234,16 @@ html, body {
     padding: 2px 0px 0px 0px;
     text-align: center;
 }    
+
+/*  defines a very small input */
+#focus_on_this_input {
+    background-color: rgb(5, 114, 197);
+    color: rgb(5, 114, 197);
+    border: 1px solid rgb(5, 114, 197);
+    font-size: 2px;
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+}
     
 /*  defines the white margin at the bottom of the page */
 #lower_margin {

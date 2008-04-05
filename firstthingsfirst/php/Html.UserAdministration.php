@@ -185,6 +185,11 @@ function action_get_user_admin_record ($title, $key_string)
     $html_database_table->get_record($title, $key_string, $result);
     $response->addAssign("action_pane", "innerHTML", $result->get_result_str());
 
+    # set focus on last input element and then on first input element
+    $response->addScriptCall("document.record_form_name.elements[0].blur()");
+    $response->addScriptCall("document.record_form_name.elements[document.record_form_name.length].focus()");
+    $response->addScriptCall("document.record_form_name.elements[0].focus()");
+
     $logging->trace("got user admin record");
 
     return $response;

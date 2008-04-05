@@ -17,6 +17,16 @@
     font-weight: bold;
     }
 
+#database_table_contents_top_left {
+    background: url(../images/standard_contents_top_left.gif) left top no-repeat;
+    z-index: 100;
+    }
+    
+#database_table_contents_top_right {
+    background: url(../images/standard_contents_top_right.gif) right top no-repeat;
+    z-index: 100;
+    }
+    
 #database_table_contents_top select, #database_table_contents_top input { 
     border: 1px solid rgb(171, 187, 202);
     color: rgb(50, 50, 50);
@@ -107,6 +117,18 @@
     padding: 0px 0px 14px 0px;
     }    
 
+#database_table_contents_bottom_left {
+    padding: 0px 0px 0px 0px;
+    background: url(../images/standard_contents_bottom_left.gif) left bottom no-repeat;
+    z-index: 100;
+    }
+    
+#database_table_contents_bottom_right {
+    padding: 0px 0px 0px 0px;
+    background: url(../images/standard_contents_bottom_right.gif) right bottom no-repeat;
+    z-index: 100;
+    }
+
 #database_table_contents_bottom a, #database_table_contents_bottom a:link, #database_table_contents_bottom a:visited {
     color: rgb(5, 114, 197);
     }
@@ -125,13 +147,13 @@
 #database_table_record_contents_pane {
     display: inline-block;
     float: none;
-    padding: 10px 0px 16px 16px;
     background-color: rgb(232, 232, 232);
+    padding: 10px 0px 16px 16px;
     border-left: 2px solid rgb(255, 130, 30);
     border-right: 2px solid rgb(255, 130, 30);
     border-bottom: 2px solid rgb(255, 130, 30);
     }
-    
+
 /*  defines table that contains contents of one database table record */
 #database_table_record_contents {
     width: 100%;
@@ -181,4 +203,3 @@
     color: rgb(255, 130, 30);
     border: 1px solid rgb(255, 130, 30);
     }
-

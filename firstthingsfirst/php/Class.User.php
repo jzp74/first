@@ -335,7 +335,15 @@ class User extends UserDatabaseTable
         if ($name == "admin" && !$this->exists("admin"))
         {
             $this->_log->info("first time login for admin");
-            if (!$this->insert($name, $firstthingsfirst_admin_passwd, 1, 1, 1))
+            $name_value_array = array();
+            $name_value_array[USER_NAME_FIELD_NAME] = $name;
+            $name_value_array[USER_PW_FIELD_NAME] = $firstthingsfirst_admin_passwd;
+            $name_value_array[USER_CAN_EDIT_LIST_FIELD_NAME] = 1;
+            $name_value_array[USER_CAN_CREATE_LIST_FIELD_NAME] = 1;
+            $name_value_array[USER_IS_ADMIN_FIELD_NAME] = 1;
+            $name_value_array[USER_TIMES_LOGIN_FIELD_NAME] = 0;
+            
+            if (!$this->insert($name_value_array))
                 return FALSE;
         }
 

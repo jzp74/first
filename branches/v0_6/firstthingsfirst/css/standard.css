@@ -1,0 +1,400 @@
+/* This stylesheet contains all shared styles */
+
+
+/*  defines shared settings for all styles */
+* {
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    border: none;
+    z-index: 10;
+    font-family: verdana;
+    font-size: 12px;
+    text-decoration: none;
+    text-align: left;
+    }
+
+/*  define style for ALL links (aka buttons) */
+a, a:link, a:visited {
+    padding: 2px 2px 2px 2px;
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    font-weight: bold;
+    }
+ 
+a:hover { 
+    border-bottom: 2px solid rgb(255, 255, 255);
+    }
+
+/*  define style for all buttons */
+.button {
+    padding: 4px 4px 4px 4px;
+    margin: -4px 4px -4px 0px;
+    font-weight: bold;
+    }
+
+/*  defines standard tags */
+em, strong {
+    font-size: inherit;
+    font-family: inherit;
+    }
+    
+/*  defines a standard input */
+input, select, textarea {
+    background-color: rgb(255, 255, 255);
+    text-align: left;
+    font-family: verdana;
+    font-size: small;
+    font-weight: normal;
+    }
+    
+input, textarea {
+    padding: 1px 5px 3px 5px;
+    }
+    
+select {
+    padding: 1px 1px 3px 0px;
+    }
+
+/*  defines an inactive button */
+.inactive_button {
+    color: rgb(120, 120, 120);
+    text-decoration: none;
+    font-weight: bold;
+    }
+
+/*  defines an invisible and collapsed style */
+.invisible_collapsed {
+    display: none;
+    }
+
+/*  defines the html overall style of a page */
+html, body {
+    height: 100%;
+    background-color: rgb(255, 255, 255);
+    }
+
+/*  defines the white margin at the top of the page, above the header */
+#upper_margin {
+    width: 100%;
+    position: absolute;
+    height: 18px;
+    top: 0px;
+    left: 0px;
+    background-color: rgb(255, 255, 255);
+    z-index: 20;
+    }    
+
+/*  defines the header of all pages which only contains the software name and version */
+#header {
+    width: 100%;
+    position: absolute;
+    top: 18px;
+    left: 0px;
+    background-color: rgb(5, 114, 197);
+    color: rgb(255, 255, 255);
+    z-index: 20;
+    }
+    
+/* defines the white margins on both side of the header */
+#header_left_margin, #header_right_margin {
+    width: 23px;
+    padding: 4px 0px 4px 0px;
+    z-index: 30;
+    }
+    
+#header_left_margin {
+    float: left;
+    margin: 0px -7px 0px 0px;
+    background: url(../images/standard_header_left.gif) right top no-repeat;
+    }
+
+#header_right_margin {
+    float: right;
+    margin: 0px 0px 0px -7px;
+    background: url(../images/standard_header_right.gif) left top no-repeat;
+    }
+
+#header_text {
+    float: left;
+    padding: 4px 0px 4px 6px;
+    font-size: 10px;
+}    
+
+/*  defines the body which has borders on both sides and stretches to the bottom of the page */
+#outer_body {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0px 16px -38px 16px;
+    background-color: rgb(255, 255, 255);
+    border-left: 6px solid rgb(5, 114, 197);
+    border-right: 6px solid rgb(5, 114, 197);
+    }    
+
+/*  this style is used only to prevent content to disappear under the header
+    the height of this style is the combined height of #header and #upper_margin */
+#hidden_upper_margin {
+    width: 100%;
+    padding: 22px 0px 4px 0px;
+    visibility: hidden;
+    }
+
+/*  container for all page contents */
+#main_body {
+    }
+
+/*  defines the title of a page */    
+#page_title {
+    background-color: rgb(5, 114, 197);
+    color: rgb(255, 255, 255);
+    font-family: arial black;    
+    font-size: 32px;
+    font-weight: bold;
+    text-align: center;
+    }
+
+/*  defines the explanation below the title */
+#page_explanation {
+    background-color: rgb(5, 114, 197);
+    color: rgb(255, 255, 255);
+    font-family: arial black;    
+    font-size: 14px;
+    text-align: center;
+    }
+
+/*  defines the navigation container */
+#navigation_container {
+    padding: 4px 6px 10px 12px;
+    background-color: rgb(5, 114, 197);
+    color: rgb(255, 255, 255);
+}
+
+/*  defines navigation links */
+#navigation {
+    padding: 6px 0px 6px 6px;
+    float: left;
+    color: rgb(114, 161, 197);
+    font-weight: bold;
+    }
+
+#navigation a, #navigation a:link, #navigation a:visited {
+    padding: 4px 2px 0px 2px;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    }
+
+#navigation a:hover { 
+    border-bottom: 4px solid rgb(255, 255, 255);
+    }
+
+/*  defines login status of a user */    
+#login_status {
+    padding: 4px 2px 2px 2px;
+    float: right;
+    }
+
+/*  this style is used only to prevent content to disappear under the footer
+    the height of this style is the combined height of #footer and #lower_margin */
+#hidden_lower_margin {
+    width: 100%;
+    height: 38px;
+    visibility: hidden;
+    }
+    
+/*  defines the footer of all pages */
+#footer {
+    height: 20px;
+    background-color: rgb(5, 114, 197);
+    color: rgb(255, 255, 255);
+    text-align: center;
+    font-size: 12px;
+    }
+
+/* defines the white margins on both side of the footer */
+#footer_left_margin, #footer_right_margin {
+    width: 23px;
+    height: 20px;
+    background-color: rgb(255, 255, 255);
+    z-index: 30;
+    }
+    
+#footer_left_margin {
+    float: left;
+    margin: 0px -7px 0px 0px;
+    background: url(../images/standard_footer_left.gif) right bottom no-repeat;
+    }
+
+#footer_right_margin {
+    float: right;
+    margin: 0px 0px 0px -7px;
+    background: url(../images/standard_footer_right.gif) left bottom no-repeat;
+    }
+
+#footer_text {
+    padding: 2px 0px 0px 0px;
+    text-align: center;
+}    
+
+/*  defines a very small input */
+#focus_on_this_input {
+    background-color: rgb(5, 114, 197);
+    color: rgb(5, 114, 197);
+    border: 1px solid rgb(5, 114, 197);
+    font-size: 2px;
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+}
+    
+/*  defines the white margin at the bottom of the page */
+#lower_margin {
+    height: 18px;
+    background-color: rgb(255, 255, 255);
+    }
+
+/*  defines the pane that contains the action bar */
+#action_pane {
+    display: block;
+    float: none;
+    padding: 14px 10px 14px 10px;
+    color: rgb(255, 255, 255);
+    }
+
+#action_pane_bottom_left {
+    float: left;
+    height: 7px;
+    width: 7px;
+    margin: -7px 0px 0px 0px;
+    background: url(../images/standard_pane_bottom_left.gif) left bottom no-repeat;
+    }
+
+#action_pane_bottom_right {
+    float: right;
+    height: 7px;
+    width: 7px;
+    margin: -7px 0px 0px 0px;
+    background: url(../images/standard_pane_bottom_right.gif) right bottom no-repeat;
+    }
+    
+/*  defines the action bar that contains a number of actions (hrefs) */
+#action_bar {
+    display: block;
+    float: none;
+    padding: 8px 8px 8px 8px;
+    background-color: rgb(255, 130, 30);
+    color: rgb(255, 255, 255);
+    }
+    
+#action_bar_top_left {
+    float: left;
+    height: 7px;
+    width: 7px;
+    background: url(../images/standard_action_bar_top_left.gif) left top no-repeat;
+    }
+
+#action_bar_top_right {
+    float: right;
+    height: 7px;
+    width: 7px;
+    background: url(../images/standard_action_bar_top_right.gif) right top no-repeat;
+    }
+
+#action_bar_bottom_left {
+    float: left;
+    height: 7px;
+    width: 7px;
+    margin: -7px 0px 0px 0px;
+    background: url(../images/standard_action_bar_bottom_left.gif) left bottom no-repeat;
+    }
+    
+#action_bar_bottom_right {
+    float: right;
+    height: 7px;
+    width: 7px;
+    margin: -7px 0px 0px 0px;
+    background: url(../images/standard_action_bar_bottom_right.gif) right bottom no-repeat;
+    }
+    
+#action_bar select { 
+    padding: 1px 1px 3px 0px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(255, 150, 65);
+    }
+
+#action_bar a, #action_bar a:link, #action_bar a:visited {
+    padding: 3px 6px 3px 6px;
+    color: rgb(255, 255, 255);
+    border: 1px solid rgb(255, 255, 255);
+    font-weight: bold;
+    }
+
+#action_bar a:hover { 
+    background-color: rgb(255, 150, 65);
+    }
+
+#clear_margin {
+    clear: both;
+    visibility: hidden;
+    }
+    
+/*  defines the pane that contains the login overview */
+#login_pane {
+    margin: 24px 10px 10px 10px;
+    text-align: center;
+    }
+
+/*  defines the login overview */
+#login_overview {
+    margin: 0px auto 0px auto;
+    background-color: rgb(232, 232, 232);
+    color: rgb(50, 50, 50);
+    border: 2px solid rgb(197, 214, 232);
+    }
+    
+#login_overview td {
+    padding: 4px 4px 4px 10px;
+    vertical-align: top;
+    }
+
+#login_overview input { 
+    padding: 1px 5px 3px 5px;
+    border: 1px solid rgb(197, 214, 232);
+    }    
+
+#login_overview .button {
+    margin: 0px 4px -4px 0px;
+    background-color: rgb(255, 130, 30);
+    color: rgb(255, 255, 255);
+    border: 1px solid rgb(255, 255, 255);
+    }
+
+#login_overview .button:hover {
+    background-color: rgb(255, 255, 255);
+    color: rgb(255, 130, 30);
+    border: 1px solid rgb(255, 130, 30);
+    }
+
+/*  defines error messages */
+#error_message {
+    float: none;
+    background-color: rgb(251, 227, 228);
+    color: rgb(151, 48, 0);
+    margin: 6px 6px 6px 6px;
+    padding: 14px 10px 14px 10px;
+    border-top: 1px dotted rgb(151, 48, 0);
+    border-bottom: 1px dotted rgb(151, 48, 0);
+    font-size: 11px;
+    font-weight: bold;
+    }
+
+/*  defines info messages */
+#info_message {
+    float: none;
+    background-color: rgb(255, 243, 197);
+    color: rgb(100, 100, 100);
+    margin: 6px 6px 6px 6px;
+    padding: 14px 10px 14px 10px;
+    border-top: 1px dotted rgb(100, 100, 100);
+    border-bottom: 1px dotted rgb(100, 100, 100);
+    font-size: 11px;
+    font-weight: bold;
+    }

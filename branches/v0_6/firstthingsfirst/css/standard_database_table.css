@@ -1,0 +1,205 @@
+/* This stylesheet contains all database table styles */
+
+
+/*  defines the pane that contains database table contents */
+#database_table_content_pane {
+    display: inline-block;
+    float: none;
+    margin: 12px 10px 2px 10px;
+    background-color: rgb(197, 214, 232);
+    color: rgb(5, 114, 197);
+    }
+
+/*  defines area above database table contents */
+#database_table_contents_top {
+    display: inline-block;
+    padding: 14px 14px 20px 14px;
+    font-weight: bold;
+    }
+
+#database_table_contents_top_left {
+    background: url(../images/standard_contents_top_left.gif) left top no-repeat;
+    z-index: 100;
+    }
+    
+#database_table_contents_top_right {
+    background: url(../images/standard_contents_top_right.gif) right top no-repeat;
+    z-index: 100;
+    }
+    
+#database_table_contents_top select, #database_table_contents_top input { 
+    border: 1px solid rgb(171, 187, 202);
+    color: rgb(50, 50, 50);
+    }
+    
+/*  defines database table pages in database table contents top */
+#database_table_pages_top {
+    float: right;
+    }    
+    
+/*  defines archive selector in database table contents top */
+#database_table_archive_select {
+    vertical-align: middle;
+    margin: 1px 16px 0px 0px;
+    float: left;
+    }    
+
+/*  defines filter in database table contents top */
+#database_table_filter {
+    vertical-align: middle;
+    float: none;
+    }    
+
+#database_table_filter .button {
+    margin: 0px 0px 0px 0px;
+    padding: 1px 4px 1px 4px;
+    background-color: rgb(232, 232, 232);
+    color: rgb(50, 50, 50);
+    border: 1px solid rgb(255, 255, 255);
+    }
+
+#database_table_filter .button:hover {
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(50, 50, 50);
+    }
+
+/*  defines table that contains database table contents */
+#database_table_contents {
+    display: inline-block;
+    width: 100%;
+    float: none;
+    margin: 0px 0px 14px 0px;
+    border-collapse: collapse;
+    border-top: 1px solid rgb(255, 255, 255);
+    border-bottom: 1px solid rgb(255, 255, 255);
+    color: rgb(50, 50, 50);
+    background-color: rgb(232, 232, 232);
+    }
+
+#database_table_contents tr {
+    background-color: rgb(232, 232, 232);
+    }
+    
+#database_table_contents th {
+    padding: 6px 4px 6px 4px;
+    color: rgb(0, 0, 0);
+    }
+
+#database_table_contents tr th:hover {
+    background-color: rgb(232, 204, 173);
+    }
+
+#database_table_contents td {
+    padding: 6px 4px 6px 4px;
+    border-top: 1px solid rgb(255, 255, 255);
+    vertical-align: top;
+    }
+
+#database_table_contents tbody tr:hover {
+    background-color: rgb(232, 204, 173);
+    }
+    
+#database_table_contents .button {
+    background-color: rgb(255, 130, 30);
+    color: rgb(255, 255, 255);
+    border: 1px solid rgb(255, 255, 255);
+    }
+
+#database_table_contents .button:hover {
+    background-color: rgb(255, 255, 255);
+    color: rgb(255, 130, 30);
+    border: 1px solid rgb(255, 130, 30);
+    }
+
+/*  defines area below database table contents */
+#database_table_contents_bottom {
+    display: inline-block;
+    padding: 0px 0px 14px 0px;
+    }    
+
+#database_table_contents_bottom_left {
+    padding: 0px 0px 0px 0px;
+    background: url(../images/standard_contents_bottom_left.gif) left bottom no-repeat;
+    z-index: 100;
+    }
+    
+#database_table_contents_bottom_right {
+    padding: 0px 0px 0px 0px;
+    background: url(../images/standard_contents_bottom_right.gif) right bottom no-repeat;
+    z-index: 100;
+    }
+
+#database_table_contents_bottom a, #database_table_contents_bottom a:link, #database_table_contents_bottom a:visited {
+    color: rgb(5, 114, 197);
+    }
+
+#database_table_contents_bottom a:hover {
+    border-bottom: 2px solid rgb(5, 114, 197);
+    }
+    
+/*  defines database table pages in database table contents bottom */
+#database_table_pages_bottom {
+    color: rgb(120, 120, 120);
+    text-align: center;
+    }
+    
+/*  defines pane that contains database table record contents */
+#database_table_record_contents_pane {
+    display: inline-block;
+    float: none;
+    background-color: rgb(232, 232, 232);
+    padding: 10px 0px 16px 16px;
+    border-left: 2px solid rgb(255, 130, 30);
+    border-right: 2px solid rgb(255, 130, 30);
+    border-bottom: 2px solid rgb(255, 130, 30);
+    }
+
+/*  defines table that contains contents of one database table record */
+#database_table_record_contents {
+    width: 100%;
+    float: none;
+    color: rgb(50, 50, 50);
+    }
+    
+#database_table_record_contents th {
+    padding: 4px 10px 4px 0px;
+    vertical-align: top;
+    }
+
+#database_table_record_contents td {
+    padding: 4px 0px 4px 10px;
+    vertical-align: top;
+    }
+
+#database_table_record_contents .super_width {
+    width: 100%;
+    }
+
+#database_table_record_contents .note_text {
+    margin: 4px 0px 4px 0px;
+    }
+    
+#database_table_record_contents select, #database_table_record_contents input, #database_table_record_contents textarea { 
+    border: 1px solid rgb(190, 190, 190);
+    }
+    
+#database_table_record_contents a, #database_table_record_contents a:link, #database_table_record_contents a:visited {
+    color: rgb(255, 130, 30);
+    }
+
+#database_table_record_contents a:hover {
+    border-bottom: 2px solid rgb(255, 130, 30);
+    }
+
+#database_table_record_contents_pane .button {
+    display: inline;
+    background-color: rgb(255, 130, 30);
+    color: rgb(255, 255, 255);
+    border: 1px solid rgb(255, 255, 255);
+    }
+
+#database_table_record_contents_pane .button:hover {
+    background-color: rgb(255, 255, 255);
+    color: rgb(255, 130, 30);
+    border: 1px solid rgb(255, 130, 30);
+    }

@@ -32,6 +32,32 @@ a:hover {
     font-weight: bold;
     }
 
+/*  define style for all 12x12 images */
+.image {
+    padding: 4px 0px 4px 0px;
+    }
+
+/*  defines arrows */
+.arrow_up {
+    width: 16px;
+    height: 20px;
+    background: url(../images/standard_arrow_up.gif) right top no-repeat;
+    }
+
+.arrow_up:hover {
+    background: url(../images/standard_arrow_up_lite.gif) right top no-repeat;
+    }
+    
+.arrow_down {
+    width: 16px;
+    height: 20px;
+    background: url(../images/standard_arrow_down.gif) right top no-repeat;
+    }
+
+.arrow_down:hover {
+    background: url(../images/standard_arrow_down_lite.gif) right top no-repeat;
+    }
+
 /*  defines standard tags */
 em, strong {
     font-size: inherit;

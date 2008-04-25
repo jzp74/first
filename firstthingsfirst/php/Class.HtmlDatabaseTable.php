@@ -293,10 +293,12 @@ class HtmlDatabaseTable
                 if ($order_by_field == $field_name)
                 {
                     if ($order_ascending)
-                        $html_str .= "<font style=\"font-weight: normal\">&nbsp;&dArr;</font>";
+                        $html_str .= "<img alt=\"\" align=\"top\" src=\"images/standard_arrow_sort_down.gif\">";
                     else
-                        $html_str .= "<font style=\"font-weight: normal\">&nbsp;&uArr;</font>";
+                        $html_str .= "<img alt=\"\" align=\"top\" src=\"images/standard_arrow_sort_up.gif\">";
                 }
+                else
+                    $html_str .= "<img alt=\"\" align=\"top\" src=\"images/standard_arrow_sort.gif\">";
                 $html_str .= "</th>\n";
                 array_push($field_names_with_length, $field_name);
             }

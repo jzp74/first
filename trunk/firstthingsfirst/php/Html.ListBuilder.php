@@ -699,13 +699,13 @@ function get_field_definition_table ($definition)
         
         # the fifth column - up
         if ($row > 1)
-            $html_str .= "                                <td width=\"1%\">".get_button("xajax_action_move_listbuilder_row(".$row.", 'up', xajax.getFormValues('database_definition_form'))", BUTTON_UP)."</td>\n";
+            $html_str .= "                                <td width=\"1%\"><div class=\"arrow_up\" onclick=\"xajax_action_move_listbuilder_row(".$row.", 'up', xajax.getFormValues('database_definition_form'))\"</div></td>\n";
         else
             $html_str .= "                                <td width=\"1%\"><p style=\"visibility: hidden;\">".BUTTON_UP."</p></td>\n";
         
         # the sixth column - down
         if ($row > 0 && $row < ((count($definition) / 3) - 1))
-            $html_str .= "                                <td width=\"1%\">".get_button("xajax_action_move_listbuilder_row(".$row.", 'down', xajax.getFormValues('database_definition_form'))", BUTTON_DOWN)."</td>\n";
+            $html_str .= "                                <td width=\"1%\"><div class=\"arrow_down\" onclick=\"xajax_action_move_listbuilder_row(".$row.", 'down', xajax.getFormValues('database_definition_form'))\"</div></td>\n";
         else
             $html_str .= "                                <td width=\"1%\"><p style=\"visibility: hidden;\">".BUTTON_DOWN."</p></td>\n";
         

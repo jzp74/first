@@ -102,6 +102,18 @@ define("LABEL_DEFINITION_AUTO_DATE", "automatic date&nbsp;&nbsp;");
 
 /**
  * shared field definition
+ * definition of date
+ */
+define("LABEL_DEFINITION_AUTO_CREATED", "automatic created&nbsp;&nbsp;");
+
+/**
+ * shared field definition
+ * definition of date
+ */
+define("LABEL_DEFINITION_AUTO_MODIFIED", "automatic modified&nbsp;&nbsp;");
+
+/**
+ * shared field definition
  * definition of text line
  */
 define("LABEL_DEFINITION_TEXT_LINE", "text line&nbsp;&nbsp;");
@@ -321,6 +333,24 @@ define("LABEL_LIST_MODIFICATIONS_DONE", "list modifications done!<br>return to t
  * definition of user message: new list created
  */
 define("LABEL_NEW_LIST_CREATED", "new list created!<br>create another new list or return to the portal page");
+
+/**
+ * listbuilder label
+ * definition of name only
+ */
+define("LABEL_NAME_ONLY", "name only&nbsp;&nbsp;");
+
+/**
+ * listbuilder label
+ * definition of date only
+ */
+define("LABEL_DATE_ONLY", "date only&nbsp;&nbsp;");
+
+/**
+ * listbuilder label
+ * definition of name and date
+ */
+define("LABEL_NAME_DATE", "name and date&nbsp;&nbsp;");
 
 /**
  * login label

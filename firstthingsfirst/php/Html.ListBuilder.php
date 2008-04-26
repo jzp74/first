@@ -152,6 +152,8 @@ function action_get_listbuilder_page ($list_title)
     }
 
     $html_str .= "        </div> <!-- listbuilder_pane -->\n\n";
+    $html_str .= "        <div id=\"message_pane\"\n";
+    $html_str .= "        </div> <!-- message_pane -->\n\n";
     $html_str .= "        <div id=\"action_pane\">\n\n";
     $html_str .= "            <div id=\"action_bar_top_left\"></div>\n";
     $html_str .= "            <div id=\"action_bar_top_right\"></div>\n";
@@ -295,14 +297,17 @@ function action_delete_listbuilder_row ($row_number, $definition)
     # create necessary objects
     $response = new xajaxResponse();
 
-    if (!check_preconditions(ACTION_DEL_LISTBUILDER_ROW, $response))
+    if (!check_preconditions(ACTION_DELETE_LISTBUILDER_ROW, $response))
         return $response;
     
     for ($position = 0; $position < count($backup_definition); $position += 1)
     {
         # only copy the value for row numbers other than given row number
         if ($position < ($row_number * 3) || $position >= (($row_number + 1) * 3))
+        {
+            $logging->debug("adding position (pos=".$position.", val=".$backup_definition[$position].")");
             array_push($new_definition, $backup_definition[$position]);
+        }
     }
 
     $html_str = get_field_definition_table($new_definition);    
@@ -400,7 +405,7 @@ function action_modify_list ($former_title, $title, $description)
     $name_values_array[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME] = $description;
     if ($list_table_description->update($former_title, $name_values_array) == FALSE)
     {
-        set_error_message("listbuilder_pane", ERROR_DATABASE_PROBLEM, $response);
+        set_error_message("message_pane", ERROR_DATABASE_PROBLEM, $response);
 
         return $response;
     }
@@ -417,7 +422,7 @@ function action_modify_list ($former_title, $title, $description)
         if ($result_object == FALSE)
         {
             $logging->error($database->get_error_str());
-            set_error_message("listbuilder_pane", ERROR_DATABASE_PROBLEM, $response);
+            set_error_message("message_pane", ERROR_DATABASE_PROBLEM, $response);
 
             return $response;
         }
@@ -441,14 +446,14 @@ function action_modify_list ($former_title, $title, $description)
             if ($result_object == FALSE)
             {
                 $logging->error($database->get_error_str());
-                set_error_message("listbuilder_pane", ERROR_DATABASE_PROBLEM, $response);
+                set_error_message("message_pane", ERROR_DATABASE_PROBLEM, $response);
     
                 return $response;
             }
         }                
     }
 
-    set_info_message("listbuilder_pane", LABEL_LIST_MODIFICATIONS_DONE, $response);
+    set_info_message("message_pane", LABEL_LIST_MODIFICATIONS_DONE, $response);
     
     $logging->trace("modified list");
 
@@ -570,7 +575,7 @@ function action_create_list ($title, $description, $definition)
     $list_table_description = new ListTableDescription();
     if ($list_table_description->insert($name_values_array) == FALSE)
     {
-        set_error_message("listbuilder_pane", $list_table_description->get_error_str(), $response);
+        set_error_message("message_pane", $list_table_description->get_error_str(), $response);
             
         return $response;
     }
@@ -579,12 +584,12 @@ function action_create_list ($title, $description, $definition)
     $list_table = new ListTable($title);
     if ($list_table->create() == FALSE)
     {
-        set_error_message("listbuilder_pane", $list_table->get_error_str(), $response);        
+        set_error_message("message_pane", $list_table->get_error_str(), $response);        
        
         return $response;
     }
 
-    set_info_message("listbuilder_pane", LABEL_NEW_LIST_CREATED, $response);
+    set_info_message("message_pane", LABEL_NEW_LIST_CREATED, $response);
     
     $logging->trace("created list");
 
@@ -618,7 +623,7 @@ function get_select ($id, $name, $selection)
     
     foreach ($field_types as $field_type)
     {
-        if ($firstthingsfirst_field_descriptions[$field_type][3])
+        if ($firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_TYPE])
         {
             $html_str .= "                                <option value=\"".$field_type."\"";
             if ($field_type == $selection)
@@ -686,6 +691,14 @@ function get_field_definition_table ($definition)
         # the third column - options
         if ($definition[$position_type] == "LABEL_DEFINITION_SELECTION")
             $html_str .= "                                <td id=\"row_".$row."_3\">".$input_html_value." name=\"row_".$row."_3\" value=\"".$definition[$position_options]."\"></td>\n";
+        else if (($definition[$position_type] == "LABEL_DEFINITION_AUTO_CREATED") || ($definition[$position_type] == "LABEL_DEFINITION_AUTO_MODIFIED"))
+        {
+            $html_str .= "                                <td id=\"row_".$row."_3\"><select class=\"selection_box\" name=\"row_".$row."_3\">\n";
+            $html_str .= "                                    <option value=\"".NAME_DATE_OPTION_NAME."\" selected>".LABEL_NAME_ONLY."</option>\n";
+            $html_str .= "                                    <option value=\"".NAME_DATE_OPTION_DATE."\">".LABEL_DATE_ONLY."</option>\n";
+            $html_str .= "                                    <option value=\"".NAME_DATE_OPTION_NAME_DATE."\">".LABEL_NAME_DATE."</option>\n";
+            $html_str .= "                                </select></td>\n";
+        }
         else
             $html_str .= "                                <td id=\"row_".$row."_3\">".$input_html_value_invisible." name=\"row_".$row."_3\" value=\"\"></td>\n";
 

@@ -355,7 +355,7 @@ class DatabaseTable
             $field_type = $this->fields[$db_field_name][1];
             $field_options = $this->fields[$db_field_name][2];
             $this->_log->trace("found field (db_field_name=".$db_field_name.", field_type=".$field_type.", field_options=".$field_options.")");
-            $query .= $db_field_name." ".$firstthingsfirst_field_descriptions[$field_type][0].", ";        
+            $query .= $db_field_name." ".$firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_DB_DEFINITION].", ";        
             # check for postfix
             if ($this->fields[$db_field_name][2] == DATABASETABLE_UNIQUE_FIELD)
                 $query_postfix .= ", ".DATABASETABLE_UNIQUE_FIELD." ".$db_field_name." (".$db_field_name.")";
@@ -686,6 +686,8 @@ class DatabaseTable
                 else
                     array_push($values, "'".$value."'");
             }
+            else if (($field_type == "LABEL_DEFINITION_AUTO_CREATED") || ($field_type == "LABEL_DEFINITION_AUTO_MODIFIED"))
+                array_push($values, "'0'");                
             else
                 array_push($values, "'".$value."'");
         }
@@ -772,6 +774,8 @@ class DatabaseTable
                 else
                     array_push($values, $db_field_name."='".$value."'");
             }
+            else if (($field_type == "LABEL_DEFINITION_AUTO_CREATED") || ($field_type == "LABEL_DEFINITION_AUTO_MODIFIED"))
+                array_push($values, $db_field_name."='0'");                
             else
                 array_push($values, $db_field_name."='".$value."'");
         }

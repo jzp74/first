@@ -34,6 +34,8 @@ function check_preconditions ($action, $response)
     {
         $html_str = get_login_page_html();
         $response->addAssign("main_body", "innerHTML", $html_str);
+        # set focus on user name
+        $response->addScriptCall("document.getElementById('user_name').focus()");
         set_footer("", $response);
         $logging->warn("user is not logged in (action=".$action.")");
 
@@ -45,6 +47,8 @@ function check_preconditions ($action, $response)
     {
         $html_str = get_login_page_html();
         $response->addAssign("main_body", "innerHTML", $html_str);
+        # set focus on user name
+        $response->addScriptCall("document.getElementById('user_name').focus()");
         set_footer("", $response);
         $logging->warn("user needs edit_list permission (action=".$action.")");
 
@@ -56,6 +60,8 @@ function check_preconditions ($action, $response)
     {
         $html_str = get_login_page_html();
         $response->addAssign("main_body", "innerHTML", $html_str);
+        # set focus on user name
+        $response->addScriptCall("document.getElementById('user_name').focus()");
         set_footer("", $response);
         $logging->warn("user needs create_list permission (action=".$action.")");
 
@@ -67,6 +73,8 @@ function check_preconditions ($action, $response)
     {
         $html_str = get_login_page_html();
         $response->addAssign("main_body", "innerHTML", $html_str);
+        # set focus on user name
+        $response->addScriptCall("document.getElementById('user_name').focus()");
         set_footer("", $response);
         $logging->warn("user needs admin permission (action=".$action.")");
 

@@ -304,7 +304,7 @@ function action_insert_list_record ($list_title, $form_values)
         $db_field_name = $value_array[0];
         $field_type = $value_array[1];
         $field_number = $value_array[2];
-        $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][2]);
+        $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_INPUT_CHECKS]);
         $result->reset();
         
         $logging->debug("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
@@ -344,7 +344,7 @@ function action_insert_list_record ($list_title, $form_values)
     if (!$list_table->insert($new_form_values))
     {
         $logging->warn("insert list record returns false");
-        set_error_message(LIST_CSS_NAME_PREFIX."content_pane", $list_table->get_error_str(), $response);
+        set_error_message("message_pane", $list_table->get_error_str(), $response);
         
         return $response;
     }
@@ -402,7 +402,7 @@ function action_update_list_record ($list_title, $key_string, $form_values)
         $db_field_name = $value_array[0];
         $field_type = $value_array[1];
         $field_number = $value_array[2];
-        $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][2]);
+        $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_INPUT_CHECKS]);
         $result->reset();
         
         $logging->debug("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
@@ -446,7 +446,7 @@ function action_update_list_record ($list_title, $key_string, $form_values)
     if (!$list_table->update($key_string, $new_form_values))
     {
         $logging->warn("update list record returns false");
-        set_error_message(LIST_CSS_NAME_PREFIX."content_pane", $list_table->get_error_str(), $response);
+        set_error_message("message_pane", $list_table->get_error_str(), $response);
         
         return $response;
     }
@@ -499,7 +499,7 @@ function action_archive_list_record ($list_title, $key_string)
     if (!$list_table->archive($key_string))
     {
         $logging->warn("archive list record returns false");
-        set_error_message(LIST_CSS_NAME_PREFIX."content_pane", $list_table->get_error_str(), $response);
+        set_error_message("message_pane", $list_table->get_error_str(), $response);
                 
         return $response;
     }
@@ -547,7 +547,7 @@ function action_delete_list_record ($list_title, $key_string)
     if (!$list_table->delete($key_string))
     {
         $logging->warn("delete list record returns false");
-        set_error_message(LIST_CSS_NAME_PREFIX."content_pane", $list_table->get_error_str(), $response);
+        set_error_message("message_pane", $list_table->get_error_str(), $response);
                 
         return $response;
     }
@@ -690,15 +690,24 @@ function action_set_list_filter($list_title, $filter_str)
 function get_footer ($creator_modifier_array)
 {
     global $logging;
+    global $firstthingsfirst_date_string;
     
     $logging->trace("getting footer");
+
+    $ts_created = strftime(DATETIME_FORMAT_EU, (strtotime($creator_modifier_array[DB_TS_CREATED_FIELD_NAME])));
+    $ts_modified = strftime(DATETIME_FORMAT_EU, (strtotime($creator_modifier_array[DB_TS_MODIFIED_FIELD_NAME])));
+    if ($firstthingsfirst_date_string == DATE_FORMAT_US)
+    {
+        $ts_created = strftime(DATETIME_FORMAT_US, (strtotime($creator_modifier_array[DB_TS_CREATED_FIELD_NAME])));
+        $ts_modified = strftime(DATETIME_FORMAT_US, (strtotime($creator_modifier_array[DB_TS_MODIFIED_FIELD_NAME])));
+    }
 
     $html_str = "";
 
     $html_str .= LABEL_CREATED_BY." <strong>".$creator_modifier_array[DB_CREATOR_FIELD_NAME];
-    $html_str .= "</strong> ".LABEL_AT." <strong>".$creator_modifier_array[DB_TS_CREATED_FIELD_NAME];
+    $html_str .= "</strong> ".LABEL_AT." <strong>".$ts_created;
     $html_str .= "</strong>, ".LABEL_LAST_MODIFICATION_BY." <strong>".$creator_modifier_array[DB_MODIFIER_FIELD_NAME];
-    $html_str .= "</strong> ".LABEL_AT." <strong>".$creator_modifier_array[DB_TS_MODIFIED_FIELD_NAME]."</strong>";
+    $html_str .= "</strong> ".LABEL_AT." <strong>".$ts_modified."</strong>";
     $html_str .= "<input id=\"focus_on_this_input\" size=\"1\" readonly>";
     
     $logging->trace("got footer");

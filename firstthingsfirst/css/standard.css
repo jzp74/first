@@ -80,6 +80,11 @@ input, textarea {
 select {
     padding: 1px 1px 3px 0px;
     }
+    
+.inactive_input {
+    background-color: rgb(240, 240, 240);
+    color: rgb(120, 120, 120)
+    }
 
 /*  defines an inactive button */
 .inactive_button {
@@ -397,6 +402,11 @@ html, body {
     background-color: rgb(255, 255, 255);
     color: rgb(255, 130, 30);
     border: 1px solid rgb(255, 130, 30);
+    }
+
+/*  defines message pane */
+#message_pane {
+    margin: 12px 10px 2px 10px;
     }
 
 /*  defines error messages */

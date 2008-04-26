@@ -14,6 +14,8 @@
  */
 define("DATE_FORMAT_US", "%m/%d/%Y");
 define("DATE_FORMAT_EU", "%d-%m-%Y");
+define("DATETIME_FORMAT_US", "%m/%d/%Y %H:%M:%S");
+define("DATETIME_FORMAT_EU", "%d-%m-%Y %H:%M:%S");
 define("DATE_FORMAT_NORMAL", 0);
 define("DATE_FORMAT_WEEKDAY", 1);
 
@@ -102,88 +104,121 @@ define("PERMISSION_IS_ADMIN", 1);
 define("PERMISSION_ISNOT_ADMIN", 0);
 
 /**
+ * field_description_types
+ */
+define("FIELD_DESCRIPTION_NON_SELECTABLE_DATATYPE", 0);
+define("FIELD_DESCRIPTION_SELECTABLE_DATATYPE", 1);
+
+/**
+ * field_description_fields
+ */
+define("FIELD_DESCRIPTION_FIELD_DB_DEFINITION", 0);
+define("FIELD_DESCRIPTION_FIELD_HTML_DEFINITION", 1);
+define("FIELD_DESCRIPTION_FIELD_INPUT_CHECKS", 2);
+define("FIELD_DESCRIPTION_FIELD_TYPE", 3);
+
+/**
+ * name_date options
+ */
+define("NAME_DATE_OPTION_NAME", "name");
+define("NAME_DATE_OPTION_DATE", "date");
+define("NAME_DATE_OPTION_NAME_DATE", "namedate");
+
+/**
  * this array contains all supported field types
  * this array is of the following structure
- *   field_name => (database_definition, html_definition, input check)
+ *   field_name => (database_definition, html_definition, input_checks, field_description_type)
  */
 $firstthingsfirst_field_descriptions = array(
     "LABEL_DEFINITION_BOOL"        => array(
         DB_DATATYPE_BOOL,
         "input type=checkbox value=\"1\"",
         "",
-        0
+        FIELD_DESCRIPTION_NON_SELECTABLE_DATATYPE
     ),
     "LABEL_DEFINITION_NUMBER"        => array(
         DB_DATATYPE_INT,
         "input type=text size=\"10\" maxlength=\"10\"",
         "str_is_number",
-        0
+        FIELD_DESCRIPTION_NON_SELECTABLE_DATATYPE
     ),
     "LABEL_DEFINITION_AUTO_NUMBER"   => array(
         DB_DATATYPE_ID,
-        "input type=text size=\"10\" maxlength=\"10\" readonly",
+        "input class=\"inactive_input\" type=text size=\"10\" maxlength=\"10\" readonly",
         "str_is_number",
-        0
+        FIELD_DESCRIPTION_NON_SELECTABLE_DATATYPE
     ),
     "LABEL_DEFINITION_NON_EDIT_NUMBER"   => array(
         DB_DATATYPE_INT,
-        "input type=text size=\"10\" maxlength=\"10\" readonly",
+        "input class=\"inactive_input\" type=text size=\"10\" maxlength=\"10\" readonly",
         "str_is_number",
-        0
+        FIELD_DESCRIPTION_NON_SELECTABLE_DATATYPE
     ),
     "LABEL_DEFINITION_DATE"          => array(
         DB_DATATYPE_DATE,
         "input type=text size=\"10\" maxlength=\"10\"",
         "str_is_not_empty str_is_date",
-        1
+        FIELD_DESCRIPTION_SELECTABLE_DATATYPE
     ),
     "LABEL_DEFINITION_DATETIME"      => array(
         DB_DATATYPE_DATETIME,
         "input type=text size=\"20\" maxlength=\"20\"",
         "str_is_not_empty str_is_date",
-        0
+        FIELD_DESCRIPTION_NON_SELECTABLE_DATATYPE
     ),
     "LABEL_DEFINITION_AUTO_DATE"     => array(
         DB_DATATYPE_DATE,
-        "input type=text size=\"10\" maxlength=\"10\" readonly",
+        "input class=\"inactive_input\" type=text size=\"10\" maxlength=\"10\" readonly",
         "str_is_date",
-        1
+        FIELD_DESCRIPTION_NON_SELECTABLE_DATATYPE
+    ),
+    "LABEL_DEFINITION_AUTO_CREATED"          => array(
+        DB_DATATYPE_BOOL,
+        "input class=\"inactive_input\" type=text size=\"30\" maxlength=\"30\" readonly",
+        "",
+        FIELD_DESCRIPTION_SELECTABLE_DATATYPE
+    ),
+    "LABEL_DEFINITION_AUTO_MODIFIED"          => array(
+        DB_DATATYPE_BOOL,
+        "input class=\"inactive_input\" type=text size=\"30\" maxlength=\"30\" readonly",
+        "",
+        FIELD_DESCRIPTION_SELECTABLE_DATATYPE
     ),
     "LABEL_DEFINITION_USERNAME"     => array(
         DB_DATATYPE_USERNAME,
         "input type=text size=\"20\" maxlenght=\"20\"",
         "str_is_not_empty",
-        0
+        FIELD_DESCRIPTION_NON_SELECTABLE_DATATYPE
     ),
     "LABEL_DEFINITION_PASSWORD"     => array(
         DB_DATATYPE_PASSWORD,
         "input type=password size=\"20\" maxlenght=\"20\"",
         "str_is_not_empty",
-        0
+        FIELD_DESCRIPTION_NON_SELECTABLE_DATATYPE
     ),
     "LABEL_DEFINITION_TEXT_LINE"     => array(
         DB_DATATYPE_TEXTLINE,
         "input type=text size=\"40\" maxlenght=\"100\"",
         "",
-        1
+        FIELD_DESCRIPTION_SELECTABLE_DATATYPE
     ),
     "LABEL_DEFINITION_TEXT_FIELD"    => array(
         DB_DATATYPE_TEXTMESSAGE,
         "textarea cols=40 rows=3",
         "",
-        1
+        FIELD_DESCRIPTION_SELECTABLE_DATATYPE
     ),
     "LABEL_DEFINITION_NOTES_FIELD" => array(
         DB_DATATYPE_INT,
         "",
         "",
-        1
+        FIELD_DESCRIPTION_SELECTABLE_DATATYPE
     ),
     "LABEL_DEFINITION_SELECTION"     => array(
         DB_DATATYPE_TEXTMESSAGE,
         "select",
         "",
-        1
+        FIELD_DESCRIPTION_SELECTABLE_DATATYPE
     )
 );
 

@@ -148,6 +148,8 @@ class HtmlDatabaseTable
         $html_str .= "        </div> <!-- navigation_container -->\n\n";    
         $html_str .= "        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane\">\n\n";
         $html_str .= "        </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane -->\n\n";
+        $html_str .= "        <div id=\"message_pane\"\n";
+        $html_str .= "        </div> <!-- message_pane -->\n\n";
         $html_str .= "        <div id=\"action_pane\">\n\n";
         $html_str .= "        </div> <!-- action_pane -->\n\n";           
         $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
@@ -193,6 +195,7 @@ class HtmlDatabaseTable
     function get_content ($list_title, $order_by_field, $page, $result)
     {
         global $firstthingsfirst_list_page_entries;
+        global $firstthingsfirst_date_string;
         
         $html_str = "";
         $field_names = $this->_database_table->get_user_field_names();
@@ -200,7 +203,7 @@ class HtmlDatabaseTable
         $user_fields = $this->_database_table->get_user_fields();
         $metadata_str = $this->_database_table->get_metadata_str();
 
-        $this->_log->trace("get content ($list_title=".$list_title.", $page=".$page.")");
+        $this->_log->trace("get content (list_title=".$list_title.", page=".$page.")");
     
         # select entries
         $records = $this->_database_table->select($order_by_field, $page);
@@ -215,7 +218,7 @@ class HtmlDatabaseTable
         # get list_state properties
         $this->_user->get_list_state($this->_database_table->get_table_name());
         $total_pages = $this->_list_state->get_total_pages();
-        $order_by_field = $fields[$this->_list_state->get_order_by_field()][0];
+        $order_by_field = $this->_list_state->get_order_by_field();
         $order_ascending = $this->_list_state->get_order_ascending();
         if ($total_pages == 0)
         {
@@ -288,9 +291,29 @@ class HtmlDatabaseTable
             # only display field names that have a length
             if (strlen($field_name) > 0)
             {
-                $db_field_name = $user_fields[$field_name];
-                $html_str .= "                        <th onclick=\"xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."content('".$list_title."', '".$db_field_name."', ".$current_page.")\">".$field_name_replaced;
-                if ($order_by_field == $field_name)
+                $sort_name = $user_fields[$field_name];
+                # change names to sort by for automatic creator and modifier fields
+                if ($fields[$sort_name][1] == "LABEL_DEFINITION_AUTO_CREATED")
+                {
+                    # sort by creation date
+                    if ($fields[$sort_name][2] == NAME_DATE_OPTION_DATE)
+                        $sort_name = DB_TS_CREATED_FIELD_NAME;
+                    # sort by creator
+                    else
+                        $sort_name = DB_CREATOR_FIELD_NAME;
+                }
+                else if ($fields[$sort_name][1] == "LABEL_DEFINITION_AUTO_MODIFIED")
+                {
+                    # sort by modification date
+                    if ($fields[$sort_name][2] == NAME_DATE_OPTION_DATE)
+                        $sort_name = DB_TS_MODIFIED_FIELD_NAME;
+                    # sort by modifier
+                    else
+                        $sort_name = DB_MODIFIER_FIELD_NAME;
+                }
+                $html_str .= "                        <th onclick=\"xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."content('".$list_title."', '".$sort_name."', ".$current_page.")\">".$field_name_replaced;
+                
+                if ($order_by_field == $sort_name)
                 {
                     if ($order_ascending)
                         $html_str .= "<img alt=\"\" align=\"top\" src=\"images/standard_arrow_sort_down.gif\">";
@@ -332,6 +355,36 @@ class HtmlDatabaseTable
                 {
                     $date_string = get_date_str(DATE_FORMAT_WEEKDAY, $value);
                     $html_str .= "                        <td ".$onclick_str.">".$date_string."</td>\n";
+                }
+                else if ($fields[$db_field_name][1] == "LABEL_DEFINITION_AUTO_CREATED")
+                {
+                    if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME)
+                        $html_str .= "                        <td ".$onclick_str.">".$record[DB_CREATOR_FIELD_NAME]."</td>\n";
+                    else
+                    {
+                        $ts_created = strftime(DATE_FORMAT_EU, (strtotime($record[DB_TS_CREATED_FIELD_NAME])));
+                        if ($firstthingsfirst_date_string == DATE_FORMAT_US)
+                            $ts_created = strftime(DATE_FORMAT_US, (strtotime($record[DB_TS_CREATED_FIELD_NAME])));
+                        if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
+                            $html_str .= "                        <td ".$onclick_str.">".$ts_created."</td>\n";
+                        else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME_DATE)
+                            $html_str .= "                        <td ".$onclick_str.">".$record[DB_CREATOR_FIELD_NAME]."&nbsp;".LABEL_AT."&nbsp;".$ts_created."</td>\n";
+                    }                        
+                }
+                else if ($fields[$db_field_name][1] == "LABEL_DEFINITION_AUTO_MODIFIED")
+                {
+                    if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME)
+                        $html_str .= "                        <td ".$onclick_str.">".$record[DB_MODIFIER_FIELD_NAME]."</td>\n";
+                    else
+                    {
+                        $ts_modified = strftime(DATE_FORMAT_EU, (strtotime($record[DB_TS_MODIFIED_FIELD_NAME])));
+                        if ($firstthingsfirst_date_string == DATE_FORMAT_US)
+                            $ts_modified = strftime(DATE_FORMAT_US, (strtotime($record[DB_TS_MODIFIED_FIELD_NAME])));
+                        if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
+                            $html_str .= "                        <td ".$onclick_str.">".$ts_modified."</td>\n";
+                        else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME_DATE)
+                            $html_str .= "                        <td ".$onclick_str.">".$record[DB_MODIFIER_FIELD_NAME]."&nbsp;".LABEL_AT."&nbsp;".$ts_modified."</td>\n";
+                    }                        
                 }
                 else if ($fields[$db_field_name][1] == "LABEL_DEFINITION_NOTES_FIELD")
                 {
@@ -545,7 +598,7 @@ class HtmlDatabaseTable
             $field_name_replaced = str_replace(' ', '&nbsp;', $field_names[$i]);
 
             # only add non auto_increment field types (check database definition for this)
-            if (!stristr($firstthingsfirst_field_descriptions[$field_type][0], "auto_increment"))
+            if (!stristr($firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_DB_DEFINITION], "auto_increment"))
             {
                 $html_str .= "                                <tr id=\"".$db_field_name."\">\n";
                 $html_str .= "                                    <th>".$field_name_replaced."</th>\n";
@@ -553,7 +606,7 @@ class HtmlDatabaseTable
                 if ($field_type != "LABEL_DEFINITION_NOTES_FIELD")
                 {
                     $html_str .= "                                    <td id=\"".$db_field_name.GENERAL_SEPARATOR.$field_type.GENERAL_SEPARATOR."0";
-                    $html_str .= "\"><".$firstthingsfirst_field_descriptions[$field_type][1];
+                    $html_str .= "\"><".$firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_HTML_DEFINITION];
                     # create a name tag
                     $html_str .= " name=".$db_field_name.GENERAL_SEPARATOR.$field_type.GENERAL_SEPARATOR."0";
                 }
@@ -571,6 +624,36 @@ class HtmlDatabaseTable
                         $date_string = get_date_str(DATE_FORMAT_NORMAL, $record[$db_field_name]);
                         $html_str .= " value=\"".$date_string."\"";
                     }
+                    else if ($fields[$db_field_name][1] == "LABEL_DEFINITION_AUTO_CREATED")
+                    {
+                        if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME)
+                            $html_str .= " value=\"".$record[DB_CREATOR_FIELD_NAME]."\"";
+                        else
+                        {
+                            $ts_created = strftime(DATE_FORMAT_EU, (strtotime($record[DB_TS_CREATED_FIELD_NAME])));
+                            if ($firstthingsfirst_date_string == DATE_FORMAT_US)
+                                $ts_created = strftime(DATE_FORMAT_US, (strtotime($record[DB_TS_CREATED_FIELD_NAME])));
+                            if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
+                                $html_str .= " value=\"".$ts_created."\"";
+                            else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME_DATE)
+                                $html_str .= " value=\"".$record[DB_CREATOR_FIELD_NAME]."&nbsp;".LABEL_AT."&nbsp;".$ts_created."\"";
+                        }                        
+                    }
+                    else if ($fields[$db_field_name][1] == "LABEL_DEFINITION_AUTO_MODIFIED")
+                    {
+                        if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME)
+                            $html_str .= " value=\"".$record[DB_MODIFIER_FIELD_NAME]."\"";
+                        else
+                        {
+                            $ts_modified = strftime(DATE_FORMAT_EU, (strtotime($record[DB_TS_MODIFIED_FIELD_NAME])));
+                            if ($firstthingsfirst_date_string == DATE_FORMAT_US)
+                                $ts_modified = strftime(DATE_FORMAT_US, (strtotime($record[DB_TS_MODIFIED_FIELD_NAME])));
+                            if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
+                                $html_str .= " value=\"".$ts_modified."\"";
+                            else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME_DATE)
+                                $html_str .= " value=\"".$record[DB_MODIFIER_FIELD_NAME]."&nbsp;".LABEL_AT."&nbsp;".$ts_modified."\"";
+                        }                        
+                    }
                     else if ($field_type == "LABEL_DEFINITION_TEXT_FIELD")
                         $html_str .= ">".$record[$db_field_name]."</textarea";
                     else if ($field_type == "LABEL_DEFINITION_PASSWORD")
@@ -584,7 +667,7 @@ class HtmlDatabaseTable
                             $html_str .= "\n                                        <option value=\"".$option."\"";
                             if ($option == $record[$db_field_name])
                                 $html_str .= " selected";
-                            $html_str .= ">".$option."</option>";
+                            $html_str .= ">".$option."&nbsp;&nbsp;"."</option>";
                         }
                         $html_str .= "\n                                    </select";
                     }
@@ -602,6 +685,8 @@ class HtmlDatabaseTable
                         $html_str .= " value=\"".strftime($firstthingsfirst_date_string)."\"";
                     else if ($field_type == "LABEL_DEFINITION_NON_EDIT_NUMBER")
                         $html_str .=  " value=\"0\"";
+                    else if (($field_type == "LABEL_DEFINITION_AUTO_CREATED") || ($field_type == "LABEL_DEFINITION_AUTO_MODIFIED"))
+                        $html_str .=  " value=\"-\"";
                     else if ($field_type == "LABEL_DEFINITION_TEXT_FIELD")
                         $html_str .= "></textarea";
                     else if ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
@@ -611,7 +696,7 @@ class HtmlDatabaseTable
                         $html_str .= ">";
                         $option_list = explode("|", $field_options);
                         foreach ($option_list as $option)
-                            $html_str .= "\n                                        <option value=\"".$option."\">".$option."</option>\n";
+                            $html_str .= "\n                                        <option value=\"".$option."\">".$option."&nbsp;&nbsp;"."</option>\n";
                         $html_str .= "\n                                    </select";
                     }
                     else

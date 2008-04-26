@@ -38,7 +38,7 @@ function action_get_login_page ()
     set_footer("", $response);
 
     # set focus on user name
-    $response->addScriptCall("document.getElementById('user_name_id').focus()");
+    $response->addScriptCall("document.getElementById('user_name').focus()");
 
     $logging->trace("got login page");
 

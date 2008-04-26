@@ -231,7 +231,7 @@ function action_insert_user_admin_record ($title, $form_values)
         $db_field_name = $value_array[0];
         $field_type = $value_array[1];
         $field_number = $value_array[2];
-        $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][2]);
+        $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_INPUT_CHECKS]);
         $result->reset();
         
         $logging->debug("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
@@ -325,7 +325,7 @@ function action_update_user_admin_record ($title, $key_string, $form_values)
         $db_field_name = $value_array[0];
         $field_type = $value_array[1];
         $field_number = $value_array[2];
-        $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][2]);
+        $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_INPUT_CHECKS]);
         $result->reset();
         
         $logging->debug("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");

@@ -87,6 +87,9 @@ class UserDatabaseTable extends DatabaseTable
 
         # get list_state from session
         $this->_user->get_list_state($this->table_name);
+        
+        # get previous field order
+        $prev_order_by_field = $this->_list_state->get_order_by_field();
 
         if (!strlen($order_by_field))
         {
@@ -94,7 +97,7 @@ class UserDatabaseTable extends DatabaseTable
             if (strlen($this->_list_state->get_order_by_field()))
             {
                 # order by previously given field
-                $order_by_field = $this->_list_state->get_order_by_field();
+                $order_by_field = $prev_order_by_field;
             }
             else
             {
@@ -102,6 +105,7 @@ class UserDatabaseTable extends DatabaseTable
                 # order by first field of this UserDatabaseTable
                 $order_by_field = $this->db_field_names[0];
                 $this->_list_state->set_order_by_field($order_by_field);
+                $this->_list_state->set_order_ascending(1);
             }
         }
         else
@@ -110,10 +114,17 @@ class UserDatabaseTable extends DatabaseTable
             # set order by field attribute value and reverse order
             $this->_list_state->set_order_by_field($order_by_field);
 
-            if ($this->_list_state->get_order_ascending())
-                $this->_list_state->set_order_ascending(0);
+            # only change sort order when user sorts by same field as previous time
+            if ($order_by_field == $prev_order_by_field)
+            {
+                if ($this->_list_state->get_order_ascending())
+                    $this->_list_state->set_order_ascending(0);
+                else
+                    $this->_list_state->set_order_ascending(1);
+            }
+            # set fixed sort order when user sorts by differen field
             else
-                $this->_list_state->set_order_ascending(1);
+                $this->_list_state->set_order_ascending(1);                
         }
         
         $order_ascending = $this->_list_state->get_order_ascending();

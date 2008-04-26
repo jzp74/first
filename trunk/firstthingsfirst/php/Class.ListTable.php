@@ -174,8 +174,6 @@ class ListTable extends UserDatabaseTable
     */
     function create ($force = FALSE)
     {
-        global $firstthingsfirst_field_descriptions;
-        
         $this->_log->trace("creating ListTable (table=".$this->table_name.")");
         
         # call parent create()
@@ -207,8 +205,6 @@ class ListTable extends UserDatabaseTable
     */
     function select ($order_by_field, $page)
     {
-        global $firstthingsfirst_field_descriptions;
-
         $records_with_notes = array();       
 
         $this->_log->trace("selecting ListTable (order_by_field=".$order_by_field.", page=".$page.")");

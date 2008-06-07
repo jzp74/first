@@ -122,7 +122,7 @@ define("FIELD_DESCRIPTION_FIELD_TYPE", 3);
  */
 define("NAME_DATE_OPTION_NAME", "name");
 define("NAME_DATE_OPTION_DATE", "date");
-define("NAME_DATE_OPTION_NAME_DATE", "namedate");
+define("NAME_DATE_OPTION_DATE_NAME", "namedate");
 
 /**
  * this array contains all supported field types

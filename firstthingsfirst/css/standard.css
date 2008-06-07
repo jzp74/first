@@ -412,7 +412,7 @@ html, body {
 /*  defines error messages */
 #error_message {
     float: none;
-    background-color: rgb(251, 227, 228);
+    background-color: rgb(251, 227, 227);
     color: rgb(151, 48, 0);
     margin: 6px 6px 6px 6px;
     padding: 14px 10px 14px 10px;
@@ -434,3 +434,86 @@ html, body {
     font-size: 11px;
     font-weight: bold;
     }
+
+/*  defines the main test body (only used in regression test) */
+#test_body {
+    margin: 12px 10px 12px 10px;
+    }
+    
+/*  defines a test item (only used in regression test) */
+.test_item {
+    float: left;
+    width: 100%;
+    margin: 1px 0px 0px 0px;
+    background-color: rgb(240, 240, 240);
+    }
+
+.test_item_header {
+    float: left;
+    padding: 6px 4px 6px 4px;
+    font-weight: bold;
+    }
+
+.test_item_description {
+    float: left;
+    width: 58%;
+    padding: 6px 4px 6px 24px;
+    }
+
+.test_item_busy {
+    float: right;
+    width: 38%;
+    padding: 6px 4px 6px 4px;
+    background-color: rgb(255, 255, 210);
+    color: rgb(90, 90, 90);
+    border-left: 1px solid rgb(255, 255, 255);
+    font-weight: bold;
+    }
+
+.test_item_successful {
+    float: right;
+    width: 38%;
+    padding: 6px 4px 6px 4px;
+    background-color: rgb(227, 251, 227);
+    color: rgb(0, 151, 0);
+    border-left: 1px solid rgb(255, 255, 255);
+    font-weight: bold;
+    }
+
+.test_item_unsuccessful {
+    float: right;
+    width: 38%;
+    padding: 6px 4px 6px 4px;
+    background-color: rgb(251, 227, 227);
+    color: rgb(151, 48, 0);
+    border-left: 1px solid rgb(255, 255, 255);
+    font-weight: bold;
+    }
+
+/*  defines the white space above the end message */
+#test_end_white_space {
+    clear: both;
+    margin: 4px 0px 4px 0px;
+    }
+
+/*  defines the end message of a successful test */
+#test_end_successful {
+    clear: both;
+    padding: 20px 20px 20px 20px;
+    text-align: center;
+    font-size: 20px;
+    background-color: rgb(227, 251, 227);
+    color: rgb(0, 151, 0);
+    font-weight: bold;
+}
+
+/*  defines the end message of an unsuccessful test */
+#test_end_unsuccessful {
+    clear: both;
+    padding: 20px 20px 20px 20px;
+    text-align: center;
+    font-size: 20px;
+    background-color: rgb(251, 227, 227);
+    color: rgb(151, 48, 0);
+    font-weight: bold;
+}

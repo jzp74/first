@@ -26,6 +26,11 @@ define("DATABASETABLE_UNIQUE_FIELD", "UNIQUE KEY");
 define("DATABASETABLE_FOREIGN_FIELD", "FOREIGN KEY");
 
 /**
+ * definition of a empty database field
+ */
+define("DATABASETABLE_EMPTY_DATABASE_FIELD", "-EMPTY-");
+
+/**
  * definition of an unknown page (used only in select() function)
  */
 define("DATABASETABLE_UNKWOWN_PAGE", 0);
@@ -355,7 +360,14 @@ class DatabaseTable
             $field_type = $this->fields[$db_field_name][1];
             $field_options = $this->fields[$db_field_name][2];
             $this->_log->trace("found field (db_field_name=".$db_field_name.", field_type=".$field_type.", field_options=".$field_options.")");
-            $query .= $db_field_name." ".$firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_DB_DEFINITION].", ";        
+            # do not create auto_created and auto_modified fields
+            if (($field_type == "LABEL_DEFINITION_AUTO_CREATED") || ($field_type == "LABEL_DEFINITION_AUTO_MODIFIED"))
+                $this->_log->trace("field not added to query (field_type=".$field_type>")");
+            else
+            {
+                $this->_log->trace("added field to query (field_type=".$field_type>")");
+                $query .= $db_field_name." ".$firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_DB_DEFINITION].", ";
+            }
             # check for postfix
             if ($this->fields[$db_field_name][2] == DATABASETABLE_UNIQUE_FIELD)
                 $query_postfix .= ", ".DATABASETABLE_UNIQUE_FIELD." ".$db_field_name." (".$db_field_name.")";
@@ -490,7 +502,23 @@ class DatabaseTable
         if (count($db_field_names) == 0)
             $db_field_names = $this->db_field_names;
         
-        $query = "SELECT ".implode($db_field_names, ", ");
+        $num_of_fields = count($db_field_names);
+        $current_field = 0;
+        # set all fieldnames in query
+        $query = "SELECT ";
+        foreach ($db_field_names as $db_field_name)
+        {
+            $field_type = $this->fields[$db_field_name][1];
+            # check if fieldname is an auto field
+            if (($field_type == "LABEL_DEFINITION_AUTO_CREATED") || ($field_type == "LABEL_DEFINITION_AUTO_MODIFIED"))
+                $query .= "'' AS ".$db_field_name;
+            else
+                $query .= $db_field_name;
+            # do not add seperator after last field
+            if ($current_field < ($num_of_fields - 1))
+                $query .= ", ";
+            $current_field += 1;
+        }
         # add archiver name and datetime
         if ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] != DATABASETABLE_METADATA_FALSE)
         {
@@ -584,7 +612,23 @@ class DatabaseTable
         if (count($db_field_names) == 0)
             $db_field_names = $this->db_field_names;
         
-        $query = "SELECT ".implode($db_field_names, ", ");
+        $num_of_fields = count($db_field_names);
+        $current_field = 0;
+        # set all fieldnames in query
+        $query = "SELECT ";
+        foreach ($db_field_names as $db_field_name)
+        {
+            $field_type = $this->fields[$db_field_name][1];
+            # check if fieldname is an auto field
+            if (($field_type == "LABEL_DEFINITION_AUTO_CREATED") || ($field_type == "LABEL_DEFINITION_AUTO_MODIFIED"))
+                $query .= "'' AS ".$db_field_name;
+            else
+                $query .= $db_field_name;
+            # do not add seperator after last field
+            if ($current_field < ($num_of_fields - 1))
+                $query .= ", ";
+            $current_field += 1;
+        }
         # add archiver name and datetime
         if ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] != DATABASETABLE_METADATA_FALSE)
         {
@@ -687,7 +731,7 @@ class DatabaseTable
                     array_push($values, "'".$value."'");
             }
             else if (($field_type == "LABEL_DEFINITION_AUTO_CREATED") || ($field_type == "LABEL_DEFINITION_AUTO_MODIFIED"))
-                array_push($values, "'0'");                
+                $this->_log->debug("this field will not be inserted (field_type=".$field_type.")");
             else
                 array_push($values, "'".$value."'");
         }
@@ -775,7 +819,7 @@ class DatabaseTable
                     array_push($values, $db_field_name."='".$value."'");
             }
             else if (($field_type == "LABEL_DEFINITION_AUTO_CREATED") || ($field_type == "LABEL_DEFINITION_AUTO_MODIFIED"))
-                array_push($values, $db_field_name."='0'");                
+                $this->_log->debug("this field will not be updated (field_type=".$field_type.")");
             else
                 array_push($values, $db_field_name."='".$value."'");
         }

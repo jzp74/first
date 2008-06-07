@@ -350,7 +350,7 @@ define("LABEL_DATE_ONLY", "date only&nbsp;&nbsp;");
  * listbuilder label
  * definition of name and date
  */
-define("LABEL_NAME_DATE", "name and date&nbsp;&nbsp;");
+define("LABEL_DATE_NAME", "date and name&nbsp;&nbsp;");
 
 /**
  * login label
@@ -398,13 +398,13 @@ define("LABEL_LIST_DEFINITION", "definition");
  * portal label
  * definition of 'list creator' label
  */
-define("LABEL_LIST_CREATOR", "created by");
+define("LABEL_LIST_CREATOR", "created");
 
 /**
  * portal label
  * definition of 'list modifier' label
  */
-define("LABEL_LIST_MODIFIER", "modified by");
+define("LABEL_LIST_MODIFIER", "modified");
 
 /**
  * portal label

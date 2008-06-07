@@ -81,33 +81,15 @@ define("USER_METADATA", "-11");
  * @package Class_FirstThingsFirst
  */
 class User extends UserDatabaseTable
-{
-    /**
-    * reference to global logging object
-    * @var Logging
-    */
-    protected $_log;
-    
-    /**
-    * reference to global database object
-    * @var Database
-    */
-    protected $_database;
-    
+{    
     # set attributes of this object when it is constructed
     function __construct ()
     {
         # these variables are assumed to be globally available
-        global $logging;
-        global $database;
         global $class_user_fields;
         
         # call parent __construct()
         parent::__construct(USER_TABLE_NAME, $class_user_fields, USER_METADATA);
-
-        # set global references for this object
-        $this->_log =& $logging;
-        $this->_database =& $database;
         
         # start a session
         session_cache_limiter('private, must-revalidate');
@@ -442,8 +424,8 @@ class User extends UserDatabaseTable
 
     /**
     * insert a new user to database
-    * @param $name_values_array array array containing name-values of the record
-    * @return int number indicates the id of the new record or 0 when no record was added
+    * @param $name_values_array array array containing name-values of record
+    * @return bool indicates if user has been inserted
     */
     function insert ($name_values_array)
     {
@@ -453,6 +435,11 @@ class User extends UserDatabaseTable
         {
             $this->_log->debug("found a password");
             $name_values_array[USER_PW_FIELD_NAME] = md5($name_values_array[USER_PW_FIELD_NAME]);
+        }
+        else
+        {
+            $this->_log->debug("could not find a password");
+            return FALSE;
         }
 
         if ($this->exists($name_values_array[USER_NAME_FIELD_NAME]))
@@ -468,6 +455,30 @@ class User extends UserDatabaseTable
         
         $this->_log->info("user added (name=".$name_values_array[USER_NAME_FIELD_NAME].")");
         
+        return TRUE;
+    }
+
+    /**
+    * update a user
+    * @param string key_string key_string of user
+    * @param $name_values array array containing new name-values of record
+    * @return bool indicates if user has been updated
+    */
+    function update ($key_string, $name_values_array)
+    {
+        $this->_log->trace("update user (key_string=".$key_string.")");
+                
+        if (strlen($name_values_array[USER_PW_FIELD_NAME]) > 0)
+        {
+            $this->_log->debug("found a password");
+            $name_values_array[USER_PW_FIELD_NAME] = md5($name_values_array[USER_PW_FIELD_NAME]);
+        }
+
+        if (parent::update($key_string, $name_values_array) == FALSE)
+            return FALSE;
+        
+        $this->_log->info("user updated (key_string=".$key_string.")");
+
         return TRUE;
     }
 

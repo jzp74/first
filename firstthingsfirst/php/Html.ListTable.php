@@ -690,17 +690,11 @@ function action_set_list_filter($list_title, $filter_str)
 function get_footer ($creator_modifier_array)
 {
     global $logging;
-    global $firstthingsfirst_date_string;
     
     $logging->trace("getting footer");
 
-    $ts_created = strftime(DATETIME_FORMAT_EU, (strtotime($creator_modifier_array[DB_TS_CREATED_FIELD_NAME])));
-    $ts_modified = strftime(DATETIME_FORMAT_EU, (strtotime($creator_modifier_array[DB_TS_MODIFIED_FIELD_NAME])));
-    if ($firstthingsfirst_date_string == DATE_FORMAT_US)
-    {
-        $ts_created = strftime(DATETIME_FORMAT_US, (strtotime($creator_modifier_array[DB_TS_CREATED_FIELD_NAME])));
-        $ts_modified = strftime(DATETIME_FORMAT_US, (strtotime($creator_modifier_array[DB_TS_MODIFIED_FIELD_NAME])));
-    }
+    $ts_created = get_date_str(DATE_FORMAT_WEEKDAY, $creator_modifier_array[DB_TS_CREATED_FIELD_NAME]);
+    $ts_modified = get_date_str(DATE_FORMAT_WEEKDAY, $creator_modifier_array[DB_TS_MODIFIED_FIELD_NAME]);
 
     $html_str = "";
 

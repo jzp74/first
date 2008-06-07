@@ -342,16 +342,8 @@ function action_update_user_admin_record ($title, $key_string, $form_values)
             }
         }
         # set new value
-        if ($db_field_name != USER_PW_FIELD_NAME)
-        {
-            $new_form_values[$db_field_name] = $result->get_result_str();
-            $logging->debug("setting new form value (db_field_name=".$db_field_name.", result=".$result->get_result_str().")");
-        }
-        else if (strlen($form_values[$name_key]) > 0)
-        {
-            $new_form_values[$db_field_name] = md5($result->get_result_str());
-            $logging->debug("setting new form value for password)");
-        }
+        $new_form_values[$db_field_name] = $result->get_result_str();
+        $logging->debug("setting new form value (db_field_name=".$db_field_name.", result=".$result->get_result_str().")");
     }
     
     # check if all booleans have been set
@@ -359,7 +351,7 @@ function action_update_user_admin_record ($title, $key_string, $form_values)
     {        
         if ($fields[$db_field_name][1] == "LABEL_DEFINITION_BOOL")
         {
-            if ($new_form_values[$db_field_name] == "")
+            if (!isset($new_form_values[$db_field_name]))
             {
                 $logging->debug("found an unset bool field");
                 $new_form_values[$db_field_name] = "0";

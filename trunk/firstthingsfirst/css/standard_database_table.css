@@ -80,9 +80,19 @@
     background-color: rgb(232, 232, 232);
     }
     
-#database_table_contents th {
+.database_table_contents_header_sort, .database_table_contents_header_sort_up, .database_table_contents_header_sort_down {
+    float: left;
     padding: 6px 4px 6px 4px;
     color: rgb(0, 0, 0);
+    background: url(../images/standard_arrow_sort.gif) right center no-repeat;
+    }
+
+.database_table_contents_header_sort_up {
+    background: url(../images/standard_arrow_sort_up.gif) right center no-repeat;
+    }
+
+.database_table_contents_header_sort_down {
+    background: url(../images/standard_arrow_sort_down.gif) right center no-repeat;
     }
 
 #database_table_contents tr th:hover {

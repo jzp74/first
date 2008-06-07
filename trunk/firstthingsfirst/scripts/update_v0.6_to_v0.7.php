@@ -23,7 +23,7 @@ require_once("../php/Class.ListTableDescription.php");
 require_once("../php/Class.ListTable.php");
 require_once("../php/Class.ListTableNote.php");
 
-$logging = new Logging(LOGGING_DEBUG);
+$logging = new Logging(LOGGING_OFF);
 $database = new Database();
 
 # update string
@@ -46,15 +46,12 @@ echo "<strong>starting ".$update_string."</strong><br><br>";
 echo "updating list: <strong>list descriptions table</strong> (".LISTTABLEDESCRIPTION_TABLE_NAME.")<br>";
     
 # insert field LISTTABLEDESCRIPTION_CREATOR_FIELD_NAME
-$query = "ALTER TABLE ".LISTTABLEDESCRIPTION_TABLE_NAME." ADD COLUMN ".LISTTABLEDESCRIPTION_CREATOR_FIELD_NAME." ".DB_DATATYPE_BOOL." AFTER ".LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME;
+$query = "ALTER TABLE ".LISTTABLEDESCRIPTION_TABLE_NAME." ADD COLUMN ".LISTTABLEDESCRIPTION_CREATOR_FIELD_NAME." ".DB_DATATYPE_BOOL." AFTER ".LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME;
 # insert field LISTTABLEDESCRIPTION_MODIFIER_FIELD_NAME
 $query .= ", ADD COLUMN ".LISTTABLEDESCRIPTION_MODIFIER_FIELD_NAME." ".DB_DATATYPE_BOOL." AFTER ".LISTTABLEDESCRIPTION_CREATOR_FIELD_NAME;
 $result = $database->query($query);
 if ($result != FALSE)
-{
-    $updated_lists += 1;
     echo "&nbsp;&nbsp;&nbsp;updated list<br>";
-}
 else
     fatal("could not update this list");
 

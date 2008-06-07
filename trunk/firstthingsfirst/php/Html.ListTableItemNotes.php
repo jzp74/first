@@ -213,8 +213,8 @@ function get_list_record_note ($db_field_name, $this_id, $previous_id, $next_id,
     # display info about the creator of this note only when it is not a new note
     if ($this_id != 0)
     {
-        $html_str .= "                                        <p>&nbsp;".$note_array[DB_CREATOR_FIELD_NAME]."&nbsp;".LABEL_AT."&nbsp;";
-        $html_str .= get_date_str(DATE_FORMAT_WEEKDAY, $note_array[DB_TS_CREATED_FIELD_NAME])."</p>\n";
+        $html_str .= "                                        <p>&nbsp;".get_date_str(DATE_FORMAT_WEEKDAY, $note_array[DB_TS_CREATED_FIELD_NAME]);
+        $html_str .= "&nbsp;(".$note_array[DB_CREATOR_FIELD_NAME].")</p>\n";
     }
     else
         $html_str .= "                                        <p>&nbsp;".LABEL_NEW_NOTE."</p>\n";
@@ -240,7 +240,7 @@ function get_list_record_note ($db_field_name, $this_id, $previous_id, $next_id,
         $html_str .= get_href("xajax_action_add_note('".$db_field_name."', '".$this_id."')", BUTTON_ADD_NOTE);
     # display button to go to the next note
     else
-        $html_str .= get_button("xajax_action_get_next_note('".$td_id."', '".$next_td_id."')", BUTTON_NEXT_NOTE);
+        $html_str .= get_href("xajax_action_get_next_note('".$td_id."', '".$next_td_id."')", BUTTON_NEXT_NOTE);
     $html_str .= "&nbsp;</div>\n";
 
     $html_str .= "                                        </div>\n";

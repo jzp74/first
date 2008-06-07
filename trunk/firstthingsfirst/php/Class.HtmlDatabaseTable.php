@@ -195,7 +195,6 @@ class HtmlDatabaseTable
     function get_content ($list_title, $order_by_field, $page, $result)
     {
         global $firstthingsfirst_list_page_entries;
-        global $firstthingsfirst_date_string;
         
         $html_str = "";
         $field_names = $this->_database_table->get_user_field_names();
@@ -294,35 +293,23 @@ class HtmlDatabaseTable
                 $sort_name = $user_fields[$field_name];
                 # change names to sort by for automatic creator and modifier fields
                 if ($fields[$sort_name][1] == "LABEL_DEFINITION_AUTO_CREATED")
-                {
-                    # sort by creation date
-                    if ($fields[$sort_name][2] == NAME_DATE_OPTION_DATE)
-                        $sort_name = DB_TS_CREATED_FIELD_NAME;
-                    # sort by creator
-                    else
-                        $sort_name = DB_CREATOR_FIELD_NAME;
-                }
+                    $sort_name = DB_TS_CREATED_FIELD_NAME;
                 else if ($fields[$sort_name][1] == "LABEL_DEFINITION_AUTO_MODIFIED")
-                {
-                    # sort by modification date
-                    if ($fields[$sort_name][2] == NAME_DATE_OPTION_DATE)
-                        $sort_name = DB_TS_MODIFIED_FIELD_NAME;
-                    # sort by modifier
-                    else
-                        $sort_name = DB_MODIFIER_FIELD_NAME;
-                }
-                $html_str .= "                        <th onclick=\"xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."content('".$list_title."', '".$sort_name."', ".$current_page.")\">".$field_name_replaced;
-                
+                    $sort_name = DB_TS_MODIFIED_FIELD_NAME;
+                # set class name to determine arrow image
+                $class_name = "database_table_contents_header_sort";
                 if ($order_by_field == $sort_name)
                 {
                     if ($order_ascending)
-                        $html_str .= "<img alt=\"\" align=\"top\" src=\"images/standard_arrow_sort_down.gif\">";
+                        $class_name .= "_down";
                     else
-                        $html_str .= "<img alt=\"\" align=\"top\" src=\"images/standard_arrow_sort_up.gif\">";
+                        $class_name .= "_up";
                 }
-                else
-                    $html_str .= "<img alt=\"\" align=\"top\" src=\"images/standard_arrow_sort.gif\">";
-                $html_str .= "</th>\n";
+                $html_str .= "                        <th onclick=\"xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX];
+                $html_str .= "content('".$list_title."', '".$sort_name."', ".$current_page.")\"><div class=\"".$class_name."\">";
+                # add some blanks for the arrow images
+                $html_str .= $field_name_replaced."&nbsp;&nbsp;&nbsp;</div></th>\n";
+                
                 array_push($field_names_with_length, $field_name);
             }
         }
@@ -362,13 +349,17 @@ class HtmlDatabaseTable
                         $html_str .= "                        <td ".$onclick_str.">".$record[DB_CREATOR_FIELD_NAME]."</td>\n";
                     else
                     {
-                        $ts_created = strftime(DATE_FORMAT_EU, (strtotime($record[DB_TS_CREATED_FIELD_NAME])));
-                        if ($firstthingsfirst_date_string == DATE_FORMAT_US)
-                            $ts_created = strftime(DATE_FORMAT_US, (strtotime($record[DB_TS_CREATED_FIELD_NAME])));
                         if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
-                            $html_str .= "                        <td ".$onclick_str.">".$ts_created."</td>\n";
-                        else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME_DATE)
-                            $html_str .= "                        <td ".$onclick_str.">".$record[DB_CREATOR_FIELD_NAME]."&nbsp;".LABEL_AT."&nbsp;".$ts_created."</td>\n";
+                        {
+                            $html_str .= "                        <td ".$onclick_str.">";
+                            $html_str .= get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_CREATED_FIELD_NAME])."</td>\n";
+                        }
+                        else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
+                        {
+                            $html_str .= "                        <td ".$onclick_str.">";
+                            $html_str .= get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_CREATED_FIELD_NAME]);
+                            $html_str .= "&nbsp;(".$record[DB_CREATOR_FIELD_NAME].")</td>\n";
+                        }
                     }                        
                 }
                 else if ($fields[$db_field_name][1] == "LABEL_DEFINITION_AUTO_MODIFIED")
@@ -377,13 +368,17 @@ class HtmlDatabaseTable
                         $html_str .= "                        <td ".$onclick_str.">".$record[DB_MODIFIER_FIELD_NAME]."</td>\n";
                     else
                     {
-                        $ts_modified = strftime(DATE_FORMAT_EU, (strtotime($record[DB_TS_MODIFIED_FIELD_NAME])));
-                        if ($firstthingsfirst_date_string == DATE_FORMAT_US)
-                            $ts_modified = strftime(DATE_FORMAT_US, (strtotime($record[DB_TS_MODIFIED_FIELD_NAME])));
                         if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
-                            $html_str .= "                        <td ".$onclick_str.">".$ts_modified."</td>\n";
-                        else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME_DATE)
-                            $html_str .= "                        <td ".$onclick_str.">".$record[DB_MODIFIER_FIELD_NAME]."&nbsp;".LABEL_AT."&nbsp;".$ts_modified."</td>\n";
+                        {
+                            $html_str .= "                        <td ".$onclick_str.">";
+                            $html_str .= get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_MODIFIED_FIELD_NAME])."</td>\n";
+                        }
+                        else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
+                        {
+                            $html_str .= "                        <td ".$onclick_str.">";
+                            $html_str .= get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_MODIFIED_FIELD_NAME]);
+                            $html_str .= "&nbsp;(".$record[DB_MODIFIER_FIELD_NAME].")</td>\n";
+                        }
                     }                        
                 }
                 else if ($fields[$db_field_name][1] == "LABEL_DEFINITION_NOTES_FIELD")
@@ -394,8 +389,8 @@ class HtmlDatabaseTable
                         $html_str .= "\n";
                         foreach ($value as $note_array)
                         {
-                            $html_str .= "                            <p>".$note_array[DB_CREATOR_FIELD_NAME]."&nbsp;".LABEL_AT."&nbsp;";
-                            $html_str .= get_date_str(DATE_FORMAT_NORMAL, $note_array[DB_TS_CREATED_FIELD_NAME]).": ";
+                            $html_str .= "                            <p>".get_date_str(DATE_FORMAT_NORMAL, $note_array[DB_TS_CREATED_FIELD_NAME]);
+                            $html_str .= "&nbsp;(".$note_array[DB_CREATOR_FIELD_NAME]."): ";
                             $html_str .= $note_array["_note"]."</p>\n";
                         }
                     }
@@ -545,7 +540,6 @@ class HtmlDatabaseTable
     function get_record ($list_title, $key_string, $result)
     {
         global $firstthingsfirst_field_descriptions;
-        global $firstthingsfirst_date_string;
     
         $html_str = "";
         $field_names = $this->_database_table->get_user_field_names();
@@ -630,13 +624,14 @@ class HtmlDatabaseTable
                             $html_str .= " value=\"".$record[DB_CREATOR_FIELD_NAME]."\"";
                         else
                         {
-                            $ts_created = strftime(DATE_FORMAT_EU, (strtotime($record[DB_TS_CREATED_FIELD_NAME])));
-                            if ($firstthingsfirst_date_string == DATE_FORMAT_US)
-                                $ts_created = strftime(DATE_FORMAT_US, (strtotime($record[DB_TS_CREATED_FIELD_NAME])));
+                            $ts_created = get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_CREATED_FIELD_NAME]);
                             if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
-                                $html_str .= " value=\"".$ts_created."\"";
-                            else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME_DATE)
-                                $html_str .= " value=\"".$record[DB_CREATOR_FIELD_NAME]."&nbsp;".LABEL_AT."&nbsp;".$ts_created."\"";
+                                $html_str .= " value=\"".get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_CREATED_FIELD_NAME])."\"";
+                            else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
+                            {
+                                $html_str .= " value=\"".get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_CREATED_FIELD_NAME]);
+                                $html_str .= "&nbsp;(".$record[DB_CREATOR_FIELD_NAME].")\"";
+                            }
                         }                        
                     }
                     else if ($fields[$db_field_name][1] == "LABEL_DEFINITION_AUTO_MODIFIED")
@@ -645,13 +640,13 @@ class HtmlDatabaseTable
                             $html_str .= " value=\"".$record[DB_MODIFIER_FIELD_NAME]."\"";
                         else
                         {
-                            $ts_modified = strftime(DATE_FORMAT_EU, (strtotime($record[DB_TS_MODIFIED_FIELD_NAME])));
-                            if ($firstthingsfirst_date_string == DATE_FORMAT_US)
-                                $ts_modified = strftime(DATE_FORMAT_US, (strtotime($record[DB_TS_MODIFIED_FIELD_NAME])));
                             if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
-                                $html_str .= " value=\"".$ts_modified."\"";
-                            else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME_DATE)
-                                $html_str .= " value=\"".$record[DB_MODIFIER_FIELD_NAME]."&nbsp;".LABEL_AT."&nbsp;".$ts_modified."\"";
+                                $html_str .= " value=\"".get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_MODIFIED_FIELD_NAME])."\"";
+                            else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
+                            {
+                                $html_str .= " value=\"".get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_MODIFIED_FIELD_NAME]);
+                                $html_str .= "&nbsp;(".$record[DB_MODIFIER_FIELD_NAME].")\"";
+                            }
                         }                        
                     }
                     else if ($field_type == "LABEL_DEFINITION_TEXT_FIELD")

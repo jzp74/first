@@ -47,8 +47,18 @@ a, a:link, a:visited {
     border: 1px solid rgb(0, 0, 0);
     }
 
+/* height of th should be lower */
+.database_table_contents_header_sort, .database_table_contents_header_sort_up, .database_table_contents_header_sort_down {
+    padding: 2px 4px 2px 4px;
+    }
+    
+/* height of th should be lower */
+#database_table_contents td {
+    padding: 2px 4px 2px 4px;
+    }    
+    
 /* do not show these divs */
-#header, #hidden_upper_margin, navigation_container, #navigation_container a, #navigation, #login_status {
+#header, #hidden_upper_margin, navigation_container, #navigation_container a, #navigation, #login_status, #focus_on_this_input {
     display: none;
     visibility: hidden;
     }

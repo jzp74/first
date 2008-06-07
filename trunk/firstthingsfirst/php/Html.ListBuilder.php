@@ -696,7 +696,7 @@ function get_field_definition_table ($definition)
             $html_str .= "                                <td id=\"row_".$row."_3\"><select class=\"selection_box\" name=\"row_".$row."_3\">\n";
             $html_str .= "                                    <option value=\"".NAME_DATE_OPTION_NAME."\" selected>".LABEL_NAME_ONLY."</option>\n";
             $html_str .= "                                    <option value=\"".NAME_DATE_OPTION_DATE."\">".LABEL_DATE_ONLY."</option>\n";
-            $html_str .= "                                    <option value=\"".NAME_DATE_OPTION_NAME_DATE."\">".LABEL_NAME_DATE."</option>\n";
+            $html_str .= "                                    <option value=\"".NAME_DATE_OPTION_DATE_NAME."\">".LABEL_DATE_NAME."</option>\n";
             $html_str .= "                                </select></td>\n";
         }
         else

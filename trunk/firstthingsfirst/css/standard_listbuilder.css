@@ -14,8 +14,9 @@
     padding: 2px 3px 2px 3px;
     background-color: rgb(197, 214, 232);
     color: rgb(0, 0, 0);
-    font-family: arial black;    
+    font-family: arial;    
     font-size: 16px;
+    font-weight: bold;
     }
     
 /*  defines the pane that containes general settings */    
@@ -47,10 +48,11 @@
     padding: 2px 3px 2px 3px;
     background-color: rgb(197, 214, 232);
     color: rgb(0, 0, 0);
-    font-family: arial black;    
+    font-family: arial;
     font-size: 16px;
+    font-weight: bold;
     }
-
+    
 /*  defines the pane that contains the list definition */
 #listbuilder_definition_pane {
     display: inline-block;

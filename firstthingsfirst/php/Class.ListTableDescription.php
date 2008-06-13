@@ -161,10 +161,6 @@ class ListTableDescription extends UserDatabaseTable
         $name_values_array[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME] = htmlentities($name_values_array[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME], ENT_QUOTES);
         $name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = htmlentities($this->_json->encode($name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME], ENT_QUOTES));
 
-        # add fake created/modifier fields
-        $name_values_array[LISTTABLEDESCRIPTION_CREATOR_FIELD_NAME] = NULL;
-        $name_values_array[LISTTABLEDESCRIPTION_MODIFIER_FIELD_NAME] = NULL;
-
         if (parent::insert($name_values_array) == 0)
             return FALSE;
         

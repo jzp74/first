@@ -183,7 +183,7 @@ function get_href ($func_str, $name_str)
  */
 function get_query_href ($query_str, $name_str)
 {
-    return "<a href=\"javascript:void(0);\" onclick=\"window.location='index.php?".$query_str."'\">".$name_str."</a>";
+    return "<a href=\"javascript:void(0);\" onclick=\"window.location='index.php?".$query_str."'; return false;\">".$name_str."</a>";
 }
 
 /**

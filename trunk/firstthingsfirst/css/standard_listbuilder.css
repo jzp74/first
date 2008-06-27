@@ -3,7 +3,7 @@
 
 /*  defines the listbuilder pane */
 #listbuilder_pane {
-    display: inline-block;
+    display: block;
     float: none;
     margin: 12px 12px 0px 12px;
     color: rgb(50, 50, 50);
@@ -21,7 +21,7 @@
     
 /*  defines the pane that containes general settings */    
 #listbuilder_general_settings_pane {
-    display: inline-block;
+    display: block;
     float: none;
     background-color: rgb(232, 232, 232);
     border: 2px solid rgb(197, 214, 232);
@@ -55,7 +55,7 @@
     
 /*  defines the pane that contains the list definition */
 #listbuilder_definition_pane {
-    display: inline-block;
+    display: block;
     float: none;
     margin: 0px 0px 0px 0px;
     padding: 12px 10px 12px 10px;

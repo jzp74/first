@@ -84,9 +84,9 @@ define("PAGE_TYPE_USER_ADMIN", 3);
 define("GENERAL_SEPARATOR", "***");
 
 /**
- * forbidden characters regular expression
+ * allowed characters regular expression
  */
-define("EREG_FORBIDDEN_CHARS", "\"\*'/:<>?\\&;#");
+define("EREG_ALLOWED_CHARS", "^A-Za-z0-9 ");
 
 /**
  * a false return string

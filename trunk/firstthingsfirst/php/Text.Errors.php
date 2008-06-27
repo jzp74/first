@@ -74,13 +74,13 @@ define("ERROR_NO_DESCRIPTION_GIVEN", "please enter a description for this list")
  * field check error
  * definition of error that is shown when user has entered a forbidden character in a field
  */
-define("ERROR_NOT_WELL_FORMED_STRING", "field contains one or more of the following characters: \" ' * / : < > ? \ | & ; #");
+define("ERROR_NOT_WELL_FORMED_STRING", "field can only contain alpha numerical characters");
 
 /**
  * field check error
  * definition of error that is shown when user has entered a forbidden character in a selection field (pipe character is now permitted)
  */
-define("ERROR_NOT_WELL_FORMED_SELECTION_STRING", "selection field contains one or more of the following characters: \" ' * / : < > ? \ & ; #");
+define("ERROR_NOT_WELL_FORMED_SELECTION_STRING", "field can only contain alpha numerical characters and the '|' character");
 
 /**
  * database error

@@ -148,7 +148,7 @@ class HtmlDatabaseTable
         $html_str .= "        </div> <!-- navigation_container -->\n\n";    
         $html_str .= "        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane\">\n\n";
         $html_str .= "        </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane -->\n\n";
-        $html_str .= "        <div id=\"message_pane\"\n";
+        $html_str .= "        <div id=\"message_pane\">\n";
         $html_str .= "        </div> <!-- message_pane -->\n\n";
         $html_str .= "        <div id=\"action_pane\">\n\n";
         $html_str .= "        </div> <!-- action_pane -->\n\n";           
@@ -389,8 +389,8 @@ class HtmlDatabaseTable
                         $html_str .= "\n";
                         foreach ($value as $note_array)
                         {
-                            $html_str .= "                            <p>".get_date_str(DATE_FORMAT_NORMAL, $note_array[DB_TS_CREATED_FIELD_NAME]);
-                            $html_str .= "&nbsp;(".$note_array[DB_CREATOR_FIELD_NAME]."): ";
+                            $html_str .= "                            <p><span class=\"note_creator\">".get_date_str(DATE_FORMAT_NORMAL, $note_array[DB_TS_CREATED_FIELD_NAME]);
+                            $html_str .= "&nbsp;(".$note_array[DB_CREATOR_FIELD_NAME].")</span> ";
                             $html_str .= $note_array["_note"]."</p>\n";
                         }
                     }
@@ -460,7 +460,7 @@ class HtmlDatabaseTable
             $html_str .= "                    <tr>\n";
             foreach ($field_names_with_length as $field_name)
                 $html_str .= "                        <td>".LABEL_MINUS."</td>\n";
-                $html_str .= "                        <td>&nbsp</td>\n";
+            $html_str .= "                        <td width=\"1%\">&nbsp</td>\n";
             $html_str .= "                    </tr>\n";
         }
     

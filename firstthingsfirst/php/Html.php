@@ -216,7 +216,7 @@ function get_button_confirm ($func_str, $confirm_str, $name_str)
  */
 function get_query_button ($query_str, $name_str)
 {
-    return "<div class=\"button\" onclick=\"window.location='index.php?".$query_str."'\">".$name_str."</div>";
+    return "<div class=\"button\" onclick=\"window.location='index.php?".$query_str."'; return false;\">".$name_str."</div>";
 }
 
 /**

@@ -159,7 +159,7 @@ function action_delete_portal_record ($list_title)
     if (!$list_table->drop())
     {
         $logging->warn("delete list record returns false");
-        set_error_message(LIST_CSS_NAME_PREFIX."content_pane", $list_table->get_error_str(), $response);
+        set_error_message("message_pane", $list_table->get_error_str(), $response);
                 
         return $response;
     }

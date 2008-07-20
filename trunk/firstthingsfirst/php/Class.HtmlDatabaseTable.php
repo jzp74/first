@@ -146,12 +146,15 @@ class HtmlDatabaseTable
         
         $html_str .= "            <div id=\"login_status\">&nbsp;</div>&nbsp\n";
         $html_str .= "        </div> <!-- navigation_container -->\n\n";    
+        $html_str .= "        <div class=\"white_area\"></div>\n\n";
         $html_str .= "        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane\">\n\n";
         $html_str .= "        </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane -->\n\n";
         $html_str .= "        <div id=\"message_pane\">\n";
+        $html_str .= "        &nbsp;";
         $html_str .= "        </div> <!-- message_pane -->\n\n";
         $html_str .= "        <div id=\"action_pane\">\n\n";
         $html_str .= "        </div> <!-- action_pane -->\n\n";           
+        $html_str .= "        <div class=\"white_area\"></div>\n\n";
         $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
 
         $result->set_result_str($html_str);    
@@ -179,7 +182,7 @@ class HtmlDatabaseTable
 
         $result->set_result_str($html_str);
     
-        $this->_log->trace("getting print page (title=".$title.")");
+        $this->_log->trace("got print page (title=".$title.")");
 
         return;
     }
@@ -233,12 +236,28 @@ class HtmlDatabaseTable
         # add contents top
         $html_str .= "\n\n            <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top_left\">\n";
         $html_str .= "                <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top_right\">\n";
-        $html_str .= "                    <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top\">\n";
+        $html_str .= "                    <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top\">&nbsp;\n";
         if ($page != DATABASETABLE_ALL_PAGES)
         {
             $archive_select = FALSE;
             $filter = FALSE;
             
+            # add archive select mechanism only when list supports archived records
+            if ($metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] != DATABASETABLE_METADATA_FALSE)
+            {
+                $html_str .= $this->get_archive_select($list_title);
+                $archive_select = TRUE;
+            }
+
+            # add filter only for lists
+            if ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_LIST)
+            {
+                $html_str .= $this->get_filter($list_title);
+                $filter = TRUE;
+            }
+            if (!$archive_select && !$filter)
+                $html_str .= "                        &nbsp;\n";
+
             # add record summary
             if ($current_page == 0)
             {
@@ -253,23 +272,10 @@ class HtmlDatabaseTable
             $html_str .= "                        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."pages_top\">";
             $html_str .= LABEL_RECORDS." ".$first_record." - ";
             $html_str .= $last_record." ".LABEL_OF." ".$total_records." ".LABEL_RECORDS."</div>\n";
-            # add archive select mechanism only when list supports archived records
-            if ($metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] != DATABASETABLE_METADATA_FALSE)
-            {
-                $html_str .= $this->get_archive_select($list_title);
-                $archive_select = TRUE;
-            }
-            # add filter only for lists
-            if ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_LIST)
-            {
-                $html_str .= $this->get_filter($list_title);
-                $filter = TRUE;
-            }
-            if (!$archive_select && !$filter)
-                $html_str .= "                        &nbsp;\n";
         }
         else
-            $html_str .= "                        &nbsp;\n";        
+            $html_str .= "                        &nbsp;\n";
+        
         $html_str .= "                    </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top -->\n";
         $html_str .= "                </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top_right -->\n";
         $html_str .= "            </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top_left -->\n\n";
@@ -301,9 +307,9 @@ class HtmlDatabaseTable
                 if ($order_by_field == $sort_name)
                 {
                     if ($order_ascending)
-                        $class_name .= "_down";
-                    else
                         $class_name .= "_up";
+                    else
+                        $class_name .= "_down";
                 }
                 $html_str .= "                        <th onclick=\"xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX];
                 $html_str .= "content('".$list_title."', '".$sort_name."', ".$current_page.")\"><div class=\"".$class_name."\">";
@@ -340,24 +346,25 @@ class HtmlDatabaseTable
             
                 if (stristr($fields[$db_field_name][1], "DATE"))
                 {
-                    $date_string = get_date_str(DATE_FORMAT_WEEKDAY, $value);
+                    $date_string = str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_WEEKDAY, $value));
                     $html_str .= "                        <td ".$onclick_str.">".$date_string."</td>\n";
                 }
                 else if ($fields[$db_field_name][1] == "LABEL_DEFINITION_AUTO_CREATED")
                 {
+                    
                     if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME)
-                        $html_str .= "                        <td ".$onclick_str.">".$record[DB_CREATOR_FIELD_NAME]."</td>\n";
+                        $html_str .= "                        <td ".$onclick_str.">".str_replace('-', '&#8209;', $record[DB_CREATOR_FIELD_NAME])."</td>\n";
                     else
                     {
                         if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
                         {
                             $html_str .= "                        <td ".$onclick_str.">";
-                            $html_str .= get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_CREATED_FIELD_NAME])."</td>\n";
+                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_CREATED_FIELD_NAME]))."</td>\n";
                         }
                         else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
                         {
                             $html_str .= "                        <td ".$onclick_str.">";
-                            $html_str .= get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_CREATED_FIELD_NAME]);
+                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_CREATED_FIELD_NAME]));
                             $html_str .= "&nbsp;(".$record[DB_CREATOR_FIELD_NAME].")</td>\n";
                         }
                     }                        
@@ -365,18 +372,18 @@ class HtmlDatabaseTable
                 else if ($fields[$db_field_name][1] == "LABEL_DEFINITION_AUTO_MODIFIED")
                 {
                     if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME)
-                        $html_str .= "                        <td ".$onclick_str.">".$record[DB_MODIFIER_FIELD_NAME]."</td>\n";
+                        $html_str .= "                        <td ".$onclick_str.">".str_replace('-', '&#8209;', $record[DB_MODIFIER_FIELD_NAME])."</td>\n";
                     else
                     {
                         if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
                         {
                             $html_str .= "                        <td ".$onclick_str.">";
-                            $html_str .= get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_MODIFIED_FIELD_NAME])."</td>\n";
+                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_MODIFIED_FIELD_NAME]))."</td>\n";
                         }
                         else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
                         {
                             $html_str .= "                        <td ".$onclick_str.">";
-                            $html_str .= get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_MODIFIED_FIELD_NAME]);
+                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_MODIFIED_FIELD_NAME]));
                             $html_str .= "&nbsp;(".$record[DB_MODIFIER_FIELD_NAME].")</td>\n";
                         }
                     }                        
@@ -389,7 +396,8 @@ class HtmlDatabaseTable
                         $html_str .= "\n";
                         foreach ($value as $note_array)
                         {
-                            $html_str .= "                            <p><span class=\"note_creator\">".get_date_str(DATE_FORMAT_NORMAL, $note_array[DB_TS_CREATED_FIELD_NAME]);
+                            $html_str .= "                            <p><span class=\"note_creator\">";
+                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_NORMAL, $note_array[DB_TS_CREATED_FIELD_NAME]));
                             $html_str .= "&nbsp;(".$note_array[DB_CREATOR_FIELD_NAME].")</span> ";
                             $html_str .= $note_array["_note"]."</p>\n";
                         }
@@ -540,7 +548,8 @@ class HtmlDatabaseTable
     function get_record ($list_title, $key_string, $result)
     {
         global $firstthingsfirst_field_descriptions;
-    
+        global $firstthingsfirst_date_string;
+        
         $html_str = "";
         $field_names = $this->_database_table->get_user_field_names();
         $fields = $this->_database_table->get_fields();
@@ -567,7 +576,7 @@ class HtmlDatabaseTable
        
         # then the form and table definition
         $html_str .= "\n                <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents_pane\">\n";
-        $html_str .= "                    <form name=\"record_form_name\" id=\"record_form\">\n";
+        $html_str .= "                    <form name=\"record_form_name\" id=\"record_form\" action=\"javascript:void(0);\" method=\"javascript:void(0);\">\n";
         $html_str .= "                        <table id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
         $html_str .= "                            <tbody>\n";
 
@@ -600,7 +609,7 @@ class HtmlDatabaseTable
                 if ($field_type != "LABEL_DEFINITION_NOTES_FIELD")
                 {
                     $html_str .= "                                    <td id=\"".$db_field_name.GENERAL_SEPARATOR.$field_type.GENERAL_SEPARATOR."0";
-                    $html_str .= "\"><".$firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_HTML_DEFINITION];
+                    $html_str .= "\" tabindex=\"".$i."\"><".$firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_HTML_DEFINITION];
                     # create a name tag
                     $html_str .= " name=".$db_field_name.GENERAL_SEPARATOR.$field_type.GENERAL_SEPARATOR."0";
                 }
@@ -676,9 +685,7 @@ class HtmlDatabaseTable
                 # set initial values
                 else
                 {
-                    if ($field_type == "LABEL_DEFINITION_AUTO_DATE")
-                        $html_str .= " value=\"".strftime($firstthingsfirst_date_string)."\"";
-                    else if ($field_type == "LABEL_DEFINITION_NON_EDIT_NUMBER")
+                    if ($field_type == "LABEL_DEFINITION_NON_EDIT_NUMBER")
                         $html_str .=  " value=\"0\"";
                     else if (($field_type == "LABEL_DEFINITION_AUTO_CREATED") || ($field_type == "LABEL_DEFINITION_AUTO_MODIFIED"))
                         $html_str .=  " value=\"-\"";
@@ -704,10 +711,6 @@ class HtmlDatabaseTable
             }
         }
         
-        $html_str .= "                                <tr align=\"left\">\n";
-        $html_str .= "                                    <td>&nbsp;</td>\n";
-        $html_str .= "                                </tr>\n";
-
         # end table definition
         $html_str .= "                            </tbody>\n";
         $html_str .= "                        </table> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents -->\n";

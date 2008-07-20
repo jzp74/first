@@ -664,10 +664,18 @@ function action_set_list_filter($list_title, $filter_str)
 
     if (!check_preconditions(ACTION_SET_LIST_FILTER, $response))
         return $response;
+        
+    # check if filter_str is well formed
+    if (str_is_well_formed("filter_str", $filter_str) == FALSE_RETURN_STRING)
+    {
+        set_error_message("database_table_contents_top_left", ERROR_NOT_WELL_FORMED_STRING, $response);
+        
+        return $response;
+    }
 
-    # set archive value
+    # set filter value
     $user->get_list_state($list_table->get_table_name());
-    $list_state->set_filter_str(ereg_replace("[".EREG_FORBIDDEN_CHARS."]+", "", $filter_str));
+    $list_state->set_filter_str($filter_str);
     $list_state->set_filter_str_sql("");
     $user->set_list_state();
 

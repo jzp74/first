@@ -149,7 +149,7 @@ class ListState
 
     /**
     * get value of filter_str attribute
-    * @return array value of filter_str_sql attribute
+    * @return array value of filter_str attribute
     */
     function get_filter_str ()
     {

@@ -12,6 +12,8 @@ require_once("../php/Class.Logging.php");
 require_once("../globals.php");
 require_once("../localsettings.php");
 
+require_once("../php/external/JSON.php");
+
 require_once("../php/Text.Labels.php");
 
 require_once("../php/Class.Database.php");
@@ -41,21 +43,77 @@ function fatal ($str)
 
 
 # opening message
-echo "<strong>starting ".$update_string."</strong><br><br>";
+echo "<strong>starting ".$update_string."</strong><br><br>\n";
 
-echo "updating list: <strong>list descriptions table</strong> (".LISTTABLEDESCRIPTION_TABLE_NAME.")<br>";
-    
-# insert field LISTTABLEDESCRIPTION_CREATOR_FIELD_NAME
-$query = "ALTER TABLE ".LISTTABLEDESCRIPTION_TABLE_NAME." ADD COLUMN ".LISTTABLEDESCRIPTION_CREATOR_FIELD_NAME." ".DB_DATATYPE_BOOL." AFTER ".LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME;
-# insert field LISTTABLEDESCRIPTION_MODIFIER_FIELD_NAME
-$query .= ", ADD COLUMN ".LISTTABLEDESCRIPTION_MODIFIER_FIELD_NAME." ".DB_DATATYPE_BOOL." AFTER ".LISTTABLEDESCRIPTION_CREATOR_FIELD_NAME;
-$result = $database->query($query);
-if ($result != FALSE)
-    echo "&nbsp;&nbsp;&nbsp;updated list<br>";
+$updated_lists = 0;
+$list_ids_array = array();
+$json = new Services_JSON();
+
+echo "updating lists<br>";
+
+$query = "SELECT _id, _title, _description, _definition FROM ".LISTTABLEDESCRIPTION_TABLE_NAME;
+$query_result = $database->query($query);
+if ($query_result != FALSE)
+{
+    while ($row = $database->fetch($query_result))
+    {
+        $list_name = $row[1];
+        $table_name = LISTTABLE_TABLE_NAME_PREFIX.strtolower(str_replace(" ", "_", $row[1]));
+        $description = html_entity_decode(html_entity_decode($row[2], ENT_QUOTES), ENT_QUOTES);
+        $definition = (array)$json->decode(html_entity_decode(html_entity_decode($row[3], ENT_QUOTES), ENT_QUOTES));
+        
+        echo "updating list: <strong>".$list_name."</strong> (".$table_name.")<br>\n";
+        
+        $field_names = array_keys($definition);
+        echo "&nbsp;&nbsp;&nbsp;updating list description<br>\n";
+
+        $previous_field_name = "";
+        foreach ($field_names as $field_name)
+        {
+            $field_definition = $definition[$field_name];
+            $field_type = $field_definition[0];
+#            echo "&nbsp;&nbsp;&nbsp;found field <strong>".$field_name."</strong> of field type ".$field_type."<br>\n";            
+            
+            # update auto update field
+            if ($field_type == "LABEL_DEFINITION_AUTO_DATE")
+            {
+                $new_field_definition = array();
+                array_push($new_field_definition, "LABEL_DEFINITION_AUTO_CREATED");
+                array_push($new_field_definition, $field_definition[1]);
+                array_push($new_field_definition, NAME_DATE_OPTION_DATE);
+                $definition[$field_name] = $new_field_definition;
+
+                # update list table description
+                echo "&nbsp;&nbsp;&nbsp;updating list table<br>\n";
+                $query = "ALTER TABLE ".$table_name." DROP COLUMN ".$field_name;
+#                echo $query."<br>\n";
+                $result = $database->query($query);
+                if ($result == FALSE)
+                    fatal("could not update list table description");
+                $query = "ALTER TABLE ".$table_name." ADD COLUMN ".$field_name." ".DB_DATATYPE_BOOL." AFTER ".$previous_field_name;
+#                echo $query."<br>\n";
+                $result = $database->query($query);
+                if ($result == FALSE)
+                    fatal("could not update list table description");
+            }
+            $previous_field_name = $field_name;
+        }
+        
+        # update complete description
+        $new_description = htmlentities($description, ENT_QUOTES);
+        $new_definition = htmlentities($json->encode($definition), ENT_QUOTES);
+        $query = "UPDATE ".LISTTABLEDESCRIPTION_TABLE_NAME." SET _description='".$new_description."', ";
+        $query .= "_definition='".$new_definition."' WHERE _id='".$row[0]."'";
+#        echo $query."<br>\n";
+        $result = $database->query($query);
+        if ($result == FALSE)
+            fatal("could not update list description");
+    }
+}
 else
-    fatal("could not update this list");
-
+    fatal("could not find any lists");
+    
 # succes
-echo "<strong>update complete!</strong><br>";
+echo "<br><strong>update complete!</strong><br>";
 
 ?>

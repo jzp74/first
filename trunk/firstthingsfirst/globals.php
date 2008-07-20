@@ -42,7 +42,7 @@ define("DB_NULL_DATETIME", "1970-01-01 00:00:00");
 /**
  * database datatypes
  */
-define("DB_DATATYPE_BOOL", "TINYINT");
+define("DB_DATATYPE_BOOL", "TINYINT NOT NULL");
 define("DB_DATATYPE_DATETIME", "DATETIME NOT NULL");
 define("DB_DATATYPE_DATE", "DATE NOT NULL");
 define("DB_DATATYPE_ID", "INT NOT NULL AUTO_INCREMENT");
@@ -164,12 +164,6 @@ $firstthingsfirst_field_descriptions = array(
         DB_DATATYPE_DATETIME,
         "input type=text size=\"20\" maxlength=\"20\"",
         "str_is_not_empty str_is_date",
-        FIELD_DESCRIPTION_NON_SELECTABLE_DATATYPE
-    ),
-    "LABEL_DEFINITION_AUTO_DATE"     => array(
-        DB_DATATYPE_DATE,
-        "input class=\"inactive_input\" type=text size=\"10\" maxlength=\"10\" readonly",
-        "str_is_date",
         FIELD_DESCRIPTION_NON_SELECTABLE_DATATYPE
     ),
     "LABEL_DEFINITION_AUTO_CREATED"          => array(

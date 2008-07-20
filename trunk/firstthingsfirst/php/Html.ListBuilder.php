@@ -100,59 +100,86 @@ function action_get_listbuilder_page ($list_title)
         $html_str .= "        <div id=\"page_title\">".LABEL_CONFIGURE_NEW_LIST."</div>\n\n";
     
     $html_str .= "        <div id=\"navigation_container\">\n";
-    $html_str .= "            <div id=\"navigation\">&nbsp;".get_query_href("action=get_portal_page", BUTTON_PORTAL)."</div>\n";
+    $html_str .= "            <div id=\"navigation\">|&nbsp;".get_query_href("action=get_portal_page", BUTTON_PORTAL)."&nbsp;|</div>\n";
     $html_str .= "            <div id=\"login_status\">&nbsp;</div>&nbsp\n";
     $html_str .= "        </div> <!-- navigation_container -->\n\n";
+    $html_str .= "        <div class=\"white_area\"></div>\n\n";
     $html_str .= "        <div id=\"listbuilder_pane\">\n\n";
-    $html_str .= "            <div id=\"listbuilder_general_settings_title\">".LABEL_GENERAL_SETTINGS."</div>\n\n";        
-    $html_str .= "            <div id=\"listbuilder_general_settings_pane\">\n\n";
-    $html_str .= "                <table id=\"listbuilder_general_settings\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
-    $html_str .= "                    <tbody>\n";
-    $html_str .= "                        <tr>\n";
-    $html_str .= "                            <td>".LABEL_TITLE_OF_THIS_LIST."</td>\n";
+    $html_str .= "            <div class=\"listbuilder_title_pane\">\n";
+    $html_str .= "                <div class=\"listbuilder_title_pane_top_left\">\n";
+    $html_str .= "                    <div class=\"listbuilder_title_pane_top_right\">\n";
+    $html_str .= "                        <div class=\"listbuilder_title_pane_contents\">".LABEL_GENERAL_SETTINGS."</div>\n";
+    $html_str .= "                    </div> <!-- listbuilder_title_pane_top_right -->\n";
+    $html_str .= "                </div> <!-- listbuilder_title_pane_top_left -->\n";
+    $html_str .= "            </div> <!-- listbuilder_title_pane_contents -->\n";
+    $html_str .= "            <div class=\"listbuilder_contents_pane_outer_border\">\n";
+    $html_str .= "                <div class=\"listbuilder_contents_pane_inner_border\">\n";
+    $html_str .= "                    <div class=\"listbuilder_contents_pane_bottom_left\">\n";
+    $html_str .= "                        <div class=\"listbuilder_contents_pane_bottom_right\">\n";
+    $html_str .= "                            <div class=\"listbuilder_contents_pane_contents\">\n";
+    $html_str .= "                                <div class=\"listbuilder_contents_pane_line\">\n";
+    $html_str .= "                                    <div class=\"listbuilder_contents_pane_line_left\">".LABEL_TITLE_OF_THIS_LIST."</div>\n";
+    $html_str .= "                                    <div class=\"listbuilder_contents_pane_line_right\">";
 
     # set value for title when list title has been given
     if (strlen($list_title))
     {
-        $html_str .= "                            <td id=\"listbuilder_list_title_id\"><input size=\"20\" maxlength=\"100\"";
-        $html_str .= " id=\"listbuilder_list_title\" value=\"".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."\" type=\"text\"></td>\n";
+        $html_str .= "<input size=\"20\" maxlength=\"100\" id=\"listbuilder_list_title\"";
+        $html_str .= " value=\"".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."\" type=\"text\"></div>\n";
     }
     else
-        $html_str .= "                            <td id=\"listbuilder_list_title_id\"><input size=\"20\" maxlength=\"100\" id=\"listbuilder_list_title\" type=\"text\"></td>\n";
+        $html_str .= "<input size=\"20\" maxlength=\"100\" id=\"listbuilder_list_title\" type=\"text\"></div>\n";
 
-    $html_str .= "                            <td width=\"90%\">&nbsp;</td>\n";
-    $html_str .= "                        </tr>\n";
-    $html_str .= "                        <tr>\n";
-    $html_str .= "                            <td>".LABEL_SHORT_DESCRIPTION_OF_THIS_LIST."</td>\n";
+    $html_str .= "                                </div> <!-- listbuilder_contents_pane_line -->\n";
+    $html_str .= "                                <div class=\"listbuilder_contents_pane_line\">\n";
+    $html_str .= "                                    <div class=\"listbuilder_contents_pane_line_left\">".LABEL_SHORT_DESCRIPTION_OF_THIS_LIST."</div>\n";
+    $html_str .= "                                    <div class=\"listbuilder_contents_pane_line_right\">";
 
     # set value for description when list title has been given
     if (strlen($list_title))
     {
-        $html_str .= "                            <td id=\"listbuilder_list_description_id\"><textarea cols=\"40\" rows=\"4\"";
-        $html_str .= " id=\"listbuilder_list_description\">".$record[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME]."</textarea></td>\n";
+        $html_str .= "<textarea cols=\"40\" rows=\"4\" id=\"listbuilder_list_description\">";
+        $html_str .= $record[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME]."</textarea></div>\n";
     }
     else
-        $html_str .= "                            <td id=\"listbuilder_list_description_id\"><textarea cols=\"40\" rows=\"4\" id=\"listbuilder_list_description\"></textarea></td>\n";
+        $html_str .= "<textarea cols=\"40\" rows=\"4\" id=\"listbuilder_list_description\"></textarea></div>\n";
 
-    $html_str .= "                            <td width=\"90%\">&nbsp;</td>\n";
-    $html_str .= "                        </tr>\n";
-    $html_str .= "                    </tbody>\n";
-    $html_str .= "                </table> <!-- listbuilder_general_settings -->\n\n";
-    $html_str .= "            </div> <!-- listbuilder_general_settings_pane -->\n\n";
+    $html_str .= "                                </div> <!-- listbuilder_contents_pane_line -->\n";
+    $html_str .= "                            </div> <!-- listbuilder_contents_pane_contents -->\n";
+    $html_str .= "                        </div> <!-- listbuilder_contents_pane_bottom_right -->\n";
+    $html_str .= "                    </div> <!-- listbuilder_contents_pane_bottom_left -->\n";
+    $html_str .= "                </div> <!-- listbuilder_contents_pane_inner_border -->\n";
+    $html_str .= "            </div> <!-- listbuilder_contents_pane_outer_border -->\n";
     
     # do not show the actual listbuilder when list title has been set
     if (!strlen($list_title))
     {
-        $html_str .= "            <div id=\"listbuilder_definition_title\">".LABEL_DEFINE_TABLE_FIELDS."</div>\n\n";
-        $html_str .= "            <div id=\"listbuilder_definition_pane\">\n\n";
+        $html_str .= "            <div class=\"white_area\"></div>\n\n";
+        $html_str .= "            <div class=\"listbuilder_title_pane\">\n";
+        $html_str .= "                <div class=\"listbuilder_title_pane_top_left\">\n";
+        $html_str .= "                    <div class=\"listbuilder_title_pane_top_right\">\n";
+        $html_str .= "                        <div class=\"listbuilder_title_pane_contents\">".LABEL_DEFINE_TABLE_FIELDS."</div>\n";
+        $html_str .= "                    </div> <!-- listbuilder_title_pane_top_right -->\n";
+        $html_str .= "                </div> <!-- listbuilder_title_pane_top_left -->\n";
+        $html_str .= "            </div> <!-- listbuilder_title_pane_contents -->\n";
+        $html_str .= "            <div class=\"listbuilder_contents_pane_outer_border\">\n";
+        $html_str .= "                <div class=\"listbuilder_contents_pane_inner_border\">\n";
+        $html_str .= "                    <div class=\"listbuilder_contents_pane_bottom_left\">\n";
+        $html_str .= "                        <div class=\"listbuilder_contents_pane_bottom_right\">\n";
+        $html_str .= "                            <div id=\"listbuilder_contents_pane_contents\" class=\"listbuilder_contents_pane_contents\">\n";
 
         $html_str .= get_field_definition_table($definition);
 
-        $html_str .= "           </div> <!-- listbuilder_definition_pane -->\n\n";
+        $html_str .= "                            </div> <!-- listbuilder_contents_pane_contents -->\n";
+        $html_str .= "                        </div> <!-- listbuilder_contents_pane_bottom_right -->\n";
+        $html_str .= "                    </div> <!-- listbuilder_contents_pane_bottom_left -->\n";
+        $html_str .= "                </div> <!-- listbuilder_contents_pane_inner_border -->\n";
+        $html_str .= "            </div> <!-- listbuilder_contents_pane_outer_border -->\n";
     }
 
     $html_str .= "        </div> <!-- listbuilder_pane -->\n\n";
-    $html_str .= "        <div id=\"message_pane\"\n";
+    $html_str .= "        <div id=\"message_pane\">\n";
+    $html_str .= "        &nbsp;";
     $html_str .= "        </div> <!-- message_pane -->\n\n";
     $html_str .= "        <div id=\"action_pane\">\n\n";
     $html_str .= "            <div id=\"action_bar_top_left\"></div>\n";
@@ -161,18 +188,29 @@ function action_get_listbuilder_page ($list_title)
     
     # only show one link when list title had been given
     if (strlen($list_title))
-        $html_str .= "                <p>".get_href("xajax_action_modify_list('".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."', document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value)", BUTTON_MODIFY_LIST)."</p>\n";
+    {
+        $href_str = "xajax_action_modify_list('".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME];
+        $href_str .= "', document.getElementById('listbuilder_list_title').value, ";
+        $href_str .= "document.getElementById('listbuilder_list_description').value)";
+        $html_str .= "                ".get_href($href_str, BUTTON_MODIFY_LIST)."\n";
+    }
     else
     {
-        $html_str .= "                <p>".get_select("add_select", "add_it", "")."\n";
-        $html_str .= "                &nbsp;".get_href("xajax_action_insert_listbuilder_row(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'))", BUTTON_ADD_FIELD)."\n";
-        $html_str .= "                &nbsp;&nbsp;&nbsp;".get_href("xajax_action_create_list(document.getElementById('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value, xajax.getFormValues('database_definition_form'))", BUTTON_CREATE_LIST)."</p>\n";
+        $html_str .= "                ".get_select("add_select", "add_it", "")."\n";
+        $href_str = "xajax_action_insert_listbuilder_row(document.getElementById";
+        $href_str .= "('add_select').value, xajax.getFormValues('database_definition_form'))";
+        $html_str .= "                &nbsp;".get_href($href_str, BUTTON_ADD_FIELD)."\n";
+        $href_str = "xajax_action_create_list(document.getElementById";
+        $href_str .= "('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value, ";
+        $href_str .= "xajax.getFormValues('database_definition_form'))";
+        $html_str .= "                &nbsp;".get_href($href_str, BUTTON_CREATE_LIST)."\n";
     }
     
     $html_str .= "            </div> <!-- action_bar -->\n\n";    
     $html_str .= "            <div id=\"action_bar_bottom_left\"></div>\n";
     $html_str .= "            <div id=\"action_bar_bottom_right\"></div>\n        ";
     $html_str .= "        </div> <!-- action_pane -->\n\n";           
+    $html_str .= "        <div class=\"white_area\"></div>\n\n";
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
         
     $response->addAssign("main_body", "innerHTML", $html_str);
@@ -210,7 +248,7 @@ function action_insert_listbuilder_row ($field_type, $definition)
         return $response;
 
     $html_str = get_field_definition_table($new_definition);    
-    $response->addAssign("listbuilder_definition_pane", "innerHTML", $html_str);
+    $response->addAssign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
 
     $logging->trace("inserted listbuilder row");
 
@@ -269,7 +307,7 @@ function action_move_listbuilder_row ($row_number, $direction, $definition)
     }
             
     $html_str = get_field_definition_table($new_definition);    
-    $response->addAssign("listbuilder_definition_pane", "innerHTML", $html_str);
+    $response->addAssign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
 
     $logging->trace("moved listbuilder row");
 
@@ -311,7 +349,7 @@ function action_delete_listbuilder_row ($row_number, $definition)
     }
 
     $html_str = get_field_definition_table($new_definition);    
-    $response->addAssign("listbuilder_definition_pane", "innerHTML", $html_str);
+    $response->addAssign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
 
     $logging->trace("deleted listbuilder row");
 
@@ -338,7 +376,7 @@ function action_refresh_listbuilder ($definition)
         return $response;
 
     $html_str = get_field_definition_table(array_values($definition));    
-    $response->addAssign("listbuilder_definition_pane", "innerHTML", $html_str);
+    $response->addAssign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
 
     $logging->trace("refreshed listbuilder");
 
@@ -662,7 +700,7 @@ function get_field_definition_table ($definition)
     $html_str .= "                                <th>".LABEL_FIELDNAME."</th>\n";
     $html_str .= "                                <th>".LABEL_OPTIONS."</th>\n";
     $html_str .= "                                <th>".LABEL_COMMENT."</th>\n";
-    $html_str .= "                                <th colspan=\"3\">".LABEL_ACTION."</th>\n";
+    $html_str .= "                                <th colspan=\"3\">&nbsp;</th>\n";
     $html_str .= "                            </tr>\n";
     $html_str .= "                        </thead>\n";
     $html_str .= "                        <tbody>\n";
@@ -694,9 +732,18 @@ function get_field_definition_table ($definition)
         else if (($definition[$position_type] == "LABEL_DEFINITION_AUTO_CREATED") || ($definition[$position_type] == "LABEL_DEFINITION_AUTO_MODIFIED"))
         {
             $html_str .= "                                <td id=\"row_".$row."_3\"><select class=\"selection_box\" name=\"row_".$row."_3\">\n";
-            $html_str .= "                                    <option value=\"".NAME_DATE_OPTION_NAME."\" selected>".LABEL_NAME_ONLY."</option>\n";
-            $html_str .= "                                    <option value=\"".NAME_DATE_OPTION_DATE."\">".LABEL_DATE_ONLY."</option>\n";
-            $html_str .= "                                    <option value=\"".NAME_DATE_OPTION_DATE_NAME."\">".LABEL_DATE_NAME."</option>\n";
+            $html_str .= "                                    <option value=\"".NAME_DATE_OPTION_DATE."\"";
+            if ($definition[$position_options] == NAME_DATE_OPTION_DATE)
+                $html_str .= " selected";            
+            $html_str .= ">".LABEL_DATE_ONLY."</option>\n";
+            $html_str .= "                                    <option value=\"".NAME_DATE_OPTION_NAME."\"";
+            if ($definition[$position_options] == NAME_DATE_OPTION_NAME)
+                $html_str .= " selected";            
+            $html_str .= ">".LABEL_NAME_ONLY."</option>\n";
+            $html_str .= "                                    <option value=\"".NAME_DATE_OPTION_DATE_NAME."\"";
+            if ($definition[$position_options] == NAME_DATE_OPTION_DATE_NAME)
+                $html_str .= " selected";            
+            $html_str .= ">".LABEL_DATE_NAME."</option>\n";
             $html_str .= "                                </select></td>\n";
         }
         else

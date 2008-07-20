@@ -165,7 +165,7 @@ class ListTableNote extends DatabaseTable
         
         # create name_value_array
         $name_values_array = array();
-        $name_values_array[LISTTABLENOTE_NOTE_FIELD_NAME] = htmlentities($note, ENT_QUOTES);
+        $name_values_array[LISTTABLENOTE_NOTE_FIELD_NAME] = $note;
 
         if (parent::update($key_string, $this->_user->get_name(), $name_values_array) == FALSE)
             return FALSE;        

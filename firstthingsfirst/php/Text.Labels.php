@@ -96,12 +96,6 @@ define("LABEL_DEFINITION_DATE", "date&nbsp;&nbsp;");
 
 /**
  * shared field definition
- * definition of automatic date
- */
-define("LABEL_DEFINITION_AUTO_DATE", "automatic date&nbsp;&nbsp;");
-
-/**
- * shared field definition
  * definition of date
  */
 define("LABEL_DEFINITION_AUTO_CREATED", "automatic created&nbsp;&nbsp;");
@@ -303,12 +297,6 @@ define("LABEL_OPTIONS", "options");
  * definition of 'comment' label
  */
 define("LABEL_COMMENT", "comment");
-
-/**
- * listbuilder label
- * definition of 'action' label
- */
-define("LABEL_ACTION", "action");
 
 /**
  * listbuilder label

@@ -3,18 +3,9 @@
 
 /*  defines the pane that contains database table contents */
 #database_table_content_pane {
-    display: block;
-    float: none;
-    margin: 12px 10px 2px 10px;
+    margin: 0px 10px 0px 10px;
     background-color: rgb(197, 214, 232);
     color: rgb(5, 114, 197);
-    }
-
-/*  defines area above database table contents */
-#database_table_contents_top {
-    display: block;
-    padding: 14px 14px 20px 14px;
-    font-weight: bold;
     }
 
 #database_table_contents_top_left {
@@ -27,29 +18,37 @@
     z-index: 100;
     }
     
+/*  defines area above database table contents */
+#database_table_contents_top {
+    padding: 0px 14px 0px 14px;
+    height: 54px;
+    font-weight: bold;
+    }
+
 #database_table_contents_top select, #database_table_contents_top input { 
     border: 1px solid rgb(171, 187, 202);
     color: rgb(50, 50, 50);
     }
-    
-/*  defines database table pages in database table contents top */
-#database_table_pages_top {
-    float: right;
-    }    
-    
+
 /*  defines archive selector in database table contents top */
 #database_table_archive_select {
-    vertical-align: middle;
-    margin: 1px 16px 0px 0px;
+    display: inline;
     float: left;
+    margin: 1px 16px 0px 0px;
     }    
 
 /*  defines filter in database table contents top */
 #database_table_filter {
-    vertical-align: middle;
-    float: none;
+    display: inline;
+    float: left;
     }    
 
+/*  defines database table pages in database table contents top */
+#database_table_pages_top {
+    display: inline;
+    float: right;
+    }    
+    
 #database_table_filter .button {
     margin: 0px 0px 0px 0px;
     padding: 1px 4px 1px 4px;
@@ -162,7 +161,7 @@
     display: block;
     float: none;
     background-color: rgb(232, 232, 232);
-    padding: 10px 0px 16px 16px;
+    padding: 10px 0px 10px 16px;
     border-left: 2px solid rgb(255, 130, 30);
     border-right: 2px solid rgb(255, 130, 30);
     border-bottom: 2px solid rgb(255, 130, 30);
@@ -205,14 +204,22 @@
     border-bottom: 2px solid rgb(255, 130, 30);
     }
 
-#database_table_record_contents_pane .button {
+#database_table_record_contents_buttons {
+    float: none;
+    width: 80%;
+    padding: 16px 0px 6px 0px;
+    }
+
+#database_table_record_contents_buttons .button {
     display: inline;
+    margin: 0px 0px 0px 0px;
+    padding: 4px 4px 4px 4px;
     background-color: rgb(255, 130, 30);
     color: rgb(255, 255, 255);
     border: 1px solid rgb(255, 255, 255);
     }
 
-#database_table_record_contents_pane .button:hover {
+#database_table_record_contents_buttons .button:hover {
     background-color: rgb(255, 255, 255);
     color: rgb(255, 130, 30);
     border: 1px solid rgb(255, 130, 30);

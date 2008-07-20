@@ -213,7 +213,8 @@ function get_list_record_note ($db_field_name, $this_id, $previous_id, $next_id,
     # display info about the creator of this note only when it is not a new note
     if ($this_id != 0)
     {
-        $html_str .= "                                        <p>&nbsp;".get_date_str(DATE_FORMAT_WEEKDAY, $note_array[DB_TS_CREATED_FIELD_NAME]);
+        $html_str .= "                                        <p>&nbsp;";
+        $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_WEEKDAY, $note_array[DB_TS_CREATED_FIELD_NAME]));
         $html_str .= "&nbsp;(".$note_array[DB_CREATOR_FIELD_NAME].")</p>\n";
     }
     else

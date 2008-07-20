@@ -168,11 +168,15 @@ function set_info_message ($info_element, $info_str, $response)
  * get html for an active href (href calls js function)
  * @param string $func_str contains the complete js function name and all its parameters
  * @param string $name_str contains the name of the button
+ * @param string $tabindex contains the tabindex of the button
  * @return string html containing button
  */
-function get_href ($func_str, $name_str)
+function get_href ($func_str, $name_str, $tabindex=-1)
 {
-    return "<a href=\"javascript:void(0);\" onclick=\"".$func_str."\">".$name_str."</a>";
+    $html_str = "<a href=\"javascript:void(0);\" ";
+    if ($tabindex >= 0)
+        $html_str .= "tabindex=\"".$tabindex."\" ";
+    return $html_str."onclick=\"".$func_str."\">".$name_str."</a>";
 }
 
 /**
@@ -194,7 +198,7 @@ function get_query_href ($query_str, $name_str)
  */
 function get_button ($func_str, $name_str)
 {
-    return "<div class=\"button\" onclick=\"".$func_str."\">".$name_str."</div>";
+    return "<button class=\"button\" onclick=\"".$func_str."\">".$name_str."</button>";
 }
 
 /**
@@ -205,7 +209,7 @@ function get_button ($func_str, $name_str)
  */
 function get_button_confirm ($func_str, $confirm_str, $name_str)
 {
-    return "<div class=\"button\" onclick=\"if (confirm('".$confirm_str."')) { ".$func_str." }\">".$name_str."</div>";
+    return "<button class=\"button\" onclick=\"if (confirm('".$confirm_str."')) { ".$func_str." }\">".$name_str."</button>";
 }
 
 /**
@@ -216,7 +220,7 @@ function get_button_confirm ($func_str, $confirm_str, $name_str)
  */
 function get_query_button ($query_str, $name_str)
 {
-    return "<div class=\"button\" onclick=\"window.location='index.php?".$query_str."'; return false;\">".$name_str."</div>";
+    return "<button class=\"button\" onclick=\"window.location='index.php?".$query_str."'; return false;\">".$name_str."</button>";
 }
 
 /**

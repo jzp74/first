@@ -34,7 +34,7 @@ $firstthingsfirst_db_schema = "some_schema";
 # loglevel
 # choose between LOGGING_OFF LOGGING_ERROR, LOGGING_WARN, LOGGING_INFO, LOGGING_DEBUG and LOGGING_TRACE
 # make sure you have write privileges on your hosting provider if you want to turn on logging
-$firstthingsfirst_loglevel = LOGGING_INFO;
+$firstthingsfirst_loglevel = LOGGING_OFF;
 
 # logfile, all logmessages will be written in this file
 $firstthingsfirst_logfile = "firstthingsfirst.log";

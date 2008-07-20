@@ -3,73 +3,113 @@
 
 /*  defines the listbuilder pane */
 #listbuilder_pane {
-    display: block;
-    float: none;
-    margin: 12px 12px 0px 12px;
-    color: rgb(50, 50, 50);
+    margin: 0px 16px 0px 12px;
     }
 
-/*  defines the title of the general settings pane */
-#listbuilder_general_settings_title {
-    padding: 2px 3px 2px 3px;
-    background-color: rgb(197, 214, 232);
-    color: rgb(0, 0, 0);
-    font-family: arial;    
-    font-size: 16px;
-    font-weight: bold;
-    }
-    
-/*  defines the pane that containes general settings */    
-#listbuilder_general_settings_pane {
-    display: block;
-    float: none;
-    background-color: rgb(232, 232, 232);
-    border: 2px solid rgb(197, 214, 232);
-    }
-
-/*  defines the table that contains the general settings */    
-#listbuilder_general_settings {
-    float: none;
+/*  defines the listbuilder title pane */
+.listbuilder_title_pane {
+    float: left;
     width: 100%;
-    }
-
-#listbuilder_general_settings td {
-    padding: 4px 10px 4px 4px;
-    vertical-align: top;
-    }
-
-#listbuilder_general_settings input, #listbuilder_general_settings textarea { 
-    border: 1px solid rgb(197, 214, 232);
-    }
-
-/*  defines the title of the definition pane */
-#listbuilder_definition_title {
-    margin: 12px 0px 0px 0px;
-    padding: 2px 3px 2px 3px;
+    padding: 0px 2px 0px 2px;
+    margin: 0px 0px 0px 0px;
+    color: rgb(50, 50, 50);
     background-color: rgb(197, 214, 232);
+    }
+
+/*  defines the rounded corners of the listbuilder title pane */
+.listbuilder_title_pane_top_left {
+    float: left;
+    width: 100%;
+    margin: 0px 0px 0px -2px; 
+    background: url(../images/standard_contents_top_left.gif) left top no-repeat;
+    }
+
+.listbuilder_title_pane_top_right {
+    float: right;
+    width: 100%;
+    margin: 0px -4px 0px 0px; 
+    background: url(../images/standard_contents_top_right.gif) right top no-repeat;
+    }
+
+/*  defines the actual title */
+.listbuilder_title_pane_contents {
+    float: left;
+    width: 100%;
+    padding: 3px 5px 3px 5px;
     color: rgb(0, 0, 0);
     font-family: arial;
     font-size: 16px;
     font-weight: bold;
     }
-    
-/*  defines the pane that contains the list definition */
-#listbuilder_definition_pane {
-    display: block;
-    float: none;
-    margin: 0px 0px 0px 0px;
-    padding: 12px 10px 12px 10px;
+
+/*  defines the bottom layer of the login screen */
+.listbuilder_contents_pane_outer_border {
+    float: left;
+    padding: 0px 2px 2px 2px;
+    width: 100%;
+    color: rgb(50, 50, 50);
+    background-color: rgb(197, 214, 232);
+    }
+
+/*  defines the login contents which contains the divs with all the rounded corners */
+.listbuilder_contents_pane_inner_border {
+    float: left;
+    width: 100%;
     background-color: rgb(232, 232, 232);
-    border: 2px solid rgb(197, 214, 232);
+    }
+
+/*  defines the rounded corners of the listbuilder title pane */
+.listbuilder_contents_pane_bottom_left {
+    float: left;
+    width: 100%;
+    margin: 0px 0px -2px -2px; 
+    background: url(../images/standard_login_bottom_left.gif) left bottom no-repeat;
+    }
+
+.listbuilder_contents_pane_bottom_right {
+    float: right;
+    width: 100%;
+    margin: 0px -4px 0px 0px;
+    background: url(../images/standard_login_bottom_right.gif) right bottom no-repeat;
+    }
+
+/*  defines the actual contents */
+.listbuilder_contents_pane_contents {
+    float: left;
+    width: 100%;
+    margin: 0px 0px 0px -2px;
+    padding: 8px 0px 10px 0px;
+    }
+
+/*  defines a line */
+.listbuilder_contents_pane_line {
+    float: left;
+    width: 100%;
+    padding: 6px 4px 6px 4px;
+    }
+
+.listbuilder_contents_pane_line_left {
+    float: left;
+    width: 26%;
+    padding: 0px 6px 0px 0px;
+    text-align: left;
+    }
+
+.listbuilder_contents_pane_line_right {
+    float: left;
+    width: 40%;
+    text-align: left;
+    }
+
+.listbuilder_contents_pane_line input, .listbuilder_contents_pane_line textarea { 
+    border: 1px solid rgb(197, 214, 232);
     }
 
 /*  defines the table that contains the list definition */
 #listbuilder_definition {
     width: 100%;
-    float: none;
     border-collapse: collapse;
-    border-top: 1px solid rgb(255, 255, 255);
-    border-bottom: 1px solid rgb(255, 255, 255);
+    margin: -8px 0px -5px 0px;
     }
 
 #listbuilder_definition tr {
@@ -88,7 +128,7 @@
 #listbuilder_definition td {
     padding: 6px 4px 4px 4px;
     vertical-align: top;
-    border-top: 1px solid rgb(255, 255, 255);
+    border-top: 1px solid rgb(197, 214, 232);
     }
 
 #listbuilder_definition select, #listbuilder_definition input { 

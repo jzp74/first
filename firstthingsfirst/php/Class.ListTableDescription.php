@@ -101,9 +101,8 @@ class ListTableDescription extends UserDatabaseTable
         $new_records = array();
         foreach ($records as $record)
         {            
-            # convert several values
-            $record[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME] = html_entity_decode($record[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME], ENT_QUOTES);
-            $record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = (array)$this->_json->decode(html_entity_decode($record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME], ENT_QUOTES));
+            # convert value
+            $record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = (array)$this->_json->decode($record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME]);
             array_push($new_records, $record);
         }
         
@@ -128,9 +127,8 @@ class ListTableDescription extends UserDatabaseTable
         if (count($record) == 0)
             return array();
         
-        # convert several values
-        $record[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME] = html_entity_decode($record[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME], ENT_QUOTES);
-        $record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = (array)$this->_json->decode(html_entity_decode($record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME], ENT_QUOTES));
+        # convert value
+        $record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = (array)$this->_json->decode($record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME]);
 
         $this->_log->trace("selected ListTableDescription record (title=\"".$title."\")");
 
@@ -157,9 +155,8 @@ class ListTableDescription extends UserDatabaseTable
             return FALSE;
         }
 
-        # convert several values
-        $name_values_array[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME] = htmlentities($name_values_array[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME], ENT_QUOTES);
-        $name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = htmlentities($this->_json->encode($name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME], ENT_QUOTES));
+        # convert value
+        $name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = $this->_json->encode($name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME]);
 
         if (parent::insert($name_values_array) == 0)
             return FALSE;

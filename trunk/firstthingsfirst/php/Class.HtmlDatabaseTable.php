@@ -765,8 +765,8 @@ class HtmlDatabaseTable
                 $html_str .= get_href("xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record('".$list_title."', '')", BUTTON_ADD_RECORD.$this->configuration[HTML_TABLE_RECORD_NAME]);
             if ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_LIST)
             {
-                $html_str .= "&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"window.open('http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
-                $html_str .= "?action=get_list_print_page&list=".$list_title."')\">".BUTTON_PRINT_LIST."</a>";
+                $html_str .= "&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"window.open('";
+                $html_str .= "index.php?action=get_list_print_page&list=".$list_title."')\">".BUTTON_PRINT_LIST."</a>";
             }
         }
         else

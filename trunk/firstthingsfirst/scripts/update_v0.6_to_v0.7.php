@@ -90,11 +90,6 @@ if ($query_result != FALSE)
                 $result = $database->query($query);
                 if ($result == FALSE)
                     fatal("could not update list table description");
-                $query = "ALTER TABLE ".$table_name." ADD COLUMN ".$field_name." ".DB_DATATYPE_BOOL." AFTER ".$previous_field_name;
-#                echo $query."<br>\n";
-                $result = $database->query($query);
-                if ($result == FALSE)
-                    fatal("could not update list table description");
             }
             $previous_field_name = $field_name;
         }

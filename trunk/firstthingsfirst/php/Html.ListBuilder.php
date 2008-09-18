@@ -692,7 +692,7 @@ function get_field_definition_table ($definition)
     $input_html_value_invisible = "<input style=\"visibility: hidden;\" type=text size=\"20\" maxlength=\"100\"";
     $html_str = "";    
     
-    $html_str .= "\n\n                <form id=\"database_definition_form\">\n";
+    $html_str .= "\n\n                <form id=\"database_definition_form\" action=\"javascript:void(0);\" method=\"javascript:void(0);\">\n";
     $html_str .= "                    <table id=\"listbuilder_definition\" align=\"left\" border=\"0\" cellspacing=\"0\">\n";
     $html_str .= "                        <thead>\n";
     $html_str .= "                            <tr>\n";

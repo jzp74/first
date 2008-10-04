@@ -130,7 +130,7 @@ class ListTableNote extends DatabaseTable
     * @param $record_id int unique identifier of a ListTable object
     * @param $field_name string field name
     * @param $note string the new note
-    * @return bool indicates if new note has been added
+    * @return bool indicates if new ListTableNote has been added
     */
     function insert ($record_id, $field_name, $note)
     {
@@ -145,7 +145,7 @@ class ListTableNote extends DatabaseTable
         if (parent::insert($name_values_array, $this->_user->get_name()) == FALSE)
             return FALSE;
         
-        $this->_log->trace("inserted ListTableItemNote");
+        $this->_log->trace("inserted ListTableNote");
         
         return TRUE;
     }
@@ -154,7 +154,7 @@ class ListTableNote extends DatabaseTable
     * update an existing note in database
     * @param $note_id int unique identifier of a specific ListTableItemNote object
     * @param $note string the new note
-    * @return bool indicates if ListTableDescription has been updated
+    * @return bool indicates if ListTableNote has been updated
     */
     function update ($note_id, $note)
     {
@@ -170,11 +170,30 @@ class ListTableNote extends DatabaseTable
         if (parent::update($key_string, $this->_user->get_name(), $name_values_array) == FALSE)
             return FALSE;        
         
-        $this->_log->trace("updated ListTableItemNote");
+        $this->_log->trace("updated ListTableNote");
         
         return TRUE;
     }
     
+    /**
+    * delete all existing notes from database for given field name
+    * @param $field_name string field name
+    * @return bool indicates if ListTableNote has been deleted
+    */
+    function delete ($field_name)
+    {
+        $this->_log->trace("deleting ListTableNotes (field_name=".$field_name.")");
+
+        # create key_string
+        $key_string = LISTTABLENOTE_FIELD_NAME_FIELD_NAME."='".$field_name."'";
+        
+        if (parent::delete($key_string) == FALSE)
+            return FALSE;        
+        
+        $this->_log->trace("deleted ListTableNotes");
+        
+        return TRUE;
+    }
 }
 
 ?>

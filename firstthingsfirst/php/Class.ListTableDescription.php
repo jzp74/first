@@ -149,8 +149,7 @@ class ListTableDescription extends UserDatabaseTable
         $record = parent::select_record(LISTTABLEDESCRIPTION_TITLE_FIELD_NAME."='".$title."'");
         if (count($record) > 0)
         {
-            $this->_log->error("this is a duplicate list");
-            $this->error_str = ERROR_DUPLICATE_LIST_NAME;
+            $this->_handle_error("this is a duplicate list", ERROR_DUPLICATE_LIST_NAME);
             
             return FALSE;
         }
@@ -179,6 +178,10 @@ class ListTableDescription extends UserDatabaseTable
         # create key_string
         $key_string = LISTTABLEDESCRIPTION_TITLE_FIELD_NAME."='".$title."'";
 
+        # convert value
+        if (array_key_exists(LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME, $name_values_array))
+            $name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = $this->_json->encode($name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME]);
+        
         if (parent::update($key_string, $name_values_array) == FALSE)
             return FALSE;        
                                     

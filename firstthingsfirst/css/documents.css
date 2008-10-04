@@ -51,6 +51,17 @@ a:hover {
     text-decoration: underline;
     }
 
+table {
+    margin: 6px 0px 6px 8px;
+    }
+
+table td {
+    padding: 4px 6px 4px 6px;
+    background-color: rgb(240, 240, 240);
+    text-align: left;
+    vertical-align: top;
+    }
+
 ul {
     margin: 0px 0px 0px 30px;
     }

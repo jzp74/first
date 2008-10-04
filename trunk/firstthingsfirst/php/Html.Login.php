@@ -117,15 +117,21 @@ function action_login ($user_name, $password)
     if (strlen($user_name) == 0)
     {
         $logging->warn("no user name given");
-        set_error_message("user_name_id", ERROR_NO_USER_NAME_GIVEN, $response);
+        set_error_message("user_name_id", ERROR_NO_USER_NAME_GIVEN, "", "", $response);
 
+        # set focus on user name
+        $response->addScriptCall("document.getElementById('user_name').focus()");
+        
         return $response;
     }
     
     if (strlen($password) == 0)
     {
         $logging->warn("no password given");
-        set_error_message("password_id", ERROR_NO_PASSWORD_GIVEN, $response);
+        set_error_message("password_id", ERROR_NO_PASSWORD_GIVEN, "", "", $response);
+
+        # set focus on password
+        $response->addScriptCall("document.getElementById('password').focus()");
 
         return $response;        
     }
@@ -141,8 +147,14 @@ function action_login ($user_name, $password)
     else
     {
         $logging->warn("user could not log in");
-        set_error_message("password_id", $user->get_error_str(), $response);
+        $error_message_str = $user->get_error_message_str();
+        $error_log_str = $user->get_error_log_str();
+        $error_str = $user->get_error_str();
+        set_error_message("password_id", $error_message_str, $error_log_str, $error_str, $response);
         
+        # set focus on user name
+        $response->addScriptCall("document.getElementById('user_name').focus()");
+
         return $response;
     }
 }

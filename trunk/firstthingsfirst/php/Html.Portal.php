@@ -67,7 +67,7 @@ function action_get_portal_page ()
     $result = new Result();
     $response = new xajaxResponse();
     $list_table_description = new ListTableDescription();
-    $html_database_table = new HtmlDatabaseTable ($portal_table_configuration, $list_table_description);
+    $html_database_table = new HtmlDatabaseTable ($portal_table_configuration);
     
     if (!check_preconditions(ACTION_GET_PORTAL_PAGE, $response))
         return $response;
@@ -77,7 +77,7 @@ function action_get_portal_page ()
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
 
     # set content
-    $html_database_table->get_content(LISTTABLEDESCRIPTION_TABLE_NAME, "", DATABASETABLE_ALL_PAGES, $result);
+    $html_database_table->get_content($list_table_description, LISTTABLEDESCRIPTION_TABLE_NAME, "", DATABASETABLE_ALL_PAGES, $result);
     $response->addAssign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
     # set login status
@@ -89,6 +89,10 @@ function action_get_portal_page ()
     
     # set footer
     set_footer("", $response);
+
+    # check post conditions
+    if (check_postconditions($result, $response) == FALSE)
+        return $response;
 
     $logging->trace("got portal page");
 
@@ -114,14 +118,18 @@ function action_get_portal_content ($title, $order_by_field, $page)
     $result = new Result();
     $response = new xajaxResponse();
     $list_table_description = new ListTableDescription();
-    $html_database_table = new HtmlDatabaseTable ($portal_table_configuration, $list_table_description);
+    $html_database_table = new HtmlDatabaseTable ($portal_table_configuration);
 
     if (!check_preconditions(ACTION_GET_PORTAL_CONTENT, $response))
         return $response;
 
     # set content
-    $html_database_table->get_content($title, $order_by_field, DATABASETABLE_ALL_PAGES, $result);
+    $html_database_table->get_content($list_table_description, $title, $order_by_field, DATABASETABLE_ALL_PAGES, $result);
     $response->addAssign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+
+    # check post conditions
+    if (check_postconditions($result, $response) == FALSE)
+        return $response;
 
     $logging->trace("got portal content");
 
@@ -146,8 +154,18 @@ function action_delete_portal_record ($list_title)
     $result = new Result();
     $response = new xajaxResponse();
     $list_table_description = new ListTableDescription();
-    $list_table = new ListTable ($list_title);
-    $html_database_table = new HtmlDatabaseTable ($portal_table_configuration, $list_table_description);    
+    $list_table = new ListTable($list_title);
+    if ($list_table->get_is_valid() == FALSE)
+    {
+        $logging->warn("create list object returns false");
+        $error_message_str = $list_table->get_error_message_str();
+        $error_log_str = $list_table->get_error_log_str();
+        $error_str = $list_table->get_error_str();
+        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+       
+        return $response;
+    }
+    $html_database_table = new HtmlDatabaseTable ($portal_table_configuration);    
 
     if (!check_preconditions(ACTION_DELETE_PORTAL_RECORD, $response))
         return $response;
@@ -156,18 +174,25 @@ function action_delete_portal_record ($list_title)
     $response->addRemove("error_message");
 
     # display error when delete returns false
-    if (!$list_table->drop())
+    if ($list_table->drop() == FALSE)
     {
-        $logging->warn("delete list record returns false");
-        set_error_message("message_pane", $list_table->get_error_str(), $response);
+        $logging->warn("drop list returns false");
+        $error_message_str = $list_table->get_error_message_str();
+        $error_log_str = $list_table->get_error_log_str();
+        $error_str = $list_table->get_error_str();
+        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
                 
         return $response;
     }
 
     # set content
-    $html_database_table->get_content($list_title, "", DATABASETABLE_ALL_PAGES, $result);
-    $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $html_database_table->get_content($list_table_description, $list_title, "", DATABASETABLE_ALL_PAGES, $result);
+    $response->addAssign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
+    # check post conditions
+    if (check_postconditions($result, $response) == FALSE)
+        return $response;
+
     $logging->trace("deleted list record");
 
     return $response;

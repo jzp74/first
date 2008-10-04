@@ -4,8 +4,8 @@
 # PLEASE EDIT THIS FILE
 
 # title and intro of the portal
-$firstthingsfirst_portal_title = "FirstThingsFirst Portal";
-$firstthingsfirst_portal_intro_text = "Welcome to the FirstThingsFirst portal. Please select a list or create a new one";
+$firstthingsfirst_portal_title = "My Portal";
+$firstthingsfirst_portal_intro_text = "Welcome to My Portal. Please select a list or create a new one";
 
 # full path name to portal on host
 $firstthingsfirst_full_pathname = "e:///sites/firstthingsfirst";
@@ -20,10 +20,10 @@ $firstthingsfirst_list_page_entries = 12;
 # database table prefix
 # define a prefix that is unique for this firstthingsfirst instance
 # this setting allows you have multiple firstthingsfirst instances to share the same db schema
-$firstthingsfirst_db_table_prefix = "portal";
+$firstthingsfirst_db_table_prefix = "firstthingsfirst";
 
 # administrator password
-$firstthingsfirst_admin_passwd = "+lantrot";
+$firstthingsfirst_admin_passwd = "adminpassword";
 
 # database connection settings
 $firstthingsfirst_db_host = "localhost";

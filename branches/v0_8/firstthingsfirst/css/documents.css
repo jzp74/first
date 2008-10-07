@@ -1,0 +1,71 @@
+/*  defines shared settings for all styles */
+* {
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    border: none;
+    z-index: 10;
+    font-family: verdana;
+    font-size: 12px;
+    text-decoration: none;
+    text-align: left;
+    }
+
+body {
+    margin: 10px 14px 10px 14px;
+    }
+
+#title {
+    font-family: arial;
+    font-size: 28px;
+    font-weight: bold;
+    color: rgb(255, 153, 0);
+    }
+
+h1 {
+    font-family: arial;
+    font-size: 18px;
+    font-weight: bold;
+    color: rgb(255, 153, 0);
+    margin: 20px 0px 0px 0px;
+    }
+    
+h2 {
+    font-family: arial;
+    font-size: 14px;
+    font-weight: bold;
+    color: rgb(255, 153, 0);
+    margin: 14px 0px 0px 4px;
+    }
+
+p {
+    margin: 8px 0px 0px 8px;
+    }
+
+a, a:link, a:visited {
+    color: rgb(5, 114, 197);
+    text-decoration: none;
+    font-weight: bold;
+    }
+    
+a:hover { 
+    text-decoration: underline;
+    }
+
+table {
+    margin: 6px 0px 6px 8px;
+    }
+
+table td {
+    padding: 4px 6px 4px 6px;
+    background-color: rgb(240, 240, 240);
+    text-align: left;
+    vertical-align: top;
+    }
+
+ul {
+    margin: 0px 0px 0px 30px;
+    }
+
+li {
+    margin: 4px 0px 0px 0px;
+    }

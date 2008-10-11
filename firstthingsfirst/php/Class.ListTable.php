@@ -310,16 +310,19 @@ class ListTable extends UserDatabaseTable
                     $this->_log->debug("field name has changed");
                     $name_has_changed = TRUE;
                     
-                    # change field name in list table notes table
-                    $query = "UPDATE ".$this->_list_table_note->get_table_name()." SET ".LISTTABLENOTE_FIELD_NAME_FIELD_NAME;
-                    $query .= "='".$new_field_definition[0]."' WHERE ".LISTTABLENOTE_FIELD_NAME_FIELD_NAME."='".$old_field_definition[0]."'";
-                    #$this->_log->info("query: ".$query);
-                    $result = $this->_database->query($query);
-                    if ($result == FALSE)
+                    if ($old_field_definition[1] == "LABEL_DEFINITION_NOTES_FIELD")
                     {
-                        $this->_handle_error("could not alter field name of list table notes table", ERROR_DATABASE_PROBLEM);
-                    
-                        return FALSE;
+                        # change field name in list table notes table
+                        $query = "UPDATE ".$this->_list_table_note->get_table_name()." SET ".LISTTABLENOTE_FIELD_NAME_FIELD_NAME;
+                        $query .= "='".$new_field_definition[0]."' WHERE ".LISTTABLENOTE_FIELD_NAME_FIELD_NAME."='".$old_field_definition[0]."'";
+                        #$this->_log->info("query: ".$query);
+                        $result = $this->_database->query($query);
+                        if ($result == FALSE)
+                        {
+                            $this->_handle_error("could not alter field name of list table notes table", ERROR_DATABASE_PROBLEM);
+                        
+                            return FALSE;
+                        }
                     }
                 }
             
@@ -366,7 +369,7 @@ class ListTable extends UserDatabaseTable
                 }
                 
                 # change the column only when the name or position has been changed
-                if ($name_has_changed == TRUE || $position_has_changed == TRUE)
+                if (($name_has_changed == TRUE || $position_has_changed == TRUE) && ($type_has_changed == FALSE))
                 {
                     $query = "ALTER TABLE ".$this->table_name." CHANGE COLUMN ".$old_field_definition[0];
                     $query .= " ".$new_field_definition[0]." ";

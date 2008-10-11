@@ -971,11 +971,6 @@ class DatabaseTable
     {
         $this->_log->trace("deleting record from DatabaseTable (key_string=".$key_string.")");
 
-        # select row from database to see if it really exists
-        $row = self::select_record($key_string);
-        if (count($row) == 0)
-            return FALSE;
-
         $query = "DELETE FROM ".$this->table_name." WHERE ".$key_string;
         $result = $this->_database->query($query);
 

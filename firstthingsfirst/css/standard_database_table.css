@@ -85,7 +85,7 @@
     
 .database_table_contents_header_sort, .database_table_contents_header_sort_up, .database_table_contents_header_sort_down {
     float: left;
-    padding: 6px 4px 6px 4px;
+    padding: 6px 6px 6px 6px;
     color: rgb(0, 0, 0);
     background: url(../images/standard_arrow_sort.gif) right center no-repeat;
     }
@@ -103,7 +103,7 @@
     }
 
 #database_table_contents td {
-    padding: 6px 4px 6px 4px;
+    padding: 6px 6px 6px 6px;
     border-top: 1px solid rgb(255, 255, 255);
     vertical-align: top;
     }

@@ -12,18 +12,6 @@
 
 /**
  * shared label
- * definition of added to logfile
- */
-define("LABEL_ADDED_TO_LOG_FILE", "added to logfile"); 
-
-/**
- * shared label
- * definition of sql message
- */
-define("LABEL_DATABASE_MESSAGE", "database message"); 
-
-/**
- * shared label
  * definition of sunday
  */
 define("LABEL_SUNDAY", "Sun"); 
@@ -99,12 +87,6 @@ define("LABEL_LAST_MODIFICATION_BY", "last modification by");
  * definition of name name
  */
 define("LABEL_USER_NAME", "name");
-
-/**
- * shared field definition
- * definition of id
- */
-define("LABEL_DEFINITION_AUTO_NUMBER", "automatic number&nbsp;&nbsp;");
 
 /**
  * shared field definition
@@ -357,12 +339,6 @@ define("LABEL_DATE_ONLY", "date only&nbsp;&nbsp;");
  * definition of name and date
  */
 define("LABEL_DATE_NAME", "date and name&nbsp;&nbsp;");
-
-/**
- * listbuilder label
- * definition of confirmation text for confirm dialog
- */
-define("LABEL_CONFIRM_MODIFY", "List content of fields whose type you changed will be removed.\\nList content of fields that you removed will be removed.\\nAre you sure you want to modify this list?");
 
 /**
  * login label

@@ -98,7 +98,7 @@ define("BUTTON_PREVIOUS_PAGE", "previous");
  * list button
  * definition of 'add row' button
  */
-define("BUTTON_ADD_RECORD", "insert&nbsp;new&nbsp;");
+define("BUTTON_ADD_RECORD", "insert&nbsp;new");
 
 /**
  * list button

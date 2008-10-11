@@ -45,11 +45,6 @@ class ListTable extends UserDatabaseTable
     protected $creator_modifier_array;
 
     /**
-    * indicates if this ListTable is valid
-    */
-    protected $is_valid;
-
-    /**
     * list_table_description object
     * @var ListTableDescription
     */
@@ -64,67 +59,40 @@ class ListTable extends UserDatabaseTable
     /**
     * overwrite __construct() function
     * @param $list_title string name of this list
-    * @return bool indicates if object was contstructed
+    * @return void
     */
     function __construct ($list_title)
     {        
         $fields = array();
         $this->creator_modifier_array = array();
-        # object is only valid when this function has run completely
-        $this->is_valid = FALSE;
         
         $this->_list_table_description = new ListTableDescription();
-        $record = $this->_get_list_table_description_record($list_title);
-        if (count($record) == 0)
-            return;
-
-        # set list title and list definition
-        $this->list_title = $list_title;
+        $record = $this->_list_table_description->select_record($list_title);
+        $_list_table_description_id = $record[DB_ID_FIELD_NAME];
         $definition = $record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME];
 
-        $table_name = $this->_convert_list_name_to_table_name($list_title);
-        $db_field_names = array_keys($definition);
-        foreach ($db_field_names as $db_field_name)
-            $fields[$db_field_name] = array($this->_get_field_name($db_field_name), $definition[$db_field_name][0], $definition[$db_field_name][1]);
-        
-        # call parent construct()
-        parent::__construct($table_name, $fields, "111");
-
-        # initialize ListTableNote
-        $this->_list_table_note = new ListTableNote ($list_title);
-        
-        $this->is_valid = TRUE;
-            
-        $this->_log->debug("constructed new ListTable object (table_name=".$this->table_name.")");
-    }
-    
-    /**
-    * get specified record from list table description and set creator_modifier_value
-    * @param $list_title string title of list table description
-    * @return array specified record
-    */
-    function _get_list_table_description_record ($list_title)
-    {
-        $record = $this->_list_table_description->select_record($list_title);
-        if (count($record) == 0)
-        {
-            # copy error strings from list_table_description
-            $this->error_message_str = $this->_list_table_description->get_error_message_str();
-            $this->error_log_str = $this->_list_table_description->get_error_log_str();
-            $this->error_str = $this->_list_table_description->get_error_str();
-
-            return array();
-        }
-        
+        # set list_title
+        $this->list_title = $list_title;
         # set creator_modifier_value
         $this->creator_modifier_array[DB_CREATOR_FIELD_NAME] = $record[DB_CREATOR_FIELD_NAME];
         $this->creator_modifier_array[DB_TS_CREATED_FIELD_NAME] = $record[DB_TS_CREATED_FIELD_NAME];
         $this->creator_modifier_array[DB_MODIFIER_FIELD_NAME] = $record[DB_MODIFIER_FIELD_NAME];
         $this->creator_modifier_array[DB_TS_MODIFIED_FIELD_NAME] = $record[DB_TS_MODIFIED_FIELD_NAME];
 
-        return $record;        
-    }
+        $table_name = $this->_convert_list_name_to_table_name($list_title);
+        $db_field_names = array_keys($definition);
+        foreach ($db_field_names as $db_field_name)
+            $fields[$db_field_name] = array($this->_get_field_name($db_field_name), $definition[$db_field_name][0], $definition[$db_field_name][2]);
+        
+        # call parent construct()
+        parent::__construct($table_name, $fields, "111");
 
+        # initialize ListTableNote
+        $this->_list_table_note = new ListTableNote ($list_title);
+            
+        $this->_log->debug("constructed new ListTable object (table_name=".$this->table_name.")");
+    }
+    
     /**
     * convert db_field_name to field_name
     * @param $db_field_name string db_field_name to be converted
@@ -182,15 +150,6 @@ class ListTable extends UserDatabaseTable
     }
     
     /**
-    * get value of is_valid attribute
-    * @return bool value of is_valid attribute
-    */
-    function get_is_valid ()
-    {
-        return $this->is_valid;
-    }
-
-    /**
     * get value of list_table_description attribute
     * @return ListTableDescription value of list_table_description attribute
     */
@@ -234,347 +193,6 @@ class ListTable extends UserDatabaseTable
         
         $this->_log->trace("created ListTable");
         
-        return TRUE;
-    }
-
-    /**
-    * transform existing definition to new definition
-    * @param $new_definition new definition
-    * @return bool indicates if transformation was complete
-    */
-    function transform ($former_title, $title, $description, $new_definition)
-    {
-        global $firstthingsfirst_field_descriptions;
-        
-        $this->_log->trace("transforming ListTable (len of new definition=".count($new_definition).")");
-        
-        $fields_to_fill = array();
-        $notes_to_delete = array();
-        
-        # transform current field to a usable format
-        $old_definition = array();
-        $id_count = 0;
-        foreach ($this->db_field_names as $db_field_name)
-        {
-            $field = $this->fields[$db_field_name];
-            $old_definition[$id_count] = array($db_field_name, $field[1], $field[2]);
-            $id_count += 1;
-        }
-        
-        # check if any notes field exist in old definition
-        $notes_field_old = FALSE;
-        $notes_field_new = FALSE;
-        foreach ($old_definition as $field_definition)
-        {
-            if ($field_definition[1] == "LABEL_DEFINITION_NOTES_FIELD")
-            {
-                $this->_log->debug("old definition contains a notes field");
-                $notes_field_old = TRUE;
-            }
-        }
-
-        # first check if existing fields have been modified and if new fields have been added
-        $position = 0;
-        $last_definition_key = 0;
-        $new_definition_keys = array_keys($new_definition);
-        foreach ($new_definition_keys as $new_definition_key)
-        {
-            $new_field_definition = $new_definition[$new_definition_key];
-
-            $this->_log->debug("check if id=".$new_definition_key." exists in old definition (name=".$new_field_definition[0].")");
-
-            # check if current field is a notes field
-            if ($new_field_definition[1] == "LABEL_DEFINITION_NOTES_FIELD")
-            {
-                $this->_log->debug("new definition contains a notes field");
-                $notes_field_new = TRUE;
-            }
-
-            if (array_key_exists($new_definition_key, $old_definition))
-            {
-                # field already existed in old definition
-                $this->_log->debug("id exists");
-
-                $name_has_changed = FALSE;
-                $type_has_changed = FALSE;
-                $position_has_changed = FALSE;
-                $old_field_definition = $old_definition[$new_definition_key];
-
-                # first remove this field from old definition
-                unset($old_definition[$new_definition_key]);
-                        
-                # now compare the new and old name
-                $this->_log->trace("comparing new and old field names (new=".$new_field_definition[0].", old=".$old_field_definition[0].")");
-                if (strcmp($new_field_definition[0], $old_field_definition[0]) != 0)
-                {
-                    $this->_log->debug("field name has changed");
-                    $name_has_changed = TRUE;
-                    
-                    if ($old_field_definition[1] == "LABEL_DEFINITION_NOTES_FIELD")
-                    {
-                        # change field name in list table notes table
-                        $query = "UPDATE ".$this->_list_table_note->get_table_name()." SET ".LISTTABLENOTE_FIELD_NAME_FIELD_NAME;
-                        $query .= "='".$new_field_definition[0]."' WHERE ".LISTTABLENOTE_FIELD_NAME_FIELD_NAME."='".$old_field_definition[0]."'";
-                        #$this->_log->info("query: ".$query);
-                        $result = $this->_database->query($query);
-                        if ($result == FALSE)
-                        {
-                            $this->_handle_error("could not alter field name of list table notes table", ERROR_DATABASE_PROBLEM);
-                        
-                            return FALSE;
-                        }
-                    }
-                }
-            
-                # compare the new and old type
-                $this->_log->trace("comparing new and old types (new=".$new_field_definition[1].", old=".$old_field_definition[1].")");
-                if (strcmp($new_field_definition[1], $old_field_definition[1]) != 0)
-                {
-                    $this->_log->debug("field type has field changed");
-                    # this field needs to be initialized because the type has changed
-                    array_push($fields_to_fill, array($new_field_definition[0], $new_field_definition[1], $new_field_definition[2]));
-                    $type_has_changed = TRUE;
-                    
-                    # check if a notes field is changed
-                    if ($old_field_definition[1] == "LABEL_DEFINITION_NOTES_FIELD")
-                    {
-                        $this->_log->debug("field was a notes field");
-                        array_push($notes_to_delete, $old_field_definition[0]);
-                    }
-                }
-                
-                # compare the new and old position
-                $this->_log->trace("comparing new and old field position (new=".$new_definition_key.", old=".$position.")");
-                if ($new_definition_key != $position)
-                {
-                    $this->_log->debug("field position has changed");
-                    $position_has_changed = TRUE;
-                }
-            
-                # drop and create field when field type has changed
-                if ($type_has_changed == TRUE)
-                {
-                    $query = "ALTER TABLE ".$this->table_name." DROP COLUMN ".$old_field_definition[0];
-                    $query .= ", ADD COLUMN ".$new_field_definition[0]." ";
-                    $query .= $firstthingsfirst_field_descriptions[$new_field_definition[1]][FIELD_DESCRIPTION_FIELD_DB_DEFINITION];
-                    $query .= " AFTER ".$new_definition[$last_definition_key][0];
-                    #$this->_log->info("query: ".$query);
-                    $result = $this->_database->query($query);
-                    if ($result == FALSE)
-                    {
-                        $this->_handle_error("could not alter the existing field (type changed)", ERROR_DATABASE_PROBLEM);
-                    
-                        return FALSE;
-                    }
-                }
-                
-                # change the column only when the name or position has been changed
-                if (($name_has_changed == TRUE || $position_has_changed == TRUE) && ($type_has_changed == FALSE))
-                {
-                    $query = "ALTER TABLE ".$this->table_name." CHANGE COLUMN ".$old_field_definition[0];
-                    $query .= " ".$new_field_definition[0]." ";
-                    $query .= $firstthingsfirst_field_descriptions[$new_field_definition[1]][FIELD_DESCRIPTION_FIELD_DB_DEFINITION];
-                    # add the position if the position has changed
-                    if ($position_has_changed == TRUE)
-                        $query .= " AFTER ".$new_definition[$last_definition_key][0];
-                    #$this->_log->info("query: ".$query);
-                    $result = $this->_database->query($query);
-                    if ($result == FALSE)
-                    {
-                        $this->_handle_error("could not alter the existing field (name and/or position changed)", ERROR_DATABASE_PROBLEM);
-                    
-                        return FALSE;
-                    }
-                }
-            }
-            else
-            {
-                # field is new
-                $this->_log->debug("id is new");
-
-                $new_field_definition = $new_definition[$new_definition_key];
-                # this field needs to be initialized because it is new
-                array_push($fields_to_fill, array($new_field_definition[0], $new_field_definition[1], $new_field_definition[2]));
-
-                $query = "ALTER TABLE ".$this->table_name." ADD COLUMN ".$new_field_definition[0]." ";
-                $query .= $firstthingsfirst_field_descriptions[$new_field_definition[1]][FIELD_DESCRIPTION_FIELD_DB_DEFINITION];
-                $query .= " AFTER ".$new_definition[$last_definition_key][0];
-                #$this->_log->info("query: ".$query);
-                $result = $this->_database->query($query);
-                if ($result == FALSE)
-                {
-                    $this->_handle_error("could add the new field", ERROR_DATABASE_PROBLEM);
-                
-                    return FALSE;
-                }                
-            }
-            
-            $position += 1;
-            $last_definition_key = $new_definition_key;
-        }
-        
-        # now remove all remaining fields
-        $old_definition_keys = array_keys($old_definition);
-        foreach ($old_definition_keys as $old_definition_key)
-        {
-            $this->_log->debug("remove field");
-
-            # check if a notes field is changed
-            if ($old_definition[$old_definition_key][1] == "LABEL_DEFINITION_NOTES_FIELD")
-            {
-                $this->_log->debug("field was a notes field");
-                array_push($notes_to_delete, $old_definition[$old_definition_key][0]);
-            }
-
-            $query = "ALTER TABLE ".$this->table_name." DROP COLUMN ".$old_definition[$old_definition_key][0];
-            #$this->_log->info("query: ".$query);
-            $result = $this->_database->query($query);
-            if ($result == FALSE)
-            {
-                $this->_handle_error("could not remove the field", ERROR_DATABASE_PROBLEM);
-            
-                return FALSE;
-            }
-        }    
-
-        # remove notes from changed or removed notes fields
-        foreach ($notes_to_delete as $db_field_name)
-        {
-            if ($this->_list_table_note->delete($db_field_name) == FALSE)
-            {
-                # copy error strings from list_table_note
-                $this->error_message_str = $this->_list_table_note->get_error_message_str();
-                $this->error_log_str = $this->_list_table_note->get_error_log_str();
-                $this->error_str = $this->_list_table_note->get_error_str();
-
-                return FALSE;
-            }
-        }
-        
-        # create notes table
-        if ($notes_field_old == FALSE && $notes_field_new == TRUE)
-        {
-            $this->_log->debug("notes did not exist but are needed for new definition");
-            if ($this->_list_table_note->create() == FALSE)
-            {
-                # copy error strings from list_table_note
-                $this->error_message_str = $this->_list_table_note->get_error_message_str();
-                $this->error_log_str = $this->_list_table_note->get_error_log_str();
-                $this->error_str = $this->_list_table_note->get_error_str();
-
-                return FALSE;
-            }
-        }
-        # drop notes table
-        if ($notes_field_old == TRUE && $notes_field_new == FALSE)
-        {
-            $this->_log->debug("notes did exist but are not needed for new definition");
-            if ($this->_list_table_note->drop() == FALSE)
-            {
-                # copy error strings from list_table_note
-                $this->error_message_str = $this->_list_table_note->get_error_message_str();
-                $this->error_log_str = $this->_list_table_note->get_error_log_str();
-                $this->error_str = $this->_list_table_note->get_error_str();
-
-                return FALSE;
-            }
-        }
-        
-        # fill new fields and fields with changed types with initial data
-        if (count($fields_to_fill) > 0)
-        {
-            $query = "UPDATE ".$this->table_name." SET ";
-            $counter = 0;
-            foreach ($fields_to_fill as $field_definition)
-            {
-                if ($field_definition[1] == "LABEL_DEFINITION_SELECTION")
-                {
-                    # fill a selection field with the first option
-                    $this->_log->debug("field is a selection");
-                    $options_list = explode("|", $field_definition[2]);
-                    $value = $options_list[0];
-                }
-                else
-                    $value = $firstthingsfirst_field_descriptions[$field_definition[1]][FIELD_DESCRIPTION_FIELD_INITIAL_DATA];
-                if ($counter > 0)
-                    $query .= ", ";
-                $query .= $field_definition[0]."='".$value."'";
-                $counter += 1;
-            }
-            #$this->_log->info("query: ".$query);
-            $result = $this->_database->query($query);
-            if ($result == FALSE)
-            {
-                $this->_handle_error("could not fill new fields", ERROR_DATABASE_PROBLEM);
-        
-                return FALSE;
-            }
-        }
-
-        # transform the new definition to the correct format
-        $correct_new_definition = array();
-        foreach ($new_definition as $field_definition)
-            $correct_new_definition[$field_definition[0]] = array($field_definition[1], $field_definition[2]);
-
-        # update the existing list table definition
-        $name_values_array = array();
-        $name_values_array[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME] = $title;
-        $name_values_array[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME] = $description;
-        $name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = $correct_new_definition;
-        if ($this->_list_table_description->update($former_title, $name_values_array) == FALSE)
-        {
-            # copy error strings from list_table_note
-            $this->error_message_str = $this->_list_table_description->get_error_message_str();
-            $this->error_log_str = $this->_list_table_description->get_error_log_str();
-            $this->error_str = $this->_list_table_description->get_error_str();
-
-            return FALSE;
-        }
-
-        # update existing tables (listtable and notes)    
-        if (strcmp($former_title, $title))
-        {
-            $this->_log->debug("list title has changed");
-            
-            # rename listtable database table
-            $former_table_name = $this->_convert_list_name_to_table_name($former_title);
-            $new_table_name = $this->_convert_list_name_to_table_name($title);
-            $query = "ALTER TABLE ".$former_table_name." RENAME ".$new_table_name;
-            $result_object = $this->_database->query($query);
-            if ($result_object == FALSE)
-            {
-                $this->_handle_error("could not rename list table name", ERROR_DATABASE_PROBLEM);
-
-                return FALSE;
-            }
-            
-            # check if list_table contains a notes field
-#            $found_note = FALSE;
-#            foreach($this->db_field_names as $db_field_name)
-#            {
-#                if ($this->fields[$db_field_name][1] == "LABEL_DEFINITION_NOTES_FIELD")
-#                    $found_note = TRUE;
-#            }
-            
-            # rename listtablenote database table only if a notes field was found
-            #notes_field_new
-            if ($notes_field_new == TRUE)
-            {
-                $former_table_name = $this->_list_table_note->_convert_list_name_to_table_name($former_title);
-                $new_table_name = $this->_list_table_note->_convert_list_name_to_table_name($title);
-                $query = "ALTER TABLE ".$former_table_name." RENAME ".$new_table_name;
-                $result_object = $this->_database->query($query);
-                if ($result_object == FALSE)
-                {
-                    $this->_handle_error("could not rename list table notes name", ERROR_DATABASE_PROBLEM);
-
-                    return FALSE;
-                }
-            }                
-        }
-        
-        $this->_log->trace("selected ListTable");
-
         return TRUE;
     }
 
@@ -757,7 +375,7 @@ class ListTable extends UserDatabaseTable
         
         $result = parent::insert($name_values);
         if ($result == 0)
-            return $result;
+            return FALSE;
                 
         # insert notes
         foreach ($all_notes_array as $notes_array)
@@ -765,18 +383,7 @@ class ListTable extends UserDatabaseTable
                 $this->_list_table_note->insert($result, $note_array[0], $note_array[1]);
                 
         # update list table description (date modified)
-        if ($this->_list_table_description->update($this->list_title) == FALSE);
-        {
-            # copy error strings from _list_table_description
-            $this->error_message_str = $this->_list_table_description->get_error_message_str();
-            $this->error_log_str = $this->_list_table_description->get_error_log_str();
-            $this->error_str = $this->_list_table_description->get_error_str();
-        }
-
-        # also update creator modifier array
-        $record = $this->_get_list_table_description_record($this->list_title);
-        if (count($record) == 0)
-            return FALSE;
+        $this->_list_table_description->update($this->list_title);
 
         $this->_log->trace("inserted record into ListTable");
         
@@ -825,7 +432,9 @@ class ListTable extends UserDatabaseTable
         $result = $this->_database->query($query);
         if ($result == FALSE)
         {
-            $this->_handle_error("could not get id of ListTable (key_string=".$key_string.")", ERROR_DATABASE_PROBLEM);
+            $this->_log->error("could not get id of ListTable (key_string=".$key_string.")");
+            $this->_log->error("database error: ".$this->_database->get_error_str());
+            $this->error_str = ERROR_DATABASE_PROBLEM;
             
             return FALSE;
         }
@@ -850,18 +459,7 @@ class ListTable extends UserDatabaseTable
         }
 
         # update list table description (date modified)
-        if ($this->_list_table_description->update($this->list_title) == FALSE);
-        {
-            # copy error strings from _list_table_description
-            $this->error_message_str = $this->_list_table_description->get_error_message_str();
-            $this->error_log_str = $this->_list_table_description->get_error_log_str();
-            $this->error_str = $this->_list_table_description->get_error_str();
-        }
-        
-        # also update creator modifier array
-        $record = $this->_get_list_table_description_record($this->list_title);
-        if (count($record) == 0)
-            return FALSE;
+        $this->_list_table_description->update($this->list_title);
 
         $this->_log->trace("updated record of ListTable");
         
@@ -889,13 +487,7 @@ class ListTable extends UserDatabaseTable
             return FALSE;
 
         # update list table description (date modified)
-        if ($this->_list_table_description->update($this->list_title) == FALSE);
-        {
-            # copy error strings from _list_table_description
-            $this->error_message_str = $this->_list_table_description->get_error_message_str();
-            $this->error_log_str = $this->_list_table_description->get_error_log_str();
-            $this->error_str = $this->_list_table_description->get_error_str();
-        }
+        $this->_list_table_description->update($this->list_title);
 
         $this->_log->trace("deleted record from ListTable");
         
@@ -915,9 +507,6 @@ class ListTable extends UserDatabaseTable
         # remove ListTableDescription record
         if ($this->_list_table_description->delete($this->list_title) == FALSE)
         {
-            # copy error strings from _list_table_description
-            $this->error_message_str = $this->_list_table_description->get_error_message_str();
-            $this->error_log_str = $this->_list_table_description->get_error_log_str();
             $this->error_str = $this->_list_table_description->get_error_str();
             
             return FALSE;
@@ -934,9 +523,6 @@ class ListTable extends UserDatabaseTable
         {
             if ($this->_list_table_note->drop() == FALSE)
             {
-                # copy error strings from _list_table_note
-                $this->error_message_str = $this->_list_table_note->get_error_message_str();
-                $this->error_log_str = $this->_list_table_note->get_error_log_str();
                 $this->error_str = $this->_list_table_note->get_error_str();
             
                 return FALSE;

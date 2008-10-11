@@ -332,15 +332,10 @@ class User extends UserDatabaseTable
         # create key_string
         $key_string = USER_NAME_FIELD_NAME."='".$name."'";
 
-        # check if record exists
         $record = parent::select_record($key_string);
         if (count($record) == 0)
         {
-            if ($this->error_message_str != ERROR_DATABASE_CONNECT)
-            {
-                $this->_handle_error("", ERROR_INCORRECT_NAME_PASSWORD);
-                $this->error_str = "";
-            }
+            $this->error_str = ERROR_INCORRECT_NAME_PASSWORD;
             
             return FALSE;
         }
@@ -363,8 +358,12 @@ class User extends UserDatabaseTable
             $name_values_array[USER_TIMES_LOGIN_FIELD_NAME] = ($record[USER_TIMES_LOGIN_FIELD_NAME] + 1);
             
             # update the number of times this user has logged in
-            if (parent::update($key_string, $name_values_array) == FALSE)                
+            if (parent::update($key_string, $name_values_array) == FALSE)
+            {
+                $this->error_str = ERROR_INCORRECT_NAME_PASSWORD;
+                
                 return FALSE;
+            }
             else
             {
                 $this->_log->debug("user logged in (name=".$name.")");
@@ -375,8 +374,7 @@ class User extends UserDatabaseTable
         else
         {        
             $this->_log->warn("passwords do not match (name=".$name."), user is not logged in");
-            $this->error_str = "";
-            $this->_handle_error("", ERROR_INCORRECT_NAME_PASSWORD);
+            $this->error_str = ERROR_INCORRECT_NAME_PASSWORD;
             
             return FALSE;
         }
@@ -414,7 +412,7 @@ class User extends UserDatabaseTable
                 
             return TRUE;
         }
-        else if (strlen($this->get_error_message_str()) == 0)
+        else if (strlen($this->get_error_str()) == 0)
         {
             $this->_log->debug("user does not exist (name=".$name.")");
                 
@@ -440,14 +438,14 @@ class User extends UserDatabaseTable
         }
         else
         {
-            $this->_log->error("could not find a password");
-            
+            $this->_log->debug("could not find a password");
             return FALSE;
         }
 
         if ($this->exists($name_values_array[USER_NAME_FIELD_NAME]))
         {
-            $this->_handle_error("user already exists", ERROR_DUPLICATE_USER_NAME);
+            $this->_log->error("user already exists");
+            $this->error_str = ERROR_DUPLICATE_USER_NAME;
             
             return FALSE;
         }
@@ -470,19 +468,10 @@ class User extends UserDatabaseTable
     {
         $this->_log->trace("update user (key_string=".$key_string.")");
                 
-        if (array_key_exists(USER_PW_FIELD_NAME, $name_values_array) == TRUE)
+        if (strlen($name_values_array[USER_PW_FIELD_NAME]) > 0)
         {
-            $password_str = $name_values_array[USER_PW_FIELD_NAME];
-            if (strlen($password_str) > 0)
-            {
-                $this->_log->debug("found a password");
-                $name_values_array[USER_PW_FIELD_NAME] = md5($password_str);
-            }
-            else
-            {
-                $this->_log->debug("found an empty password");
-                unset($name_values_array[USER_PW_FIELD_NAME]);
-            }
+            $this->_log->debug("found a password");
+            $name_values_array[USER_PW_FIELD_NAME] = md5($name_values_array[USER_PW_FIELD_NAME]);
         }
 
         if (parent::update($key_string, $name_values_array) == FALSE)

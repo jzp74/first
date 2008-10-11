@@ -61,6 +61,12 @@ class HtmlDatabaseTable
     protected $configuration;
     
     /**
+     * reference to databasetable object
+     * @var DatabaseTable
+     */
+    protected $_database_table;
+    
+    /**
      * reference to global user object
      * @var User
      */
@@ -84,7 +90,7 @@ class HtmlDatabaseTable
      * @param $database_table DatabaseTable reference to an existing DatabaseTable object
      * @return void
      */
-    function __construct ($configuration)
+    function __construct ($configuration, &$database_table)
     {
         # these variables are assumed to be globally available
         global $user;
@@ -97,22 +103,9 @@ class HtmlDatabaseTable
         $this->_user =& $user;
         $this->_log =& $logging;
         $this->_list_state =& $list_state;
+        $this->_database_table =& $database_table;
         
         $this->_log->debug("constructed new HtmlTable object");
-    }
-
-    /**
-     * set appropriate variables of given result object
-     * @param $result Result result object
-     * @param $error_element string id of element that will contain the error 
-     * @return void
-     */
-    function _handle_error ($database_table, $result, $element_id)
-    {
-        $result->set_error_message_str($database_table->get_error_message_str());
-        $result->set_error_log_str($database_table->get_error_log_str());
-        $result->set_error_str($database_table->get_error_str());
-        $result->set_error_element($element_id);
     }
     
     /**
@@ -185,8 +178,6 @@ class HtmlDatabaseTable
         $html_str .= "        <div id=\"page_title\">".$title."</div>\n\n";
         $html_str .= "        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane\">\n\n";
         $html_str .= "        </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane -->\n\n";
-        $html_str .= "        <div id=\"message_pane\">\n";
-        $html_str .= "        </div> <!-- message_pane -->\n\n";
         $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
 
         $result->set_result_str($html_str);
@@ -198,36 +189,36 @@ class HtmlDatabaseTable
 
     /**
      * get html (use Result object) for the records of a databasetable
-     * @param $database_table DatabaseTable database table object
      * @param $list_title string title of list
      * @param $order_by_field string name of field by which this list needs to be ordered
      * @param $page int page to be shown (show first page when 0 is given)
      * @param $result Result result object
      * @return void
      */
-    function get_content ($database_table, $list_title, $order_by_field, $page, $result)
+    function get_content ($list_title, $order_by_field, $page, $result)
     {
         global $firstthingsfirst_list_page_entries;
         
         $html_str = "";
-        $field_names = $database_table->get_user_field_names();
-        $fields = $database_table->get_fields();
-        $user_fields = $database_table->get_user_fields();
-        $metadata_str = $database_table->get_metadata_str();
+        $field_names = $this->_database_table->get_user_field_names();
+        $fields = $this->_database_table->get_fields();
+        $user_fields = $this->_database_table->get_user_fields();
+        $metadata_str = $this->_database_table->get_metadata_str();
 
         $this->_log->trace("get content (list_title=".$list_title.", page=".$page.")");
     
         # select entries
-        $records = $database_table->select($order_by_field, $page);
+        $records = $this->_database_table->select($order_by_field, $page);
 
-        if (strlen($database_table->get_error_message_str()) > 0 && $database_table->get_error_message_str() != ERROR_DATABASE_EXISTENCE)
+        if (strlen($this->_database_table->get_error_str()) > 0)
         {
-            $this->_handle_error($database_table, $result, "message_pane");
+            $result->set_error_str($this->_database_table->get_error_str());
+            $result->set_error_element($this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane");
             # no return statement here because we want the complete page to be displayed
         }
     
         # get list_state properties
-        $this->_user->get_list_state($database_table->get_table_name());
+        $this->_user->get_list_state($this->_database_table->get_table_name());
         $total_pages = $this->_list_state->get_total_pages();
         $order_by_field = $this->_list_state->get_order_by_field();
         $order_ascending = $this->_list_state->get_order_ascending();
@@ -254,14 +245,14 @@ class HtmlDatabaseTable
             # add archive select mechanism only when list supports archived records
             if ($metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] != DATABASETABLE_METADATA_FALSE)
             {
-                $html_str .= $this->get_archive_select($database_table, $list_title);
+                $html_str .= $this->get_archive_select($list_title);
                 $archive_select = TRUE;
             }
 
             # add filter only for lists
             if ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_LIST)
             {
-                $html_str .= $this->get_filter($database_table, $list_title);
+                $html_str .= $this->get_filter($list_title);
                 $filter = TRUE;
             }
             if (!$archive_select && !$filter)
@@ -338,8 +329,8 @@ class HtmlDatabaseTable
         foreach ($records as $record)
         {
             # build key string for this record
-            $key_string = $database_table->_get_key_string($record);
-            $key_values_string = $database_table->_get_key_values_string($record);
+            $key_string = $this->_database_table->_get_key_string($record);
+            $key_values_string = $this->_database_table->_get_key_values_string($record);
     
             $html_str .= "                    <tr id=\"".$key_values_string."\">\n";
             
@@ -549,36 +540,33 @@ class HtmlDatabaseTable
     
     /**
      * get html (use Result object) of one specified record
-     * @param $database_table DatabaseTable database table object
      * @param $list_title string title of list
      * @param $key_string string comma separated name value pairs
      * @param $result Result result object
      * @return void
      */
-    function get_record ($database_table, $list_title, $key_string, $result)
+    function get_record ($list_title, $key_string, $result)
     {
         global $firstthingsfirst_field_descriptions;
         global $firstthingsfirst_date_string;
-            
+        
+        $html_str = "";
+        $field_names = $this->_database_table->get_user_field_names();
+        $fields = $this->_database_table->get_fields();
+    
         $this->_log->trace("getting record (list_title=".$list_title.", key_string=".$key_string.")");
 
         # get list record when key string has been given
         if (strlen($key_string) > 0)
         {
-            $this->_log->debug("key string has been set");
-            $record = $database_table->select_record($key_string);
-            if (strlen($database_table->get_error_message_str()) > 0)
+            $record = $this->_database_table->select_record($key_string);
+            if (strlen($this->_database_table->get_error_str()) > 0)
             {
-                $this->_log->debug("error has been set");
-                $this->_handle_error($database_table, $result, "message_pane");
-
-                return;
+                $result->set_error_str($list_table->get_error_str());
+                $result->set_error_element("".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane");
+                # no return statement here because we want the complete page to be displayed
             }
         }
-
-        $html_str = "";
-        $field_names = $database_table->get_user_field_names();
-        $fields = $database_table->get_fields();
 
         # start with the action bar
         if (strlen($key_string))
@@ -596,7 +584,7 @@ class HtmlDatabaseTable
         for ($i=0; $i<count($field_names); $i++)
         {
             $field_name = $field_names[$i];
-            $user_fields = $database_table->get_user_fields();
+            $user_fields = $this->_database_table->get_user_fields();
             $db_field_name = $user_fields[$field_name];        
             $field_type = $fields[$db_field_name][1];
             $field_options = $fields[$db_field_name][2];
@@ -797,17 +785,16 @@ class HtmlDatabaseTable
 
     /**
      * get html for the archive records selector
-     * @param $database_table DatabaseTable database table object
      * @param $list_title string title of list
      * @return string returned html
      */
-    function get_archive_select ($database_table, $list_title)
+    function get_archive_select ($list_title)
     {
         $this->_log->trace("get archive select");
 
         $html_str = "";
         
-        $this->_user->get_list_state($database_table->get_table_name());
+        $this->_user->get_list_state($this->_database_table->get_table_name());
         $archived = $this->_list_state->get_archived();
         
         $html_str .= "                        ";
@@ -832,17 +819,16 @@ class HtmlDatabaseTable
 
     /**
      * get html for filter
-     * @param $database_table DatabaseTable database table object
      * @param $list_title string title of list
      * @return string returned html
      */
-    function get_filter ($database_table, $list_title)
+    function get_filter ($list_title)
     {
         $this->_log->trace("get filter");
 
         $html_str = "";
         
-        $this->_user->get_list_state($database_table->get_table_name());
+        $this->_user->get_list_state($this->_database_table->get_table_name());
         $filter_str = $this->_list_state->get_filter_str();
         
         $html_str .= "                        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."filter\">\n";
@@ -855,7 +841,7 @@ class HtmlDatabaseTable
 
         $this->_log->trace("got filter");
     
-        return $html_str;
+        return $html_str;        
     }            
 
 }

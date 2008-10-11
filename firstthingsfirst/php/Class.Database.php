@@ -105,20 +105,16 @@ class Database
     {    
         $this->_log->trace("opening db connection (host=".$this->host.", user=".$this->user.")");
 
-        $db_link = @mysql_connect($this->host, $this->user, $this->passwd);
+        $db_link = mysql_connect($this->host, $this->user, $this->passwd);
         if (!$db_link)
         {
-            $this->error_str = "unable to connect to database (host=".$this->host.", user=".$this->user.")";
-            $this->_log->error($this->error_str);
-            
+            $this->_log->error("could connect to database (host=".$this->host.", user=".$this->user.")");
             return FALSE;
         }
         $succes = mysql_select_db($this->database, $db_link);
         if (!$succes)
         {
-            $this->error_str = "unable to select database (db=".$this->database.")";
-            $this->_log->error($this->error_str);
-            
+            $this->_log->error("could not select database (db=".$this->database.")");
             return FALSE;
         }
     
@@ -189,7 +185,11 @@ class Database
             return $row;
         }
         else
+        {
+            $this->_log->error("cannot fetch: result is FALSE");
+        
             return FALSE;
+        }
     }
     
     /**

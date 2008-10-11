@@ -104,20 +104,18 @@ function check_postconditions ($result, $response)
     $response->addRemove("info_message");
 
     # check if an error is set
-    if (strlen($result->get_error_message_str()) > 0)
+    if ($result->get_error_str())
     {
         $logging->warn("an error has been set");
         
         $error_element = $result->get_error_element();
-        $error_message_str = $result->get_error_message_str();
-        $error_log_str = $result->get_error_log_str();
         $error_str = $result->get_error_str();
-        set_error_message($error_element, $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message($error_element, $error_str, $response);
                 
         return FALSE;
     }
     
-    $logging->trace("checked postconditions");
+    $logging->trace("checked postconditions: ".$action);
 
     return TRUE;
 }
@@ -125,13 +123,11 @@ function check_postconditions ($result, $response)
 /**
  * show an error on screen
  * @param string $error_element DOM element in which error has to be shown
- * @param string $error_message_str error message for user
- * @param string $error_log_str error message for log
- * @param string $error_str actual error string
+ * @param string $error_str the error string
  * @param $response xajaxResponse response object
  * @return void
  */
-function set_error_message ($error_element, $error_message_str, $error_log_str, $error_str, $response)
+function set_error_message ($error_element, $error_str, $response)
 {
     global $logging;
     
@@ -140,18 +136,8 @@ function set_error_message ($error_element, $error_message_str, $error_log_str, 
     # first remove any error or info messages
     $response->addRemove("error_message");
     $response->addRemove("info_message");
-    
-    # now create the HTML for the error message
-    $html_str = "<p id=\"error_message\"><strong>".$error_message_str."</strong>";
-    if (strlen($error_log_str) > 0 || strlen($error_str) > 0)
-        $html_str .= "<br>";
-    if (strlen($error_log_str) > 0)
-        $html_str .= "<br><strong>".LABEL_ADDED_TO_LOG_FILE.":</strong> ".$error_log_str;
-    if (strlen($error_str) > 0)
-        $html_str .= "<br><strong>".LABEL_DATABASE_MESSAGE.":</strong> ".$error_str;
-    $html_str .= "</p>";
 
-    $response->addAppend($error_element, "innerHTML", $html_str);
+    $response->addAppend($error_element, "innerHTML", "<p id=\"error_message\">".$error_str."</p>");
     
     $logging->trace("set error (element=".$error_element.")");        
 }
@@ -185,20 +171,12 @@ function set_info_message ($info_element, $info_str, $response)
  * @param string $tabindex contains the tabindex of the button
  * @return string html containing button
  */
-function get_href ($func_str, $name_str)
+function get_href ($func_str, $name_str, $tabindex=-1)
 {
-    return "<a href=\"javascript:void(0);\" onclick=\"".$func_str."\">".$name_str."</a>";
-}
-
-/**
- * get html for an active button (button calls a javascript function and prompt a confirm button)
- * @param string $func_str contains the complete js function name and all its parameters
- * @param string $name_str contains the name of the button
- * @return string html containing button
- */
-function get_href_confirm ($func_str, $confirm_str, $name_str)
-{
-    return "<a href=\"javascript:void(0);\" onclick=\"if (confirm('".$confirm_str."')) { ".$func_str." }\">".$name_str."</a>";
+    $html_str = "<a href=\"javascript:void(0);\" ";
+    if ($tabindex >= 0)
+        $html_str .= "tabindex=\"".$tabindex."\" ";
+    return $html_str."onclick=\"".$func_str."\">".$name_str."</a>";
 }
 
 /**
@@ -220,7 +198,7 @@ function get_query_href ($query_str, $name_str)
  */
 function get_button ($func_str, $name_str)
 {
-    return "<button class=\"button\" type=\"button\" onclick=\"".$func_str."\">".$name_str."</button>";
+    return "<button class=\"button\" onclick=\"".$func_str."\">".$name_str."</button>";
 }
 
 /**
@@ -231,7 +209,7 @@ function get_button ($func_str, $name_str)
  */
 function get_button_confirm ($func_str, $confirm_str, $name_str)
 {
-    return "<button class=\"button\" type=\"button\" onclick=\"if (confirm('".$confirm_str."')) { ".$func_str." }\">".$name_str."</button>";
+    return "<button class=\"button\" onclick=\"if (confirm('".$confirm_str."')) { ".$func_str." }\">".$name_str."</button>";
 }
 
 /**
@@ -242,7 +220,7 @@ function get_button_confirm ($func_str, $confirm_str, $name_str)
  */
 function get_query_button ($query_str, $name_str)
 {
-    return "<button class=\"button\" type=\"button\" onclick=\"window.location='index.php?".$query_str."'; return false;\">".$name_str."</button>";
+    return "<button class=\"button\" onclick=\"window.location='index.php?".$query_str."'; return false;\">".$name_str."</button>";
 }
 
 /**

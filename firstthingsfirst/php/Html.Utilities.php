@@ -33,7 +33,7 @@ function check_field ($check_functions, $field_name, $str, $result)
             $result_str = str_is_not_empty($field_name, $result_str);
             if ($result_str == FALSE_RETURN_STRING)
             {
-                $result->set_error_message_str(ERROR_NO_FIELD_VALUE_GIVEN);
+                $result->set_error_str(ERROR_NO_FIELD_VALUE_GIVEN);
                 
                 return;
             }
@@ -43,7 +43,7 @@ function check_field ($check_functions, $field_name, $str, $result)
             $result_str = str_is_number($field_name, $result_str);
             if ($result_str == FALSE_RETURN_STRING)
             {
-                $result->set_error_message_str(ERROR_NO_NUMBER_GIVEN);
+                $result->set_error_str(ERROR_NO_NUMBER_GIVEN);
                 
                 return;
             }
@@ -53,7 +53,7 @@ function check_field ($check_functions, $field_name, $str, $result)
             $result_str = str_is_date($field_name, $result_str);
             if ($result_str == FALSE_RETURN_STRING)
             {
-                $result->set_error_message_str(ERROR_DATE_WRONG_FORMAT);
+                $result->set_error_str(ERROR_DATE_WRONG_FORMAT);
                 
                 return;
             }
@@ -224,13 +224,6 @@ function get_date_str ($format, $value)
     
     if ($format == DATE_FORMAT_NORMAL)
         return strftime($firstthingsfirst_date_string, (strtotime($value)));
-    if ($format == DATE_FORMAT_DATETIME)
-    {
-        if ($firstthingsfirst_date_string == DATE_FORMAT_EU)
-            return strftime(DATETIME_FORMAT_EU, (strtotime($value)));
-        else
-            return strftime(DATETIME_FORMAT_EU, (strtotime($value)));
-    }
     else if ($format == DATE_FORMAT_WEEKDAY)
     {
         # get weekday

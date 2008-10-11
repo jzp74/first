@@ -18,19 +18,7 @@
 class Result
 {
     /**
-    * error message for user
-    * @var string
-    */
-    protected $error_message_str;
-
-    /**
-    * error message for log
-    * @var string
-    */
-    protected $error_log_str;
-
-    /**
-    * error string, contains last known error
+    * error string
     * @var string
     */
     protected $error_str;
@@ -69,26 +57,8 @@ class Result
     }
 
     /**
-    * get value of error_message_str attribute
-    * @return string value of error_message_str attribute
-    */
-    function get_error_message_str ()
-    {
-        return $this->error_message_str;
-    }
-
-    /**
-    * get value of error_log_str attribute
-    * @return string value of error_log_str attribute
-    */
-    function get_error_log_str ()
-    {
-        return $this->error_log_str;
-    }
-
-    /**
     * get value of error_str attribute
-    * @return string value of error_str attribute
+    * @return int value of error_str attribute
     */
     function get_error_str ()
     {
@@ -114,26 +84,6 @@ class Result
     }
     
     /**
-    * set value of error_message_str attribute
-    * @param string $str value of error_message_str attribute
-    * @return void
-    */
-    function set_error_message_str ($str)
-    {
-        $this->error_message_str = $str;
-    }
-
-    /**
-    * set value of error_log_str attribute
-    * @param string $str value of error_log_str attribute
-    * @return void
-    */
-    function set_error_log_str ($str)
-    {
-        $this->error_log_str = $str;
-    }
-
-    /**
     * set value of error_str attribute
     * @param string $str value of error_str attribute
     * @return void
@@ -142,7 +92,7 @@ class Result
     {
         $this->error_str = $str;
     }
-        
+    
     /**
     * set value of error_element attribute
     * @param string $str value of error_element attribute
@@ -171,8 +121,6 @@ class Result
     {
         $this->_log->trace("resetting Result");
 
-        $this->error_message_str = "";
-        $this->error_log_str = "";
         $this->error_str = "";
         $this->error_element = "";
         $this->result_str = "";

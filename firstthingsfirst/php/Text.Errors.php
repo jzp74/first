@@ -84,21 +84,9 @@ define("ERROR_NOT_WELL_FORMED_SELECTION_STRING", "field can only contain alpha n
 
 /**
  * database error
- * definition of database connect error
- */
-define("ERROR_DATABASE_CONNECT", "unable to connect to database. make sure database is working properly and check your database settings");
-
-/**
- * database error
- * definition of database existence error
- */
-define("ERROR_DATABASE_EXISTENCE", "one or more tables appear not to exist in database. please contact an administrator");
-
-/**
- * database error
  * definition of unkwown database error
  */
-define("ERROR_DATABASE_PROBLEM", "an unkwown error occurred. please contact an administrator");
+define("ERROR_DATABASE_PROBLEM", "an unkwown error occurred please check your database settings or contact an administrator");
 
 /**
  * creation error

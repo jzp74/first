@@ -121,7 +121,8 @@ function action_get_list_page ($list_title)
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
-    $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
+    $list_table = new ListTable($list_title);
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
     
     if (!check_preconditions(ACTION_GET_LIST_PAGE, $response))
         return $response;
@@ -130,37 +131,20 @@ function action_get_list_page ($list_title)
     $html_database_table->get_page($list_title, "", $result);    
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
 
+    # set content
+    $html_database_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+
     # set login status
     set_login_status($response);
     
     # set action pane
     $html_str = $html_database_table->get_action_bar($list_title, "");
     $response->addAssign("action_pane", "innerHTML", $html_str);
-
-    # create list table object
-    $list_table = new ListTable($list_title);
-    if ($list_table->get_is_valid() == FALSE)
-    {
-        $logging->warn("create list object returns false");
-        $error_message_str = $list_table->get_error_message_str();
-        $error_log_str = $list_table->get_error_log_str();
-        $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
-       
-        return $response;
-    }
-
-    # set content
-    $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
     # set footer
     $html_str = get_footer($list_table->get_creator_modifier_array()); 
     set_footer($html_str, $response);
-
-    # check post conditions
-    if (check_postconditions($result, $response) == FALSE)
-        return $response;
 
     $logging->trace("got list page");
 
@@ -183,39 +167,23 @@ function action_get_list_print_page ($list_title)
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
-    $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
-
-    # set page
-    $html_database_table->get_print_page($list_title, $result);
-    $response->addAssign("main_body", "innerHTML", $result->get_result_str());
-
-    # create list table object
     $list_table = new ListTable($list_title);
-    if ($list_table->get_is_valid() == FALSE)
-    {
-        $logging->warn("create list object returns false");
-        $error_message_str = $list_table->get_error_message_str();
-        $error_log_str = $list_table->get_error_log_str();
-        $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
-       
-        return $response;
-    }
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
 
     if (!check_preconditions(ACTION_GET_LIST_PAGE, $response))
         return $response;
         
+    # set page
+    $html_database_table->get_print_page($list_title, $result);
+    $response->addAssign("main_body", "innerHTML", $result->get_result_str());
+
     # set content
-    $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_ALL_PAGES, $result);
+    $html_database_table->get_content($list_title, "", DATABASETABLE_ALL_PAGES, $result);
     $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
         
     # set footer
     $html_str = get_footer($list_table->get_creator_modifier_array()); 
     set_footer($html_str, $response);
-
-    # check post conditions
-    if (check_postconditions($result, $response) == FALSE)
-        return $response;
 
     # print this page
     $response->AddScriptCall("window.print()");
@@ -244,35 +212,19 @@ function action_get_list_content ($list_title, $order_by_field, $page)
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
-    $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
+    $list_table = new ListTable($list_title);
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
 
     if (!check_preconditions(ACTION_GET_LIST_CONTENT, $response))
         return $response;
 
-    # create list table object
-    $list_table = new ListTable($list_title);
-    if ($list_table->get_is_valid() == FALSE)
-    {
-        $logging->warn("create list object returns false");
-        $error_message_str = $list_table->get_error_message_str();
-        $error_log_str = $list_table->get_error_log_str();
-        $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
-       
-        return $response;
-    }
-
     # set content
-    $html_database_table->get_content($list_table, $list_title, $order_by_field, $page, $result);
+    $html_database_table->get_content($list_title, $order_by_field, $page, $result);
     $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
     # set action pane
     $html_str = $html_database_table->get_action_bar($list_title, "");
     $response->addAssign("action_pane", "innerHTML", $html_str);
-
-    # check post conditions
-    if (check_postconditions($result, $response) == FALSE)
-        return $response;
 
     $logging->trace("got list content");
 
@@ -296,7 +248,8 @@ function action_get_list_record ($list_title, $key_string)
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
-    $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
+    $list_table = new ListTable($list_title);
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
 
     if (!check_preconditions(ACTION_GET_LIST_RECORD, $response))
         return $response;
@@ -304,27 +257,10 @@ function action_get_list_record ($list_title, $key_string)
     # remove any error messages
     $response->addRemove("error_message");
 
-    # create list table object
-    $list_table = new ListTable($list_title);
-    if ($list_table->get_is_valid() == FALSE)
-    {
-        $logging->warn("create list object returns false");
-        $error_message_str = $list_table->get_error_message_str();
-        $error_log_str = $list_table->get_error_log_str();
-        $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
-       
-        return $response;
-    }
-
     # set action pane
-    $html_database_table->get_record($list_table, $list_title, $key_string, $result);
+    $html_database_table->get_record($list_title, $key_string, $result);
     $response->addAssign("action_pane", "innerHTML", $result->get_result_str());
     
-    # check post conditions
-    if (check_postconditions($result, $response) == FALSE)
-        return $response;
-
     # set focus on last input element and then on first input element
     $response->addScriptCall("document.getElementById('focus_on_this_input').blur()");
     $response->addScriptCall("document.getElementById('focus_on_this_input').focus()");
@@ -356,7 +292,8 @@ function action_insert_list_record ($list_title, $form_values)
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
-    $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
+    $list_table = new ListTable($list_title);
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
 
     if (!check_preconditions(ACTION_INSERT_LIST_RECORD, $response))
         return $response;
@@ -374,9 +311,9 @@ function action_insert_list_record ($list_title, $form_values)
         
         # check field values
         check_field($check_functions, $db_field_name, $form_values[$name_key], $result);
-        if (strlen($result->get_error_message_str()) > 0)
+        if (strlen($result->get_error_str()) > 0)
         {
-            set_error_message($name_key, $result->get_error_message_str(), "", "", $response);
+            set_error_message($name_key, $result->get_error_str(), $response);
             
             return $response;
         }
@@ -403,34 +340,18 @@ function action_insert_list_record ($list_title, $form_values)
     # remove any error messages
     $response->addRemove("error_message");
     
-    # create list table object
-    $list_table = new ListTable($list_title);
-    if ($list_table->get_is_valid() == FALSE)
-    {
-        $logging->warn("create list object returns false");
-        $error_message_str = $list_table->get_error_message_str();
-        $error_log_str = $list_table->get_error_log_str();
-        $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
-       
-        return $response;
-    }
-
     # display error when insertion returns false
-    if ($list_table->insert($new_form_values) == FALSE)
+    if (!$list_table->insert($new_form_values))
     {
         $logging->warn("insert list record returns false");
-        $error_message_str = $list_table->get_error_message_str();
-        $error_log_str = $list_table->get_error_log_str();
-        $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message("message_pane", $list_table->get_error_str(), $response);
         
         return $response;
     }
     
     # set content
     $result->reset();
-    $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $html_database_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
     $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
     # set action pane
@@ -440,10 +361,6 @@ function action_insert_list_record ($list_title, $form_values)
     # set footer
     $html_str = get_footer($list_table->get_creator_modifier_array()); 
     set_footer($html_str, $response);
-
-    # check post conditions
-    if (check_postconditions($result, $response) == FALSE)
-        return $response;
 
     $logging->trace("inserted list record");
 
@@ -473,7 +390,8 @@ function action_update_list_record ($list_title, $key_string, $form_values)
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
-    $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
+    $list_table = new ListTable($list_title);
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
 
     if (!check_preconditions(ACTION_UPDATE_LIST_RECORD, $response))
         return $response;
@@ -493,7 +411,7 @@ function action_update_list_record ($list_title, $key_string, $form_values)
         check_field($check_functions, $db_field_name, $form_values[$name_key], $result);
         if (strlen($result->get_error_str()) > 0)
         {
-            set_error_message($name_key, $result->get_error_message_str(), "", "", $response);
+            set_error_message($name_key, $result->get_error_str(), $response);
             
             return $response;
         }
@@ -524,34 +442,18 @@ function action_update_list_record ($list_title, $key_string, $form_values)
     # remove any error messages
     $response->addRemove("error_message");
 
-    # create list table object
-    $list_table = new ListTable($list_title);
-    if ($list_table->get_is_valid() == FALSE)
-    {
-        $logging->warn("create list object returns false");
-        $error_message_str = $list_table->get_error_message_str();
-        $error_log_str = $list_table->get_error_log_str();
-        $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
-       
-        return $response;
-    }
-
     # display error when insertion returns false
     if (!$list_table->update($key_string, $new_form_values))
     {
         $logging->warn("update list record returns false");
-        $error_message_str = $list_table->get_error_message_str();
-        $error_log_str = $list_table->get_error_log_str();
-        $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message("message_pane", $list_table->get_error_str(), $response);
         
         return $response;
     }
     
     # set content
     $result->reset();
-    $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $html_database_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
     $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
     # set action pane
@@ -561,10 +463,6 @@ function action_update_list_record ($list_title, $key_string, $form_values)
     # set footer
     $html_str = get_footer($list_table->get_creator_modifier_array()); 
     set_footer($html_str, $response);
-
-    # check post conditions
-    if (check_postconditions($result, $response) == FALSE)
-        return $response;
 
     $logging->trace("updated list record");
 
@@ -588,7 +486,8 @@ function action_archive_list_record ($list_title, $key_string)
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
-    $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
+    $list_table = new ListTable($list_title);
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
 
     if (!check_preconditions(ACTION_ARCHIVE_LIST_RECORD, $response))
         return $response;
@@ -596,42 +495,22 @@ function action_archive_list_record ($list_title, $key_string)
     # remove any error messages
     $response->addRemove("error_message");
 
-    # create list table object
-    $list_table = new ListTable($list_title);
-    if ($list_table->get_is_valid() == FALSE)
-    {
-        $logging->warn("create list object returns false");
-        $error_message_str = $list_table->get_error_message_str();
-        $error_log_str = $list_table->get_error_log_str();
-        $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
-       
-        return $response;
-    }
-
     # display error when archive returns false
     if (!$list_table->archive($key_string))
     {
         $logging->warn("archive list record returns false");
-        $error_message_str = $list_table->get_error_message_str();
-        $error_log_str = $list_table->get_error_log_str();
-        $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message("message_pane", $list_table->get_error_str(), $response);
                 
         return $response;
     }
 
     # set content
-    $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $html_database_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
     $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
     # set footer
     $html_str = get_footer($list_table->get_creator_modifier_array()); 
     set_footer($html_str, $response);
-
-    # check post conditions
-    if (check_postconditions($result, $response) == FALSE)
-        return $response;
 
     $logging->trace("archived list record");
 
@@ -655,7 +534,8 @@ function action_delete_list_record ($list_title, $key_string)
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
-    $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
+    $list_table = new ListTable($list_title);
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
 
     if (!check_preconditions(ACTION_DELETE_LIST_RECORD, $response))
         return $response;
@@ -663,42 +543,22 @@ function action_delete_list_record ($list_title, $key_string)
     # remove any error messages
     $response->addRemove("error_message");
 
-    # create list table object
-    $list_table = new ListTable($list_title);
-    if ($list_table->get_is_valid() == FALSE)
-    {
-        $logging->warn("create list object returns false");
-        $error_message_str = $list_table->get_error_message_str();
-        $error_log_str = $list_table->get_error_log_str();
-        $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
-       
-        return $response;
-    }
-
     # display error when delete returns false
     if (!$list_table->delete($key_string))
     {
         $logging->warn("delete list record returns false");
-        $error_message_str = $list_table->get_error_message_str();
-        $error_log_str = $list_table->get_error_log_str();
-        $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message("message_pane", $list_table->get_error_str(), $response);
                 
         return $response;
     }
 
     # set content
-    $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $html_database_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
     $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
     # set footer
     $html_str = get_footer($list_table->get_creator_modifier_array()); 
     set_footer($html_str, $response);
-
-    # check post conditions
-    if (check_postconditions($result, $response) == FALSE)
-        return $response;
 
     $logging->trace("deleted list record");
 
@@ -720,7 +580,8 @@ function action_cancel_list_action ($list_title)
 
     # create necessary objects
     $response = new xajaxResponse();
-    $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
+    $list_table = new ListTable($list_title);
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
 
     if (!check_preconditions(ACTION_CANCEL_LIST_ACTION, $response))
         return $response;
@@ -756,23 +617,11 @@ function action_set_list_archive($list_title, $archive_value)
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
-    $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
+    $list_table = new ListTable($list_title);
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
 
     if (!check_preconditions(ACTION_SET_LIST_ARCHIVE, $response))
         return $response;
-
-    # create list table object
-    $list_table = new ListTable($list_title);
-    if ($list_table->get_is_valid() == FALSE)
-    {
-        $logging->warn("create list object returns false");
-        $error_message_str = $list_table->get_error_message_str();
-        $error_log_str = $list_table->get_error_log_str();
-        $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
-       
-        return $response;
-    }
 
     # set archive value
     $user->get_list_state($list_table->get_table_name());
@@ -783,12 +632,8 @@ function action_set_list_archive($list_title, $archive_value)
     $response->addRemove("error_message");
 
     # set content
-    $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $html_database_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
     $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
-
-    # check post conditions
-    if (check_postconditions($result, $response) == FALSE)
-        return $response;
 
     $logging->trace("set list archive");
 
@@ -814,7 +659,8 @@ function action_set_list_filter($list_title, $filter_str)
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
-    $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
+    $list_table = new ListTable($list_title);
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration, $list_table);
 
     if (!check_preconditions(ACTION_SET_LIST_FILTER, $response))
         return $response;
@@ -822,21 +668,8 @@ function action_set_list_filter($list_title, $filter_str)
     # check if filter_str is well formed
     if (str_is_well_formed("filter_str", $filter_str) == FALSE_RETURN_STRING)
     {
-        set_error_message("database_table_contents_top_left", ERROR_NOT_WELL_FORMED_STRING, "", "", $response);
+        set_error_message("database_table_contents_top_left", ERROR_NOT_WELL_FORMED_STRING, $response);
         
-        return $response;
-    }
-
-    # create list table object
-    $list_table = new ListTable($list_title);
-    if ($list_table->get_is_valid() == FALSE)
-    {
-        $logging->warn("create list object returns false");
-        $error_message_str = $list_table->get_error_message_str();
-        $error_log_str = $list_table->get_error_log_str();
-        $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
-       
         return $response;
     }
 
@@ -850,12 +683,8 @@ function action_set_list_filter($list_title, $filter_str)
     $response->addRemove("error_message");
 
     # set content
-    $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $html_database_table->get_content($list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
     $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
-
-    # check post conditions
-    if (check_postconditions($result, $response) == FALSE)
-        return $response;
 
     $logging->trace("set list filter");
 
@@ -872,8 +701,8 @@ function get_footer ($creator_modifier_array)
     
     $logging->trace("getting footer");
 
-    $ts_created = get_date_str(DATE_FORMAT_DATETIME, $creator_modifier_array[DB_TS_CREATED_FIELD_NAME]);
-    $ts_modified = get_date_str(DATE_FORMAT_DATETIME, $creator_modifier_array[DB_TS_MODIFIED_FIELD_NAME]);
+    $ts_created = get_date_str(DATE_FORMAT_WEEKDAY, $creator_modifier_array[DB_TS_CREATED_FIELD_NAME]);
+    $ts_modified = get_date_str(DATE_FORMAT_WEEKDAY, $creator_modifier_array[DB_TS_MODIFIED_FIELD_NAME]);
 
     $html_str = "";
 

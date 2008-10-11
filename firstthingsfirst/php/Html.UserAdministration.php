@@ -94,7 +94,7 @@ function action_get_user_admin_page ()
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
-    $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
+    $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration, $user);
     
     if (!check_preconditions(ACTION_GET_USER_ADMIN_PAGE, $response))
         return $response;
@@ -104,7 +104,7 @@ function action_get_user_admin_page ()
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
 
     # set content
-    $html_database_table->get_content($user, USER_TABLE_NAME, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $html_database_table->get_content(USER_TABLE_NAME, "", DATABASETABLE_UNKWOWN_PAGE, $result);
     $response->addAssign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
     # set login status
@@ -116,10 +116,6 @@ function action_get_user_admin_page ()
     
     # set footer
     set_footer("", $response);
-
-    # check post conditions
-    if (check_postconditions($result, $response) == FALSE)
-        return $response;
 
     $logging->trace("got user admin page");
 
@@ -145,18 +141,14 @@ function action_get_user_admin_content ($title, $order_by_field, $page)
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
-    $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
+    $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration, $user);
 
     if (!check_preconditions(ACTION_GET_USER_ADMIN_CONTENT, $response))
         return $response;
 
     # set content
-    $html_database_table->get_content($user, $title, $order_by_field, $page, $result);
+    $html_database_table->get_content($title, $order_by_field, $page, $result);
     $response->addAssign(USER_ADMIN_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
-
-    # check post conditions
-    if (check_postconditions($result, $response) == FALSE)
-        return $response;
 
     $logging->trace("got user admin content");
 
@@ -181,7 +173,7 @@ function action_get_user_admin_record ($title, $key_string)
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
-    $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
+    $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration, $user);
 
     if (!check_preconditions(ACTION_GET_USER_ADMIN_RECORD, $response))
         return $response;
@@ -189,14 +181,8 @@ function action_get_user_admin_record ($title, $key_string)
     # remove any error messages
     $response->addRemove("error_message");
 
-    # get html for one user record
-    $html_database_table->get_record($user, $title, $key_string, $result);
-    
-    # check post conditions
-    if (check_postconditions($result, $response) == FALSE)
-        return $response;
-    
-    # set action pane    
+    # set action pane
+    $html_database_table->get_record($title, $key_string, $result);
     $response->addAssign("action_pane", "innerHTML", $result->get_result_str());
 
     # set focus on last input element and then on first input element
@@ -234,7 +220,7 @@ function action_insert_user_admin_record ($title, $form_values)
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
-    $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
+    $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration, $user);
 
     if (!check_preconditions(ACTION_INSERT_USER_ADMIN_RECORD, $response))
         return $response;
@@ -254,7 +240,7 @@ function action_insert_user_admin_record ($title, $form_values)
         check_field($check_functions, $db_field_name, $form_values[$name_key], $result);
         if (strlen($result->get_error_str()) > 0)
         {
-            set_error_message($name_key, $result->get_error_str(), "", "", $response);
+            set_error_message($name_key, $result->get_error_str(), $response);
             
             return $response;
         }
@@ -283,27 +269,20 @@ function action_insert_user_admin_record ($title, $form_values)
     if (!$user->insert($new_form_values))
     {
         $logging->warn("insert user admin record returns false");
-        $error_message_str = $user->get_error_message_str();
-        $error_log_str = $user->get_error_log_str();
-        $error_str = $user->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(USER_ADMIN_CSS_NAME_PREFIX."content_pane", $user->get_error_str(), $response);
         
         return $response;
     }
     
     # set content
     $result->reset();
-    $html_database_table->get_content($user, $title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $html_database_table->get_content($title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
     $response->addAssign(USER_ADMIN_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
     # set action pane
     $html_str = $html_database_table->get_action_bar($title, "");
     $response->addAssign("action_pane", "innerHTML", $html_str);
     
-    # check post conditions
-    if (check_postconditions($result, $response) == FALSE)
-        return $response;
-
     $logging->trace("inserted user admin record");
 
     return $response;
@@ -335,7 +314,7 @@ function action_update_user_admin_record ($title, $key_string, $form_values)
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
-    $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
+    $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration, $user);
 
     if (!check_preconditions(ACTION_UPDATE_USER_ADMIN_RECORD, $response))
         return $response;
@@ -357,7 +336,7 @@ function action_update_user_admin_record ($title, $key_string, $form_values)
             check_field($check_functions, $db_field_name, $form_values[$name_key], $result);
             if (strlen($result->get_error_str()) > 0)
             {
-                set_error_message($name_key, $result->get_error_str(), "", "", $response);
+                set_error_message($name_key, $result->get_error_str(), $response);
             
                 return $response;
             }
@@ -387,27 +366,20 @@ function action_update_user_admin_record ($title, $key_string, $form_values)
     if (!$user->update($key_string, $new_form_values))
     {
         $logging->warn("update user admin record returns false");
-        $error_message_str = $user->get_error_message_str();
-        $error_log_str = $user->get_error_log_str();
-        $error_str = $user->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(USER_ADMIN_CSS_NAME_PREFIX."content_pane", $user->get_error_str(), $response);
         
         return $response;
     }
     
     # set content
     $result->reset();
-    $html_database_table->get_content($user, $title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $html_database_table->get_content($title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
     $response->addAssign(USER_ADMIN_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
     # set action pane
     $html_str = $html_database_table->get_action_bar($title, "");
     $response->addAssign("action_pane", "innerHTML", $html_str);
     
-    # check post conditions
-    if (check_postconditions($result, $response) == FALSE)
-        return $response;
-
     $logging->trace("updated user admin record");
 
     return $response;
@@ -431,7 +403,7 @@ function action_delete_user_admin_record ($title, $key_string)
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
-    $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
+    $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration, $user);
 
     if (!check_preconditions(ACTION_DELETE_USER_ADMIN_RECORD, $response))
         return $response;
@@ -443,22 +415,15 @@ function action_delete_user_admin_record ($title, $key_string)
     if (!$user->delete($key_string))
     {
         $logging->warn("delete user admin record returns false");
-        $error_message_str = $user->get_error_message_str();
-        $error_log_str = $user->get_error_log_str();
-        $error_str = $user->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(USER_ADMIN_CSS_NAME_PREFIX."content_pane", $user->get_error_str(), $response);
                 
         return $response;
     }
 
     # set content
-    $html_database_table->get_content($user, $title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $html_database_table->get_content($title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
     $response->addAssign(USER_ADMIN_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
-    # check post conditions
-    if (check_postconditions($result, $response) == FALSE)
-        return $response;
-
     $logging->trace("deleted user admin record");
 
     return $response;
@@ -480,7 +445,7 @@ function action_cancel_user_admin_action ($title)
 
     # create necessary objects
     $response = new xajaxResponse();
-    $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
+    $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration, $user);
 
     if (!check_preconditions(ACTION_CANCEL_USER_ADMIN_ACTION, $response))
         return $response;

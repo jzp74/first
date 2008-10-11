@@ -493,6 +493,7 @@ html, body {
     border-top: 1px dotted rgb(151, 48, 0);
     border-bottom: 1px dotted rgb(151, 48, 0);
     font-size: 11px;
+    font-weight: bold;
     }
 
 /*  defines info messages */

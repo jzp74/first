@@ -7,7 +7,7 @@
     padding: 0px 0px 0px 0px;
     border: none;
     z-index: 10;
-    font-family: verdana;
+    font-family: Tahoma;
     font-size: 12px;
     text-decoration: none;
     text-align: left;
@@ -15,20 +15,12 @@
 
 /*  define style for ALL links (aka buttons) */
 a, a:link, a:visited {
-    padding: 2px 2px 2px 2px;
-    color: rgb(255, 255, 255);
-    text-decoration: none;
     font-weight: bold;
     }
  
-a:hover { 
-    border-bottom: 2px solid rgb(255, 255, 255);
-    }
-
 /*  define style for all buttons */
 .button {
-    padding: 4px 4px 4px 4px;
-    margin: -4px 4px -4px 0px;
+    padding: 0px 1px 0px 1px;
     font-weight: bold;
     }
 
@@ -68,8 +60,8 @@ em, strong {
 input, select, textarea {
     background-color: rgb(255, 255, 255);
     text-align: left;
-    font-family: verdana;
-    font-size: small;
+    font-family: Tahoma;
+    font-size: 12px;
     font-weight: normal;
     }
     
@@ -182,10 +174,14 @@ html, body {
 #main_body {
     }
 
-/*  defines the title of a page */    
-#page_title {
+/*  container for most header contents */    
+#page_header {
     background-color: rgb(5, 114, 197);
     color: rgb(255, 255, 255);
+    }
+
+/*  defines the title of a page */    
+#page_title {
     font-family: arial black;    
     font-size: 32px;
     font-weight: bold;
@@ -194,42 +190,73 @@ html, body {
 
 /*  defines the explanation below the title */
 #page_explanation {
-    background-color: rgb(5, 114, 197);
-    color: rgb(255, 255, 255);
-    font-family: arial black;    
-    font-size: 14px;
+    padding: 4px 0px 4px 0px;
+    font-family: Tahoma;    
+    font-size: 16px;
+    font-weight: bold;
     text-align: center;
     }
 
 /*  defines the navigation container */
 #navigation_container {
-    padding: 4px 6px 10px 12px;
-    background-color: rgb(5, 114, 197);
-    color: rgb(255, 255, 255);
+    padding: 4px 6px 6px 6px;
 }
 
 /*  defines navigation links */
 #navigation {
-    padding: 6px 0px 6px 6px;
     float: left;
-    color: rgb(114, 161, 197);
+    margin: -4px 0px -6px 0px;
+    padding: 4px 0px 6px 0px;
+    color: rgb(50, 50, 50);
     font-weight: bold;
     }
 
 #navigation a, #navigation a:link, #navigation a:visited {
-    padding: 4px 2px 0px 2px;
-    color: rgb(255, 255, 255);
+    padding: 4px 10px 4px 10px;
+    margin: 0px 0px 0px 3px;
+    background-color: rgb(60, 171, 255);
+    color: rgb(50, 50, 50);
     font-weight: bold;
     }
 
 #navigation a:hover { 
-    border-bottom: 4px solid rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
+    }
+
+#navigation .navigation_link {
+    padding: 4px 10px 4px 10px;
+    margin: 0px 0px 0px 3px;
+    background-color: rgb(60, 171, 255);
+    }
+
+#navigation .navigation_link_highlight {
+    padding: 4px 10px 6px 10px;
+    margin: 0px 0px 0px 3px;
+    background-color: rgb(255, 255, 255);
     }
 
 /*  defines login status of a user */    
 #login_status {
-    padding: 4px 2px 2px 2px;
+    margin: -4px 0px -6px 0px;
+    padding: 4px 6px 4px 10px;
     float: right;
+    background-color: rgb(60, 171, 255);
+    color: rgb(50, 50, 50);
+    }
+
+#login_status_invisible {
+    margin: -4px 0px -6px 0px;
+    padding: 4px 6px 4px 10px;
+    float: right;
+    }
+
+#login_status a, #login_status a:link, #login_status a:visited {
+    padding: 1px 4px 1px 4px;
+    color: rgb(50, 50, 50);
+    }    
+
+#login_status a:hover { 
+    color: rgb(255, 255, 255);
     }
 
 /*  this style is used only to prevent content to disappear under the footer
@@ -320,8 +347,8 @@ html, body {
     display: block;
     float: none;
     padding: 8px 8px 8px 8px;
-    background-color: rgb(255, 130, 30);
-    color: rgb(255, 255, 255);
+    background-color: rgb(197, 214, 232);
+    color: rgb(5, 114, 197);
     }
     
 #action_bar_top_left {
@@ -358,18 +385,16 @@ html, body {
     padding: 1px 1px 3px 0px;
     margin: -4px 4px -4px 4px;
     background-color: rgb(255, 255, 255);
-    border: 1px solid rgb(255, 150, 65);
+    border: 1px solid rgb(5, 114, 197);
     }
 
 #action_bar a, #action_bar a:link, #action_bar a:visited {
-    padding: 3px 6px 3px 6px;
-    color: rgb(255, 255, 255);
-    border: 1px solid rgb(255, 255, 255);
-    font-weight: bold;
+    padding: 1px 4px 1px 4px;
+    color: rgb(5, 114, 197);
     }
 
 #action_bar a:hover { 
-    background-color: rgb(255, 150, 65);
+    color: rgb(255, 255, 255);
     }
 
 #clear_margin {
@@ -467,15 +492,14 @@ html, body {
 
 #login_contents .button {
     margin: 0px 4px -4px 0px;
-    background-color: rgb(255, 130, 30);
-    color: rgb(255, 255, 255);
-    border: 1px solid rgb(255, 255, 255);
+    color: rgb(120, 120, 120);
+    border: 1px solid rgb(120, 120, 120);
     }
 
 #login_contents .button:hover {
+    color: rgb(50, 50, 50);
     background-color: rgb(255, 255, 255);
-    color: rgb(255, 130, 30);
-    border: 1px solid rgb(255, 130, 30);
+    border: 1px solid rgb(50, 50, 50);
     }
 
 /*  defines message pane */

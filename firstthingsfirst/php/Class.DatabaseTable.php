@@ -268,11 +268,31 @@ class DatabaseTable
     * @param $record array array containing all field values of a record
     * @return string the key string
     */
-    function _get_key_string ($record)
+    function _get_encoded_key_string ($record)
     {
-        return DB_ID_FIELD_NAME."='".$record[DB_ID_FIELD_NAME]."'";
+        return DB_ID_FIELD_NAME."=&quod;".$record[DB_ID_FIELD_NAME]."&quod;";
     }
     
+    /**
+    * return encoded key string
+    * @param $key_string the key string
+    * @return encoded key string
+    */
+    function _encode_key_string ($key_string)
+    {        
+        return str_replace("'", "&quod;", $key_string);
+    }
+
+    /**
+    * return decoded key string
+    * @param $key_string the key string
+    * @return deccoded key string
+    */
+    function _decode_key_string ($key_string)
+    {        
+        return str_replace("&quod;", "'", $key_string);
+    }
+
     /**
     * return string containing only the key field values
     * @param $record array array containing all field values of a record
@@ -282,7 +302,7 @@ class DatabaseTable
     {        
         return "_".$record[DB_ID_FIELD_NAME];
     }
-
+    
     /**
     * get value of table_name attribute
     * @return string value of table_name attribute
@@ -659,11 +679,14 @@ class DatabaseTable
     /**
     * select exactly one record from database
     * @param $db_field_names array array containing db_field_names to select for each record
-    * @param $key_string string unique identifier of requested record
+    * @param $encoded_key_string string unique identifier of record
     * @return array array containing exactly one record (which is an array)
     */
-    function select_record ($key_string, $db_field_names = array())
+    function select_record ($encoded_key_string, $db_field_names = array())
     {
+        # decode key string
+        $key_string = $this->_decode_key_string($encoded_key_string);
+        
         $this->_log->trace("selecting DatabaseTable row (key_string=".$key_string.")");
 
         # check if database connection is working
@@ -839,13 +862,15 @@ class DatabaseTable
 
     /**
     * update an existing record in database
-    * @param $key_string string unique identifier of record
+    * @param $encoded_key_string string unique identifier of record
     * @param $user_name string name of current user
     * @param $name_values array array containing new name-values of record
     * @return bool indicates if record has been updated
     */
-    function update ($key_string, $user_name, $name_values_array = array())
+    function update ($encoded_key_string, $user_name, $name_values_array = array())
     {
+        # decode key string
+        $key_string = $this->_decode_key_string($encoded_key_string);
         $values = array();
         $db_field_names = array_keys($name_values_array);
 
@@ -925,12 +950,15 @@ class DatabaseTable
 
     /**
     * archive an existing record in database
-    * @param $key_string string unique identifier of record to be archived
+    * @param $encoded_key_string string unique identifier of record
     * @param $user_name string name of current user
     * @return bool indicates if record has been archived
     */
-    function archive ($key_string, $user_name)
+    function archive ($encoded_key_string, $user_name)
     {
+        # decode key string
+        $key_string = $this->_decode_key_string($encoded_key_string);
+
         $this->_log->trace("archiving record from DatabaseTable (key_string=".$key_string.", user_name=".$user_name.")");
 
         if ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] == DATABASETABLE_METADATA_FALSE)
@@ -964,11 +992,14 @@ class DatabaseTable
 
     /**
     * delete an existing record from database
-    * @param $key_string string unique identifier of record to be deleted
+    * @param $encoded_key_string string unique identifier of record
     * @return bool indicates if record has been deleted
     */
-    function delete ($key_string)
+    function delete ($encoded_key_string)
     {
+        # decode key string
+        $key_string = $this->_decode_key_string($encoded_key_string);
+
         $this->_log->trace("deleting record from DatabaseTable (key_string=".$key_string.")");
 
         $query = "DELETE FROM ".$this->table_name." WHERE ".$key_string;

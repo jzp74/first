@@ -14,7 +14,7 @@
  * shared button
  * definition of 'back to portal' button
  */
-define("BUTTON_PORTAL", "back&nbsp;to&nbsp;portal");
+define("BUTTON_PORTAL", "portal");
 
 /**
  * shared button
@@ -27,6 +27,12 @@ define("BUTTON_ARCHIVE", "archive");
  * definition of 'filter' button
  */
 define("BUTTON_FILTER", "filter");
+
+/**
+ * shared button
+ * definition of 'filter' button
+ */
+define("BUTTON_RESET_FILTER", "reset filter");
 
 /**
  * shared button
@@ -50,7 +56,7 @@ define("BUTTON_ADD", "ok");
  * shared button
  * definition of 'cancel' button
  */
-define("BUTTON_CANCEL", "cancel");
+define("BUTTON_CANCEL", "pancel");
 
 /**
  * shared button

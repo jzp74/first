@@ -329,11 +329,11 @@ class User extends UserDatabaseTable
                 return FALSE;
         }
 
-        # create key_string
-        $key_string = USER_NAME_FIELD_NAME."='".$name."'";
+        # create encoded_key_string
+        $encoded_key_string = parent::_encode_key_string(USER_NAME_FIELD_NAME."='".$name."'");
 
         # check if record exists
-        $record = parent::select_record($key_string);
+        $record = parent::select_record($encoded_key_string);
         if (count($record) == 0)
         {
             if ($this->error_message_str != ERROR_DATABASE_CONNECT)
@@ -363,7 +363,7 @@ class User extends UserDatabaseTable
             $name_values_array[USER_TIMES_LOGIN_FIELD_NAME] = ($record[USER_TIMES_LOGIN_FIELD_NAME] + 1);
             
             # update the number of times this user has logged in
-            if (parent::update($key_string, $name_values_array) == FALSE)                
+            if (parent::update($encoded_key_string, $name_values_array) == FALSE)                
                 return FALSE;
             else
             {
@@ -404,10 +404,10 @@ class User extends UserDatabaseTable
     */
     function exists ($name)
     {
-        # create key_string
-        $key_string = USER_NAME_FIELD_NAME."='".$name."'";
+        # create encoded_key_string
+        $encoded_key_string = parent::_encode_key_string(USER_NAME_FIELD_NAME."='".$name."'");
 
-        $record = parent::select_record($key_string);
+        $record = parent::select_record($encoded_key_string);
         if (count($record) > 0)
         {
             $this->_log->debug("user already exists (name=".$name.")");
@@ -462,13 +462,13 @@ class User extends UserDatabaseTable
 
     /**
     * update a user
-    * @param string key_string key_string of user
+    * @param string encoded_key_string encoded_key_string of user
     * @param $name_values array array containing new name-values of record
     * @return bool indicates if user has been updated
     */
-    function update ($key_string, $name_values_array)
+    function update ($encoded_key_string, $name_values_array)
     {
-        $this->_log->trace("update user (key_string=".$key_string.")");
+        $this->_log->trace("update user (encoded_key_string=".$encoded_key_string.")");
                 
         if (array_key_exists(USER_PW_FIELD_NAME, $name_values_array) == TRUE)
         {
@@ -485,10 +485,10 @@ class User extends UserDatabaseTable
             }
         }
 
-        if (parent::update($key_string, $name_values_array) == FALSE)
+        if (parent::update($encoded_key_string, $name_values_array) == FALSE)
             return FALSE;
         
-        $this->_log->info("user updated (key_string=".$key_string.")");
+        $this->_log->info("user updated (encoded_key_string=".$encoded_key_string.")");
 
         return TRUE;
     }

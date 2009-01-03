@@ -13,23 +13,23 @@
 /**
  * definition of 'get_portal_page' action
  */
-define("ACTION_GET_PORTAL_PAGE", "get_portal_page");
+define("ACTION_GET_PORTAL_PAGE", "action_get_portal_page");
 $firstthingsfirst_action_description[ACTION_GET_PORTAL_PAGE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_get_portal_page");
+$xajax->registerFunction(ACTION_GET_PORTAL_PAGE);
 
 /**
  * definition of 'get_portal_content' action
  */
-define("ACTION_GET_PORTAL_CONTENT", "get_portal_content");
+define("ACTION_GET_PORTAL_CONTENT", "action_get_portal_content");
 $firstthingsfirst_action_description[ACTION_GET_PORTAL_CONTENT] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_get_portal_content");
+$xajax->registerFunction(ACTION_GET_PORTAL_CONTENT);
 
 /**
  * definition of 'delete_list_table' action
  */
-define("ACTION_DELETE_PORTAL_RECORD", "delete_portal_record");
+define("ACTION_DELETE_PORTAL_RECORD", "action_delete_portal_record");
 $firstthingsfirst_action_description[ACTION_DELETE_PORTAL_RECORD] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_delete_portal_record");
+$xajax->registerFunction(ACTION_DELETE_PORTAL_RECORD);
 
 /**
  * definition of css name prefix
@@ -69,9 +69,6 @@ function action_get_portal_page ()
     $list_table_description = new ListTableDescription();
     $html_database_table = new HtmlDatabaseTable ($portal_table_configuration);
     
-    if (!check_preconditions(ACTION_GET_PORTAL_PAGE, $response))
-        return $response;
-    
     # set page
     $html_database_table->get_page($firstthingsfirst_portal_title, $firstthingsfirst_portal_intro_text, $result);    
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
@@ -83,10 +80,8 @@ function action_get_portal_page ()
     # set login status
     set_login_status($response);
     
-    # set action pane
-    $html_str = $html_database_table->get_action_bar(LISTTABLEDESCRIPTION_TABLE_NAME, "");
-    $response->addAssign("action_pane", "innerHTML", $html_str);
-    
+    # no action pane
+
     # set footer
     set_footer("", $response);
 
@@ -119,9 +114,6 @@ function action_get_portal_content ($title, $order_by_field, $page)
     $response = new xajaxResponse();
     $list_table_description = new ListTableDescription();
     $html_database_table = new HtmlDatabaseTable ($portal_table_configuration);
-
-    if (!check_preconditions(ACTION_GET_PORTAL_CONTENT, $response))
-        return $response;
 
     # set content
     $html_database_table->get_content($list_table_description, $title, $order_by_field, DATABASETABLE_ALL_PAGES, $result);
@@ -161,14 +153,11 @@ function action_delete_portal_record ($list_title)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
        
         return $response;
     }
     $html_database_table = new HtmlDatabaseTable ($portal_table_configuration);    
-
-    if (!check_preconditions(ACTION_DELETE_PORTAL_RECORD, $response))
-        return $response;
 
     # remove any error messages
     $response->addRemove("error_message");
@@ -180,7 +169,7 @@ function action_delete_portal_record ($list_title)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
                 
         return $response;
     }

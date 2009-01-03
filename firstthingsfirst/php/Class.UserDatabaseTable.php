@@ -190,16 +190,16 @@ class UserDatabaseTable extends DatabaseTable
     
     /**
     * update an existing record in database
-    * @param $key_string string unique identifier of record
+    * @param $encoded_key_string string unique identifier of record
     * @param $name_values array array containing new name-values of record
     * @return bool indicates if record has been updated
     */
-    function update ($key_string, $name_values_array = array())
+    function update ($encoded_key_string, $name_values_array = array())
     {
-        $this->_log->trace("updating record from UserDatabaseTable (key_string=".$key_string.")");
+        $this->_log->trace("updating record from UserDatabaseTable (encoded_key_string=".$encoded_key_string.")");
         
         # call parent update()
-        if (parent::update($key_string, $this->_user->get_name(), $name_values_array) == FALSE)
+        if (parent::update($encoded_key_string, $this->_user->get_name(), $name_values_array) == FALSE)
             return FALSE;
 
         $this->_log->trace("updated record from UserDatabaseTable");
@@ -209,15 +209,15 @@ class UserDatabaseTable extends DatabaseTable
     
     /**
     * archive an existing record in database
-    * @param $key_string string unique identifier of record to be archived
+    * @param $encoded_key_string string unique identifier of record to be archived
     * @return bool indicates if record has been archived
     */
-    function archive ($key_string)
+    function archive ($encoded_key_string)
     {
-        $this->_log->trace("archiving record from UserDatabaseTable (key_string=".$key_string.")");
+        $this->_log->trace("archiving record from UserDatabaseTable (encoded_key_string=".$encoded_key_string.")");
 
         # call parent archive()
-        if (parent::archive($key_string, $this->_user->get_name()) == FALSE)
+        if (parent::archive($encoded_key_string, $this->_user->get_name()) == FALSE)
             return FALSE;
 
         $this->_log->trace("archived record from UserDatabaseTable");

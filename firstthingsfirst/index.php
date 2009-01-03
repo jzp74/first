@@ -80,10 +80,31 @@ function process_url ()
     $logging->trace("PROCESS_URL (request_uri=".$_SERVER["REQUEST_URI"].")");
     
     # show portal page if no action is set
+    $action = "";
     if (isset($_GET['action']))
         $action = $_GET['action'];
-    else
-        $action = ACTION_GET_PORTAL_PAGE;
+    
+    # do nothing for the login page
+    # TEMPORARY SOLUTION
+    # for some reason firefox needs the login page served as a whole
+    if ($action == ACTION_GET_LOGIN_PAGE)
+    {
+        $response = new xajaxResponse();
+
+        $response->addScript("document.getElementById('user_name').focus()");
+        
+        return $response;
+    }
+    # redirect to login page when user is not logged in
+    else if (!$user->is_login())
+    {
+        $response = new xajaxResponse();
+
+        $response->AddScript("window.location.assign('index.php?action=".ACTION_GET_LOGIN_PAGE."')");
+        $response->addScript("document.getElementById('user_name').focus()");
+    
+        return $response;
+    }
     
     # show portal page
     if ($action == ACTION_GET_PORTAL_PAGE)
@@ -114,9 +135,13 @@ function process_url ()
         else
             return action_get_listbuilder_page("");
     }
-    # show portal page in all other instances
+    # redirect to portal page in all other instances
     else
-        return action_get_portal_page();
+    {
+        $response = new xajaxResponse();
+        $response->AddScriptCall("window.location.assign('index.php?action=".ACTION_GET_PORTAL_PAGE."')");
+        return $response;
+    }
 }
 
 ?>
@@ -135,6 +160,22 @@ function process_url ()
 <link rel="stylesheet" href="css/standard_print.css" media="print">
 
 <?php $xajax->printJavascript("xajax"); ?>
+    
+<?php
+    # define js functions
+    print("        <script type=\"text/javascript\">\n");
+
+    # set a permission error in the message pane
+    # each page should have a message pane
+    print("function set_permission_error()\n");
+    print("{\n");
+    print("    alert(\"no permissions\");\n");
+    print("}\n");
+    
+    # end of js functions
+    print("        </script>\n");
+?>
+
 </head>
 
 <body>
@@ -148,10 +189,17 @@ function process_url ()
     
 <div id="outer_body">
 
-    <div id="main_body">
-
-        <script language="javascript">xajax_process_url()</script>
-            
+    <div id="main_body">        
+<?php
+    # logout any active user and serve the html page for login
+    # TEMPORARY SOLUTION
+    # for some reason firefox needs the login page served as a whole
+    if ($_GET['action'] == ACTION_GET_LOGIN_PAGE)
+    {
+        $user->logout();
+        print get_login_page_html();
+    }
+?>
     </div> <!-- main_body -->
 
 </div> <!-- outer_body -->
@@ -159,10 +207,12 @@ function process_url ()
 <div id="footer">
     <div id="footer_left_margin">&nbsp</div>
     <div id="footer_right_margin">&nbsp</div>
-    <div id="footer_text">...</div>
+    <div id="footer_text"></div>
 </div> <!-- footer -->
 
 <div id="lower_margin"></div>
+
+<script language="javascript">xajax_process_url()</script>
         
 </body>
 

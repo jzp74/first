@@ -13,79 +13,79 @@
 /**
  * definition of 'get_list_page' action
  */
-define("ACTION_GET_LIST_PAGE", "get_list_page");
+define("ACTION_GET_LIST_PAGE", "action_get_list_page");
 $firstthingsfirst_action_description[ACTION_GET_LIST_PAGE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_get_list_page");
+$xajax->registerFunction(ACTION_GET_LIST_PAGE);
 
 /**
  * definition of 'get_list_print_page' action
  */
-define("ACTION_GET_LIST_PRINT_PAGE", "get_list_print_page");
+define("ACTION_GET_LIST_PRINT_PAGE", "action_get_list_print_page");
 $firstthingsfirst_action_description[ACTION_GET_LIST_PRINT_PAGE] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_get_list_print_page");
+$xajax->registerFunction(ACTION_GET_LIST_PRINT_PAGE);
 
 /**
  * definition of 'get_list_content' action
  */
-define("ACTION_GET_LIST_CONTENT", "get_list_content");
+define("ACTION_GET_LIST_CONTENT", "action_get_list_content");
 $firstthingsfirst_action_description[ACTION_GET_LIST_CONTENT] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_get_list_content");
+$xajax->registerFunction(ACTION_GET_LIST_CONTENT);
 
 /**
  * definition of 'get_list_record' action
  */
-define("ACTION_GET_LIST_RECORD", "get_list_record");
+define("ACTION_GET_LIST_RECORD", "action_get_list_record");
 $firstthingsfirst_action_description[ACTION_GET_LIST_RECORD] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_get_list_record");
+$xajax->registerFunction(ACTION_GET_LIST_RECORD);
 
 /**
  * definition of 'insert_list_record' action
  */
-define("ACTION_INSERT_LIST_RECORD", "insert_list_record");
+define("ACTION_INSERT_LIST_RECORD", "action_insert_list_record");
 $firstthingsfirst_action_description[ACTION_INSERT_LIST_RECORD] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_insert_list_record");
+$xajax->registerFunction(ACTION_INSERT_LIST_RECORD);
 
 /**
  * definition of 'update_list_record' action
  */
-define("ACTION_UPDATE_LIST_RECORD", "update_list_record");
+define("ACTION_UPDATE_LIST_RECORD", "action_update_list_record");
 $firstthingsfirst_action_description[ACTION_UPDATE_LIST_RECORD] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_update_list_record");
+$xajax->registerFunction(ACTION_UPDATE_LIST_RECORD);
 
 /**
  * definition of 'archive_list_record' action
  */
-define("ACTION_ARCHIVE_LIST_RECORD", "archive_list_record");
+define("ACTION_ARCHIVE_LIST_RECORD", "action_archive_list_record");
 $firstthingsfirst_action_description[ACTION_ARCHIVE_LIST_RECORD] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_archive_list_record");
+$xajax->registerFunction(ACTION_ARCHIVE_LIST_RECORD);
 
 /**
  * definition of 'delete_list_record' action
  */
-define("ACTION_DELETE_LIST_RECORD", "delete_list_record");
+define("ACTION_DELETE_LIST_RECORD", "action_delete_list_record");
 $firstthingsfirst_action_description[ACTION_DELETE_LIST_RECORD] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_delete_list_record");
+$xajax->registerFunction(ACTION_DELETE_LIST_RECORD);
 
 /**
  * definition of 'cancel_list_action' action
  */
-define("ACTION_CANCEL_LIST_ACTION", "cancel_list_action");
+define("ACTION_CANCEL_LIST_ACTION", "action_cancel_list_action");
 $firstthingsfirst_action_description[ACTION_CANCEL_LIST_ACTION] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_cancel_list_action");
+$xajax->registerFunction(ACTION_CANCEL_LIST_ACTION);
 
 /**
  * definition of 'set_list_archive' action
  */
-define("ACTION_SET_LIST_ARCHIVE", "set_list_archive");
+define("ACTION_SET_LIST_ARCHIVE", "action_set_list_archive");
 $firstthingsfirst_action_description[ACTION_SET_LIST_ARCHIVE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_set_list_archive");
+$xajax->registerFunction(ACTION_SET_LIST_ARCHIVE);
 
 /**
  * definition of 'set_list_filter' action
  */
-define("ACTION_SET_LIST_FILTER", "set_list_filter");
+define("ACTION_SET_LIST_FILTER", "action_set_list_filter");
 $firstthingsfirst_action_description[ACTION_SET_LIST_FILTER] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_set_list_filter");
+$xajax->registerFunction(ACTION_SET_LIST_FILTER);
 
 /**
  * definition of css name prefix
@@ -123,9 +123,6 @@ function action_get_list_page ($list_title)
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
     
-    if (!check_preconditions(ACTION_GET_LIST_PAGE, $response))
-        return $response;
-    
     # set page
     $html_database_table->get_page($list_title, "", $result);    
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
@@ -145,7 +142,7 @@ function action_get_list_page ($list_title)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
        
         return $response;
     }
@@ -197,14 +194,11 @@ function action_get_list_print_page ($list_title)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
        
         return $response;
     }
 
-    if (!check_preconditions(ACTION_GET_LIST_PAGE, $response))
-        return $response;
-        
     # set content
     $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_ALL_PAGES, $result);
     $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
@@ -246,9 +240,6 @@ function action_get_list_content ($list_title, $order_by_field, $page)
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
 
-    if (!check_preconditions(ACTION_GET_LIST_CONTENT, $response))
-        return $response;
-
     # create list table object
     $list_table = new ListTable($list_title);
     if ($list_table->get_is_valid() == FALSE)
@@ -257,7 +248,7 @@ function action_get_list_content ($list_title, $order_by_field, $page)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
        
         return $response;
     }
@@ -298,9 +289,6 @@ function action_get_list_record ($list_title, $key_string)
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
 
-    if (!check_preconditions(ACTION_GET_LIST_RECORD, $response))
-        return $response;
-
     # remove any error messages
     $response->addRemove("error_message");
 
@@ -312,7 +300,7 @@ function action_get_list_record ($list_title, $key_string)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
        
         return $response;
     }
@@ -326,8 +314,8 @@ function action_get_list_record ($list_title, $key_string)
         return $response;
 
     # set focus on last input element and then on first input element
-    $response->addScriptCall("document.getElementById('focus_on_this_input').blur()");
-    $response->addScriptCall("document.getElementById('focus_on_this_input').focus()");
+    $response->addScript("document.getElementById('focus_on_this_input').blur()");
+    $response->addScript("document.getElementById('focus_on_this_input').focus()");
 
     $logging->trace("got list record");
 
@@ -357,9 +345,6 @@ function action_insert_list_record ($list_title, $form_values)
     $result = new Result();
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
-
-    if (!check_preconditions(ACTION_INSERT_LIST_RECORD, $response))
-        return $response;
 
     foreach ($name_keys as $name_key)
     {
@@ -411,7 +396,7 @@ function action_insert_list_record ($list_title, $form_values)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
        
         return $response;
     }
@@ -423,7 +408,7 @@ function action_insert_list_record ($list_title, $form_values)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
         
         return $response;
     }
@@ -474,9 +459,6 @@ function action_update_list_record ($list_title, $key_string, $form_values)
     $result = new Result();
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
-
-    if (!check_preconditions(ACTION_UPDATE_LIST_RECORD, $response))
-        return $response;
 
     foreach ($name_keys as $name_key)
     {
@@ -532,7 +514,7 @@ function action_update_list_record ($list_title, $key_string, $form_values)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
        
         return $response;
     }
@@ -544,7 +526,7 @@ function action_update_list_record ($list_title, $key_string, $form_values)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
         
         return $response;
     }
@@ -590,9 +572,6 @@ function action_archive_list_record ($list_title, $key_string)
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
 
-    if (!check_preconditions(ACTION_ARCHIVE_LIST_RECORD, $response))
-        return $response;
-
     # remove any error messages
     $response->addRemove("error_message");
 
@@ -604,7 +583,7 @@ function action_archive_list_record ($list_title, $key_string)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
        
         return $response;
     }
@@ -616,7 +595,7 @@ function action_archive_list_record ($list_title, $key_string)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
                 
         return $response;
     }
@@ -657,9 +636,6 @@ function action_delete_list_record ($list_title, $key_string)
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
 
-    if (!check_preconditions(ACTION_DELETE_LIST_RECORD, $response))
-        return $response;
-
     # remove any error messages
     $response->addRemove("error_message");
 
@@ -671,7 +647,7 @@ function action_delete_list_record ($list_title, $key_string)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
        
         return $response;
     }
@@ -683,7 +659,7 @@ function action_delete_list_record ($list_title, $key_string)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
                 
         return $response;
     }
@@ -722,9 +698,6 @@ function action_cancel_list_action ($list_title)
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
 
-    if (!check_preconditions(ACTION_CANCEL_LIST_ACTION, $response))
-        return $response;
-
     # remove any error messages
     $response->addRemove("error_message");
 
@@ -758,9 +731,6 @@ function action_set_list_archive($list_title, $archive_value)
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
 
-    if (!check_preconditions(ACTION_SET_LIST_ARCHIVE, $response))
-        return $response;
-
     # create list table object
     $list_table = new ListTable($list_title);
     if ($list_table->get_is_valid() == FALSE)
@@ -769,7 +739,7 @@ function action_set_list_archive($list_title, $archive_value)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
        
         return $response;
     }
@@ -816,9 +786,6 @@ function action_set_list_filter($list_title, $filter_str)
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
 
-    if (!check_preconditions(ACTION_SET_LIST_FILTER, $response))
-        return $response;
-        
     # check if filter_str is well formed
     if (str_is_well_formed("filter_str", $filter_str) == FALSE_RETURN_STRING)
     {
@@ -835,7 +802,7 @@ function action_set_list_filter($list_title, $filter_str)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
        
         return $response;
     }

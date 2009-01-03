@@ -120,10 +120,10 @@ class ListTableDescription extends UserDatabaseTable
     {
         $this->_log->trace("selecting ListTableDescription record (title=".$title.")");
         
-        # create key_string
-        $key_string = LISTTABLEDESCRIPTION_TITLE_FIELD_NAME."='".$title."'";
+        # create encoded_key_string
+        parent::_encode_key_string($encoded_key_string = LISTTABLEDESCRIPTION_TITLE_FIELD_NAME."='".$title."'");
         
-        $record = parent::select_record($key_string);
+        $record = parent::select_record($encoded_key_string);
         if (count($record) == 0)
             return array();
         
@@ -175,14 +175,14 @@ class ListTableDescription extends UserDatabaseTable
     {
         $this->_log->trace("updating ListTableDescription in database (title=".$title.")");
 
-        # create key_string
-        $key_string = LISTTABLEDESCRIPTION_TITLE_FIELD_NAME."='".$title."'";
+        # create encoded_key_string
+        $encoded_key_string = parent::_encode_key_string(LISTTABLEDESCRIPTION_TITLE_FIELD_NAME."='".$title."'");
 
         # convert value
         if (array_key_exists(LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME, $name_values_array))
             $name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = $this->_json->encode($name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME]);
         
-        if (parent::update($key_string, $name_values_array) == FALSE)
+        if (parent::update($encoded_key_string, $name_values_array) == FALSE)
             return FALSE;        
                                     
         $this->_log->trace("updated ListTableDescription (title=".$title.")");
@@ -200,10 +200,10 @@ class ListTableDescription extends UserDatabaseTable
     {
         $this->_log->trace("deleting ListTableDescription from database (title=".$title.")");
 
-        # create key_string
-        $key_string = LISTTABLEDESCRIPTION_TITLE_FIELD_NAME."='".$title."'";
+        # create encoded_key_string
+        $encoded_key_string = parent::_encode_key_string(LISTTABLEDESCRIPTION_TITLE_FIELD_NAME."='".$title."'");
 
-        if (parent::delete($key_string) == FALSE)
+        if (parent::delete($encoded_key_string) == FALSE)
             return FALSE;        
             
         $this->_log->trace("deleted ListTableDescription (title=".$title.")");

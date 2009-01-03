@@ -13,51 +13,51 @@
 /**
  * definition of 'get_add_user_page' action
  */
-define("ACTION_GET_USER_ADMIN_PAGE", "get_user_admin_page");
+define("ACTION_GET_USER_ADMIN_PAGE", "action_get_user_admin_page");
 $firstthingsfirst_action_description[ACTION_GET_USER_ADMIN_PAGE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_IS_ADMIN);
-$xajax->registerFunction("action_get_user_admin_page");
+$xajax->registerFunction(ACTION_GET_USER_ADMIN_PAGE);
 
 /**
  * definition of 'get_add_user_content' action
  */
-define("ACTION_GET_USER_ADMIN_CONTENT", "get_add_user_admin_content");
+define("ACTION_GET_USER_ADMIN_CONTENT", "action_get_user_admin_content");
 $firstthingsfirst_action_description[ACTION_GET_USER_ADMIN_CONTENT] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_IS_ADMIN);
-$xajax->registerFunction("action_get_user_admin_content");
+$xajax->registerFunction(ACTION_GET_USER_ADMIN_CONTENT);
 
 /**
  * definition of 'get_user_admin_record' action
  */
-define("ACTION_GET_USER_ADMIN_RECORD", "get_user_admin_record");
+define("ACTION_GET_USER_ADMIN_RECORD", "action_get_user_admin_record");
 $firstthingsfirst_action_description[ACTION_GET_USER_ADMIN_RECORD] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_IS_ADMIN);
-$xajax->registerFunction("action_get_user_admin_record");
+$xajax->registerFunction(ACTION_GET_USER_ADMIN_RECORD);
 
 /**
  * definition of 'insert_user_admin_record' action
  */
-define("ACTION_INSERT_USER_ADMIN_RECORD", "insert_user_admin_record");
+define("ACTION_INSERT_USER_ADMIN_RECORD", "action_insert_user_admin_record");
 $firstthingsfirst_action_description[ACTION_INSERT_USER_ADMIN_RECORD] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_IS_ADMIN);
-$xajax->registerFunction("action_insert_user_admin_record");
+$xajax->registerFunction(ACTION_INSERT_USER_ADMIN_RECORD);
 
 /**
  * definition of 'update_user_admin_record' action
  */
-define("ACTION_UPDATE_USER_ADMIN_RECORD", "update_user_admin_record");
+define("ACTION_UPDATE_USER_ADMIN_RECORD", "action_update_user_admin_record");
 $firstthingsfirst_action_description[ACTION_UPDATE_USER_ADMIN_RECORD] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_IS_ADMIN);
-$xajax->registerFunction("action_update_user_admin_record");
+$xajax->registerFunction(ACTION_UPDATE_USER_ADMIN_RECORD);
 
 /**
  * definition of 'delete_user_admin_record' action
  */
-define("ACTION_DELETE_USER_ADMIN_RECORD", "delete_user_admin_record");
+define("ACTION_DELETE_USER_ADMIN_RECORD", "action_delete_user_admin_record");
 $firstthingsfirst_action_description[ACTION_DELETE_USER_ADMIN_RECORD] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_IS_ADMIN);
-$xajax->registerFunction("action_delete_user_admin_record");
+$xajax->registerFunction(ACTION_DELETE_USER_ADMIN_RECORD);
 
 /**
  * definition of 'cancel_user_admin_action' action
  */
-define("ACTION_CANCEL_USER_ADMIN_ACTION", "cancel_user_admin_action");
+define("ACTION_CANCEL_USER_ADMIN_ACTION", "action_cancel_user_admin_action");
 $firstthingsfirst_action_description[ACTION_CANCEL_USER_ADMIN_ACTION] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_IS_ADMIN);
-$xajax->registerFunction("action_cancel_user_admin_action");
+$xajax->registerFunction(ACTION_CANCEL_USER_ADMIN_ACTION);
 
 
 /**
@@ -95,9 +95,6 @@ function action_get_user_admin_page ()
     $result = new Result();
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
-    
-    if (!check_preconditions(ACTION_GET_USER_ADMIN_PAGE, $response))
-        return $response;
     
     # set page
     $html_database_table->get_page(LABEL_USER_ADMIN_TITLE, "", $result);
@@ -147,9 +144,6 @@ function action_get_user_admin_content ($title, $order_by_field, $page)
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
 
-    if (!check_preconditions(ACTION_GET_USER_ADMIN_CONTENT, $response))
-        return $response;
-
     # set content
     $html_database_table->get_content($user, $title, $order_by_field, $page, $result);
     $response->addAssign(USER_ADMIN_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
@@ -183,9 +177,6 @@ function action_get_user_admin_record ($title, $key_string)
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
 
-    if (!check_preconditions(ACTION_GET_USER_ADMIN_RECORD, $response))
-        return $response;
-
     # remove any error messages
     $response->addRemove("error_message");
 
@@ -200,9 +191,9 @@ function action_get_user_admin_record ($title, $key_string)
     $response->addAssign("action_pane", "innerHTML", $result->get_result_str());
 
     # set focus on last input element and then on first input element
-    $response->addScriptCall("document.record_form_name.elements[0].blur()");
-    $response->addScriptCall("document.record_form_name.elements[document.record_form_name.length].focus()");
-    $response->addScriptCall("document.record_form_name.elements[0].focus()");
+    $response->addScript("document.record_form_name.elements[0].blur()");
+    $response->addScript("document.record_form_name.elements[document.record_form_name.length].focus()");
+    $response->addScript("document.record_form_name.elements[0].focus()");
 
     $logging->trace("got user admin record");
 
@@ -235,9 +226,6 @@ function action_insert_user_admin_record ($title, $form_values)
     $result = new Result();
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
-
-    if (!check_preconditions(ACTION_INSERT_USER_ADMIN_RECORD, $response))
-        return $response;
 
     foreach ($name_keys as $name_key)
     {
@@ -286,7 +274,7 @@ function action_insert_user_admin_record ($title, $form_values)
         $error_message_str = $user->get_error_message_str();
         $error_log_str = $user->get_error_log_str();
         $error_str = $user->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
         
         return $response;
     }
@@ -336,9 +324,6 @@ function action_update_user_admin_record ($title, $key_string, $form_values)
     $result = new Result();
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
-
-    if (!check_preconditions(ACTION_UPDATE_USER_ADMIN_RECORD, $response))
-        return $response;
 
     foreach ($name_keys as $name_key)
     {
@@ -390,7 +375,7 @@ function action_update_user_admin_record ($title, $key_string, $form_values)
         $error_message_str = $user->get_error_message_str();
         $error_log_str = $user->get_error_log_str();
         $error_str = $user->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
         
         return $response;
     }
@@ -433,9 +418,6 @@ function action_delete_user_admin_record ($title, $key_string)
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
 
-    if (!check_preconditions(ACTION_DELETE_USER_ADMIN_RECORD, $response))
-        return $response;
-
     # remove any error messages
     $response->addRemove("error_message");
 
@@ -446,7 +428,7 @@ function action_delete_user_admin_record ($title, $key_string)
         $error_message_str = $user->get_error_message_str();
         $error_log_str = $user->get_error_log_str();
         $error_str = $user->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
                 
         return $response;
     }
@@ -481,9 +463,6 @@ function action_cancel_user_admin_action ($title)
     # create necessary objects
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
-
-    if (!check_preconditions(ACTION_CANCEL_USER_ADMIN_ACTION, $response))
-        return $response;
 
     # remove any error messages
     $response->addRemove("error_message");

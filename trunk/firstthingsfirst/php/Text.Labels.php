@@ -11,6 +11,12 @@
 
 
 /**
+ * shared field definition
+ * definition of list navigation
+ */
+define("LABEL_NAVIGATION_LIST", "list");
+
+/**
  * shared label
  * definition of added to logfile
  */

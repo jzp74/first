@@ -83,9 +83,11 @@ define("DB_TOTAL_RECORDS", "_total_records");
 /**
  * different page type
  */
+define("PAGE_TYPE_LOGIN", 0);
 define("PAGE_TYPE_PORTAL", 1);
-define("PAGE_TYPE_LIST", 2);
-define("PAGE_TYPE_USER_ADMIN", 3);
+define("PAGE_TYPE_LISTBUILDER", 2);
+define("PAGE_TYPE_LIST", 3);
+define("PAGE_TYPE_USER_ADMIN", 4);
 
 /**
  * general separator
@@ -133,6 +135,12 @@ define("FIELD_DESCRIPTION_FIELD_TYPE", 4);
 define("NAME_DATE_OPTION_NAME", "name");
 define("NAME_DATE_OPTION_DATE", "date");
 define("NAME_DATE_OPTION_DATE_NAME", "namedate");
+
+/**
+ * id of message pane div
+ */
+define("MESSAGE_PANE_DIV", "message_pane");
+
 
 /**
  * this array contains all supported field types

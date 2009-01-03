@@ -52,15 +52,14 @@ function start_regression_test ()
     # create necessary objects
     $response = new xajaxResponse();
     $html_str = "";
-    
+
     # create html for page layout
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
-    $html_str .= "        <div id=\"page_title\">Regression test</div>\n\n";
+    $html_str .= "        <div id=\"page_header\">\n";
+    $html_str .= "            <div id=\"page_title\">Regression test</div>\n";
+    $html_str .= "            <div id=\"page_explanation\">&nbsp;</div>\n";
+    $html_str .= "        </div> <!-- page_header -->\n\n";
     $html_str .= "            <div id=\"test_body\">\n\n";
-#    $html_str .= "                <table id=\"test_items\" align=\"left\" border=\"0\" cellspacing=\"0\">\n";
-#    $html_str .= "                    <tbody id=\"test_items_body\">";
-#    $html_str .= "                    </tbody>\n";
-#    $html_str .= "                </table> <!-- test_items -->\n";
     $html_str .= "            </div> <!-- test_body -->\n\n";
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
             

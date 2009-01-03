@@ -11,6 +11,12 @@
 
 
 /**
+ * permission error
+ * definition of error that is shown when user tries to create a user with an existing name
+ */
+define("ERROR_INSUFFIENT_PERMISSIONS", "you have insufficient permissions for this operation");
+
+/**
  * field check error
  * definition of error that is shown when user has entered a wrong date format
  */

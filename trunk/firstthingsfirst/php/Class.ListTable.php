@@ -682,15 +682,15 @@ class ListTable extends UserDatabaseTable
     
     /**
     * select exactly one record from database
-    * @param $key_string string unique identifier of requested ListTableItem
+    * @param $encoded_key_string string unique identifier of requested ListTableItem
     * @return array array containing exactly one ListTableItem (which is an array)
     */
-    function select_record ($key_string)
+    function select_record ($encoded_key_string)
     {
-        $this->_log->trace("selecting record form ListTable (key_string=".$key_string.")");
+        $this->_log->trace("selecting record form ListTable (encoded_key_string=".$encoded_key_string.")");
 
         # call parent select_record()
-        $record = parent::select_record($key_string, $this->db_field_names);
+        $record = parent::select_record($encoded_key_string, $this->db_field_names);
 
         if (count($record) != 0)
         {
@@ -785,16 +785,16 @@ class ListTable extends UserDatabaseTable
 
     /**
     * update an existing ListTableItem in database
-    * @param $key_string string unique identifier of ListTableItem
+    * @param $encoded_key_string string unique identifier of ListTableItem
     * @param $name_values_array array array containing name-values of the ListTableItem
     * @return bool indicates if ListTableItem has been updated
     */
-    function update ($key_string, $name_values_array)
+    function update ($encoded_key_string, $name_values_array)
     {
         $db_field_names = array_keys($name_values_array);
         $all_notes_array = array();
 
-        $this->_log->trace("updating record from ListTable (key_string=".$key_string.")");
+        $this->_log->trace("updating record from ListTable (encoded_key_string=".$encoded_key_string.")");
 
         foreach ($db_field_names as $db_field_name)
         {
@@ -817,10 +817,11 @@ class ListTable extends UserDatabaseTable
             }
         }
         
-        if(parent::update($key_string, $name_values_array) == FALSE)
+        if(parent::update($encoded_key_string, $name_values_array) == FALSE)
             return FALSE;
                 
         # get the id of this record
+        $key_string = $this->_decode_key_string($encoded_key_string);
         $query = "SELECT ".DB_ID_FIELD_NAME." FROM ".$this->table_name." WHERE ".$key_string;
         $result = $this->_database->query($query);
         if ($result == FALSE)
@@ -871,21 +872,21 @@ class ListTable extends UserDatabaseTable
     /**
     * delete an existing ListTableItem from database
     * delete all connected ListTableItemNotes objects
-    * @param $key_string string unique identifier of ListTableItem to be deleted
+    * @param $encoded_key_string string unique identifier of ListTableItem to be deleted
     * @return bool indicates if ListTableItem has been deleted
     */
-    function delete ($key_string)
+    function delete ($encoded_key_string)
     {        
-        $this->_log->trace("deleting record from ListTable (key_string=".$key_string.")");
+        $this->_log->trace("deleting record from ListTable (encoded_key_string=".$encoded_key_string.")");
 
         # get the id of this record
-        $record = self::select_record($key_string);
+        $record = self::select_record($encoded_key_string);
         if (count($record) == 0)
             return FALSE;
         $record_id = $record[DB_ID_FIELD_NAME];
         
         # delete of record automatically deletes all notes
-        if (parent::delete($key_string) == FALSE)
+        if (parent::delete($encoded_key_string) == FALSE)
             return FALSE;
 
         # update list table description (date modified)

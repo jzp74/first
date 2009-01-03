@@ -117,16 +117,16 @@
     }
     
 #listbuilder_definition tbody tr:hover {
-    background-color: rgb(232, 204, 173);
+    background-color: rgb(197, 214, 232);
     }
     
 #listbuilder_definition th {
-    padding: 6px 4px 6px 4px;
+    padding: 5px 4px 5px 4px;
     color: rgb(0, 0, 0);
     }
 
 #listbuilder_definition td {
-    padding: 6px 4px 4px 4px;
+    padding: 3px 4px 3px 4px;
     vertical-align: top;
     border-top: 1px solid rgb(197, 214, 232);
     }
@@ -136,15 +136,13 @@
     }
 
 #listbuilder_definition .button {
-    margin: 0px 0px 0px 0px;
-    background-color: rgb(255, 130, 30);
-    color: rgb(255, 255, 255);
-    border: 1px solid rgb(255, 255, 255);
+    color: rgb(120, 120, 120);
+    border: 1px solid rgb(120, 120, 120);
     }
 
 #listbuilder_definition .button:hover {
+    color: rgb(50, 50, 50);
     background-color: rgb(255, 255, 255);
-    color: rgb(255, 130, 30);
-    border: 1px solid rgb(255, 130, 30);
+    border: 1px solid rgb(50, 50, 50);
     }
 

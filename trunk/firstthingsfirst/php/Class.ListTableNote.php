@@ -160,14 +160,14 @@ class ListTableNote extends DatabaseTable
     {
         $this->_log->trace("updating ListTableNote (note_id=".$note_id.")");
 
-        # create key_string
-        $key_string = DB_ID_FIELD_NAME."='".$note_id."'";
+        # create encoded_key_string
+        $encoded_key_string = parent::_encode_key_string(DB_ID_FIELD_NAME."='".$note_id."'");
         
         # create name_value_array
         $name_values_array = array();
         $name_values_array[LISTTABLENOTE_NOTE_FIELD_NAME] = $note;
 
-        if (parent::update($key_string, $this->_user->get_name(), $name_values_array) == FALSE)
+        if (parent::update($encoded_key_string, $this->_user->get_name(), $name_values_array) == FALSE)
             return FALSE;        
         
         $this->_log->trace("updated ListTableNote");
@@ -184,10 +184,10 @@ class ListTableNote extends DatabaseTable
     {
         $this->_log->trace("deleting ListTableNotes (field_name=".$field_name.")");
 
-        # create key_string
-        $key_string = LISTTABLENOTE_FIELD_NAME_FIELD_NAME."='".$field_name."'";
+        # create encoded_key_string
+        $encoded_key_string = parent::_encode_key_string(LISTTABLENOTE_FIELD_NAME_FIELD_NAME."='".$field_name."'");
         
-        if (parent::delete($key_string) == FALSE)
+        if (parent::delete($encoded_key_string) == FALSE)
             return FALSE;        
         
         $this->_log->trace("deleted ListTableNotes");

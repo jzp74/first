@@ -113,7 +113,7 @@ function test_2 ()
 <div id="footer">
     <div id="footer_left_margin">&nbsp</div>
     <div id="footer_right_margin">&nbsp</div>
-    <div id="footer_text">...</div>
+    <div id="footer_text">&nbsp;</div>
 </div> <!-- footer -->
 
 <div id="lower_margin"></div>

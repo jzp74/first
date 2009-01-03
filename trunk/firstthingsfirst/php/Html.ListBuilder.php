@@ -13,51 +13,51 @@
 /**
  * definition of 'get_listbuilder_page' action
  */
-define("ACTION_GET_LISTBUILDER_PAGE", "get_listbuilder_page");
+define("ACTION_GET_LISTBUILDER_PAGE", "action_get_listbuilder_page");
 $firstthingsfirst_action_description[ACTION_GET_LISTBUILDER_PAGE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_get_listbuilder_page");
+$xajax->registerFunction(ACTION_GET_LISTBUILDER_PAGE);
 
 /**
  * definition of 'insert_listbuilder_row' action
  */
-define("ACTION_INSERT_LISTBUILDER_ROW", "insert_listbuilder_row");
+define("ACTION_INSERT_LISTBUILDER_ROW", "action_insert_listbuilder_row");
 $firstthingsfirst_action_description[ACTION_INSERT_LISTBUILDER_ROW] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_insert_listbuilder_row");
+$xajax->registerFunction(ACTION_INSERT_LISTBUILDER_ROW);
 
 /**
  * definition of 'move_listbuilder_row' action
  */
-define("ACTION_MOVE_LISTBUILDER_ROW", "move_listbuilder_row");
+define("ACTION_MOVE_LISTBUILDER_ROW", "action_move_listbuilder_row");
 $firstthingsfirst_action_description[ACTION_MOVE_LISTBUILDER_ROW] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_move_listbuilder_row");
+$xajax->registerFunction(ACTION_MOVE_LISTBUILDER_ROW);
 
 /**
  * definition of 'delete_listbuilder_row' action
  */
-define("ACTION_DELETE_LISTBUILDER_ROW", "delete_listbuilder_row");
+define("ACTION_DELETE_LISTBUILDER_ROW", "action_delete_listbuilder_row");
 $firstthingsfirst_action_description[ACTION_DELETE_LISTBUILDER_ROW] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_delete_listbuilder_row");
+$xajax->registerFunction(ACTION_DELETE_LISTBUILDER_ROW);
 
 /**
  * definition of 'refresh_listbuilder' action
  */
-define("ACTION_REFRESH_LISTBUILDER", "refresh_listbuilder");
+define("ACTION_REFRESH_LISTBUILDER", "action_refresh_listbuilder");
 $firstthingsfirst_action_description[ACTION_REFRESH_LISTBUILDER] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_refresh_listbuilder");
+$xajax->registerFunction(ACTION_REFRESH_LISTBUILDER);
 
 /**
  * definition of 'modify list' action
  */
-define("ACTION_MODIFY_LIST", "modify_list");
+define("ACTION_MODIFY_LIST", "action_modify_list");
 $firstthingsfirst_action_description[ACTION_MODIFY_LIST] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_modify_list");
+$xajax->registerFunction(ACTION_MODIFY_LIST);
 
 /**
  * definition of 'create_list' action
  */
-define("ACTION_CREATE_LIST", "create_list");
+define("ACTION_CREATE_LIST", "action_create_list");
 $firstthingsfirst_action_description[ACTION_CREATE_LIST] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction("action_create_list");
+$xajax->registerFunction(ACTION_CREATE_LIST);
 
 
 /**
@@ -80,9 +80,6 @@ function action_get_listbuilder_page ($list_title)
     # create necessary objects
     $response = new xajaxResponse();
     $json = new Services_JSON();
-
-    if (!check_preconditions(ACTION_GET_LISTBUILDER_PAGE, $response))
-        return $response;
 
     # load list details when list title has been given
     if (strlen($list_title))
@@ -133,14 +130,12 @@ function action_get_listbuilder_page ($list_title)
     
     # different page title when list title has been given
     if ($old_list_loaded == TRUE)
-        $html_str .= "        <div id=\"page_title\">".LABEL_MODIFY_LIST." '".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."'</div>\n\n";
+        $page_title = LABEL_MODIFY_LIST." '".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME];
     else        
-        $html_str .= "        <div id=\"page_title\">".LABEL_CONFIGURE_NEW_LIST."</div>\n\n";
+        $page_title = LABEL_CONFIGURE_NEW_LIST;
+    # get html for page header
+    $html_str = get_page_header($page_title, "", PAGE_TYPE_LISTBUILDER);
     
-    $html_str .= "        <div id=\"navigation_container\">\n";
-    $html_str .= "            <div id=\"navigation\">|&nbsp;".get_query_href("action=get_portal_page", BUTTON_PORTAL)."&nbsp;|</div>\n";
-    $html_str .= "            <div id=\"login_status\">&nbsp;</div>&nbsp\n";
-    $html_str .= "        </div> <!-- navigation_container -->\n\n";
     $html_str .= "        <div class=\"white_area\"></div>\n\n";
     $html_str .= "        <div id=\"listbuilder_pane\">\n\n";
     $html_str .= "            <div class=\"listbuilder_title_pane\">\n";
@@ -219,9 +214,9 @@ function action_get_listbuilder_page ($list_title)
     $html_str .= "            </div> <!-- listbuilder_contents_pane_outer_border -->\n";
 
     $html_str .= "        </div> <!-- listbuilder_pane -->\n\n";
-    $html_str .= "        <div id=\"message_pane\">\n";
+    $html_str .= "        <div id=\"".MESSAGE_PANE_DIV."\">\n";
     $html_str .= "        &nbsp;";
-    $html_str .= "        </div> <!-- message_pane -->\n\n";
+    $html_str .= "        </div> <!-- ".MESSAGE_PANE_DIV." -->\n\n";
     $html_str .= "        <div id=\"action_pane\">\n\n";
     $html_str .= "            <div id=\"action_bar_top_left\"></div>\n";
     $html_str .= "            <div id=\"action_bar_top_right\"></div>\n";
@@ -230,25 +225,25 @@ function action_get_listbuilder_page ($list_title)
     # display the selection box to add a new column
     $html_str .= "                ".get_select("add_select", "add_it", "")."\n";
     $href_str = "xajax_action_insert_listbuilder_row(document.getElementById";
-    $href_str .= "('add_select').value, xajax.getFormValues('database_definition_form'), document.getElementById('largest_id').innerHTML)";
-    $html_str .= "                &nbsp;".get_href($href_str, BUTTON_ADD_FIELD)."\n";
+    $href_str .= "(%27add_select%27).value, xajax.getFormValues(%27database_definition_form%27), document.getElementById(%27largest_id%27).innerHTML)";
+    $html_str .= "                ".get_href(ACTION_INSERT_LISTBUILDER_ROW, $href_str, BUTTON_ADD_FIELD)."\n";
     
     # display the modify button when a title has been given
     if ($old_list_loaded == TRUE)
     {
-        $href_str = "xajax_action_modify_list('".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME];
-        $href_str .= "', document.getElementById('listbuilder_list_title').value, ";
-        $href_str .= "document.getElementById('listbuilder_list_description').value, ";
-        $href_str .= "xajax.getFormValues('database_definition_form'))";
-        $html_str .= "                &nbsp;".get_href_confirm($href_str, LABEL_CONFIRM_MODIFY, BUTTON_MODIFY_LIST)."\n";
+        $href_str = "xajax_action_modify_list(%27".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME];
+        $href_str .= "%27, document.getElementById(%27listbuilder_list_title%27).value, ";
+        $href_str .= "document.getElementById(%27listbuilder_list_description%27).value, ";
+        $href_str .= "xajax.getFormValues(%27database_definition_form%27))";
+        $html_str .= "                &nbsp;&nbsp;&nbsp;".get_href_confirm(ACTION_MODIFY_LIST, $href_str, LABEL_CONFIRM_MODIFY, BUTTON_MODIFY_LIST)."\n";
     }
     # display the create button when no title has been given
     else
     {
         $href_str = "xajax_action_create_list(document.getElementById";
-        $href_str .= "('listbuilder_list_title').value, document.getElementById('listbuilder_list_description').value, ";
-        $href_str .= "xajax.getFormValues('database_definition_form'))";
-        $html_str .= "                &nbsp;".get_href($href_str, BUTTON_CREATE_LIST)."\n";
+        $href_str .= "(%27listbuilder_list_title%27).value, document.getElementById(%27listbuilder_list_description%27).value, ";
+        $href_str .= "xajax.getFormValues(%27database_definition_form%27))";
+        $html_str .= "                &nbsp;&nbsp;&nbsp;".get_href(ACTION_CREATE_LIST, $href_str, BUTTON_CREATE_LIST)."\n";
     }
     
     $html_str .= "            </div> <!-- action_bar -->\n\n";    
@@ -265,7 +260,7 @@ function action_get_listbuilder_page ($list_title)
         $error_message_str = $list_table_description->get_error_message_str();
         $error_log_str = $list_table_description->get_error_log_str();
         $error_str = $list_table_description->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
     }    
 
     set_login_status($response);
@@ -298,9 +293,6 @@ function action_insert_listbuilder_row ($field_type, $definition, $largest_id)
     # create necessary objects
     $response = new xajaxResponse();
 
-    if (!check_preconditions(ACTION_INSERT_LISTBUILDER_ROW, $response))
-        return $response;
-
     $html_str = get_field_definition_table($new_definition);    
     $response->addAssign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
     $response->addAssign("largest_id", "innerHTML", $largest_id + 1);
@@ -331,9 +323,6 @@ function action_move_listbuilder_row ($row_number, $direction, $definition)
 
     # create necessary objects
     $response = new xajaxResponse();
-
-    if (!check_preconditions(ACTION_MOVE_LISTBUILDER_ROW, $response))
-        return $response;
 
     # store values of given row number
     for ($position = 0; $position < 4; $position += 1)
@@ -390,9 +379,6 @@ function action_delete_listbuilder_row ($row_number, $definition)
     # create necessary objects
     $response = new xajaxResponse();
 
-    if (!check_preconditions(ACTION_DELETE_LISTBUILDER_ROW, $response))
-        return $response;
-    
     for ($position = 0; $position < count($backup_definition); $position += 1)
     {
         # only copy the value for row numbers other than given row number
@@ -426,9 +412,6 @@ function action_refresh_listbuilder ($definition)
 
     # create necessary objects
     $response = new xajaxResponse();
-
-    if (!check_preconditions(ACTION_REFRESH_LISTBUILDER, $response))
-        return $response;
 
     $html_str = get_field_definition_table(array_values($definition));    
     $response->addAssign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
@@ -467,16 +450,13 @@ function action_modify_list ($former_title, $title, $description, $new_definitio
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
        
         return $response;
     }
     $list_table_description = $list_table->get_list_table_description();    
     $list_table_note = $list_table->get_list_table_note();
     
-    if (!check_preconditions(ACTION_MODIFY_LIST, $response))
-        return $response;
-        
     # check if title and description have been given
     if (!check_title_and_description($title, $description, $response))
         return $response;
@@ -493,12 +473,12 @@ function action_modify_list ($former_title, $title, $description, $new_definitio
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
        
         return $response;
     }
     
-    set_info_message("message_pane", LABEL_LIST_MODIFICATIONS_DONE, $response);
+    set_info_message(MESSAGE_PANE_DIV, LABEL_LIST_MODIFICATIONS_DONE, $response);
     
     $logging->trace("modified list");
 
@@ -523,9 +503,6 @@ function action_create_list ($title, $description, $definition)
     # create necessary objects
     $response = new xajaxResponse();
 
-    if (!check_preconditions(ACTION_CREATE_LIST, $response))
-        return $response;
-    
     # check if title and description have been given
     if (!check_title_and_description($title, $description, $response))
         return $response;
@@ -555,7 +532,7 @@ function action_create_list ($title, $description, $definition)
         $error_message_str = $list_table_description->get_error_message_str();
         $error_log_str = $list_table_description->get_error_log_str();
         $error_str = $list_table_description->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
             
         return $response;
     }
@@ -568,12 +545,12 @@ function action_create_list ($title, $description, $definition)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("message_pane", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
        
         return $response;
     }
 
-    set_info_message("message_pane", LABEL_NEW_LIST_CREATED, $response);
+    set_info_message(MESSAGE_PANE_DIV, LABEL_NEW_LIST_CREATED, $response);
     
     $logging->trace("created list");
 
@@ -841,7 +818,7 @@ function get_field_definition_table ($definition)
         
         # the seventh column - delete
         if ($row > 0)
-            $html_str .= "                                                <td width=\"1%\">".get_button("xajax_action_delete_listbuilder_row(".$row.", xajax.getFormValues('database_definition_form'))", BUTTON_DELETE)."</td>\n";
+            $html_str .= "                                                <td width=\"1%\">".get_button(ACTION_DELETE_LISTBUILDER_ROW, "xajax_action_delete_listbuilder_row(".$row.", xajax.getFormValues('database_definition_form'))", BUTTON_DELETE)."</td>\n";
         else
             $html_str .= "                                                <td width=\"1%\"><p style=\"visibility: hidden;\">".BUTTON_DELETE."</p></td>\n";
     

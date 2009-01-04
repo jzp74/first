@@ -77,6 +77,7 @@ function check_permissions ($action, $js_function_call_str)
     }
 
     # call given js function
+    $logging->debug("call js function: ".$js_function_call);
     $response->addScript($js_function_call);
 
     $logging->trace("checked permissions");

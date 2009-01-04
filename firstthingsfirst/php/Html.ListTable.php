@@ -88,6 +88,13 @@ $firstthingsfirst_action_description[ACTION_SET_LIST_FILTER] = array(PERMISSION_
 $xajax->registerFunction(ACTION_SET_LIST_FILTER);
 
 /**
+ * definition of 'clear_list_filter' action
+ */
+define("ACTION_CLEAR_LIST_FILTER", "action_clear_list_filter");
+$firstthingsfirst_action_description[ACTION_SET_LIST_FILTER] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$xajax->registerFunction(ACTION_SET_LIST_FILTER);
+
+/**
  * definition of css name prefix
  */
 define("LIST_CSS_NAME_PREFIX", "database_table_");
@@ -789,7 +796,7 @@ function action_set_list_filter($list_title, $filter_str)
     # check if filter_str is well formed
     if (str_is_well_formed("filter_str", $filter_str) == FALSE_RETURN_STRING)
     {
-        set_error_message("database_table_contents_top_left", ERROR_NOT_WELL_FORMED_STRING, "", "", $response);
+        set_error_message("message_pane", ERROR_NOT_WELL_FORMED_STRING, "", "", $response);
         
         return $response;
     }

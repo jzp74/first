@@ -489,24 +489,24 @@ class HtmlDatabaseTable
                 
                 # display previous page link
                 if ($current_page > 1)                   
-                    $html_str .= get_href($js_href_get, $js_href_get."('".$list_title."', '', ".($current_page - 1).")", "&laquo;&nbsp;".BUTTON_PREVIOUS_PAGE)."&nbsp;&nbsp;";
+                    $html_str .= get_href($js_href_get, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".($current_page - 1).")", "&laquo;&nbsp;".BUTTON_PREVIOUS_PAGE)."&nbsp;&nbsp;";
         
                 # display first pagenumber
                 if ($current_page == 1)
                     $html_str .= " <strong>1</strong>";
                 else
-                    $html_str .= " ".get_href($js_href_get, $js_href_get."('".$list_title."', '', 1)", 1);
+                    $html_str .= " ".get_href($js_href_get, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, 1)", 1);
                 # display middle pagenumbers
                 for ($cnt = 2; $cnt<$total_pages; $cnt += 1)
                 {
                     if ($cnt == ($current_page - 2))
                         $html_str .= " <strong>...<strong>";
                     else if ($cnt == ($current_page - 1))
-                        $html_str .= " ".get_href($js_href_get, $js_href_get."('".$list_title."', '', ".$cnt.")", $cnt);
+                        $html_str .= " ".get_href($js_href_get, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".$cnt.")", $cnt);
                     else if ($cnt == $current_page)
                         $html_str .= " <strong>".$cnt."</strong>";
                     else if ($cnt == ($current_page + 1))
-                        $html_str .= " ".get_href($js_href_get, $js_href_get."('".$list_title."', '', ".$cnt.")", $cnt);
+                        $html_str .= " ".get_href($js_href_get, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".$cnt.")", $cnt);
                     if ($cnt == ($current_page + 2))
                         $html_str .= " <strong>...<strong>";
                 }
@@ -514,11 +514,11 @@ class HtmlDatabaseTable
                 if ($current_page == $total_pages)
                     $html_str .= "  <strong>".$total_pages."</strong>";
                 else
-                    $html_str .= "  ".get_href($js_href_get, $js_href_get."('".$list_title."', '', ".$total_pages.")", $total_pages);
+                    $html_str .= "  ".get_href($js_href_get, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".$total_pages.")", $total_pages);
     
                 # display next page link
                 if ($current_page < $total_pages)
-                    $html_str .= "&nbsp;&nbsp;".get_href($js_href_get, $js_href_get."('".$list_title."', '', ".($current_page + 1).")", BUTTON_NEXT_PAGE."&nbsp;&raquo;");        
+                    $html_str .= "&nbsp;&nbsp;".get_href($js_href_get, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".($current_page + 1).")", BUTTON_NEXT_PAGE."&nbsp;&raquo;");        
             }
             $html_str .= "</div>\n";
         }
@@ -845,7 +845,7 @@ class HtmlDatabaseTable
         $html_str .= "onsubmit=\"javascript:xajax_action_set_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."filter('".$list_title."', document.getElementById('filter_str').value); return false;\">\n";
         $html_str .= "                                <input size=\"34\" maxlength=\"100\" value=\"".$filter_str."\" id=\"filter_str\"><br>\n";
         $html_str .= "                                <input type=submit class=\"button\" value=\"".BUTTON_FILTER."\">\n";
-        $html_str .= "                                ".get_button ("", "void", BUTTON_RESET_FILTER)."\n";
+        $html_str .= "                                ".get_button (ACTION_SET_LIST_FILTER, "javascript:xajax_action_set_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."filter(%27".$list_title."%27, %27%27)", BUTTON_RESET_FILTER);
         $html_str .= "                            </form>\n";
         $html_str .= "                        </div>\n";
 

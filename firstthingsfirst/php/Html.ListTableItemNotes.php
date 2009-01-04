@@ -109,7 +109,7 @@ function action_add_note ($db_field_name, $this_id)
     $response = new xajaxResponse();
 
     # change the link of this_id from 'add' to 'next'
-    $next_html_str = get_href(ACTION_NEXT_NOTE, "xajax_action_get_next_note('".$this_td_id."', '".$next_td_id."')", BUTTON_NEXT_NOTE);
+    $next_html_str = get_href(ACTION_NEXT_NOTE, "xajax_action_get_next_note(%27".$this_td_id."%27, %27".$next_td_id."%27)", BUTTON_NEXT_NOTE);
     $response->addAssign($db_field_name."_0_next", "innerHTML", $next_html_str);
 
     # hide this note
@@ -226,7 +226,7 @@ function get_list_record_note ($db_field_name, $this_id, $previous_id, $next_id,
     
     # display button to go to the previous note
     if ($previous_id != -1)
-        $html_str .= get_href(ACTION_PREVIOUS_NOTE, "xajax_action_get_previous_note('".$td_id."', '".$previous_td_id."')", BUTTON_PREVIOUS_NOTE);
+        $html_str .= get_href(ACTION_PREVIOUS_NOTE, "xajax_action_get_previous_note(%27".$td_id."%27, %27".$previous_td_id."%27)", BUTTON_PREVIOUS_NOTE);
     # display inactive button when there is no previous note
     else
         $html_str .= get_inactive_button(BUTTON_PREVIOUS_NOTE);
@@ -238,10 +238,10 @@ function get_list_record_note ($db_field_name, $this_id, $previous_id, $next_id,
         $html_str .= get_inactive_button(BUTTON_ADD_NOTE);
     # display button to add note when it is possible to add a new note
     else if ($next_id == 0)
-        $html_str .= get_href(ACTION_ADD_NOTE, "xajax_action_add_note('".$db_field_name."', '".$this_id."')", BUTTON_ADD_NOTE);
+        $html_str .= get_href(ACTION_ADD_NOTE, "xajax_action_add_note(%27".$db_field_name."%27, %27".$this_id."%27)", BUTTON_ADD_NOTE);
     # display button to go to the next note
     else
-        $html_str .= get_href(ACTION_NEXT_NOTE, "xajax_action_get_next_note('".$td_id."', '".$next_td_id."')", BUTTON_NEXT_NOTE);
+        $html_str .= get_href(ACTION_NEXT_NOTE, "xajax_action_get_next_note(%27".$td_id."%27, %27".$next_td_id."%27)", BUTTON_NEXT_NOTE);
     $html_str .= "&nbsp;</div>\n";
 
     $html_str .= "                                        </div>\n";

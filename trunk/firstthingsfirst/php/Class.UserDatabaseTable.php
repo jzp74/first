@@ -5,7 +5,7 @@
  *
  * @package Class_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
+ * @copyright 2007-2009 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -144,7 +144,7 @@ class UserDatabaseTable extends DatabaseTable
             $page = $this->_list_state->get_current_page();
         
         # call parent select()
-        $rows = parent::select($order_by_field, $order_ascending, $archived, $filter_str_sql, $page, $this->db_field_names);
+        $rows = parent::select($order_by_field, $order_ascending, $archived, $filter_str_sql, $page, $db_field_names);
         
         if ($page != DATABASETABLE_ALL_PAGES)
             $this->_list_state->set_current_page($page);        

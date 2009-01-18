@@ -5,16 +5,40 @@
  *
  * @package Text_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
+ * @copyright 2007-2009 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
 
 /**
- * permission error
- * definition of error that is shown when user tries to create a user with an existing name
+ * permission error (create list)
+ * definition of error that is shown when user has insufficient permissions
  */
-define("ERROR_INSUFFIENT_PERMISSIONS", "you have insufficient permissions for this operation");
+define("ERROR_PERMISSION_CREATE_LIST", "you need to have permission to create lists");
+
+/**
+ * permission error (admin)
+ * definition of error that is shown when user has insufficient permissions
+ */
+define("ERROR_PERMISSION_ADMIN", "you need to be administrator");
+
+/**
+ * permission error (view list)
+ * definition of error that is shown when user has insufficient permissions
+ */
+define("ERROR_PERMISSION_LIST_VIEW", "you need to have view permission for this list");
+
+/**
+ * permission error (edit list)
+ * definition of error that is shown when user has insufficient permissions
+ */
+define("ERROR_PERMISSION_LIST_EDIT", "you need to have edit permission for this list");
+
+/**
+ * permission error (list admin)
+ * definition of error that is shown when user has insufficient permissions
+ */
+define("ERROR_PERMISSION_LIST_ADMIN", "you need to be administrator of this list");
 
 /**
  * field check error

@@ -5,7 +5,7 @@
  *
  * @package Class_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
+ * @copyright 2007-2009 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -109,13 +109,6 @@ class DatabaseTable
     protected $db_field_names;
     
     /**
-    * array containing the database text type field names
-    * values in this array are derived from $field_names field
-    * @var array
-    */
-    protected $db_text_field_names;    
-    
-    /**
     * string describing which record metadata should be recorded
     * this string should have a length of exactly 4 chars describing:
     * - record creator name and datetime ('-' signifies no, any other char signifies yes)
@@ -172,7 +165,6 @@ class DatabaseTable
         $this->_database =& $database;
 
         $this->user_field_names = array();
-        $this->db_text_field_names = array();
         
         $this->table_name = $table_name;
         $this->fields = $fields;
@@ -186,8 +178,6 @@ class DatabaseTable
             $field_type = $fields[$db_field_name][1];
             array_push($this->user_field_names, $user_field_name);
             $this->user_fields[$user_field_name] = $db_field_name;
-            if (stristr($field_type, "TEXT"))
-                array_push($this->db_text_field_names, $db_field_name);            
         }
         
         if (strlen($metadata_str) != 3)
@@ -349,15 +339,6 @@ class DatabaseTable
     }
 
     /**
-    * get value of db_text_field_names attribute
-    * @return string value of db_text_field_names attribute
-    */
-    function get_db_text_field_names ()
-    {
-        return $this->db_text_field_names;
-    }
-
-    /**
     * get value of metadata_str attribute
     * @return string value of metadata_str attribute
     */
@@ -404,7 +385,6 @@ class DatabaseTable
         $this->table_name = "";
         $this->user_field_names = array();
         $this->db_field_names = array();
-        $this->db_text_field_names = array();
         $this->error_message_str = "";
         $this->error_log_str = "";
         $this->error_str = "";
@@ -457,7 +437,6 @@ class DatabaseTable
             $field_type = $this->fields[$db_field_name][1];
             $field_options = $this->fields[$db_field_name][2];
             $this->_log->trace("found field (db_field_name=".$db_field_name.", field_type=".$field_type.", field_options=".$field_options.")");
-            $this->_log->trace("added field to query (field_type=".$field_type>")");
             $query .= $db_field_name." ".$firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_DB_DEFINITION].", ";
             # check for postfix
             if ($this->fields[$db_field_name][2] == DATABASETABLE_UNIQUE_FIELD)
@@ -565,11 +544,11 @@ class DatabaseTable
             {
                 $total_pages_array = $this->_database->fetch($result);
                 $total_records = $total_pages_array[0];
-                $this->_log->debug("found (total_records=".$total_records.")");
+#                $this->_log->debug("found (total_records=".$total_records.")");
                 $total_pages = floor((int)$total_records / $firstthingsfirst_list_page_entries);
                 if (($total_pages_array[0]%$firstthingsfirst_list_page_entries) != 0)
                     $total_pages += 1;
-                $this->_log->debug("found (total_pages=".$total_pages.")");
+#                $this->_log->debug("found (total_pages=".$total_pages.")");
             }
             else 
             {
@@ -584,7 +563,7 @@ class DatabaseTable
                 $page = $total_pages;
             if ($total_pages == 0)
                 $page = 1;
-            $this->_log->debug("found (total_pages=".$total_pages.")");
+#            $this->_log->debug("found (total_pages=".$total_pages.")");
         }
 
         $rows = array();
@@ -659,8 +638,15 @@ class DatabaseTable
             while ($row = $this->_database->fetch($result))
             {
                 # decode text field
-                foreach ($this->db_text_field_names as $text_field_name)
-                    $row[$text_field_name] = html_entity_decode($row[$text_field_name], ENT_QUOTES);
+                foreach ($db_field_names as $db_field_name)
+                {
+                    $field_type = $this->fields[$db_field_name][1];
+                    if (stristr($field_type, "TEXT")) 
+                    {
+#                        $this->_log->debug("found text_field: ".$db_field_name);
+                        $row[$db_field_name] = html_entity_decode($row[$db_field_name], ENT_QUOTES);
+                    }
+                }
                 array_push($rows, $row);
             }
         }
@@ -745,8 +731,12 @@ class DatabaseTable
             if (count($row) > 0)
             {
                 # decode text field
-                foreach ($this->db_text_field_names as $text_field_name)
-                    $row[$text_field_name] = html_entity_decode($row[$text_field_name], ENT_QUOTES);                
+                foreach ($db_field_names as $db_field_name)
+                {
+                    $field_type = $this->fields[$db_field_name][1];
+                    if (stristr($field_type, "TEXT")) 
+                        $row[$db_field_name] = html_entity_decode($row[$db_field_name], ENT_QUOTES);
+                }
                 
                 $this->_log->trace("selected DatabaseTable row");
 
@@ -793,7 +783,7 @@ class DatabaseTable
         {
             $value = $name_values_array[$db_field_name];
             $field_type = $this->fields[$db_field_name][1];
-            
+                        
             # check if db_field_name is known
             if ($field_type == "")
             {
@@ -802,12 +792,11 @@ class DatabaseTable
                 return 0;
             }
                         
+            $this->_log->debug("building insert query (db_field_name=".$db_field_name.", value=".$value.")");
+
             # encode text field
-            foreach ($this->db_text_field_names as $text_field_name)
-            {
-                if ($db_field_name == $text_field_name)
-                    $value = htmlentities($value, ENT_QUOTES);
-            }
+            if (stristr($field_type, "TEXT")) 
+                $value = htmlentities($value, ENT_QUOTES);
             
             if (stristr($field_type, "DATE"))
             {
@@ -894,11 +883,8 @@ class DatabaseTable
             $field_type = $this->fields[$db_field_name][1];
             
             # encode text field
-            foreach ($this->db_text_field_names as $text_field_name)
-            {
-                if ($db_field_name == $text_field_name)
-                    $value = htmlentities($value, ENT_QUOTES);
-            }
+            if (stristr($field_type, "TEXT")) 
+                $value = htmlentities($value, ENT_QUOTES);
             
             if (stristr($field_type, "DATE"))
             {

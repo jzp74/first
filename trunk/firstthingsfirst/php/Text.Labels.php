@@ -5,10 +5,22 @@
  *
  * @package Text_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
+ * @copyright 2007-2009 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
+
+/**
+ * shared field definition
+ * definition of yes
+ */
+define("LABEL_YES", "yes");
+
+/**
+ * shared field definition
+ * definition of no
+ */
+define("LABEL_NO", "no");
 
 /**
  * shared field definition
@@ -170,19 +182,19 @@ define("LABEL_USER_PW", "password");
  * user admin label
  * definition of can_edit name
  */
-define("LABEL_USER_CAN_EDIT_LIST", "can edit lists");
+define("LABEL_USER_CAN_EDIT_LIST", "is allowed to edit lists");
 
 /**
  * user admin label
  * definition of can_create name
  */
-define("LABEL_USER_CAN_CREATE_LIST", "can create lists");
+define("LABEL_USER_CAN_CREATE_LIST", "is allowed to create lists");
 
 /**
  * user admin label
  * definition of is_admin name
  */
-define("LABEL_USER_IS_ADMIN", "is admin");
+define("LABEL_USER_IS_ADMIN", "is administrator");
 
 /**
  * user admin label
@@ -191,10 +203,52 @@ define("LABEL_USER_IS_ADMIN", "is admin");
 define("LABEL_USER_TIMES_LOGIN", "# login");
 
 /**
- * user admin button
+ * user admin label
  * definition of 'add user record' label
  */
 define("LABEL_USER_ADMIN_RECORD", "user");
+
+/**
+ * user listtable permissions label
+ * definition of user admin page title
+ */
+define("LABEL_USERLISTTABLEPERMISSIONS_TITLE", "User List Permissions");
+
+/**
+ * user listtable permissions label
+ * definition of listtable title label
+ */
+define("LABEL_USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE", "list name");
+
+/**
+ * user listtable permissions label
+ * definition of listtable title label
+ */
+define("LABEL_USERLISTTABLEPERMISSIONS_USER_NAME", "user name");
+
+/**
+ * user listtable permissions label
+ * definition of listtable title label
+ */
+define("LABEL_USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST", "is allowed to view this list");
+
+/**
+ * user listtable permissions label
+ * definition of listtable title label
+ */
+define("LABEL_USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST", "is allowed to edit this list");
+
+/**
+ * user listtable permissions label
+ * definition of listtable title label
+ */
+define("LABEL_USERLISTTABLEPERMISSIONS_IS_AMDIN", "is administrator of this list");
+
+/**
+ * user listtable permissions label
+ * definition of 'add user list permissions record' label
+ */
+define("LABEL_USERLISTTABLEPERMISSIONS_RECORD", "user list permissions");
 
 /**
  * listtable label
@@ -422,7 +476,7 @@ define("LABEL_LIST_CREATOR", "created");
  * portal label
  * definition of 'list modifier' label
  */
-define("LABEL_LIST_MODIFIER", "modified");
+define("LABEL_LIST_MODIFIER", "last modified");
 
 /**
  * portal label

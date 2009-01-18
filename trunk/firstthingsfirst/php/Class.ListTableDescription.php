@@ -5,7 +5,7 @@
  *
  * @package Class_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
+ * @copyright 2007-2009 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -90,11 +90,11 @@ class ListTableDescription extends UserDatabaseTable
     * @param $page int the page number to select
     * @return array array containing the records (each records is an array)
     */
-    function select ($order_by_field, $page)
+    function select ($order_by_field, $page, $db_field_names = array())
     {
         $this->_log->trace("selecting ListTableDescription (order_by_field=".$order_by_field.", page=".$page.")");
 
-        $records = parent::select($order_by_field, $page);
+        $records = parent::select($order_by_field, $page, $db_field_names);
         if (count($records) == 0)
             return array();
         
@@ -102,7 +102,8 @@ class ListTableDescription extends UserDatabaseTable
         foreach ($records as $record)
         {            
             # convert value
-            $record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = (array)$this->_json->decode($record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME]);
+            if (array_key_exists(LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME, $record) == TRUE) 
+                $record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = (array)$this->_json->decode($record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME]);
             array_push($new_records, $record);
         }
         
@@ -128,7 +129,8 @@ class ListTableDescription extends UserDatabaseTable
             return array();
         
         # convert value
-        $record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = (array)$this->_json->decode($record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME]);
+        if (array_key_exists(LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME, $record) == TRUE) 
+            $record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = (array)$this->_json->decode($record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME]);
 
         $this->_log->trace("selected ListTableDescription record (title=\"".$title."\")");
 
@@ -142,6 +144,8 @@ class ListTableDescription extends UserDatabaseTable
     */
     function insert ($name_values_array)
     {
+        global $user_list_permissions;
+        
         $title = $name_values_array[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME];
 
         $this->_log->trace("inserting ListTableDescription (title=".$title.")");
@@ -155,11 +159,22 @@ class ListTableDescription extends UserDatabaseTable
         }
 
         # convert value
-        $name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = $this->_json->encode($name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME]);
+        if (array_key_exists(LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME, $name_values_array) == TRUE) 
+            $name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = $this->_json->encode($name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME]);
 
         if (parent::insert($name_values_array) == 0)
             return FALSE;
         
+        if ($user_list_permissions->insert_list_permissions_new_list($title) == FALSE) 
+        {
+            # copy error strings from user_list_permissions
+            $this->error_message_str = $user_list_permissions->get_error_message_str();
+            $this->error_log_str = $user_list_permissions->get_error_log_str();
+            $this->error_str = $user_list_permissions->get_error_str();
+            
+            return FALSE;
+        }
+                    
         $this->_log->trace("inserted ListTableDescription (title=".$title.")");
         
         return TRUE;

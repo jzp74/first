@@ -5,7 +5,7 @@
  *
  * @package Class_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
+ * @copyright 2007-2009 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -39,6 +39,11 @@ define("HTML_TABLE_DELETE_MODE_ALWAYS", 0);
  * definition of delete mode archived (only show delete button for archived records)
  */
 define("HTML_TABLE_DELETE_MODE_ARCHIVED", 1);
+
+/**
+ * definition of delete mode never (never show delete button)
+ */
+define("HTML_TABLE_DELETE_MODE_NEVER", 2);
 
 /**
  * definition of record name
@@ -98,6 +103,12 @@ class HtmlDatabaseTable
         $this->_log =& $logging;
         $this->_list_state =& $list_state;
         
+        # set permissions_list_title
+        if (($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_LIST) || ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_USERLISTTABLEPERMISSIONS))
+            $this->permissions_list_title = $this->_user->get_current_list_name();
+        else
+            $this->permissions_list_title = HTML_EMPTY_LIST_TITLE;
+
         $this->_log->debug("constructed new HtmlTable object");
     }
 
@@ -192,7 +203,7 @@ class HtmlDatabaseTable
         $fields = $database_table->get_fields();
         $user_fields = $database_table->get_user_fields();
         $metadata_str = $database_table->get_metadata_str();
-
+        
         $this->_log->trace("get content (list_title=".$list_title.", page=".$page.")");
     
         # select entries
@@ -329,11 +340,23 @@ class HtmlDatabaseTable
                 
                 # add onclick actions
                 if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_PORTAL)
-                    $onclick_str = "onclick=\"xajax_check_permissions('".ACTION_GET_LIST_RECORD."', 'xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record(%27".$list_title."%27, %27".$encoded_key_string."%27)')\"";
+                {
+                    if ($this->permissions_list_title == HTML_EMPTY_LIST_TITLE)    
+                        $onclick_str = "onclick=\"xajax_check_permissions('".ACTION_GET_LIST_RECORD."', 'xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record(%27".$list_title."%27, %27".$encoded_key_string."%27)')\"";
+                    else
+                        $onclick_str = "onclick=\"xajax_check_list_permissions('".ACTION_GET_LIST_RECORD."', '".$this->permissions_list_title."', 'xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record(%27".$list_title."%27, %27".$encoded_key_string."%27)')\"";
+                }
                 else
-                    $onclick_str = "onclick=\"xajax_check_permissions('".ACTION_GET_LIST_PAGE."', 'window.location.assign(%27index.php?action=".ACTION_GET_LIST_PAGE."&list=".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."%27)')\"";
+                    $onclick_str = "onclick=\"xajax_check_list_permissions('".ACTION_GET_LIST_PAGE."', '".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."', 'window.location.assign(%27index.php?action=".ACTION_GET_LIST_PAGE."&list=".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."%27)')\"";
             
-                if (stristr($fields[$db_field_name][1], "DATE"))
+                if ($fields[$db_field_name][1] == "LABEL_DEFINITION_BOOL")
+                {
+                    if ($value == 0)
+                        $html_str .= "                        <td ".$onclick_str.">".LABEL_NO."</td>\n";
+                    else
+                        $html_str .= "                        <td ".$onclick_str.">".LABEL_YES."</td>\n";
+                }
+                else if (stristr($fields[$db_field_name][1], "DATE"))
                 {
                     $date_string = str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_WEEKDAY, $value));
                     $html_str .= "                        <td ".$onclick_str.">".$date_string."</td>\n";
@@ -419,38 +442,42 @@ class HtmlDatabaseTable
                     if (($metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] != DATABASETABLE_METADATA_FALSE) && (strlen($record[DB_ARCHIVER_FIELD_NAME]) == 0))
                     {
                         $html_str .= "                        <td width=\"1%\">";
-                        $html_str .= get_button($js_button_archive, "xajax_".$js_button_archive."(%27".$list_title."%27, %27".$encoded_key_string."%27)", BUTTON_ARCHIVE);
+                        $html_str .= get_href($js_button_archive, $this->permissions_list_title, "xajax_".$js_button_archive."(%27".$list_title."%27, %27".$encoded_key_string."%27)", BUTTON_ARCHIVE);
                         $html_str .= "</td>\n";
                     }
                     # add the delete link when it should always be displayed
                     if ($this->configuration[HTML_TABLE_DELETE_MODE] == HTML_TABLE_DELETE_MODE_ALWAYS)
                     {
                         $html_str .= "                        <td width=\"1%\">";
-                        $html_str .= get_button($js_button_delete, "xajax_".$js_button_delete."(%27".$list_title."%27, %27".$encoded_key_string."%27)", BUTTON_DELETE);
+                        $html_str .= get_href($js_button_delete, $this->permissions_list_title, "xajax_".$js_button_delete."(%27".$list_title."%27, %27".$encoded_key_string."%27)", BUTTON_DELETE);
                         $html_str .= "</td>\n";
                     }
                     # or add the delete link when record is archived
-                    else if ((strlen($record[DB_ARCHIVER_FIELD_NAME]) > 0) && ($this->configuration[HTML_TABLE_DELETE_MODE] == HTML_TABLE_DELETE_MODE_ARCHIVED))
+                    else if (($this->configuration[HTML_TABLE_DELETE_MODE] == HTML_TABLE_DELETE_MODE_ARCHIVED) && (strlen($record[DB_ARCHIVER_FIELD_NAME]) > 0))
                     {
                         $html_str .= "                        <td width=\"1%\">";
-                        $html_str .= get_button($js_button_delete, "xajax_".$js_button_delete."(%27".$list_title."%27, %27".$encoded_key_string."%27)", BUTTON_DELETE);
+                        $html_str .= get_href($js_button_delete, $this->permissions_list_title, "xajax_".$js_button_delete."(%27".$list_title."%27, %27".$encoded_key_string."%27)", BUTTON_DELETE);
                         $html_str .= "</td>\n";
                     }
+                    else if ($this->configuration[HTML_TABLE_DELETE_MODE] == HTML_TABLE_DELETE_MODE_NEVER)
+                        $html_str .= "                        <td width=\"1%\">&nbsp;</td>\n";
                     $html_str .= "                    </tr>\n";
                 }
             }            
             # add buttons for portal page
-            if ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_PORTAL)
+            else if ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_PORTAL)
             {
                 # add modify button
                 $html_str .= "                        <td width=\"1%\">";
-                $html_str .= get_query_button(ACTION_GET_LISTBUILDER_PAGE, "action=".ACTION_GET_LISTBUILDER_PAGE."&list=".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], BUTTON_MODIFY);
+                $html_str .= get_query_href(ACTION_GET_LISTBUILDER_PAGE, $record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], "action=".ACTION_GET_LISTBUILDER_PAGE."&list=".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], BUTTON_MODIFY);
                 $html_str .= "</td>\n";
                 # add delete button
                 $html_str .= "                        <td width=\"1%\">";
-                $html_str .= get_button_confirm(ACTION_DELETE_PORTAL_RECORD, "xajax_action_delete_portal_record(%27".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."%27)", LABEL_CONFIRM_DELETE, BUTTON_DELETE);
+                $html_str .= get_href_confirm(ACTION_DELETE_PORTAL_RECORD, $record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], "xajax_action_delete_portal_record(%27".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."%27)", LABEL_CONFIRM_DELETE, BUTTON_DELETE);
                 $html_str .= "</td>\n                    </tr>\n";
             }
+            else
+                $html_str .= "                        <td width=\"1%\">&nbsp;</td>\n                    </tr>\n";
             
             $record_number += 1;
         }
@@ -489,24 +516,24 @@ class HtmlDatabaseTable
                 
                 # display previous page link
                 if ($current_page > 1)                   
-                    $html_str .= get_href($js_href_get, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".($current_page - 1).")", "&laquo;&nbsp;".BUTTON_PREVIOUS_PAGE)."&nbsp;&nbsp;";
+                    $html_str .= get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".($current_page - 1).")", "&laquo;&nbsp;".BUTTON_PREVIOUS_PAGE)."&nbsp;&nbsp;";
         
                 # display first pagenumber
                 if ($current_page == 1)
                     $html_str .= " <strong>1</strong>";
                 else
-                    $html_str .= " ".get_href($js_href_get, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, 1)", 1);
+                    $html_str .= " ".get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, 1)", 1);
                 # display middle pagenumbers
                 for ($cnt = 2; $cnt<$total_pages; $cnt += 1)
                 {
                     if ($cnt == ($current_page - 2))
                         $html_str .= " <strong>...<strong>";
                     else if ($cnt == ($current_page - 1))
-                        $html_str .= " ".get_href($js_href_get, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".$cnt.")", $cnt);
+                        $html_str .= " ".get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".$cnt.")", $cnt);
                     else if ($cnt == $current_page)
                         $html_str .= " <strong>".$cnt."</strong>";
                     else if ($cnt == ($current_page + 1))
-                        $html_str .= " ".get_href($js_href_get, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".$cnt.")", $cnt);
+                        $html_str .= " ".get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".$cnt.")", $cnt);
                     if ($cnt == ($current_page + 2))
                         $html_str .= " <strong>...<strong>";
                 }
@@ -514,11 +541,11 @@ class HtmlDatabaseTable
                 if ($current_page == $total_pages)
                     $html_str .= "  <strong>".$total_pages."</strong>";
                 else
-                    $html_str .= "  ".get_href($js_href_get, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".$total_pages.")", $total_pages);
+                    $html_str .= "  ".get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".$total_pages.")", $total_pages);
     
                 # display next page link
                 if ($current_page < $total_pages)
-                    $html_str .= "&nbsp;&nbsp;".get_href($js_href_get, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".($current_page + 1).")", BUTTON_NEXT_PAGE."&nbsp;&raquo;");        
+                    $html_str .= "&nbsp;&nbsp;".get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".($current_page + 1).")", BUTTON_NEXT_PAGE."&nbsp;&raquo;");        
             }
             $html_str .= "</div>\n";
         }
@@ -722,11 +749,11 @@ class HtmlDatabaseTable
         $html_str .= "                        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents_buttons\">\n";
         $html_str .= "                            ";
         if (!strlen($encoded_key_string))
-            $html_str .= get_button($js_button_insert, "xajax_".$js_button_insert."(%27".$list_title."%27, xajax.getFormValues(%27record_form%27))", BUTTON_ADD);
+            $html_str .= get_href($js_button_insert, $this->permissions_list_title, "xajax_".$js_button_insert."(%27".$list_title."%27, xajax.getFormValues(%27record_form%27))", BUTTON_ADD);
         else
-            $html_str .= get_button($js_button_update, "xajax_".$js_button_update."(%27".$list_title."%27, %27".$encoded_key_string."%27, xajax.getFormValues(%27record_form%27))", BUTTON_COMMIT);
+            $html_str .= get_href($js_button_update, $this->permissions_list_title, "xajax_".$js_button_update."(%27".$list_title."%27, %27".$encoded_key_string."%27, xajax.getFormValues(%27record_form%27))", BUTTON_COMMIT);
         $html_str .= "\n                            ";
-        $html_str .= "&nbsp;&nbsp;".get_button($js_button_cancel, "xajax_".$js_button_cancel."(%27".$list_title."%27)", BUTTON_CANCEL);
+        $html_str .= "&nbsp;&nbsp;".get_href($js_button_cancel, HTML_EMPTY_LIST_TITLE, "xajax_".$js_button_cancel."(%27".$list_title."%27)", BUTTON_CANCEL);
         $html_str .= "\n                        </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents_buttons -->\n";
 
         #end form
@@ -764,18 +791,20 @@ class HtmlDatabaseTable
                 $html_str .= "<strong>".LABEL_EDIT_RECORD."</strong>";
             else if ($action == "insert")
                 $html_str .= "<strong>".LABEL_ADD_RECORD."</strong>";
-            else
+            else if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_USERLISTTABLEPERMISSIONS)
             {
-                $html_str .= get_href(ACTION_INSERT_LIST_RECORD, "xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record(%27".$list_title."%27, %27%27)", BUTTON_ADD_RECORD.$this->configuration[HTML_TABLE_RECORD_NAME]);
+                $html_str .= get_href(ACTION_INSERT_LIST_RECORD, $this->permissions_list_title, "xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record(%27".$list_title."%27, %27%27)", BUTTON_ADD_RECORD.$this->configuration[HTML_TABLE_RECORD_NAME]);
                 $html_str .= "&nbsp;&nbsp;&nbsp;&nbsp;";
             }
         }
-        # only display the print button when no action is active
-        if ($action == "")
+        # only display the print button when no action is active and only when this is a list page
+        if (($action == "") && ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_LIST))
         {
             $html_str .= "<a href=\"javascript:void(0);\" onclick=\"window.open('";
             $html_str .= "index.php?action=".ACTION_GET_LIST_PRINT_PAGE."&list=".$list_title."')\">".BUTTON_PRINT_LIST."</a>";
         }
+        else
+            $html_str .= "&nbsp;";
         
         $html_str .= "\n            </div> <!-- action_bar -->\n";
         if ($action == "")
@@ -845,7 +874,7 @@ class HtmlDatabaseTable
         $html_str .= "onsubmit=\"javascript:xajax_action_set_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."filter('".$list_title."', document.getElementById('filter_str').value); return false;\">\n";
         $html_str .= "                                <input size=\"34\" maxlength=\"100\" value=\"".$filter_str."\" id=\"filter_str\"><br>\n";
         $html_str .= "                                <input type=submit class=\"button\" value=\"".BUTTON_FILTER."\">\n";
-        $html_str .= "                                ".get_button (ACTION_SET_LIST_FILTER, "javascript:xajax_action_set_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."filter(%27".$list_title."%27, %27%27)", BUTTON_RESET_FILTER);
+        $html_str .= "                                <button type=\"button\" class=\"button\" onclick=\"javascript:xajax_action_set_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."filter('".$list_title."', '')\">".BUTTON_RESET_FILTER."</button>\n";
         $html_str .= "                            </form>\n";
         $html_str .= "                        </div>\n";
 

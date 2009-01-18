@@ -5,32 +5,38 @@
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
+ * @copyright 2007-2009 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
 
 /**
- * definition of 'get_previous_note' action
+ * definitions of all possible actions
  */
 define("ACTION_PREVIOUS_NOTE", "action_get_previous_note");
-$firstthingsfirst_action_description[ACTION_PREVIOUS_NOTE] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+define("ACTION_NEXT_NOTE", "action_get_next_note");
+define("ACTION_ADD_NOTE", "action_add_note");
+
+/**
+ * register all actions in xajax
+ */
+$xajax->registerFunction(ACTION_NEXT_NOTE);
+$xajax->registerFunction(ACTION_ADD_NOTE);
 $xajax->registerFunction(ACTION_PREVIOUS_NOTE);
 
 /**
- * definition of 'get_next_note' action
+ * definition of action permissions
+ * permission are stored in a six character string (P means permissions, - means don't care):
+ *  - user has to have edit list permission to be able to execute action
+ *  - user has to have create list permission to be able to execute action
+ *  - user has to have admin permission to be able to execute action
+ *  - user has to have permission to view this list to execute list action for this list
+ *  - user has to have permission to edit this list to execute action for this list
+ *  - user has to have admin permission for this list to exectute action for this list
  */
-define("ACTION_NEXT_NOTE", "action_get_next_note");
-$firstthingsfirst_action_description[ACTION_NEXT_NOTE] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction(ACTION_NEXT_NOTE);
-
-/**
- * definition of 'add_note' action
- */
-define("ACTION_ADD_NOTE", "action_add_note");
-$firstthingsfirst_action_description[ACTION_ADD_NOTE] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction(ACTION_ADD_NOTE);
-
+$firstthingsfirst_action_description[ACTION_PREVIOUS_NOTE] = "-----";
+$firstthingsfirst_action_description[ACTION_NEXT_NOTE] = "-----";
+$firstthingsfirst_action_description[ACTION_ADD_NOTE] = "-----";
 
 /**
  * hide the current note and show the previous note (by changing classnames in DOM)
@@ -109,7 +115,7 @@ function action_add_note ($db_field_name, $this_id)
     $response = new xajaxResponse();
 
     # change the link of this_id from 'add' to 'next'
-    $next_html_str = get_href(ACTION_NEXT_NOTE, "xajax_action_get_next_note(%27".$this_td_id."%27, %27".$next_td_id."%27)", BUTTON_NEXT_NOTE);
+    $next_html_str = get_href(ACTION_NEXT_NOTE, HTML_EMPTY_LIST_TITLE, "xajax_action_get_next_note(%27".$this_td_id."%27, %27".$next_td_id."%27)", BUTTON_NEXT_NOTE);
     $response->addAssign($db_field_name."_0_next", "innerHTML", $next_html_str);
 
     # hide this note
@@ -226,7 +232,7 @@ function get_list_record_note ($db_field_name, $this_id, $previous_id, $next_id,
     
     # display button to go to the previous note
     if ($previous_id != -1)
-        $html_str .= get_href(ACTION_PREVIOUS_NOTE, "xajax_action_get_previous_note(%27".$td_id."%27, %27".$previous_td_id."%27)", BUTTON_PREVIOUS_NOTE);
+        $html_str .= get_href(ACTION_PREVIOUS_NOTE, HTML_EMPTY_LIST_TITLE, "xajax_action_get_previous_note(%27".$td_id."%27, %27".$previous_td_id."%27)", BUTTON_PREVIOUS_NOTE);
     # display inactive button when there is no previous note
     else
         $html_str .= get_inactive_button(BUTTON_PREVIOUS_NOTE);
@@ -238,10 +244,10 @@ function get_list_record_note ($db_field_name, $this_id, $previous_id, $next_id,
         $html_str .= get_inactive_button(BUTTON_ADD_NOTE);
     # display button to add note when it is possible to add a new note
     else if ($next_id == 0)
-        $html_str .= get_href(ACTION_ADD_NOTE, "xajax_action_add_note(%27".$db_field_name."%27, %27".$this_id."%27)", BUTTON_ADD_NOTE);
+        $html_str .= get_href(ACTION_ADD_NOTE, HTML_EMPTY_LIST_TITLE, "xajax_action_add_note(%27".$db_field_name."%27, %27".$this_id."%27)", BUTTON_ADD_NOTE);
     # display button to go to the next note
     else
-        $html_str .= get_href(ACTION_NEXT_NOTE, "xajax_action_get_next_note(%27".$td_id."%27, %27".$next_td_id."%27)", BUTTON_NEXT_NOTE);
+        $html_str .= get_href(ACTION_NEXT_NOTE, HTML_EMPTY_LIST_TITLE, "xajax_action_get_next_note(%27".$td_id."%27, %27".$next_td_id."%27)", BUTTON_NEXT_NOTE);
     $html_str .= "&nbsp;</div>\n";
 
     $html_str .= "                                        </div>\n";

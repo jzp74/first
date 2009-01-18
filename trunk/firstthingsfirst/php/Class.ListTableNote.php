@@ -5,7 +5,7 @@
  *
  * @package Class_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
+ * @copyright 2007-2009 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -36,7 +36,7 @@ define("LISTTABLENOTE_NOTE_FIELD_NAME", "_note");
 $class_listtablenote_fields = array(
     DB_ID_FIELD_NAME => array(LABEL_LIST_ID, "LABEL_DEFINITION_AUTO_NUMBER", ""),
     LISTTABLENOTE_RECORD_ID_FIELD_NAME => array(LABEL_MINUS, "LABEL_DEFINITION_NUMBER", ""),
-    LISTTABLENOTE_FIELD_NAME_FIELD_NAME => array(LABEL_MINUS, "LABEL_DEFINITION_TEXT_LINE", DATABASETABLE_FOREIGN_FIELD),
+    LISTTABLENOTE_FIELD_NAME_FIELD_NAME => array(LABEL_MINUS, "LABEL_DEFINITION_TEXT_LINE", ""),
     LISTTABLENOTE_NOTE_FIELD_NAME => array(LABEL_MINUS, "LABEL_DEFINITION_TEXT_FIELD", ""),
 );
 
@@ -82,10 +82,9 @@ class ListTableNote extends DatabaseTable
         $table_name = $this->_convert_list_name_to_table_name($list_title);
 
         # set correct foreign_key
-        $fields_array = $class_listtablenote_fields[LISTTABLENOTE_FIELD_NAME_FIELD_NAME];
         $foreign_key = DATABASETABLE_FOREIGN_FIELD." (".LISTTABLENOTE_RECORD_ID_FIELD_NAME.") REFERENCES ";
         $foreign_key .= LISTTABLE_TABLE_NAME_PREFIX.strtolower(str_replace(" ", "_", $list_title))."(".DB_ID_FIELD_NAME.") ON DELETE CASCADE";
-        $class_listtablenote_fields[LISTTABLENOTE_FIELD_NAME_FIELD_NAME][2] = $foreign_key;
+        $class_listtablenote_fields[LISTTABLENOTE_RECORD_ID_FIELD_NAME][2] = $foreign_key;
         
         # call parent __construct()
         parent::__construct($table_name, $class_listtablenote_fields, LISTTABLENOTE_METADATA);

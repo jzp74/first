@@ -57,11 +57,11 @@
     }    
 
 #database_table_filter form {
-    text-align: right;
+    text-align: left;
     }
 
 #database_table_filter .button {
-    margin: 4px 0px 0px 6px;
+    margin: 4px 6px 0px 0px;
     background-color: rgb(232, 232, 232);
     color: rgb(50, 50, 50);
     border: 1px solid rgb(255, 255, 255);
@@ -129,15 +129,13 @@
     background-color: rgb(197, 214, 232);
     }
     
-#database_table_contents .button {
-    color: rgb(120, 120, 120);
-    border: 1px solid rgb(120, 120, 120);
+#database_table_contents a, #database_table_contents a:link, #database_table_contents a:visited {
+    padding: 1px 2px 1px 2px;
+    color: rgb(50, 50, 50);
     }
 
-#database_table_contents .button:hover {
-    color: rgb(50, 50, 50);
-    background-color: rgb(255, 255, 255);
-    border: 1px solid rgb(50, 50, 50);
+#database_table_contents a:hover {
+    color: rgb(255, 255, 255);
     }
 
 /*  defines area below database table contents */
@@ -227,15 +225,14 @@
     padding: 10px 0px 2px 0px;
     }
 
-#database_table_record_contents_buttons .button {
-    display: inline;
+#database_table_record_contents_buttons a, #database_table_record_contents_buttons a:link, #database_table_record_contents_buttons a:visited {
     margin: 0px 0px 0px 0px;
-    padding: 0px 1px 0px 1px;
-    color: rgb(120, 120, 120);
-    border: 1px solid rgb(120, 120, 120);
+    padding: 1px 2px 1px 2px;
+    color: rgb(5, 114, 197);
+    border: 1px solid rgb(5, 114, 197);
     }
 
-#database_table_record_contents_buttons .button:hover {
+#database_table_record_contents_buttons a:hover {
     color: rgb(50, 50, 50);
     background-color: rgb(255, 255, 255);
     border: 1px solid rgb(50, 50, 50);

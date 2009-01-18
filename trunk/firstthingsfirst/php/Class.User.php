@@ -5,7 +5,7 @@
  *
  * @package Class_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
+ * @copyright 2007-2009 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -36,11 +36,6 @@ define("USER_NAME_FIELD_NAME", "_name");
 define("USER_PW_FIELD_NAME", "_pw");
 
 /**
- * definition of edit_list field name
- */
-define("USER_CAN_EDIT_LIST_FIELD_NAME", "_edit_list");
-
-/**
  * definition of create_list field name
  */
 define("USER_CAN_CREATE_LIST_FIELD_NAME", "_create_list");
@@ -62,7 +57,6 @@ $class_user_fields = array(
     DB_ID_FIELD_NAME => array(LABEL_LIST_ID, "LABEL_DEFINITION_AUTO_NUMBER", ""),
     USER_NAME_FIELD_NAME => array(LABEL_USER_NAME, "LABEL_DEFINITION_USERNAME", DATABASETABLE_UNIQUE_FIELD),
     USER_PW_FIELD_NAME => array(LABEL_USER_PW, "LABEL_DEFINITION_PASSWORD", ""),
-    USER_CAN_EDIT_LIST_FIELD_NAME => array(LABEL_USER_CAN_EDIT_LIST, "LABEL_DEFINITION_BOOL", ""),
     USER_CAN_CREATE_LIST_FIELD_NAME => array(LABEL_USER_CAN_CREATE_LIST, "LABEL_DEFINITION_BOOL", ""),
     USER_IS_ADMIN_FIELD_NAME => array(LABEL_USER_IS_ADMIN, "LABEL_DEFINITION_BOOL", ""),
     USER_TIMES_LOGIN_FIELD_NAME => array(LABEL_USER_TIMES_LOGIN, "LABEL_DEFINITION_NON_EDIT_NUMBER", ""),
@@ -82,7 +76,10 @@ define("USER_METADATA", "-11");
  */
 class User extends UserDatabaseTable
 {    
-    # set attributes of this object when it is constructed
+    /**
+    * overwrite __construct() function
+    * @return void
+    */
     function __construct ()
     {
         # these variables are assumed to be globally available
@@ -124,12 +121,12 @@ class User extends UserDatabaseTable
     }
 
     /**
-    * get value of SESSION variable edit_list.
-    * @return bool value of SESSION variable can_edit_list.
-    */
-    function get_can_edit_list ()
+     * get value of SESSION variable current_list_name.
+     * @return string value of SESSION variable current_list_name.
+     */
+    function get_current_list_name ()
     {
-        return $_SESSION["can_edit_list"];
+        return $_SESSION["current_list_name"];
     }
 
     /**
@@ -202,17 +199,17 @@ class User extends UserDatabaseTable
     {
         $_SESSION["name"] = $name;
     }
-    
-    /**
-    * set value of SESSION variable can_edit_list
-    * @param bool $permission indicates if current user is allowed to edit a list
-    * @return void
-    */
-    function set_can_edit_list ($permission)
-    {
-        $_SESSION["can_edit_list"] = $permission;
-    }
 
+    /**
+     * set value of SESSION variable current_list_name
+     * @param string $list_name name of current list
+     * @return void
+     */
+    function set_current_list_name ($list_name)
+    {
+        $_SESSION["current_list_name"] = $list_name;
+    }
+        
     /**
     * set value of SESSION variable can_create_list
     * @param bool $permission indicates if current user is allowed to create a new list
@@ -279,8 +276,8 @@ class User extends UserDatabaseTable
 
         $this->set_id(USER_ID_RESET_VALUE);
         $this->set_name(USER_NAME_RESET_VALUE);
+        $this->set_current_list_name("");
         $this->set_times_login("0");
-        $this->set_can_edit_list("0");
         $this->set_can_create_list("0");
         $this->set_is_admin("0");
         $this->set_login("0");
@@ -320,7 +317,6 @@ class User extends UserDatabaseTable
             $name_value_array = array();
             $name_value_array[USER_NAME_FIELD_NAME] = $name;
             $name_value_array[USER_PW_FIELD_NAME] = $firstthingsfirst_admin_passwd;
-            $name_value_array[USER_CAN_EDIT_LIST_FIELD_NAME] = 1;
             $name_value_array[USER_CAN_CREATE_LIST_FIELD_NAME] = 1;
             $name_value_array[USER_IS_ADMIN_FIELD_NAME] = 1;
             $name_value_array[USER_TIMES_LOGIN_FIELD_NAME] = 0;
@@ -353,7 +349,7 @@ class User extends UserDatabaseTable
             # set session parameters
             $this->set_id($record[DB_ID_FIELD_NAME]);
             $this->set_name($record[USER_NAME_FIELD_NAME]);
-            $this->set_can_edit_list($record[USER_CAN_EDIT_LIST_FIELD_NAME]);
+            $this->set_current_list_name("");
             $this->set_can_create_list($record[USER_CAN_CREATE_LIST_FIELD_NAME]);
             $this->set_is_admin($record[USER_IS_ADMIN_FIELD_NAME]);
             $this->set_times_login($record[USER_TIMES_LOGIN_FIELD_NAME] + 1);
@@ -431,8 +427,12 @@ class User extends UserDatabaseTable
     */
     function insert ($name_values_array)
     {
-        $this->_log->trace("insert user (name=".$name_values_array[USER_NAME_FIELD_NAME].")");
+        global $user_list_permissions;
         
+        $user_name = $name_values_array[USER_NAME_FIELD_NAME];
+
+        $this->_log->trace("insert user (name=".$user_name.")");
+                
         if (strlen($name_values_array[USER_PW_FIELD_NAME]) > 0)
         {
             $this->_log->debug("found a password");
@@ -445,7 +445,14 @@ class User extends UserDatabaseTable
             return FALSE;
         }
 
-        if ($this->exists($name_values_array[USER_NAME_FIELD_NAME]))
+        # if user is admin then user must also be able to create lists
+        if (array_key_exists(USER_IS_ADMIN_FIELD_NAME, $name_values_array) == TRUE)
+        {
+            if ($name_values_array[USER_IS_ADMIN_FIELD_NAME] == 1)
+                $name_values_array[USER_CAN_CREATE_LIST_FIELD_NAME] = 1;
+        }
+        
+        if ($this->exists($user_name))
         {
             $this->_handle_error("user already exists", ERROR_DUPLICATE_USER_NAME);
             
@@ -455,7 +462,17 @@ class User extends UserDatabaseTable
         if (parent::insert($name_values_array) == FALSE)
             return FALSE;
         
-        $this->_log->info("user added (name=".$name_values_array[USER_NAME_FIELD_NAME].")");
+        if ($user_list_permissions->insert_list_permissions_new_user($user_name) == FALSE) 
+        {
+            # copy error strings from user_list_permissions
+            $this->error_message_str = $user_list_permissions->get_error_message_str();
+            $this->error_log_str = $user_list_permissions->get_error_log_str();
+            $this->error_str = $user_list_permissions->get_error_str();
+            
+            return FALSE;
+        }
+        
+        $this->_log->info("user added (name=".$user_name.")");
         
         return TRUE;
     }
@@ -484,6 +501,11 @@ class User extends UserDatabaseTable
                 unset($name_values_array[USER_PW_FIELD_NAME]);
             }
         }
+
+        # if user is admin then user must also be able to create lists
+        if (array_key_exists(USER_IS_ADMIN_FIELD_NAME, $name_values_array) == TRUE)
+            if ($name_values_array[USER_IS_ADMIN_FIELD_NAME] == 1) 
+                $name_values_array[USER_CAN_CREATE_LIST_FIELD_NAME] = 1;
 
         if (parent::update($encoded_key_string, $name_values_array) == FALSE)
             return FALSE;

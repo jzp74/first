@@ -5,59 +5,49 @@
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
+ * @copyright 2007-2009 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
 
 /**
- * definition of 'get_listbuilder_page' action
+ * definitions of all possible actions
  */
 define("ACTION_GET_LISTBUILDER_PAGE", "action_get_listbuilder_page");
-$firstthingsfirst_action_description[ACTION_GET_LISTBUILDER_PAGE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction(ACTION_GET_LISTBUILDER_PAGE);
-
-/**
- * definition of 'insert_listbuilder_row' action
- */
 define("ACTION_INSERT_LISTBUILDER_ROW", "action_insert_listbuilder_row");
-$firstthingsfirst_action_description[ACTION_INSERT_LISTBUILDER_ROW] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction(ACTION_INSERT_LISTBUILDER_ROW);
-
-/**
- * definition of 'move_listbuilder_row' action
- */
 define("ACTION_MOVE_LISTBUILDER_ROW", "action_move_listbuilder_row");
-$firstthingsfirst_action_description[ACTION_MOVE_LISTBUILDER_ROW] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction(ACTION_MOVE_LISTBUILDER_ROW);
-
-/**
- * definition of 'delete_listbuilder_row' action
- */
 define("ACTION_DELETE_LISTBUILDER_ROW", "action_delete_listbuilder_row");
-$firstthingsfirst_action_description[ACTION_DELETE_LISTBUILDER_ROW] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction(ACTION_DELETE_LISTBUILDER_ROW);
-
-/**
- * definition of 'refresh_listbuilder' action
- */
 define("ACTION_REFRESH_LISTBUILDER", "action_refresh_listbuilder");
-$firstthingsfirst_action_description[ACTION_REFRESH_LISTBUILDER] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction(ACTION_REFRESH_LISTBUILDER);
-
-/**
- * definition of 'modify list' action
- */
 define("ACTION_MODIFY_LIST", "action_modify_list");
-$firstthingsfirst_action_description[ACTION_MODIFY_LIST] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction(ACTION_MODIFY_LIST);
+define("ACTION_CREATE_LIST", "action_create_list");
 
 /**
- * definition of 'create_list' action
+ * register all actions in xajax
  */
-define("ACTION_CREATE_LIST", "action_create_list");
-$firstthingsfirst_action_description[ACTION_CREATE_LIST] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$xajax->registerFunction(ACTION_GET_LISTBUILDER_PAGE);
+$xajax->registerFunction(ACTION_INSERT_LISTBUILDER_ROW);
+$xajax->registerFunction(ACTION_MOVE_LISTBUILDER_ROW);
+$xajax->registerFunction(ACTION_DELETE_LISTBUILDER_ROW);
+$xajax->registerFunction(ACTION_REFRESH_LISTBUILDER);
+$xajax->registerFunction(ACTION_MODIFY_LIST);
 $xajax->registerFunction(ACTION_CREATE_LIST);
+
+/**
+ * definition of action permissions
+ * permission are stored in a six character string (P means permissions, - means don't care):
+ *  - user has to have create list permission to be able to execute action
+ *  - user has to have admin permission to be able to execute action
+ *  - user has to have permission to view this list to execute list action for this list
+ *  - user has to have permission to edit this list to execute action for this list
+ *  - user has to have admin permission for this list to exectute action for this list
+ */
+$firstthingsfirst_action_description[ACTION_GET_LISTBUILDER_PAGE] = "P---P";
+$firstthingsfirst_action_description[ACTION_INSERT_LISTBUILDER_ROW] = "-----";
+$firstthingsfirst_action_description[ACTION_MOVE_LISTBUILDER_ROW] = "-----";
+$firstthingsfirst_action_description[ACTION_DELETE_LISTBUILDER_ROW] = "-----";
+$firstthingsfirst_action_description[ACTION_REFRESH_LISTBUILDER] = "-----";
+$firstthingsfirst_action_description[ACTION_MODIFY_LIST] = "----P";
+$firstthingsfirst_action_description[ACTION_CREATE_LIST] = "P----";
 
 
 /**
@@ -70,6 +60,7 @@ function action_get_listbuilder_page ($list_title)
 {
     global $logging;
     global $user;
+    global $list_table_description;
     global $firstthingsfirst_field_descriptions;
     
     $field_types = array_keys($firstthingsfirst_field_descriptions);
@@ -86,7 +77,6 @@ function action_get_listbuilder_page ($list_title)
     {
         $counter = 0;
         $definition = array();
-        $list_table_description = new ListTableDescription();
         $record = $list_table_description->select_record($list_title);
         # just create an empty list when list could not be loaded
         if (count($record) == 0)
@@ -130,7 +120,7 @@ function action_get_listbuilder_page ($list_title)
     
     # different page title when list title has been given
     if ($old_list_loaded == TRUE)
-        $page_title = LABEL_MODIFY_LIST." '".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME];
+        $page_title = LABEL_MODIFY_LIST." '".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."'";
     else        
         $page_title = LABEL_CONFIGURE_NEW_LIST;
     # get html for page header
@@ -226,7 +216,7 @@ function action_get_listbuilder_page ($list_title)
     $html_str .= "                ".get_select("add_select", "add_it", "")."\n";
     $href_str = "xajax_action_insert_listbuilder_row(document.getElementById";
     $href_str .= "(%27add_select%27).value, xajax.getFormValues(%27database_definition_form%27), document.getElementById(%27largest_id%27).innerHTML)";
-    $html_str .= "                ".get_href(ACTION_INSERT_LISTBUILDER_ROW, $href_str, BUTTON_ADD_FIELD)."\n";
+    $html_str .= "                ".get_href(ACTION_INSERT_LISTBUILDER_ROW, HTML_EMPTY_LIST_TITLE, $href_str, BUTTON_ADD_FIELD)."\n";
     
     # display the modify button when a title has been given
     if ($old_list_loaded == TRUE)
@@ -235,7 +225,7 @@ function action_get_listbuilder_page ($list_title)
         $href_str .= "%27, document.getElementById(%27listbuilder_list_title%27).value, ";
         $href_str .= "document.getElementById(%27listbuilder_list_description%27).value, ";
         $href_str .= "xajax.getFormValues(%27database_definition_form%27))";
-        $html_str .= "                &nbsp;&nbsp;&nbsp;".get_href_confirm(ACTION_MODIFY_LIST, $href_str, LABEL_CONFIRM_MODIFY, BUTTON_MODIFY_LIST)."\n";
+        $html_str .= "                &nbsp;&nbsp;&nbsp;".get_href_confirm(ACTION_MODIFY_LIST, $list_title, $href_str, LABEL_CONFIRM_MODIFY, BUTTON_MODIFY_LIST)."\n";
     }
     # display the create button when no title has been given
     else
@@ -243,7 +233,7 @@ function action_get_listbuilder_page ($list_title)
         $href_str = "xajax_action_create_list(document.getElementById";
         $href_str .= "(%27listbuilder_list_title%27).value, document.getElementById(%27listbuilder_list_description%27).value, ";
         $href_str .= "xajax.getFormValues(%27database_definition_form%27))";
-        $html_str .= "                &nbsp;&nbsp;&nbsp;".get_href(ACTION_CREATE_LIST, $href_str, BUTTON_CREATE_LIST)."\n";
+        $html_str .= "                &nbsp;&nbsp;&nbsp;".get_href(ACTION_CREATE_LIST, HTML_EMPTY_LIST_TITLE, $href_str, BUTTON_CREATE_LIST)."\n";
     }
     
     $html_str .= "            </div> <!-- action_bar -->\n\n";    
@@ -436,6 +426,7 @@ function action_modify_list ($former_title, $title, $description, $new_definitio
 {
     global $database;
     global $logging;
+    global $list_table_description;
     
     $logging->info("ACTION: modify list (former_title=".$former_title.", title=".$title.")");
 
@@ -454,7 +445,6 @@ function action_modify_list ($former_title, $title, $description, $new_definitio
        
         return $response;
     }
-    $list_table_description = $list_table->get_list_table_description();    
     $list_table_note = $list_table->get_list_table_note();
     
     # check if title and description have been given
@@ -497,6 +487,7 @@ function action_modify_list ($former_title, $title, $description, $new_definitio
 function action_create_list ($title, $description, $definition)
 {
     global $logging;
+    global $list_table_description;
     
     $logging->info("ACTION: create list (title=".$title.")");
 
@@ -525,7 +516,6 @@ function action_create_list ($title, $description, $definition)
     $name_values_array[LISTTABLEDESCRIPTION_MODIFIER_FIELD_NAME] = 0;
 
     # insert new description
-    $list_table_description = new ListTableDescription();
     if ($list_table_description->insert($name_values_array) == FALSE)
     {
         $logging->warn("insert list description returns false");
@@ -818,7 +808,7 @@ function get_field_definition_table ($definition)
         
         # the seventh column - delete
         if ($row > 0)
-            $html_str .= "                                                <td width=\"1%\">".get_button(ACTION_DELETE_LISTBUILDER_ROW, "xajax_action_delete_listbuilder_row(".$row.", xajax.getFormValues('database_definition_form'))", BUTTON_DELETE)."</td>\n";
+            $html_str .= "                                                <td width=\"1%\">".get_href(ACTION_DELETE_LISTBUILDER_ROW, HTML_EMPTY_LIST_TITLE, "xajax_action_delete_listbuilder_row(".$row.", xajax.getFormValues('database_definition_form'))", BUTTON_DELETE)."</td>\n";
         else
             $html_str .= "                                                <td width=\"1%\"><p style=\"visibility: hidden;\">".BUTTON_DELETE."</p></td>\n";
     

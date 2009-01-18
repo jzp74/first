@@ -5,12 +5,19 @@
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
+ * @copyright 2007-2009 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
 
 $xajax->registerFunction("check_permissions");
+$xajax->registerFunction("check_list_permissions");
+
+
+/**
+ * definition of an empty list title
+ */
+define("HTML_EMPTY_LIST_TITLE", "-!@#$$#@!-");
 
 
 /**
@@ -23,20 +30,22 @@ function check_permissions ($action, $js_function_call_str)
 {
     global $logging;
     global $user;
+    global $user_list_permissions;
     global $firstthingsfirst_action_description;
     
     # create necessary objects
     $response = new xajaxResponse();
 
-    # action descriptions
-    $can_edit_list = $firstthingsfirst_action_description[$action][0];
-    $can_create_list = $firstthingsfirst_action_description[$action][1];
-    $is_admin = $firstthingsfirst_action_description[$action][2];
+    # set permissions
+    $can_create_list = FALSE;
+    $is_admin = FALSE;
+    $action_permissions_str = $firstthingsfirst_action_description[$action];
+    if ($action_permissions_str[PERMISSION_CAN_CREATE_LIST] == "P") 
+        $can_create_list = TRUE;
+    if ($action_permissions_str[PERMISSION_IS_ADMIN] == "P") 
+        $is_admin = TRUE;
     
-    # replace %27 into ' chars    
-    $js_function_call = str_replace('%27', "'", $js_function_call_str);
-    
-    $logging->trace("check permissions for action: ".$action." (can_edit_list=".$can_edit_list.", can_create_list=".$can_create_list.", is_admin=".$is_admin.")");
+    $logging->trace("check permissions for action: ".$action." (permissions=".$action_permissions_str.")");
 
     # check if user is logged in
     if (!$user->is_login())
@@ -49,20 +58,11 @@ function check_permissions ($action, $js_function_call_str)
         return $response;
     }
         
-    # check if edit_list permission is required
-    if ($can_edit_list && !$user->get_can_edit_list())
-    {
-        # display error message
-        set_error_message(MESSAGE_PANE_DIV, ERROR_INSUFFIENT_PERMISSIONS, "user has no edit list permission", "", $response);
-        
-        return $response;
-    }
-    
     # check if create_list permission is required
     if ($can_create_list && !$user->get_can_create_list())
     {
         # display error message
-        set_error_message(MESSAGE_PANE_DIV, ERROR_INSUFFIENT_PERMISSIONS, "user has no create list permission", "", $response);
+        set_error_message(MESSAGE_PANE_DIV, ERROR_PERMISSION_CREATE_LIST, "", "", $response);
 
         return $response;
     }
@@ -71,18 +71,115 @@ function check_permissions ($action, $js_function_call_str)
     if ($is_admin && !$user->get_is_admin())
     {
         # display error message
-        set_error_message(MESSAGE_PANE_DIV, ERROR_INSUFFIENT_PERMISSIONS, "user has no admin permission", "", $response);
+        set_error_message(MESSAGE_PANE_DIV, ERROR_PERMISSION_ADMIN, "", "", $response);
 
         return $response;
     }
-
-    # call given js function
-    $logging->debug("call js function: ".$js_function_call);
-    $response->addScript($js_function_call);
+    
+    # add function call to local xajaxResponse object
+    add_js_function_call($response, $js_function_call_str);
 
     $logging->trace("checked permissions");
         
     return $response;
+}
+
+/**
+ * test if user is logged in and has permissions for given action
+ * @param string $action the action for which user permissions have to be checked
+ * @param string $list_title the title of the list for which this action is taken
+ * @param string $js_function_call_str function to call when user has sufficient permissions
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
+function check_list_permissions ($action, $list_title, $js_function_call_str)
+{
+    global $logging;
+    global $user;
+    global $user_list_permissions;
+    global $firstthingsfirst_action_description;
+    
+    # create necessary objects
+    $response = new xajaxResponse();
+
+    # set permissions
+    $can_view_specific_list = FALSE;
+    $can_edit_specific_list = FALSE;
+    $is_admin_specific_list = FALSE;
+    $action_permissions_str = $firstthingsfirst_action_description[$action];
+    if ($action_permissions_str[PERMISSION_CAN_VIEW_SPECIFIC_LIST] == "P") 
+        $can_view_specific_list = TRUE;
+    if ($action_permissions_str[PERMISSION_CAN_EDIT_SPECIFIC_LIST] == "P") 
+        $can_edit_specific_list = TRUE;
+    if ($action_permissions_str[PERMISSION_IS_ADMIN_SPECIFIC_LIST] == "P") 
+        $is_admin_specific_list = TRUE;
+    
+    $logging->trace("check list permissions for list: ".$list_title." and action: ".$action." (permissions=".$action_permissions_str.")");
+
+    # check if user is logged in
+    if (!$user->is_login())
+    {
+        # redirect to login page
+        $response->AddScript("window.location.assign('index.php?action=".ACTION_GET_LOGIN_PAGE."')");
+        set_footer("", $response);
+        $logging->warn("user is not logged in (action=".$action.")");
+
+        return $response;
+    }
+        
+    # get list permissions
+    $permission_array = $user_list_permissions->select_user_list_permissions($list_title, $user->get_name());
+
+    # check if view list permission is required
+    if ($can_view_specific_list && !$permission_array[PERMISSION_CAN_VIEW_SPECIFIC_LIST])
+    {
+        # display error message
+        set_error_message(MESSAGE_PANE_DIV, ERROR_PERMISSION_LIST_VIEW, "", "", $response);
+
+        return $response;
+    }
+    
+    # check if edit list permission is required
+    if ($can_edit_specific_list && !$permission_array[PERMISSION_CAN_EDIT_SPECIFIC_LIST])
+    {
+        # display error message
+        set_error_message(MESSAGE_PANE_DIV, ERROR_PERMISSION_LIST_EDIT, "", "", $response);
+
+        return $response;
+    }
+
+    # check if view list permission is required
+    if ($is_admin_specific_list && !$permission_array[PERMISSION_IS_ADMIN_SPECIFIC_LIST])
+    {
+        # display error message
+        set_error_message(MESSAGE_PANE_DIV, ERROR_PERMISSION_LIST_ADMIN, "", "", $response);
+
+        return $response;
+    }
+    
+    # add function call to local xajaxResponse object
+    add_js_function_call($response, $js_function_call_str);
+
+    $logging->trace("checked permissions");
+        
+    return $response;
+}
+
+/**
+ * add javascript function call to given xajaxResponse object
+ * @param $response xajaxResponse response object
+ * @param string $js_function_call_str function to call
+ * @return void
+ */
+function add_js_function_call ($response, $js_function_call_str)
+{
+    global $logging;
+
+    # replace %27 into ' chars    
+    $js_function_call = str_replace('%27', "'", $js_function_call_str);
+    
+    # call given js function
+    $logging->debug("call js function: ".$js_function_call);
+    $response->addScript($js_function_call);    
 }
 
 /**
@@ -180,74 +277,52 @@ function set_info_message ($info_element, $info_str, $response)
 /**
  * get html for an active href (href calls js function)
  * @param string $action the action for which user permissions have to be checked
+ * @param string $list_title the title of the list on which this action is performed
  * @param string $func_str contains the complete js function name and all its parameters
  * @param string $name_str contains the name of the button
- * @param string $tabindex contains the tabindex of the button
  * @return string html containing button
  */
-function get_href ($action, $func_str, $name_str)
+function get_href ($action, $list_title, $func_str, $name_str)
 {
-    return "<a href=\"javascript:void(0);\" onclick=\"xajax_check_permissions('".$action."', '".$func_str."')\">".$name_str."</a>";
+    if ($list_title == HTML_EMPTY_LIST_TITLE)
+        $onclick_str = "onclick=\"xajax_check_permissions('".$action."', '".$func_str."')";
+    else
+        $onclick_str = "onclick=\"xajax_check_list_permissions('".$action."', '".$list_title."', '".$func_str."')";
+    return "<a href=\"javascript:void(0);\" ".$onclick_str."\">".$name_str."</a>";
 }
 
 /**
  * get html for an active button (button calls a javascript function and prompt a confirm button)
  * @param string $action the action for which user permissions have to be checked
+ * @param string $list_title the title of the list on which this action is performed
  * @param string $func_str contains the complete js function name and all its parameters
  * @param string $name_str contains the name of the button
  * @return string html containing button
  */
-function get_href_confirm ($action, $func_str, $confirm_str, $name_str)
+function get_href_confirm ($action, $list_title, $func_str, $confirm_str, $name_str)
 {
-    return "<a href=\"javascript:void(0);\" onclick=\"if (confirm('".$confirm_str."')) { xajax_check_permissions('".$action."', '".$func_str."') }\">".$name_str."</a>";
+    if ($list_title == HTML_EMPTY_LIST_TITLE)
+        $onclick_str = "onclick=\"if (confirm('".$confirm_str."')) { xajax_check_permissions('".$action."', '".$func_str."') }";
+    else
+        $onclick_str = "onclick=\"if (confirm('".$confirm_str."')) { xajax_check_list_permissions('".$action."', '".$list_title."', '".$func_str."') }";
+    return "<a href=\"javascript:void(0);\" ".$onclick_str."\">".$name_str."</a>";
 }
 
 /**
  * get html for an active href (href calls index.php with specified query string)
  * @param string $action the action for which user permissions have to be checked
+ * @param string $list_title the title of the list on which this action is performed
  * @param string $query_str contains the query string
  * @param string $name_str contains the name of the button
  * @return string html containing button
  */
-function get_query_href ($action, $query_str, $name_str)
+function get_query_href ($action, $list_title, $query_str, $name_str)
 {
-    return "<a href=\"javascript:void(0);\" onclick=\"xajax_check_permissions('".$action."', 'window.location.assign(%27index.php?".$query_str."%27)')\">".$name_str."</a>";
-}
-
-/**
- * get html for an active button (button calls js function)
- * @param string $action the action for which user permissions have to be checked
- * @param string $func_str contains the complete js function name and all its parameters
- * @param string $name_str contains the name of the button
- * @return string html containing button
- */
-function get_button ($action, $func_str, $name_str)
-{
-    return "<button class=\"button\" type=\"button\" onclick=\"xajax_check_permissions('".$action."', '".$func_str."')\">".$name_str."</button>";
-}
-
-/**
- * get html for an active button (button calls a javascript function and prompt a confirm button)
- * @param string $action the action for which user permissions have to be checked
- * @param string $func_str contains the complete js function name and all its parameters
- * @param string $name_str contains the name of the button
- * @return string html containing button
- */
-function get_button_confirm ($action, $func_str, $confirm_str, $name_str)
-{
-    return "<button class=\"button\" type=\"button\" onclick=\"if (confirm('".$confirm_str."')) { xajax_check_permissions('".$action."', '".$func_str."') }\">".$name_str."</button>";
-}
-
-/**
- * get html for an active link_button (button calls index.php with specified query string)
- * @param string $action the action for which user permissions have to be checked
- * @param string $query_str contains the query string
- * @param string $name_str contains the name of the button
- * @return string html containing button
- */
-function get_query_button ($action, $query_str, $name_str)
-{
-    return "<button class=\"button\" type=\"button\" onclick=\"xajax_check_permissions('".$action."', 'window.location.assign(%27index.php?".$query_str."%27)')\">".$name_str."</button>";
+    if ($list_title == HTML_EMPTY_LIST_TITLE)
+        $onclick_str = "onclick=\"xajax_check_permissions('".$action."', 'window.location.assign(%27index.php?".$query_str."%27)')";
+    else
+        $onclick_str = "onclick=\"xajax_check_list_permissions('".$action."', '".$list_title."', 'window.location.assign(%27index.php?".$query_str."%27)')";
+    return "<a href=\"javascript:void(0);\" ".$onclick_str."\">".$name_str."</a>";
 }
 
 /**
@@ -284,7 +359,9 @@ function get_page_header ($page_title, $page_explanation, $page_type)
         $html_str .= "            <div id=\"page_explanation\">&nbsp;</div>\n";
     
     # get html for page navigation
+    $html_str .= "            <div id=\"navigation_container\">\n";    
     $html_str .= get_page_navigation($page_type);
+    $html_str .= "            </div> <!-- navigation_container -->\n";
 
     $html_str .= "        </div> <!-- page_header -->\n\n";
 
@@ -307,7 +384,6 @@ function get_page_navigation ($page_type)
 
     $logging->trace("setting page_navigation");
         
-    $html_str .= "            <div id=\"navigation_container\">\n";    
     $html_str .= "                <div id=\"navigation\">";
     
     # set no navigation links when page is a login page
@@ -317,28 +393,35 @@ function get_page_navigation ($page_type)
     {
         # show portal page link clickable when this is not the portal page
         if ($page_type != PAGE_TYPE_PORTAL)
-            $html_str .= get_query_href(ACTION_GET_PORTAL_PAGE, "action=".ACTION_GET_PORTAL_PAGE, BUTTON_PORTAL);
+            $html_str .= get_query_href(ACTION_GET_PORTAL_PAGE, HTML_EMPTY_LIST_TITLE, "action=".ACTION_GET_PORTAL_PAGE, BUTTON_PORTAL);
         else  
             $html_str .= "<span class=\"navigation_link_highlight\">".BUTTON_PORTAL."</span>";
         
         # show create new list link clickable when this not the list builder page
         if ($page_type != PAGE_TYPE_LISTBUILDER)
-            $html_str .= get_query_href(ACTION_GET_LISTBUILDER_PAGE, "action=".ACTION_GET_LISTBUILDER_PAGE, BUTTON_CREATE_NEW_LIST);
+            $html_str .= get_query_href(ACTION_GET_LISTBUILDER_PAGE, HTML_EMPTY_LIST_TITLE, "action=".ACTION_GET_LISTBUILDER_PAGE, BUTTON_CREATE_NEW_LIST);
         else  
             $html_str .= "<span class=\"navigation_link_highlight\">".BUTTON_CREATE_NEW_LIST."</span>";
         
         # show list link non clickable but highlighted when this is list page
         if ($page_type == PAGE_TYPE_LIST)
             $html_str .= "<span class=\"navigation_link_highlight\">".LABEL_NAVIGATION_LIST."</span>";
-        else
-            $html_str .= "<span class=\"navigation_link\">".LABEL_NAVIGATION_LIST."</span>";
+        else if (strlen($user->get_current_list_name()) > 0)
+            $html_str .= get_query_href(ACTION_GET_LIST_PAGE, $user->get_current_list_name(), "action=".ACTION_GET_LIST_PAGE."&list=".$user->get_current_list_name(), LABEL_NAVIGATION_LIST);
+
+        # show the user list permissions only when this is a list page
+        if ($page_type == PAGE_TYPE_LIST)
+            $html_str .= get_query_href(ACTION_GET_USERLISTTABLEPERMISSIONS_PAGE, $user->get_current_list_name(), "action=".ACTION_GET_USERLISTTABLEPERMISSIONS_PAGE, BUTTON_USERLISTTABLEPERMISSIONS);
+        else if ($page_type == PAGE_TYPE_USERLISTTABLEPERMISSIONS)
+            $html_str .= "<span class=\"navigation_link_highlight\">".BUTTON_USERLISTTABLEPERMISSIONS."</span>";
+            
         
         # show user admin link only when user has admin permissions
         if ($user->is_login() && $user->get_is_admin())
         {
             # show user admin link clickable when this is not the user admin page
             if ($page_type != PAGE_TYPE_USER_ADMIN)
-                $html_str .= get_query_href(ACTION_GET_USER_ADMIN_PAGE, "action=".ACTION_GET_USER_ADMIN_PAGE, BUTTON_USER_ADMINISTRATION);
+                $html_str .= get_query_href(ACTION_GET_USER_ADMIN_PAGE, HTML_EMPTY_LIST_TITLE, "action=".ACTION_GET_USER_ADMIN_PAGE, BUTTON_USER_ADMINISTRATION);
             else
                 $html_str .= "<span class=\"navigation_link_highlight\">".BUTTON_USER_ADMINISTRATION."</span>";
         }
@@ -351,7 +434,6 @@ function get_page_navigation ($page_type)
         $html_str .= "                <div id=\"login_status\">&nbsp;</div>&nbsp\n";
     else
         $html_str .= "                <div id=\"login_status_invisible\">&nbsp;</div>&nbsp\n";
-    $html_str .= "            </div> <!-- navigation_container -->\n";
 
     $logging->trace("set page_navigation");
 

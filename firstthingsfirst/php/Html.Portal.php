@@ -5,31 +5,38 @@
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
+ * @copyright 2007-2009 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
 
 /**
- * definition of 'get_portal_page' action
+ * definitions of all possible actions
  */
 define("ACTION_GET_PORTAL_PAGE", "action_get_portal_page");
-$firstthingsfirst_action_description[ACTION_GET_PORTAL_PAGE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction(ACTION_GET_PORTAL_PAGE);
-
-/**
- * definition of 'get_portal_content' action
- */
 define("ACTION_GET_PORTAL_CONTENT", "action_get_portal_content");
-$firstthingsfirst_action_description[ACTION_GET_PORTAL_CONTENT] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction(ACTION_GET_PORTAL_CONTENT);
+define("ACTION_DELETE_PORTAL_RECORD", "action_delete_portal_record");
 
 /**
- * definition of 'delete_list_table' action
+ * register all actions in xajax
  */
-define("ACTION_DELETE_PORTAL_RECORD", "action_delete_portal_record");
-$firstthingsfirst_action_description[ACTION_DELETE_PORTAL_RECORD] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CAN_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+$xajax->registerFunction(ACTION_GET_PORTAL_PAGE);
+$xajax->registerFunction(ACTION_GET_PORTAL_CONTENT);
 $xajax->registerFunction(ACTION_DELETE_PORTAL_RECORD);
+
+/**
+ * definition of action permissions
+ * permission are stored in a six character string (P means permissions, - means don't care):
+ *  - user has to have edit list permission to be able to execute action
+ *  - user has to have create list permission to be able to execute action
+ *  - user has to have admin permission to be able to execute action
+ *  - user has to have permission to view this list to execute list action for this list
+ *  - user has to have permission to edit this list to execute action for this list
+ *  - user has to have admin permission for this list to exectute action for this list
+ */
+$firstthingsfirst_action_description[ACTION_GET_PORTAL_PAGE] = "-----";
+$firstthingsfirst_action_description[ACTION_GET_PORTAL_CONTENT] = "-----";
+$firstthingsfirst_action_description[ACTION_DELETE_PORTAL_RECORD] = "----P";
 
 /**
  * definition of css name prefix
@@ -58,6 +65,7 @@ function action_get_portal_page ()
 {
     global $logging;
     global $portal_table_configuration;
+    global $list_table_description;
     global $firstthingsfirst_portal_title;
     global $firstthingsfirst_portal_intro_text;
     
@@ -66,13 +74,12 @@ function action_get_portal_page ()
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
-    $list_table_description = new ListTableDescription();
     $html_database_table = new HtmlDatabaseTable ($portal_table_configuration);
     
     # set page
     $html_database_table->get_page($firstthingsfirst_portal_title, $firstthingsfirst_portal_intro_text, $result);    
     $response->addAssign("main_body", "innerHTML", $result->get_result_str());
-
+    
     # set content
     $html_database_table->get_content($list_table_description, LISTTABLEDESCRIPTION_TABLE_NAME, "", DATABASETABLE_ALL_PAGES, $result);
     $response->addAssign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
@@ -105,6 +112,7 @@ function action_get_portal_page ()
 function action_get_portal_content ($title, $order_by_field, $page)
 {
     global $logging;
+    global $list_table_description;
     global $portal_table_configuration;
     
     $logging->info("ACTION: get portal content (title=".$title.", order_by_field=".$order_by_field.", page=".$page.")");
@@ -112,7 +120,6 @@ function action_get_portal_content ($title, $order_by_field, $page)
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
-    $list_table_description = new ListTableDescription();
     $html_database_table = new HtmlDatabaseTable ($portal_table_configuration);
 
     # set content
@@ -138,6 +145,8 @@ function action_get_portal_content ($title, $order_by_field, $page)
 function action_delete_portal_record ($list_title)
 {
     global $logging;
+    global $user;
+    global $list_table_description;
     global $portal_table_configuration;
     
     $logging->info("ACTION: delete portal record (list_title=".$list_title.")");
@@ -145,7 +154,6 @@ function action_delete_portal_record ($list_title)
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
-    $list_table_description = new ListTableDescription();
     $list_table = new ListTable($list_title);
     if ($list_table->get_is_valid() == FALSE)
     {
@@ -178,6 +186,14 @@ function action_delete_portal_record ($list_title)
     $html_database_table->get_content($list_table_description, $list_title, "", DATABASETABLE_ALL_PAGES, $result);
     $response->addAssign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
+    # reset current list name
+    $user->set_current_list_name("");
+
+    # set page navigation and login status to update old 'list' links
+    $page_navigation_str = get_page_navigation(PAGE_TYPE_PORTAL);
+    $response->addAssign("navigation_container", "innerHTML", $page_navigation_str);
+    set_login_status($response);
+
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
         return $response;

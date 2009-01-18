@@ -5,60 +5,50 @@
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
+ * @copyright 2007-2009 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
 
 /**
- * definition of 'get_add_user_page' action
+ * definitions of all possible actions
  */
 define("ACTION_GET_USER_ADMIN_PAGE", "action_get_user_admin_page");
-$firstthingsfirst_action_description[ACTION_GET_USER_ADMIN_PAGE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_IS_ADMIN);
-$xajax->registerFunction(ACTION_GET_USER_ADMIN_PAGE);
-
-/**
- * definition of 'get_add_user_content' action
- */
 define("ACTION_GET_USER_ADMIN_CONTENT", "action_get_user_admin_content");
-$firstthingsfirst_action_description[ACTION_GET_USER_ADMIN_CONTENT] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_IS_ADMIN);
-$xajax->registerFunction(ACTION_GET_USER_ADMIN_CONTENT);
-
-/**
- * definition of 'get_user_admin_record' action
- */
 define("ACTION_GET_USER_ADMIN_RECORD", "action_get_user_admin_record");
-$firstthingsfirst_action_description[ACTION_GET_USER_ADMIN_RECORD] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_IS_ADMIN);
-$xajax->registerFunction(ACTION_GET_USER_ADMIN_RECORD);
-
-/**
- * definition of 'insert_user_admin_record' action
- */
 define("ACTION_INSERT_USER_ADMIN_RECORD", "action_insert_user_admin_record");
-$firstthingsfirst_action_description[ACTION_INSERT_USER_ADMIN_RECORD] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_IS_ADMIN);
-$xajax->registerFunction(ACTION_INSERT_USER_ADMIN_RECORD);
-
-/**
- * definition of 'update_user_admin_record' action
- */
 define("ACTION_UPDATE_USER_ADMIN_RECORD", "action_update_user_admin_record");
-$firstthingsfirst_action_description[ACTION_UPDATE_USER_ADMIN_RECORD] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_IS_ADMIN);
-$xajax->registerFunction(ACTION_UPDATE_USER_ADMIN_RECORD);
-
-/**
- * definition of 'delete_user_admin_record' action
- */
 define("ACTION_DELETE_USER_ADMIN_RECORD", "action_delete_user_admin_record");
-$firstthingsfirst_action_description[ACTION_DELETE_USER_ADMIN_RECORD] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_IS_ADMIN);
-$xajax->registerFunction(ACTION_DELETE_USER_ADMIN_RECORD);
+define("ACTION_CANCEL_USER_ADMIN_ACTION", "action_cancel_user_admin_action");
 
 /**
- * definition of 'cancel_user_admin_action' action
+ * register all actions in xajax
  */
-define("ACTION_CANCEL_USER_ADMIN_ACTION", "action_cancel_user_admin_action");
-$firstthingsfirst_action_description[ACTION_CANCEL_USER_ADMIN_ACTION] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_IS_ADMIN);
+$xajax->registerFunction(ACTION_GET_USER_ADMIN_PAGE);
+$xajax->registerFunction(ACTION_GET_USER_ADMIN_CONTENT);
+$xajax->registerFunction(ACTION_GET_USER_ADMIN_RECORD);
+$xajax->registerFunction(ACTION_INSERT_USER_ADMIN_RECORD);
+$xajax->registerFunction(ACTION_UPDATE_USER_ADMIN_RECORD);
+$xajax->registerFunction(ACTION_DELETE_USER_ADMIN_RECORD);
 $xajax->registerFunction(ACTION_CANCEL_USER_ADMIN_ACTION);
 
+/**
+ * definition of action permissions
+ * permission are stored in a six character string (P means permissions, - means don't care):
+ *  - user has to have edit list permission to be able to execute action
+ *  - user has to have create list permission to be able to execute action
+ *  - user has to have admin permission to be able to execute action
+ *  - user has to have permission to view this list to execute list action for this list
+ *  - user has to have permission to edit this list to execute action for this list
+ *  - user has to have admin permission for this list to exectute action for this list
+ */
+$firstthingsfirst_action_description[ACTION_GET_USER_ADMIN_PAGE] = "-P---";
+$firstthingsfirst_action_description[ACTION_GET_USER_ADMIN_CONTENT] = "-P---";
+$firstthingsfirst_action_description[ACTION_GET_USER_ADMIN_RECORD] = "-P---";
+$firstthingsfirst_action_description[ACTION_INSERT_USER_ADMIN_RECORD] = "-P---";
+$firstthingsfirst_action_description[ACTION_UPDATE_USER_ADMIN_RECORD] = "-P---";
+$firstthingsfirst_action_description[ACTION_DELETE_USER_ADMIN_RECORD] = "-P---";
+$firstthingsfirst_action_description[ACTION_CANCEL_USER_ADMIN_ACTION] = "-P---";
 
 /**
  * definition of css name prefix
@@ -217,6 +207,7 @@ function action_insert_user_admin_record ($title, $form_values)
     $html_str = "";
     $name_keys = array_keys($form_values);
     $new_form_values = array();
+    $final_form_values = array();
     $fields = $user->get_fields();
     $field_keys = array_keys($fields);
     
@@ -240,9 +231,9 @@ function action_insert_user_admin_record ($title, $form_values)
         
         # check field values
         check_field($check_functions, $db_field_name, $form_values[$name_key], $result);
-        if (strlen($result->get_error_str()) > 0)
+        if (strlen($result->get_error_message_str()) > 0)
         {
-            set_error_message($name_key, $result->get_error_str(), "", "", $response);
+            set_error_message($name_key, $result->get_error_message_str(), "", "", $response);
             
             return $response;
         }
@@ -251,24 +242,28 @@ function action_insert_user_admin_record ($title, $form_values)
         $logging->debug("setting new form value (db_field_name=".$db_field_name.", result=".$result->get_result_str().")");        
     }
     
-    # check if all booleans have been set
+    # check if all booleans have been set and copy old values into new array
     foreach ($field_keys as $db_field_name)
     {        
         if ($fields[$db_field_name][1] == "LABEL_DEFINITION_BOOL")
         {
             if (!isset($new_form_values[$db_field_name]))
             {
-                $logging->debug("found an unset bool field");
-                $new_form_values[$db_field_name] = "0";
+                $logging->debug("found an unset bool field (db_field_name=".$db_field_name.")");
+                $final_form_values[$db_field_name] = "0";
             }
+            else
+                $final_form_values[$db_field_name] = $new_form_values[$db_field_name];
         }
+        else if (isset($new_form_values[$db_field_name]))
+            $final_form_values[$db_field_name] = $new_form_values[$db_field_name];
     }
     
     # remove any error messages
     $response->addRemove("error_message");
     
     # display error when insertion returns false
-    if (!$user->insert($new_form_values))
+    if (!$user->insert($final_form_values))
     {
         $logging->warn("insert user admin record returns false");
         $error_message_str = $user->get_error_message_str();

@@ -5,7 +5,7 @@
  *
  * @package Class_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
+ * @copyright 2007-2009 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -50,12 +50,6 @@ class ListTable extends UserDatabaseTable
     protected $is_valid;
 
     /**
-    * list_table_description object
-    * @var ListTableDescription
-    */
-    protected $_list_table_description;
-
-    /**
     * list_table_note object
     * @var ListTableItemNotes
     */
@@ -73,7 +67,6 @@ class ListTable extends UserDatabaseTable
         # object is only valid when this function has run completely
         $this->is_valid = FALSE;
         
-        $this->_list_table_description = new ListTableDescription();
         $record = $this->_get_list_table_description_record($list_title);
         if (count($record) == 0)
             return;
@@ -105,13 +98,15 @@ class ListTable extends UserDatabaseTable
     */
     function _get_list_table_description_record ($list_title)
     {
-        $record = $this->_list_table_description->select_record($list_title);
+        global $list_table_description;
+        
+        $record = $list_table_description->select_record($list_title);
         if (count($record) == 0)
         {
             # copy error strings from list_table_description
-            $this->error_message_str = $this->_list_table_description->get_error_message_str();
-            $this->error_log_str = $this->_list_table_description->get_error_log_str();
-            $this->error_str = $this->_list_table_description->get_error_str();
+            $this->error_message_str = $list_table_description->get_error_message_str();
+            $this->error_log_str = $list_table_description->get_error_log_str();
+            $this->error_str = $list_table_description->get_error_str();
 
             return array();
         }
@@ -191,15 +186,6 @@ class ListTable extends UserDatabaseTable
     }
 
     /**
-    * get value of list_table_description attribute
-    * @return ListTableDescription value of list_table_description attribute
-    */
-    function get_list_table_description ()
-    {
-        return $this->_list_table_description;
-    }
-    
-    /**
     * get value of list_table_note attribute
     * @return ListTableDescription value of list_table_note attribute
     */
@@ -244,6 +230,7 @@ class ListTable extends UserDatabaseTable
     */
     function transform ($former_title, $title, $description, $new_definition)
     {
+        global $list_table_description;
         global $firstthingsfirst_field_descriptions;
         
         $this->_log->trace("transforming ListTable (len of new definition=".count($new_definition).")");
@@ -521,12 +508,12 @@ class ListTable extends UserDatabaseTable
         $name_values_array[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME] = $title;
         $name_values_array[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME] = $description;
         $name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = $correct_new_definition;
-        if ($this->_list_table_description->update($former_title, $name_values_array) == FALSE)
+        if ($list_table_description->update($former_title, $name_values_array) == FALSE)
         {
             # copy error strings from list_table_note
-            $this->error_message_str = $this->_list_table_description->get_error_message_str();
-            $this->error_log_str = $this->_list_table_description->get_error_log_str();
-            $this->error_str = $this->_list_table_description->get_error_str();
+            $this->error_message_str = $list_table_description->get_error_message_str();
+            $this->error_log_str = $list_table_description->get_error_log_str();
+            $this->error_str = $list_table_description->get_error_str();
 
             return FALSE;
         }
@@ -736,6 +723,8 @@ class ListTable extends UserDatabaseTable
 
         foreach ($db_field_names as $db_field_name)
         {
+            global $list_table_description;
+
             $notes_array = array();
             $value = $name_values[$db_field_name];
             
@@ -765,12 +754,12 @@ class ListTable extends UserDatabaseTable
                 $this->_list_table_note->insert($result, $note_array[0], $note_array[1]);
                 
         # update list table description (date modified)
-        if ($this->_list_table_description->update($this->list_title) == FALSE);
+        if ($list_table_description->update($this->list_title) == FALSE);
         {
             # copy error strings from _list_table_description
-            $this->error_message_str = $this->_list_table_description->get_error_message_str();
-            $this->error_log_str = $this->_list_table_description->get_error_log_str();
-            $this->error_str = $this->_list_table_description->get_error_str();
+            $this->error_message_str = $list_table_description->get_error_message_str();
+            $this->error_log_str = $list_table_description->get_error_log_str();
+            $this->error_str = $list_table_description->get_error_str();
         }
 
         # also update creator modifier array
@@ -791,6 +780,8 @@ class ListTable extends UserDatabaseTable
     */
     function update ($encoded_key_string, $name_values_array)
     {
+        global $list_table_description;
+
         $db_field_names = array_keys($name_values_array);
         $all_notes_array = array();
 
@@ -851,12 +842,12 @@ class ListTable extends UserDatabaseTable
         }
 
         # update list table description (date modified)
-        if ($this->_list_table_description->update($this->list_title) == FALSE);
+        if ($list_table_description->update($this->list_title) == FALSE);
         {
             # copy error strings from _list_table_description
-            $this->error_message_str = $this->_list_table_description->get_error_message_str();
-            $this->error_log_str = $this->_list_table_description->get_error_log_str();
-            $this->error_str = $this->_list_table_description->get_error_str();
+            $this->error_message_str = $list_table_description->get_error_message_str();
+            $this->error_log_str = $list_table_description->get_error_log_str();
+            $this->error_str = $list_table_description->get_error_str();
         }
         
         # also update creator modifier array
@@ -877,6 +868,8 @@ class ListTable extends UserDatabaseTable
     */
     function delete ($encoded_key_string)
     {        
+        global $list_table_description;
+
         $this->_log->trace("deleting record from ListTable (encoded_key_string=".$encoded_key_string.")");
 
         # get the id of this record
@@ -890,12 +883,12 @@ class ListTable extends UserDatabaseTable
             return FALSE;
 
         # update list table description (date modified)
-        if ($this->_list_table_description->update($this->list_title) == FALSE);
+        if ($list_table_description->update($this->list_title) == FALSE);
         {
             # copy error strings from _list_table_description
-            $this->error_message_str = $this->_list_table_description->get_error_message_str();
-            $this->error_log_str = $this->_list_table_description->get_error_log_str();
-            $this->error_str = $this->_list_table_description->get_error_str();
+            $this->error_message_str = $list_table_description->get_error_message_str();
+            $this->error_log_str = $list_table_description->get_error_log_str();
+            $this->error_str = $list_table_description->get_error_str();
         }
 
         $this->_log->trace("deleted record from ListTable");
@@ -911,15 +904,17 @@ class ListTable extends UserDatabaseTable
     */
     function drop ()
     {
+        global $list_table_description;
+
         $this->_log->trace("drop ListTable (table_name=".$this->table_name.")");
         
         # remove ListTableDescription record
-        if ($this->_list_table_description->delete($this->list_title) == FALSE)
+        if ($list_table_description->delete($this->list_title) == FALSE)
         {
             # copy error strings from _list_table_description
-            $this->error_message_str = $this->_list_table_description->get_error_message_str();
-            $this->error_log_str = $this->_list_table_description->get_error_log_str();
-            $this->error_str = $this->_list_table_description->get_error_str();
+            $this->error_message_str = $list_table_description->get_error_message_str();
+            $this->error_log_str = $list_table_description->get_error_log_str();
+            $this->error_str = $list_table_description->get_error_str();
             
             return FALSE;
         }

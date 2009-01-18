@@ -23,7 +23,7 @@ require_once("../php/Class.ListTableDescription.php");
 require_once("../php/Class.ListTable.php");
 require_once("../php/Class.ListTableNote.php");
 
-$logging = new Logging(LOGGING_TRACE);
+$logging = new Logging(LOGGING_OFF);
 $database = new Database();
 
 # update string

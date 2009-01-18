@@ -5,7 +5,7 @@
  *
  * @package Text_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
+ * @copyright 2007-2009 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -56,7 +56,7 @@ define("BUTTON_ADD", "ok");
  * shared button
  * definition of 'cancel' button
  */
-define("BUTTON_CANCEL", "pancel");
+define("BUTTON_CANCEL", "cancel");
 
 /**
  * shared button
@@ -129,6 +129,12 @@ define("BUTTON_ADD_NOTE", "add&nbsp;note");
  * definition of 'print this list' button
  */
 define("BUTTON_PRINT_LIST", "print&nbsp;this&nbsp;list");
+
+/**
+ * user listtable permissions button
+ * definition of 'user list permissions' button
+ */
+define("BUTTON_USERLISTTABLEPERMISSIONS", "user&nbsp;list&nbsp;permissions");
 
 /**
  * list builder button

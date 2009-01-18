@@ -5,94 +5,62 @@
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
+ * @copyright 2007-2009 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
 
 /**
- * definition of 'get_list_page' action
+ * definitions of all possible actions
  */
 define("ACTION_GET_LIST_PAGE", "action_get_list_page");
-$firstthingsfirst_action_description[ACTION_GET_LIST_PAGE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction(ACTION_GET_LIST_PAGE);
-
-/**
- * definition of 'get_list_print_page' action
- */
 define("ACTION_GET_LIST_PRINT_PAGE", "action_get_list_print_page");
-$firstthingsfirst_action_description[ACTION_GET_LIST_PRINT_PAGE] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction(ACTION_GET_LIST_PRINT_PAGE);
-
-/**
- * definition of 'get_list_content' action
- */
 define("ACTION_GET_LIST_CONTENT", "action_get_list_content");
-$firstthingsfirst_action_description[ACTION_GET_LIST_CONTENT] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction(ACTION_GET_LIST_CONTENT);
-
-/**
- * definition of 'get_list_record' action
- */
 define("ACTION_GET_LIST_RECORD", "action_get_list_record");
-$firstthingsfirst_action_description[ACTION_GET_LIST_RECORD] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction(ACTION_GET_LIST_RECORD);
-
-/**
- * definition of 'insert_list_record' action
- */
 define("ACTION_INSERT_LIST_RECORD", "action_insert_list_record");
-$firstthingsfirst_action_description[ACTION_INSERT_LIST_RECORD] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction(ACTION_INSERT_LIST_RECORD);
-
-/**
- * definition of 'update_list_record' action
- */
 define("ACTION_UPDATE_LIST_RECORD", "action_update_list_record");
-$firstthingsfirst_action_description[ACTION_UPDATE_LIST_RECORD] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction(ACTION_UPDATE_LIST_RECORD);
-
-/**
- * definition of 'archive_list_record' action
- */
 define("ACTION_ARCHIVE_LIST_RECORD", "action_archive_list_record");
-$firstthingsfirst_action_description[ACTION_ARCHIVE_LIST_RECORD] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction(ACTION_ARCHIVE_LIST_RECORD);
-
-/**
- * definition of 'delete_list_record' action
- */
 define("ACTION_DELETE_LIST_RECORD", "action_delete_list_record");
-$firstthingsfirst_action_description[ACTION_DELETE_LIST_RECORD] = array(PERMISSION_CAN_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction(ACTION_DELETE_LIST_RECORD);
-
-/**
- * definition of 'cancel_list_action' action
- */
 define("ACTION_CANCEL_LIST_ACTION", "action_cancel_list_action");
-$firstthingsfirst_action_description[ACTION_CANCEL_LIST_ACTION] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction(ACTION_CANCEL_LIST_ACTION);
-
-/**
- * definition of 'set_list_archive' action
- */
 define("ACTION_SET_LIST_ARCHIVE", "action_set_list_archive");
-$firstthingsfirst_action_description[ACTION_SET_LIST_ARCHIVE] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction(ACTION_SET_LIST_ARCHIVE);
-
-/**
- * definition of 'set_list_filter' action
- */
 define("ACTION_SET_LIST_FILTER", "action_set_list_filter");
-$firstthingsfirst_action_description[ACTION_SET_LIST_FILTER] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
+
+/**
+ * register all actions in xajax
+ */
+$xajax->registerFunction(ACTION_GET_LIST_PAGE);
+$xajax->registerFunction(ACTION_GET_LIST_PRINT_PAGE);
+$xajax->registerFunction(ACTION_GET_LIST_CONTENT);
+$xajax->registerFunction(ACTION_GET_LIST_RECORD);
+$xajax->registerFunction(ACTION_INSERT_LIST_RECORD);
+$xajax->registerFunction(ACTION_UPDATE_LIST_RECORD);
+$xajax->registerFunction(ACTION_ARCHIVE_LIST_RECORD);
+$xajax->registerFunction(ACTION_DELETE_LIST_RECORD);
+$xajax->registerFunction(ACTION_CANCEL_LIST_ACTION);
+$xajax->registerFunction(ACTION_SET_LIST_ARCHIVE);
 $xajax->registerFunction(ACTION_SET_LIST_FILTER);
 
 /**
- * definition of 'clear_list_filter' action
+ * definition of action permissions
+ * permission are stored in a six character string (P means permissions, - means don't care):
+ *  - user has to have edit list permission to be able to execute action
+ *  - user has to have create list permission to be able to execute action
+ *  - user has to have admin permission to be able to execute action
+ *  - user has to have permission to view this list to execute list action for this list
+ *  - user has to have permission to edit this list to execute action for this list
+ *  - user has to have admin permission for this list to exectute action for this list
  */
-define("ACTION_CLEAR_LIST_FILTER", "action_clear_list_filter");
-$firstthingsfirst_action_description[ACTION_SET_LIST_FILTER] = array(PERMISSION_CANNOT_EDIT_LIST, PERMISSION_CANNOT_CREATE_LIST, PERMISSION_ISNOT_ADMIN);
-$xajax->registerFunction(ACTION_SET_LIST_FILTER);
+$firstthingsfirst_action_description[ACTION_GET_LIST_PAGE] = "--P--";
+$firstthingsfirst_action_description[ACTION_GET_LIST_PRINT_PAGE] = "--P--";
+$firstthingsfirst_action_description[ACTION_GET_LIST_CONTENT] = "--P--";
+$firstthingsfirst_action_description[ACTION_GET_LIST_RECORD] = "---P-";
+$firstthingsfirst_action_description[ACTION_INSERT_LIST_RECORD] = "---P-";
+$firstthingsfirst_action_description[ACTION_UPDATE_LIST_RECORD] = "---P-";
+$firstthingsfirst_action_description[ACTION_ARCHIVE_LIST_RECORD] = "---P-";
+$firstthingsfirst_action_description[ACTION_DELETE_LIST_RECORD] = "---P-";
+$firstthingsfirst_action_description[ACTION_CANCEL_LIST_ACTION] = "-----";
+$firstthingsfirst_action_description[ACTION_SET_LIST_ARCHIVE] = "-----";
+$firstthingsfirst_action_description[ACTION_SET_LIST_FILTER] = "-----";
 
 /**
  * definition of css name prefix
@@ -121,9 +89,13 @@ $list_table_configuration = array(
 function action_get_list_page ($list_title)
 {
     global $logging;
+    global $user;
     global $list_table_configuration;
     
     $logging->info("ACTION: get list page (list_title=".$list_title.")");
+
+    # set current list name
+    $user->set_current_list_name($list_title);
 
     # create necessary objects
     $result = new Result();
@@ -165,7 +137,7 @@ function action_get_list_page ($list_title)
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
         return $response;
-
+    
     $logging->trace("got list page");
 
     return $response;

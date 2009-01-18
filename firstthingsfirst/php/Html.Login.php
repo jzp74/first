@@ -5,18 +5,18 @@
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
+ * @copyright 2007-2009 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
 
 /**
- * definition of 'action_get_login_page' action
+ * definitions of all possible actions
  */
 define("ACTION_GET_LOGIN_PAGE", "get_login_page");
 
 /**
- * definition of other login actions
+ * register all actions in xajax
  */
 $xajax->registerFunction("action_login");
 $xajax->registerFunction("action_logout");                                        

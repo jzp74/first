@@ -4,7 +4,7 @@
  * General index.php as used in this project
  *
  * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
+ * @copyright 2007-2009 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  * @todo how much data can we transfer from php to js?
  */
@@ -31,6 +31,7 @@ require_once("php/Class.User.php");
 require_once("php/Class.ListTableDescription.php");
 require_once("php/Class.ListTable.php");
 require_once("php/Class.ListTableNote.php");
+require_once("php/Class.UserListTablePermissions.php");
 
 require_once("php/Class.HtmlDatabaseTable.php");
 
@@ -47,6 +48,7 @@ require_once("php/Html.UserAdministration.php");
 require_once("php/Html.ListTable.php");
 require_once("php/Html.ListTableItemNotes.php");
 require_once("php/Html.ListBuilder.php");
+require_once("php/Html.UserListTablePermissions.php");
 
 
 /**
@@ -56,6 +58,8 @@ $logging = new Logging($firstthingsfirst_loglevel, $firstthingsfirst_logfile);
 $database = new Database();
 $list_state = new ListState();
 $user = new User();
+$list_table_description = new ListTableDescription();
+$user_list_permissions = new UserListTablePermissions();
 
 /**
  * register process_url function
@@ -124,6 +128,9 @@ function process_url ()
         else
             return action_get_portal_page();
     }
+    # show user list permissions page
+    else if ($action == ACTION_GET_USERLISTTABLEPERMISSIONS_PAGE)
+        return action_get_user_list_permissions_page();
     # show add user page
     else if ($action == ACTION_GET_USER_ADMIN_PAGE)
         return action_get_user_admin_page();
@@ -217,5 +224,3 @@ function process_url ()
 </body>
 
 <html>
-
-

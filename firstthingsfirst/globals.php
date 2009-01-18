@@ -4,7 +4,7 @@
  * This file contains global firstthingsfirst definitions
  *
  * @author Jasper de Jong
- * @copyright 2008 Jasper de Jong
+ * @copyright 2007-2009 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -88,6 +88,7 @@ define("PAGE_TYPE_PORTAL", 1);
 define("PAGE_TYPE_LISTBUILDER", 2);
 define("PAGE_TYPE_LIST", 3);
 define("PAGE_TYPE_USER_ADMIN", 4);
+define("PAGE_TYPE_USERLISTTABLEPERMISSIONS", 5);
 
 /**
  * general separator
@@ -107,12 +108,11 @@ define("FALSE_RETURN_STRING", "<<FaLsE>>");
 /** 
  * user permissions
  */
-define("PERMISSION_CAN_EDIT_LIST", 1);
-define("PERMISSION_CANNOT_EDIT_LIST", 0);
-define("PERMISSION_CAN_CREATE_LIST", 1);
-define("PERMISSION_CANNOT_CREATE_LIST", 0);
+define("PERMISSION_CAN_CREATE_LIST", 0);
 define("PERMISSION_IS_ADMIN", 1);
-define("PERMISSION_ISNOT_ADMIN", 0);
+define("PERMISSION_CAN_VIEW_SPECIFIC_LIST", 2);
+define("PERMISSION_CAN_EDIT_SPECIFIC_LIST", 3);
+define("PERMISSION_IS_ADMIN_SPECIFIC_LIST", 4);
 
 /**
  * field_description_types
@@ -224,6 +224,13 @@ $firstthingsfirst_field_descriptions = array(
         "",
         DB_INITIAL_DATA_STRING,
         FIELD_DESCRIPTION_SELECTABLE_DATATYPE
+    ),
+    "LABEL_DEFINITION_NON_EDIT_TEXT_LINE"     => array(
+        DB_DATATYPE_TEXTLINE,
+        "input type=text size=\"40\" maxlenght=\"100\" readonly",
+        "",
+        DB_INITIAL_DATA_STRING,
+        FIELD_DESCRIPTION_NON_SELECTABLE_DATATYPE
     ),
     "LABEL_DEFINITION_TEXT_FIELD"    => array(
         DB_DATATYPE_TEXTMESSAGE,

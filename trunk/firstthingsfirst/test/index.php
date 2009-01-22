@@ -30,6 +30,7 @@ require_once("../php/Class.User.php");
 require_once("../php/Class.ListTableDescription.php");
 require_once("../php/Class.ListTable.php");
 require_once("../php/Class.ListTableNote.php");
+require_once("../php/Class.UserListTablePermissions.php");
 
 require_once("Html.RegressionTest.php");
 require_once("testfunctions.php");
@@ -45,6 +46,7 @@ $list_state = new ListState();
 $user = new User();
 $result = new Result();
 $list_table_description = new ListTableDescription();
+$user_list_permissions = new UserListTablePermissions();
 
 /**
  * Initialize xajax
@@ -121,5 +123,4 @@ function test_2 ()
 </body>
 
 <html>
-
 

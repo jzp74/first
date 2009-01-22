@@ -52,7 +52,6 @@ $regression_test_functions = array(
 $regression_tester_user_array = array(
     USER_NAME_FIELD_NAME => REGRESSION_TEST_USER_NAME,
     USER_PW_FIELD_NAME => REGRESSION_TEST_USER_PW,
-    USER_CAN_EDIT_LIST_FIELD_NAME => 1,
     USER_CAN_CREATE_LIST_FIELD_NAME => 1,
     USER_IS_ADMIN_FIELD_NAME => 0,
     USER_TIMES_LOGIN_FIELD_NAME => 0

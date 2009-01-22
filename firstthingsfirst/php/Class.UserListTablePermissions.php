@@ -160,33 +160,29 @@ class UserListTablePermissions extends UserDatabaseTable
 
         # get list of all users
         $results = $list_table_description->select("", DATABASETABLE_ALL_PAGES, array(0 => LISTTABLEDESCRIPTION_TITLE_FIELD_NAME));
-        if (count($results) == 0)
+        if (count($results) > 0)
         {
-            $this->_handle_error("could not select all lists", ERROR_DATABASE_PROBLEM);
-                        
-            return FALSE;
-        }
-
-        foreach($results as $list_title_array)
-        {
-            $list_title = $list_title_array[0];
-            $name_values_array = array();
-            $name_values_array[USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE_FIELD_NAME] = $list_title;
-            $name_values_array[USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME] = $user_name;
-            $name_values_array[USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME] = 0;
-            $name_values_array[USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME] = 0;
-            $name_values_array[USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME] = 0;
-            
-            # insert permissions
-            $result = $this->insert($name_values_array);
-            if ($result == 0)
+            foreach($results as $list_title_array)
             {
-                $this->_handle_error("could not insert user permissions (list=".$list_title.")", ERROR_DATABASE_PROBLEM);
-                        
-                return FALSE;
+                $list_title = $list_title_array[0];
+                $name_values_array = array();
+                $name_values_array[USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE_FIELD_NAME] = $list_title;
+                $name_values_array[USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME] = $user_name;
+                $name_values_array[USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME] = 0;
+                $name_values_array[USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME] = 0;
+                $name_values_array[USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME] = 0;
+                
+                # insert permissions
+                $result = $this->insert($name_values_array);
+                if ($result == 0)
+                {
+                    $this->_handle_error("could not insert user permissions (list=".$list_title.")", ERROR_DATABASE_PROBLEM);
+                            
+                    return FALSE;
+                }
             }
         }
-        
+                
         $this->_log->trace("inserted list permissions");
         
         return TRUE;

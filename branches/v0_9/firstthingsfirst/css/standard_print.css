@@ -1,0 +1,65 @@
+/* This stylesheet contains modifications on styles needed for printing*/
+
+/* all links should be black */
+a, a:link, a:visited {
+    color: rgb(0, 0, 0);
+    }
+   
+/* do not show upper and lower margins */
+#upper_margin, #lower_margin, #database_table_contents_top, #database_table_contents_bottom {
+    display: none;
+    visibility: hidden;
+    }
+
+/* show header at top of page */
+#header {
+    top: 0px;
+    }
+
+/* do not use full heigth, use full width of screen/page */
+#outer_body {
+    height: auto;
+    border-left: 0px;
+    border-right: 0px;
+    margin: 0px 1px -38px 1px;
+    }
+    
+/* use only black and white for printing */
+#page_title, #footer, #login_overview, #list_content_pane {
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    }
+
+/* use full width of screen/page */    
+#database_table_content_pane {
+    margin: 0px 1px 0px 1px;
+    }
+
+/* use collapsed borders to be able to print nice borders */
+#database_table_contents {
+    border-collapse: collapse; 
+    color: rgb(0, 0, 0);
+    border: 1px solid rgb(0, 0, 0);
+    }
+
+/* td and th need a border */    
+#database_table_contents td, #database_table_contents th {
+    border: 1px solid rgb(0, 0, 0);
+    }
+
+/* height of th should be lower */
+.database_table_contents_header_sort, .database_table_contents_header_sort_up, .database_table_contents_header_sort_down {
+    padding: 2px 4px 2px 4px;
+    }
+    
+/* height of th should be lower */
+#database_table_contents td {
+    padding: 2px 4px 2px 4px;
+    }    
+    
+/* do not show these divs */
+#header, #hidden_upper_margin, navigation_container, #navigation_container a, #navigation, #login_status, #focus_on_this_input {
+    display: none;
+    visibility: hidden;
+    }
+   

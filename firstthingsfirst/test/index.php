@@ -15,7 +15,7 @@ require_once("../globals.php");
 require_once("../localsettings.php");
 
 require_once("../php/external/JSON.php");
-require_once("../xajax/xajax.inc.php");
+require_once("../xajax/xajax_core/xajaxAIO.inc.php");
 
 require_once("../php/Text.Buttons.php");
 require_once("../php/Text.Errors.php");
@@ -52,19 +52,20 @@ $user_list_permissions = new UserListTablePermissions();
  * Initialize xajax
  */
 $xajax = new xajax();
+$xajax->configure("javascript URI", "../xajax");
 
 /**
  * Register ajax functions
  */
-$xajax->registerFunction("start_regression_test");
-$xajax->registerFunction("prepare_test");
-$xajax->registerFunction("execute_test");
-$xajax->registerFunction("end_regression_test");
+$xajax->register(XAJAX_FUNCTION, "start_regression_test");
+$xajax->register(XAJAX_FUNCTION, "prepare_test");
+$xajax->register(XAJAX_FUNCTION, "execute_test");
+$xajax->register(XAJAX_FUNCTION, "end_regression_test");
 
 /**
  * start ajax interactions
  */
-$xajax->processRequests();
+$xajax->processRequest();
 
 
 function test_1 ()
@@ -123,4 +124,3 @@ function test_2 ()
 </body>
 
 <html>
-

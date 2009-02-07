@@ -28,17 +28,17 @@ define("ACTION_SET_LIST_FILTER", "action_set_list_filter");
 /**
  * register all actions in xajax
  */
-$xajax->registerFunction(ACTION_GET_LIST_PAGE);
-$xajax->registerFunction(ACTION_GET_LIST_PRINT_PAGE);
-$xajax->registerFunction(ACTION_GET_LIST_CONTENT);
-$xajax->registerFunction(ACTION_GET_LIST_RECORD);
-$xajax->registerFunction(ACTION_INSERT_LIST_RECORD);
-$xajax->registerFunction(ACTION_UPDATE_LIST_RECORD);
-$xajax->registerFunction(ACTION_ARCHIVE_LIST_RECORD);
-$xajax->registerFunction(ACTION_DELETE_LIST_RECORD);
-$xajax->registerFunction(ACTION_CANCEL_LIST_ACTION);
-$xajax->registerFunction(ACTION_SET_LIST_ARCHIVE);
-$xajax->registerFunction(ACTION_SET_LIST_FILTER);
+$xajax->register(XAJAX_FUNCTION, ACTION_GET_LIST_PAGE);
+$xajax->register(XAJAX_FUNCTION, ACTION_GET_LIST_PRINT_PAGE);
+$xajax->register(XAJAX_FUNCTION, ACTION_GET_LIST_CONTENT);
+$xajax->register(XAJAX_FUNCTION, ACTION_GET_LIST_RECORD);
+$xajax->register(XAJAX_FUNCTION, ACTION_INSERT_LIST_RECORD);
+$xajax->register(XAJAX_FUNCTION, ACTION_UPDATE_LIST_RECORD);
+$xajax->register(XAJAX_FUNCTION, ACTION_ARCHIVE_LIST_RECORD);
+$xajax->register(XAJAX_FUNCTION, ACTION_DELETE_LIST_RECORD);
+$xajax->register(XAJAX_FUNCTION, ACTION_CANCEL_LIST_ACTION);
+$xajax->register(XAJAX_FUNCTION, ACTION_SET_LIST_ARCHIVE);
+$xajax->register(XAJAX_FUNCTION, ACTION_SET_LIST_FILTER);
 
 /**
  * definition of action permissions
@@ -104,14 +104,14 @@ function action_get_list_page ($list_title)
     
     # set page
     $html_database_table->get_page($list_title, "", $result);    
-    $response->addAssign("main_body", "innerHTML", $result->get_result_str());
+    $response->assign("main_body", "innerHTML", $result->get_result_str());
 
     # set login status
     set_login_status($response);
     
     # set action pane
     $html_str = $html_database_table->get_action_bar($list_title, "");
-    $response->addAssign("action_pane", "innerHTML", $html_str);
+    $response->assign("action_pane", "innerHTML", $html_str);
 
     # create list table object
     $list_table = new ListTable($list_title);
@@ -128,7 +128,7 @@ function action_get_list_page ($list_title)
 
     # set content
     $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
     # set footer
     $html_str = get_footer($list_table->get_creator_modifier_array()); 
@@ -163,7 +163,7 @@ function action_get_list_print_page ($list_title)
 
     # set page
     $html_database_table->get_print_page($list_title, $result);
-    $response->addAssign("main_body", "innerHTML", $result->get_result_str());
+    $response->assign("main_body", "innerHTML", $result->get_result_str());
 
     # create list table object
     $list_table = new ListTable($list_title);
@@ -180,7 +180,7 @@ function action_get_list_print_page ($list_title)
 
     # set content
     $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_ALL_PAGES, $result);
-    $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
         
     # set footer
     $html_str = get_footer($list_table->get_creator_modifier_array()); 
@@ -191,8 +191,8 @@ function action_get_list_print_page ($list_title)
         return $response;
 
     # print this page
-    $response->AddScriptCall("window.print()");
-    $response->AddScriptCall("window.close()");
+    $response->call("window.print()");
+    $response->call("window.close()");
     
     $logging->trace("got print list");
 
@@ -234,11 +234,11 @@ function action_get_list_content ($list_title, $order_by_field, $page)
 
     # set content
     $html_database_table->get_content($list_table, $list_title, $order_by_field, $page, $result);
-    $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
     # set action pane
     $html_str = $html_database_table->get_action_bar($list_title, "");
-    $response->addAssign("action_pane", "innerHTML", $html_str);
+    $response->assign("action_pane", "innerHTML", $html_str);
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -269,7 +269,7 @@ function action_get_list_record ($list_title, $key_string)
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
 
     # remove any error messages
-    $response->addRemove("error_message");
+    $response->remove("error_message");
 
     # create list table object
     $list_table = new ListTable($list_title);
@@ -286,15 +286,15 @@ function action_get_list_record ($list_title, $key_string)
 
     # set action pane
     $html_database_table->get_record($list_table, $list_title, $key_string, $result);
-    $response->addAssign("action_pane", "innerHTML", $result->get_result_str());
+    $response->assign("action_pane", "innerHTML", $result->get_result_str());
     
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
     # set focus on last input element and then on first input element
-    $response->addScript("document.getElementById('focus_on_this_input').blur()");
-    $response->addScript("document.getElementById('focus_on_this_input').focus()");
+    $response->script("document.getElementById('focus_on_this_input').blur()");
+    $response->script("document.getElementById('focus_on_this_input').focus()");
 
     $logging->trace("got list record");
 
@@ -365,7 +365,7 @@ function action_insert_list_record ($list_title, $form_values)
     }
     
     # remove any error messages
-    $response->addRemove("error_message");
+    $response->remove("error_message");
     
     # create list table object
     $list_table = new ListTable($list_title);
@@ -395,11 +395,11 @@ function action_insert_list_record ($list_title, $form_values)
     # set content
     $result->reset();
     $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
     # set action pane
     $html_str = $html_database_table->get_action_bar($list_title, "");
-    $response->addAssign("action_pane", "innerHTML", $html_str);
+    $response->assign("action_pane", "innerHTML", $html_str);
     
     # set footer
     $html_str = get_footer($list_table->get_creator_modifier_array()); 
@@ -483,7 +483,7 @@ function action_update_list_record ($list_title, $key_string, $form_values)
     }
     
     # remove any error messages
-    $response->addRemove("error_message");
+    $response->remove("error_message");
 
     # create list table object
     $list_table = new ListTable($list_title);
@@ -513,11 +513,11 @@ function action_update_list_record ($list_title, $key_string, $form_values)
     # set content
     $result->reset();
     $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
     # set action pane
     $html_str = $html_database_table->get_action_bar($list_title, "");
-    $response->addAssign("action_pane", "innerHTML", $html_str);
+    $response->assign("action_pane", "innerHTML", $html_str);
     
     # set footer
     $html_str = get_footer($list_table->get_creator_modifier_array()); 
@@ -552,7 +552,7 @@ function action_archive_list_record ($list_title, $key_string)
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
 
     # remove any error messages
-    $response->addRemove("error_message");
+    $response->remove("error_message");
 
     # create list table object
     $list_table = new ListTable($list_title);
@@ -581,7 +581,7 @@ function action_archive_list_record ($list_title, $key_string)
 
     # set content
     $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
     # set footer
     $html_str = get_footer($list_table->get_creator_modifier_array()); 
@@ -616,7 +616,7 @@ function action_delete_list_record ($list_title, $key_string)
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
 
     # remove any error messages
-    $response->addRemove("error_message");
+    $response->remove("error_message");
 
     # create list table object
     $list_table = new ListTable($list_title);
@@ -645,7 +645,7 @@ function action_delete_list_record ($list_title, $key_string)
 
     # set content
     $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
     # set footer
     $html_str = get_footer($list_table->get_creator_modifier_array()); 
@@ -678,11 +678,11 @@ function action_cancel_list_action ($list_title)
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
 
     # remove any error messages
-    $response->addRemove("error_message");
+    $response->remove("error_message");
 
     # set action pane
     $html_str = $html_database_table->get_action_bar($list_title, "");
-    $response->addAssign("action_pane", "innerHTML", $html_str);
+    $response->assign("action_pane", "innerHTML", $html_str);
 
     $logging->trace("canceled list action");
 
@@ -729,11 +729,11 @@ function action_set_list_archive($list_title, $archive_value)
     $user->set_list_state();
 
     # remove any error messages
-    $response->addRemove("error_message");
+    $response->remove("error_message");
 
     # set content
     $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -793,11 +793,11 @@ function action_set_list_filter($list_title, $filter_str)
     $user->set_list_state();
 
     # remove any error messages
-    $response->addRemove("error_message");
+    $response->remove("error_message");
 
     # set content
     $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->addAssign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)

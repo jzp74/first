@@ -20,9 +20,9 @@ define("ACTION_ADD_NOTE", "action_add_note");
 /**
  * register all actions in xajax
  */
-$xajax->registerFunction(ACTION_NEXT_NOTE);
-$xajax->registerFunction(ACTION_ADD_NOTE);
-$xajax->registerFunction(ACTION_PREVIOUS_NOTE);
+$xajax->register(XAJAX_FUNCTION, ACTION_NEXT_NOTE);
+$xajax->register(XAJAX_FUNCTION, ACTION_ADD_NOTE);
+$xajax->register(XAJAX_FUNCTION, ACTION_PREVIOUS_NOTE);
 
 /**
  * definition of action permissions
@@ -56,10 +56,10 @@ function action_get_previous_note ($this_id, $previous_id)
     $response = new xajaxResponse();
 
     # hide the current note
-    $response->addAssign($this_id, "className", "invisible_collapsed");
+    $response->assign($this_id, "className", "invisible_collapsed");
     
     # show the previous note
-    $response->addAssign($previous_id, "className", "");
+    $response->assign($previous_id, "className", "");
 
     $logging->trace("got previous note");
 
@@ -84,10 +84,10 @@ function action_get_next_note ($this_id, $next_id)
     $response = new xajaxResponse();
 
     # hide the current note
-    $response->addAssign($this_id, "className", "invisible_collapsed");
+    $response->assign($this_id, "className", "invisible_collapsed");
     
     # show the previous note
-    $response->addAssign($next_id, "className", "");
+    $response->assign($next_id, "className", "");
 
     $logging->trace("got next note");
 
@@ -116,13 +116,13 @@ function action_add_note ($db_field_name, $this_id)
 
     # change the link of this_id from 'add' to 'next'
     $next_html_str = get_href(ACTION_NEXT_NOTE, HTML_EMPTY_LIST_TITLE, "xajax_action_get_next_note(%27".$this_td_id."%27, %27".$next_td_id."%27)", BUTTON_NEXT_NOTE);
-    $response->addAssign($db_field_name."_0_next", "innerHTML", $next_html_str);
+    $response->assign($db_field_name."_0_next", "innerHTML", $next_html_str);
 
     # hide this note
-    $response->addAssign($this_td_id, "className", "invisible_collapsed");
+    $response->assign($this_td_id, "className", "invisible_collapsed");
 
     # show the new note
-    $response->addAssign($next_td_id, "className", "");
+    $response->assign($next_td_id, "className", "");
 
     $logging->trace("added note");
 

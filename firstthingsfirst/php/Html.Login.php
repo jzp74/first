@@ -18,8 +18,8 @@ define("ACTION_GET_LOGIN_PAGE", "get_login_page");
 /**
  * register all actions in xajax
  */
-$xajax->registerFunction("action_login");
-$xajax->registerFunction("action_logout");                                        
+$xajax->register(XAJAX_FUNCTION, "action_login");
+$xajax->register(XAJAX_FUNCTION, "action_logout");                                        
 
 
 /**
@@ -98,7 +98,7 @@ function action_login ($user_name, $password)
         set_error_message("user_name_id", ERROR_NO_USER_NAME_GIVEN, "", "", $response);
 
         # set focus on user name
-        $response->addScript("document.getElementById('user_name').focus()");
+        $response->script("document.getElementById('user_name').focus()");
         
         return $response;
     }
@@ -109,7 +109,7 @@ function action_login ($user_name, $password)
         set_error_message("password_id", ERROR_NO_PASSWORD_GIVEN, "", "", $response);
 
         # set focus on password
-        $response->addScript("document.getElementById('password').focus()");
+        $response->script("document.getElementById('password').focus()");
 
         return $response;        
     }
@@ -119,7 +119,7 @@ function action_login ($user_name, $password)
         $logging->trace("user is logged in");
         
         # redirect to portal page
-        $response->AddScript("window.location.assign('index.php?action=".ACTION_GET_PORTAL_PAGE."')");
+        $response->script("window.location.assign('index.php?action=".ACTION_GET_PORTAL_PAGE."')");
         
         return $response;
     }
@@ -132,7 +132,7 @@ function action_login ($user_name, $password)
         set_error_message("password_id", $error_message_str, $error_log_str, $error_str, $response);
         
         # set focus on user name
-        $response->addScript("document.getElementById('user_name').focus()");
+        $response->script("document.getElementById('user_name').focus()");
 
         return $response;
     }
@@ -155,7 +155,7 @@ function action_logout ()
 
     $user->logout();
     # redirect to login page
-    $response->AddScript("window.location.assign('index.php?action=".ACTION_GET_LOGIN_PAGE."')");
+    $response->script("window.location.assign('index.php?action=".ACTION_GET_LOGIN_PAGE."')");
 
     $logging->trace("user is logged out");
 
@@ -204,7 +204,7 @@ function set_login_status ($response)
     
     $logging->trace("setting login status");
         
-    $response->addAssign("login_status", "innerHTML", get_login_status());
+    $response->assign("login_status", "innerHTML", get_login_status());
 
     $logging->trace("set login status");
 

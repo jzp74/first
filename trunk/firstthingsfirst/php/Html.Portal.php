@@ -20,9 +20,9 @@ define("ACTION_DELETE_PORTAL_RECORD", "action_delete_portal_record");
 /**
  * register all actions in xajax
  */
-$xajax->registerFunction(ACTION_GET_PORTAL_PAGE);
-$xajax->registerFunction(ACTION_GET_PORTAL_CONTENT);
-$xajax->registerFunction(ACTION_DELETE_PORTAL_RECORD);
+$xajax->register(XAJAX_FUNCTION, ACTION_GET_PORTAL_PAGE);
+$xajax->register(XAJAX_FUNCTION, ACTION_GET_PORTAL_CONTENT);
+$xajax->register(XAJAX_FUNCTION, ACTION_DELETE_PORTAL_RECORD);
 
 /**
  * definition of action permissions
@@ -78,11 +78,11 @@ function action_get_portal_page ()
     
     # set page
     $html_database_table->get_page($firstthingsfirst_portal_title, $firstthingsfirst_portal_intro_text, $result);    
-    $response->addAssign("main_body", "innerHTML", $result->get_result_str());
+    $response->assign("main_body", "innerHTML", $result->get_result_str());
     
     # set content
     $html_database_table->get_content($list_table_description, LISTTABLEDESCRIPTION_TABLE_NAME, "", DATABASETABLE_ALL_PAGES, $result);
-    $response->addAssign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->assign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
     # set login status
     set_login_status($response);
@@ -124,7 +124,7 @@ function action_get_portal_content ($title, $order_by_field, $page)
 
     # set content
     $html_database_table->get_content($list_table_description, $title, $order_by_field, DATABASETABLE_ALL_PAGES, $result);
-    $response->addAssign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->assign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -168,7 +168,7 @@ function action_delete_portal_record ($list_title)
     $html_database_table = new HtmlDatabaseTable ($portal_table_configuration);    
 
     # remove any error messages
-    $response->addRemove("error_message");
+    $response->remove("error_message");
 
     # display error when delete returns false
     if ($list_table->drop() == FALSE)
@@ -184,14 +184,14 @@ function action_delete_portal_record ($list_title)
 
     # set content
     $html_database_table->get_content($list_table_description, $list_title, "", DATABASETABLE_ALL_PAGES, $result);
-    $response->addAssign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->assign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
     # reset current list name
     $user->set_current_list_name("");
 
     # set page navigation and login status to update old 'list' links
     $page_navigation_str = get_page_navigation(PAGE_TYPE_PORTAL);
-    $response->addAssign("navigation_container", "innerHTML", $page_navigation_str);
+    $response->assign("navigation_container", "innerHTML", $page_navigation_str);
     set_login_status($response);
 
     # check post conditions

@@ -23,12 +23,12 @@ define("ACTION_CANCEL_USERLISTTABLEPERMISSIONS_ACTION", "action_cancel_user_list
 /**
  * register all actions in xajax
  */
-$xajax->registerFunction(ACTION_GET_USERLISTTABLEPERMISSIONS_PAGE);
-$xajax->registerFunction(ACTION_GET_USERLISTTABLEPERMISSIONS_CONTENT);
-$xajax->registerFunction(ACTION_GET_USERLISTTABLEPERMISSIONS_RECORD);
-$xajax->registerFunction(ACTION_UPDATE_USERLISTTABLEPERMISSIONS_RECORD);
-$xajax->registerFunction(ACTION_DELETE_USERLISTTABLEPERMISSIONS_RECORD);
-$xajax->registerFunction(ACTION_CANCEL_USERLISTTABLEPERMISSIONS_ACTION);
+$xajax->register(XAJAX_FUNCTION, ACTION_GET_USERLISTTABLEPERMISSIONS_PAGE);
+$xajax->register(XAJAX_FUNCTION, ACTION_GET_USERLISTTABLEPERMISSIONS_CONTENT);
+$xajax->register(XAJAX_FUNCTION, ACTION_GET_USERLISTTABLEPERMISSIONS_RECORD);
+$xajax->register(XAJAX_FUNCTION, ACTION_UPDATE_USERLISTTABLEPERMISSIONS_RECORD);
+$xajax->register(XAJAX_FUNCTION, ACTION_DELETE_USERLISTTABLEPERMISSIONS_RECORD);
+$xajax->register(XAJAX_FUNCTION, ACTION_CANCEL_USERLISTTABLEPERMISSIONS_ACTION);
 
 /**
  * definition of action permissions
@@ -87,7 +87,7 @@ function action_get_user_list_permissions_page ()
     
     # set page
     $html_database_table->get_page($user->get_current_list_name(), LABEL_USERLISTTABLEPERMISSIONS_TITLE, $result);
-    $response->addAssign("main_body", "innerHTML", $result->get_result_str());
+    $response->assign("main_body", "innerHTML", $result->get_result_str());
 
     # set filter value
     $user->get_list_state(USERLISTTABLEPERMISSIONS_TABLE_NAME);
@@ -96,14 +96,14 @@ function action_get_user_list_permissions_page ()
 
     # set content
     $html_database_table->get_content($user_list_permissions, USER_TABLE_NAME, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->addAssign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->assign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
     # set login status
     set_login_status($response);
     
     # set action pane
     $html_str = $html_database_table->get_action_bar(USER_TABLE_NAME, "");
-    $response->addAssign("action_pane", "innerHTML", $html_str);
+    $response->assign("action_pane", "innerHTML", $html_str);
     
     # set footer
     set_footer("", $response);
@@ -140,7 +140,7 @@ function action_get_user_list_permissions_content ($title, $order_by_field, $pag
 
     # set content
     $html_database_table->get_content($user_list_permissions, $title, $order_by_field, $page, $result);
-    $response->addAssign(USERLISTTABLEPERMISSIONS_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->assign(USERLISTTABLEPERMISSIONS_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -172,7 +172,7 @@ function action_get_user_list_permissions_record ($title, $key_string)
     $html_database_table = new HtmlDatabaseTable ($user_list_permissions_table_configuration);
 
     # remove any error messages
-    $response->addRemove("error_message");
+    $response->remove("error_message");
 
     # get html for one user record
     $html_database_table->get_record($user_list_permissions, $title, $key_string, $result);
@@ -182,12 +182,12 @@ function action_get_user_list_permissions_record ($title, $key_string)
         return $response;
     
     # set action pane    
-    $response->addAssign("action_pane", "innerHTML", $result->get_result_str());
+    $response->assign("action_pane", "innerHTML", $result->get_result_str());
 
     # set focus on last input element and then on first input element
-    $response->addScript("document.record_form_name.elements[0].blur()");
-    $response->addScript("document.record_form_name.elements[document.record_form_name.length].focus()");
-    $response->addScript("document.record_form_name.elements[0].focus()");
+    $response->script("document.record_form_name.elements[0].blur()");
+    $response->script("document.record_form_name.elements[document.record_form_name.length].focus()");
+    $response->script("document.record_form_name.elements[0].focus()");
 
     $logging->trace("got user list permissions record");
 
@@ -263,7 +263,7 @@ function action_update_user_list_permissions_record ($title, $key_string, $form_
     }
     
     # remove any error messages
-    $response->addRemove("error_message");
+    $response->remove("error_message");
 
     # display error when insertion returns false
     if (!$user_list_permissions->update($key_string, $new_form_values))
@@ -280,11 +280,11 @@ function action_update_user_list_permissions_record ($title, $key_string, $form_
     # set content
     $result->reset();
     $html_database_table->get_content($user_list_permissions, $title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->addAssign(USERLISTTABLEPERMISSIONS_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->assign(USERLISTTABLEPERMISSIONS_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
     # set action pane
     $html_str = $html_database_table->get_action_bar($title, "");
-    $response->addAssign("action_pane", "innerHTML", $html_str);
+    $response->assign("action_pane", "innerHTML", $html_str);
     
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -316,7 +316,7 @@ function action_delete_user_list_permissions_record ($title, $key_string)
     $html_database_table = new HtmlDatabaseTable ($user_list_permissions_table_configuration);
 
     # remove any error messages
-    $response->addRemove("error_message");
+    $response->remove("error_message");
 
     # display error when delete returns false
     if (!$user_list_permissions->delete($key_string))
@@ -332,7 +332,7 @@ function action_delete_user_list_permissions_record ($title, $key_string)
 
     # set content
     $html_database_table->get_content($user_list_permissions, $title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->addAssign(USERLISTTABLEPERMISSIONS_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->assign(USERLISTTABLEPERMISSIONS_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
     
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -362,11 +362,11 @@ function action_cancel_user_list_permissions_action ($title)
     $html_database_table = new HtmlDatabaseTable ($user_list_permissions_table_configuration);
 
     # remove any error messages
-    $response->addRemove("error_message");
+    $response->remove("error_message");
 
     # set action pane
     $html_str = $html_database_table->get_action_bar($title, "");
-    $response->addAssign("action_pane", "innerHTML", $html_str);
+    $response->assign("action_pane", "innerHTML", $html_str);
 
     $logging->trace("canceled user list permissions action");
 

@@ -24,13 +24,13 @@ define("ACTION_CREATE_LIST", "action_create_list");
 /**
  * register all actions in xajax
  */
-$xajax->registerFunction(ACTION_GET_LISTBUILDER_PAGE);
-$xajax->registerFunction(ACTION_INSERT_LISTBUILDER_ROW);
-$xajax->registerFunction(ACTION_MOVE_LISTBUILDER_ROW);
-$xajax->registerFunction(ACTION_DELETE_LISTBUILDER_ROW);
-$xajax->registerFunction(ACTION_REFRESH_LISTBUILDER);
-$xajax->registerFunction(ACTION_MODIFY_LIST);
-$xajax->registerFunction(ACTION_CREATE_LIST);
+$xajax->register(XAJAX_FUNCTION, ACTION_GET_LISTBUILDER_PAGE);
+$xajax->register(XAJAX_FUNCTION, ACTION_INSERT_LISTBUILDER_ROW);
+$xajax->register(XAJAX_FUNCTION, ACTION_MOVE_LISTBUILDER_ROW);
+$xajax->register(XAJAX_FUNCTION, ACTION_DELETE_LISTBUILDER_ROW);
+$xajax->register(XAJAX_FUNCTION, ACTION_REFRESH_LISTBUILDER);
+$xajax->register(XAJAX_FUNCTION, ACTION_MODIFY_LIST);
+$xajax->register(XAJAX_FUNCTION, ACTION_CREATE_LIST);
 
 /**
  * definition of action permissions
@@ -243,7 +243,7 @@ function action_get_listbuilder_page ($list_title)
     $html_str .= "        <div class=\"white_area\"></div>\n\n";
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
         
-    $response->addAssign("main_body", "innerHTML", $html_str);
+    $response->assign("main_body", "innerHTML", $html_str);
 
     if ($old_list_loaded == FALSE && strlen($list_title) > 0)
     {
@@ -284,8 +284,8 @@ function action_insert_listbuilder_row ($field_type, $definition, $largest_id)
     $response = new xajaxResponse();
 
     $html_str = get_field_definition_table($new_definition);    
-    $response->addAssign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
-    $response->addAssign("largest_id", "innerHTML", $largest_id + 1);
+    $response->assign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
+    $response->assign("largest_id", "innerHTML", $largest_id + 1);
 
     $logging->trace("inserted listbuilder row");
 
@@ -341,7 +341,7 @@ function action_move_listbuilder_row ($row_number, $direction, $definition)
     }
             
     $html_str = get_field_definition_table($new_definition);    
-    $response->addAssign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
+    $response->assign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
 
     $logging->trace("moved listbuilder row");
 
@@ -380,7 +380,7 @@ function action_delete_listbuilder_row ($row_number, $definition)
     }
 
     $html_str = get_field_definition_table($new_definition);    
-    $response->addAssign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
+    $response->assign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
 
     $logging->trace("deleted listbuilder row");
 
@@ -404,7 +404,7 @@ function action_refresh_listbuilder ($definition)
     $response = new xajaxResponse();
 
     $html_str = get_field_definition_table(array_values($definition));    
-    $response->addAssign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
+    $response->assign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
 
     $logging->trace("refreshed listbuilder");
 

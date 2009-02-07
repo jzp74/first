@@ -16,7 +16,7 @@ require_once("globals.php");
 require_once("localsettings.php");
 
 require_once("php/external/JSON.php");
-require_once("xajax/xajax.inc.php");
+require_once("xajax/xajax_core/xajaxAIO.inc.php");
 
 require_once("php/Text.Buttons.php");
 require_once("php/Text.Errors.php");
@@ -39,6 +39,7 @@ require_once("php/Class.HtmlDatabaseTable.php");
  * Initialize xajax
  */
 $xajax = new xajax();
+$xajax->configure("javascript URI", "../xajax");
 
 require_once("php/Html.Utilities.php");
 require_once("php/Html.php");
@@ -64,12 +65,12 @@ $user_list_permissions = new UserListTablePermissions();
 /**
  * register process_url function
  */
-$xajax->registerFunction("process_url");
+$xajax->register(XAJAX_FUNCTION, "process_url");
 
 /**
  * start ajax interactions
  */
-$xajax->processRequests();
+$xajax->processRequest();
 
 
 /**
@@ -95,7 +96,7 @@ function process_url ()
     {
         $response = new xajaxResponse();
 
-        $response->addScript("document.getElementById('user_name').focus()");
+        $response->script("document.getElementById('user_name').focus()");
         
         return $response;
     }
@@ -104,8 +105,8 @@ function process_url ()
     {
         $response = new xajaxResponse();
 
-        $response->AddScript("window.location.assign('index.php?action=".ACTION_GET_LOGIN_PAGE."')");
-        $response->addScript("document.getElementById('user_name').focus()");
+        $response->script("window.location.assign('index.php?action=".ACTION_GET_LOGIN_PAGE."')");
+        $response->script("document.getElementById('user_name').focus()");
     
         return $response;
     }
@@ -146,7 +147,7 @@ function process_url ()
     else
     {
         $response = new xajaxResponse();
-        $response->AddScriptCall("window.location.assign('index.php?action=".ACTION_GET_PORTAL_PAGE."')");
+        $response->call("window.location.assign('index.php?action=".ACTION_GET_PORTAL_PAGE."')");
         return $response;
     }
 }

@@ -4,7 +4,7 @@
     padding: 0px 0px 0px 0px;
     border: none;
     z-index: 10;
-    font-family: verdana;
+    font-family: Arial;
     font-size: 12px;
     text-decoration: none;
     text-align: left;
@@ -15,14 +15,14 @@ body {
     }
 
 #title {
-    font-family: arial;
+    font-family: Arial;
     font-size: 28px;
     font-weight: bold;
     color: rgb(255, 153, 0);
     }
 
 h1 {
-    font-family: arial;
+    font-family: Arial;
     font-size: 18px;
     font-weight: bold;
     color: rgb(255, 153, 0);
@@ -30,7 +30,7 @@ h1 {
     }
     
 h2 {
-    font-family: arial;
+    font-family: Arial;
     font-size: 14px;
     font-weight: bold;
     color: rgb(255, 153, 0);

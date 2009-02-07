@@ -63,7 +63,7 @@ function start_regression_test ()
     $html_str .= "            </div> <!-- test_body -->\n\n";
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
             
-    $response->addAssign("main_body", "innerHTML", $html_str);
+    $response->assign("main_body", "innerHTML", $html_str);
     
     # create html for footer
     $html_str = "<input id=\"focus_on_this_input\" size=\"1\" readonly>test start: ";
@@ -71,8 +71,8 @@ function start_regression_test ()
     if ($firstthingsfirst_date_string == DATE_FORMAT_US)
         $html_str .= "<strong>".strftime(DATETIME_FORMAT_US)."</strong>, test end: ";
     
-    $response->addAssign("footer_text", "innerHTML", $html_str);
-    $response->addScriptCall("xajax_prepare_test(0)");
+    $response->assign("footer_text", "innerHTML", $html_str);
+    $response->call("xajax_prepare_test(0)");
 
     $logging->info("started regression testing");
     
@@ -110,8 +110,8 @@ function prepare_test ($test_function_number)
         $html_str .= "                            <div class=\"test_item_header\">".$test_function_description."</div>\n";
     $html_str .= "                        </div>";
     
-    $response->addAppend("test_body", "innerHTML", $html_str);
-    $response->addScriptCall("xajax_execute_test(".$test_function_number.")");
+    $response->append("test_body", "innerHTML", $html_str);
+    $response->call("xajax_execute_test(".$test_function_number.")");
 
     $logging->info("done preparing test");
     
@@ -154,14 +154,14 @@ function execute_test ($test_function_number)
             $html_str .= "\n                            <div class=\"test_item_description\">".$test_function_description."</div>\n";
             $html_str .= "                            <div class=\"test_item_successful\">".$test_function_passed_text."</div>\n";
 
-            $response->addAssign("test_item_".$test_function_number."", "innerHTML", $html_str);
+            $response->assign("test_item_".$test_function_number."", "innerHTML", $html_str);
         }
         
         # check if this was the last test
         if ($test_function_number == ($num_of_test_functions - 1))
-            $response->addScriptCall("xajax_end_regression_test(1)");
+            $response->call("xajax_end_regression_test(1)");
         else
-            $response->addScriptCall("xajax_prepare_test(".($test_function_number + 1).")");
+            $response->call("xajax_prepare_test(".($test_function_number + 1).")");
     }
     else
     {
@@ -170,8 +170,8 @@ function execute_test ($test_function_number)
         $html_str .= "\n                            <div class=\"test_item_description\">".$test_function_description."</div>\n";
         $html_str .= "                            <div class=\"test_item_unsuccessful\">".$test_function_error_text."</div>\n";
 
-        $response->addAssign("test_item_".$test_function_number."", "innerHTML", $html_str);
-        $response->addScriptCall("xajax_end_regression_test(0)");
+        $response->assign("test_item_".$test_function_number."", "innerHTML", $html_str);
+        $response->call("xajax_end_regression_test(0)");
     }
 
     $logging->info("done executing test");
@@ -205,7 +205,7 @@ function end_regression_test ($successful)
         $html_str .= "Congratulations! Regression test was successful";
         $html_str .= "</div> <!-- test_end_successful -->\n\n        ";
 
-        $response->addAppend("test_body", "innerHTML", $html_str);        
+        $response->append("test_body", "innerHTML", $html_str);        
     }
     else
     {
@@ -215,18 +215,18 @@ function end_regression_test ($successful)
         $html_str .= "Regression test was unsuccessful";
         $html_str .= "<div> <!-- test_end_unsuccessful -->\n\n        ";
 
-        $response->addAppend("test_body", "innerHTML", $html_str);
+        $response->append("test_body", "innerHTML", $html_str);
     }
     
     # append end date to footer
     $html_str = "<strong>".strftime(DATETIME_FORMAT_EU)."</strong>";
     if ($firstthingsfirst_date_string == DATE_FORMAT_US)
         $html_str = "<strong>".strftime(DATETIME_FORMAT_US)."</strong>";
-    $response->addAppend("footer_text", "innerHTML", $html_str);
+    $response->append("footer_text", "innerHTML", $html_str);
     
     # highlight footer
-    $response->addScriptCall("document.getElementById('focus_on_this_input').blur()");
-    $response->addScriptCall("document.getElementById('focus_on_this_input').focus()");    
+    $response->call("document.getElementById('focus_on_this_input').blur()");
+    $response->call("document.getElementById('focus_on_this_input').focus()");    
 
     $logging->info("done ending");
     

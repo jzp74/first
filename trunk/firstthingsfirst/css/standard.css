@@ -7,7 +7,7 @@
     padding: 0px 0px 0px 0px;
     border: none;
     z-index: 10;
-    font-family: Tahoma;
+    font-family: Arial;
     font-size: 12px;
     text-decoration: none;
     text-align: left;
@@ -60,7 +60,7 @@ em, strong {
 input, select, textarea {
     background-color: rgb(255, 255, 255);
     text-align: left;
-    font-family: Tahoma;
+    font-family: Arial;
     font-size: 12px;
     font-weight: normal;
     }
@@ -182,7 +182,7 @@ html, body {
 
 /*  defines the title of a page */    
 #page_title {
-    font-family: arial black;    
+    font-family: Arial Black;    
     font-size: 32px;
     font-weight: bold;
     text-align: center;
@@ -191,7 +191,7 @@ html, body {
 /*  defines the explanation below the title */
 #page_explanation {
     padding: 4px 0px 4px 0px;
-    font-family: Tahoma;    
+    font-family: Arial;    
     font-size: 16px;
     font-weight: bold;
     text-align: center;

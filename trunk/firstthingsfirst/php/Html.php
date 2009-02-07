@@ -10,8 +10,8 @@
  */
 
 
-$xajax->registerFunction("check_permissions");
-$xajax->registerFunction("check_list_permissions");
+$xajax->register(XAJAX_FUNCTION, "check_permissions");
+$xajax->register(XAJAX_FUNCTION, "check_list_permissions");
 
 
 /**
@@ -51,7 +51,7 @@ function check_permissions ($action, $js_function_call_str)
     if (!$user->is_login())
     {
         # redirect to login page
-        $response->AddScript("window.location.assign('index.php?action=".ACTION_GET_LOGIN_PAGE."')");
+        $response->script("window.location.assign('index.php?action=".ACTION_GET_LOGIN_PAGE."')");
         set_footer("", $response);
         $logging->warn("user is not logged in (action=".$action.")");
 
@@ -119,7 +119,7 @@ function check_list_permissions ($action, $list_title, $js_function_call_str)
     if (!$user->is_login())
     {
         # redirect to login page
-        $response->AddScript("window.location.assign('index.php?action=".ACTION_GET_LOGIN_PAGE."')");
+        $response->script("window.location.assign('index.php?action=".ACTION_GET_LOGIN_PAGE."')");
         set_footer("", $response);
         $logging->warn("user is not logged in (action=".$action.")");
 
@@ -179,7 +179,7 @@ function add_js_function_call ($response, $js_function_call_str)
     
     # call given js function
     $logging->debug("call js function: ".$js_function_call);
-    $response->addScript($js_function_call);    
+    $response->script($js_function_call);    
 }
 
 /**
@@ -196,8 +196,8 @@ function check_postconditions ($result, $response)
     $logging->trace("check postconditions");
     
     # first remove any error or info messages
-    $response->addRemove("error_message");
-    $response->addRemove("info_message");
+    $response->remove("error_message");
+    $response->remove("info_message");
 
     # check if an error is set
     if (strlen($result->get_error_message_str()) > 0)
@@ -234,8 +234,8 @@ function set_error_message ($error_element, $error_message_str, $error_log_str, 
     $logging->trace("set error (element=".$error_element.")");
     
     # first remove any error or info messages
-    $response->addRemove("error_message");
-    $response->addRemove("info_message");
+    $response->remove("error_message");
+    $response->remove("info_message");
     
     # now create the HTML for the error message
     $html_str = "<p id=\"error_message\"><strong>".$error_message_str."</strong>";
@@ -247,7 +247,7 @@ function set_error_message ($error_element, $error_message_str, $error_log_str, 
         $html_str .= "<br><strong>".LABEL_DATABASE_MESSAGE.":</strong> ".$error_str;
     $html_str .= "</p>";
 
-    $response->addAppend($error_element, "innerHTML", $html_str);
+    $response->append($error_element, "innerHTML", $html_str);
     
     $logging->trace("set error (element=".$error_element.")");        
 }
@@ -266,10 +266,10 @@ function set_info_message ($info_element, $info_str, $response)
     $logging->trace("set info (element=".$info_element.")");
     
     # first remove any error or info messages
-    $response->addRemove("error_message");
-    $response->addRemove("info_message");
+    $response->remove("error_message");
+    $response->remove("info_message");
 
-    $response->addAppend($info_element, "innerHTML", "<p id=\"info_message\">".$info_str."</p>");
+    $response->append($info_element, "innerHTML", "<p id=\"info_message\">".$info_str."</p>");
     
     $logging->trace("set info (element=".$info_element.")");        
 }
@@ -452,7 +452,7 @@ function set_footer ($html_str, $response)
     
     $logging->trace("setting footer");
         
-    $response->addAssign("footer_text", "innerHTML", $html_str);
+    $response->assign("footer_text", "innerHTML", $html_str);
 
     $logging->trace("set footer");
 

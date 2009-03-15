@@ -78,7 +78,7 @@ if ($query_result != FALSE)
             if ($field_type == "LABEL_DEFINITION_AUTO_DATE")
             {
                 $new_field_definition = array();
-                array_push($new_field_definition, "LABEL_DEFINITION_AUTO_CREATED");
+                array_push($new_field_definition, FIELD_TYPE_DEFINITION_AUTO_CREATED);
                 array_push($new_field_definition, $field_definition[1]);
                 array_push($new_field_definition, NAME_DATE_OPTION_DATE);
                 $definition[$field_name] = $new_field_definition;

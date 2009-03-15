@@ -10,6 +10,9 @@
  */
 
 
+/**
+ * Import class files and settings files
+ */
 require_once("php/Class.Logging.php");
 
 require_once("globals.php");
@@ -18,9 +21,7 @@ require_once("localsettings.php");
 require_once("php/external/JSON.php");
 require_once("xajax/xajax_core/xajaxAIO.inc.php");
 
-require_once("php/Text.Buttons.php");
-require_once("php/Text.Errors.php");
-require_once("php/Text.Labels.php");
+require_once("php/Html.Utilities.php");
 
 require_once("php/Class.Result.php");
 require_once("php/Class.Database.php");
@@ -33,15 +34,33 @@ require_once("php/Class.ListTable.php");
 require_once("php/Class.ListTableNote.php");
 require_once("php/Class.UserListTablePermissions.php");
 
-require_once("php/Class.HtmlDatabaseTable.php");
 
 /**
- * Initialize xajax
+ * Initialize global objects and language settings
  */
 $xajax = new xajax();
 $xajax->configure("javascript URI", "../xajax");
 
-require_once("php/Html.Utilities.php");
+$logging = new Logging($firstthingsfirst_loglevel, $firstthingsfirst_logfile);
+$database = new Database();
+$list_state = new ListState();
+$user = new User();
+$list_table_description = new ListTableDescription();
+$user_list_permissions = new UserListTablePermissions();
+
+$text_translations = array();
+if ($user->is_login())
+    $firstthingsfirst_lang = $user->get_lang();
+require_once("lang/".$firstthingsfirst_lang_prefix_array[$firstthingsfirst_lang].".Text.Buttons.php");
+require_once("lang/".$firstthingsfirst_lang_prefix_array[$firstthingsfirst_lang].".Text.Errors.php");
+require_once("lang/".$firstthingsfirst_lang_prefix_array[$firstthingsfirst_lang].".Text.Labels.php");
+
+
+/**
+ * Import HTML related files
+ */
+require_once("php/Class.HtmlDatabaseTable.php");
+
 require_once("php/Html.php");
 require_once("php/Html.Login.php");
 require_once("php/Html.Portal.php");
@@ -51,16 +70,6 @@ require_once("php/Html.ListTableItemNotes.php");
 require_once("php/Html.ListBuilder.php");
 require_once("php/Html.UserListTablePermissions.php");
 
-
-/**
- * create global objects
- */
-$logging = new Logging($firstthingsfirst_loglevel, $firstthingsfirst_logfile);
-$database = new Database();
-$list_state = new ListState();
-$user = new User();
-$list_table_description = new ListTableDescription();
-$user_list_permissions = new UserListTablePermissions();
 
 /**
  * register process_url function

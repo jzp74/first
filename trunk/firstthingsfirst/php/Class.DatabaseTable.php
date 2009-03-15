@@ -200,7 +200,7 @@ class DatabaseTable
     {
         if ($this->_database->connect() == FALSE)
         {
-            $this->_handle_error ("", ERROR_DATABASE_CONNECT);
+            $this->_handle_error ("", "ERROR_DATABASE_CONNECT");
             
             return FALSE;
         }
@@ -416,7 +416,7 @@ class DatabaseTable
                 $result = $this->_database->query($query);
                 if ($result == FALSE)
                 {
-                    $this->_handle_error("could not drop DatabaseTable", ERROR_DATABASE_PROBLEM);
+                    $this->_handle_error("could not drop DatabaseTable", "ERROR_DATABASE_PROBLEM");
                                         
                     return FALSE;
                 }
@@ -424,7 +424,7 @@ class DatabaseTable
             else
             {
                 # do not drop the table by force
-                $this->_handle_error("table (table=".$this->table_name.") already exists and (force=FALSE)", ERROR_DUPLICATE_LIST_NAME);
+                $this->_handle_error("table (table=".$this->table_name.") already exists and (force=FALSE)", "ERROR_DUPLICATE_LIST_NAME");
                 
                 return FALSE;
             }
@@ -471,7 +471,7 @@ class DatabaseTable
         $result = $this->_database->query($query);
         if ($result == FALSE)
         {
-            $this->_handle_error("could not create DatabaseTable", ERROR_DATABASE_PROBLEM);
+            $this->_handle_error("could not create DatabaseTable", "ERROR_DATABASE_PROBLEM");
             
             return FALSE;
         }
@@ -505,7 +505,7 @@ class DatabaseTable
         # check if database table exists
         if (!$this->_database->table_exists($this->table_name))
         {
-            $this->_handle_error("DatabaseTable does not exist in database", ERROR_DATABASE_EXISTENCE);
+            $this->_handle_error("DatabaseTable does not exist in database", "ERROR_DATABASE_EXISTENCE");
             
             return array();
         }
@@ -552,7 +552,7 @@ class DatabaseTable
             }
             else 
             {
-                $this->_handle_error("could not get number of DatabaseTable records from database", ERROR_DATABASE_PROBLEM);
+                $this->_handle_error("could not get number of DatabaseTable records from database", "ERROR_DATABASE_PROBLEM");
             
                 return array();
             }
@@ -652,7 +652,7 @@ class DatabaseTable
         }
         else 
         {
-            $this->_handle_error("could not read DatabaseTable rows from database", ERROR_DATABASE_PROBLEM);
+            $this->_handle_error("could not read DatabaseTable rows from database", "ERROR_DATABASE_PROBLEM");
             
             return array();
         }
@@ -682,7 +682,7 @@ class DatabaseTable
         # check if database table exists
         if (!$this->_database->table_exists($this->table_name))
         {
-            $this->_handle_error("DatabaseTable does not exist in database", ERROR_DATABASE_EXISTENCE);
+            $this->_handle_error("DatabaseTable does not exist in database", "ERROR_DATABASE_EXISTENCE");
             
             return array();
         }
@@ -751,7 +751,7 @@ class DatabaseTable
         }
         else
         {
-            $this->_handle_error("could not read DatabaseTable row from table", ERROR_DATABASE_PROBLEM);
+            $this->_handle_error("could not read DatabaseTable row from table", "ERROR_DATABASE_PROBLEM");
             
             return array();
         }
@@ -787,7 +787,7 @@ class DatabaseTable
             # check if db_field_name is known
             if ($field_type == "")
             {
-                $this->_handle_error("unknown field type (db_field_name=".$db_field_name.")", ERROR_DATABASE_PROBLEM);
+                $this->_handle_error("unknown field type (db_field_name=".$db_field_name.")", "ERROR_DATABASE_PROBLEM");
                     
                 return 0;
             }
@@ -802,14 +802,14 @@ class DatabaseTable
             {
                 if (!$this->_check_datetime($value))
                 {
-                    $this->_handle_error("given date string is incorrect (date_str=".$value.")", ERROR_DATE_WRONG_FORMAT);
+                    $this->_handle_error("given date string is incorrect (date_str=".$value.")", "ERROR_DATE_WRONG_FORMAT");
                     
                     return 0;
                 }
                 else
                     array_push($values, "'".$value."'");
             }
-            else if (($field_type == "LABEL_DEFINITION_AUTO_CREATED") || ($field_type == "LABEL_DEFINITION_AUTO_MODIFIED"))
+            else if (($field_type == FIELD_TYPE_DEFINITION_AUTO_CREATED) || ($field_type == FIELD_TYPE_DEFINITION_AUTO_MODIFIED))
                 array_push($values, "'0'");
             else
                 array_push($values, "'".$value."'");
@@ -839,7 +839,7 @@ class DatabaseTable
         $result = $this->_database->insertion_query($query);
         if ($result == 0)
         {
-            $this->_handle_error("could not insert record to DatabaseTable", ERROR_DATABASE_PROBLEM);
+            $this->_handle_error("could not insert record to DatabaseTable", "ERROR_DATABASE_PROBLEM");
             
             return 0;
         }
@@ -872,7 +872,7 @@ class DatabaseTable
         # check if database table exists
         if (!$this->_database->table_exists($this->table_name))
         {
-            $this->_handle_error("DatabaseTable does not exist in database", ERROR_DATABASE_EXISTENCE);
+            $this->_handle_error("DatabaseTable does not exist in database", "ERROR_DATABASE_EXISTENCE");
             
             return FALSE;
         }
@@ -890,14 +890,14 @@ class DatabaseTable
             {
                 if (!$this->_check_datetime($value))
                 {
-                    $this->_handle_error("given date string is incorrect (date_str=".$value.")", ERROR_DATE_WRONG_FORMAT);
+                    $this->_handle_error("given date string is incorrect (date_str=".$value.")", "ERROR_DATE_WRONG_FORMAT");
                     
                     return FALSE;
                 }
                 else
                     array_push($values, $db_field_name."='".$value."'");
             }
-            else if (($field_type == "LABEL_DEFINITION_AUTO_CREATED") || ($field_type == "LABEL_DEFINITION_AUTO_MODIFIED"))
+            else if (($field_type == FIELD_TYPE_DEFINITION_AUTO_CREATED) || ($field_type == FIELD_TYPE_DEFINITION_AUTO_MODIFIED))
                 array_push($values, $db_field_name."='0'");
             else
                 array_push($values, $db_field_name."='".$value."'");
@@ -924,7 +924,7 @@ class DatabaseTable
         $result = $this->_database->query($query);
         if ($result == FALSE)
         {
-            $this->_handle_error("could not update record of DatabaseTable (key_string=".$key_string.")", ERROR_DATABASE_PROBLEM);
+            $this->_handle_error("could not update record of DatabaseTable (key_string=".$key_string.")", "ERROR_DATABASE_PROBLEM");
             
             return FALSE;
         }
@@ -966,7 +966,7 @@ class DatabaseTable
 
         if ($result == FALSE)
         {
-            $this->_handle_error("could not archive record from DatabaseTable (key_string=".$key_string.")", ERROR_DATABASE_PROBLEM);
+            $this->_handle_error("could not archive record from DatabaseTable (key_string=".$key_string.")", "ERROR_DATABASE_PROBLEM");
             
             return FALSE;
         }
@@ -993,7 +993,7 @@ class DatabaseTable
 
         if ($result == FALSE)
         {
-            $this->_handle_error("could not delete record from DatabaseTable (key_string=".$key_string.")", ERROR_DATABASE_PROBLEM);
+            $this->_handle_error("could not delete record from DatabaseTable (key_string=".$key_string.")", "ERROR_DATABASE_PROBLEM");
             
             return FALSE;
         }
@@ -1018,7 +1018,7 @@ class DatabaseTable
         # check if database table exists
         if (!$this->_database->table_exists($this->table_name))
         {
-            $this->_handle_error("DatabaseTable does not exist in database", ERROR_DATABASE_EXISTENCE);
+            $this->_handle_error("DatabaseTable does not exist in database", "ERROR_DATABASE_EXISTENCE");
 
             return FALSE;
         }
@@ -1027,7 +1027,7 @@ class DatabaseTable
         $result = $this->_database->query($query);
         if ($result == FALSE)
         {
-            $this->_handle_error("could not drop DatabaseTable", ERROR_DATABASE_PROBLEM);
+            $this->_handle_error("could not drop DatabaseTable", "ERROR_DATABASE_PROBLEM");
             
             return FALSE;
         }

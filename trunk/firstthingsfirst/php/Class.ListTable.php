@@ -211,7 +211,7 @@ class ListTable extends UserDatabaseTable
         $found_notes_field = FALSE;
         foreach($this->fields as $field)
         {
-            if ($field[1] == "LABEL_DEFINITION_NOTES_FIELD")
+            if ($field[1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
                 $found_notes_field = TRUE;
         }
         if ($found_notes_field)
@@ -253,7 +253,7 @@ class ListTable extends UserDatabaseTable
         $notes_field_new = FALSE;
         foreach ($old_definition as $field_definition)
         {
-            if ($field_definition[1] == "LABEL_DEFINITION_NOTES_FIELD")
+            if ($field_definition[1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
             {
                 $this->_log->debug("old definition contains a notes field");
                 $notes_field_old = TRUE;
@@ -271,7 +271,7 @@ class ListTable extends UserDatabaseTable
             $this->_log->debug("check if id=".$new_definition_key." exists in old definition (name=".$new_field_definition[0].")");
 
             # check if current field is a notes field
-            if ($new_field_definition[1] == "LABEL_DEFINITION_NOTES_FIELD")
+            if ($new_field_definition[1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
             {
                 $this->_log->debug("new definition contains a notes field");
                 $notes_field_new = TRUE;
@@ -297,7 +297,7 @@ class ListTable extends UserDatabaseTable
                     $this->_log->debug("field name has changed");
                     $name_has_changed = TRUE;
                     
-                    if ($old_field_definition[1] == "LABEL_DEFINITION_NOTES_FIELD")
+                    if ($old_field_definition[1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
                     {
                         # change field name in list table notes table
                         $query = "UPDATE ".$this->_list_table_note->get_table_name()." SET ".LISTTABLENOTE_FIELD_NAME_FIELD_NAME;
@@ -306,7 +306,7 @@ class ListTable extends UserDatabaseTable
                         $result = $this->_database->query($query);
                         if ($result == FALSE)
                         {
-                            $this->_handle_error("could not alter field name of list table notes table", ERROR_DATABASE_PROBLEM);
+                            $this->_handle_error("could not alter field name of list table notes table", "ERROR_DATABASE_PROBLEM");
                         
                             return FALSE;
                         }
@@ -323,7 +323,7 @@ class ListTable extends UserDatabaseTable
                     $type_has_changed = TRUE;
                     
                     # check if a notes field is changed
-                    if ($old_field_definition[1] == "LABEL_DEFINITION_NOTES_FIELD")
+                    if ($old_field_definition[1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
                     {
                         $this->_log->debug("field was a notes field");
                         array_push($notes_to_delete, $old_field_definition[0]);
@@ -349,7 +349,7 @@ class ListTable extends UserDatabaseTable
                     $result = $this->_database->query($query);
                     if ($result == FALSE)
                     {
-                        $this->_handle_error("could not alter the existing field (type changed)", ERROR_DATABASE_PROBLEM);
+                        $this->_handle_error("could not alter the existing field (type changed)", "ERROR_DATABASE_PROBLEM");
                     
                         return FALSE;
                     }
@@ -368,7 +368,7 @@ class ListTable extends UserDatabaseTable
                     $result = $this->_database->query($query);
                     if ($result == FALSE)
                     {
-                        $this->_handle_error("could not alter the existing field (name and/or position changed)", ERROR_DATABASE_PROBLEM);
+                        $this->_handle_error("could not alter the existing field (name and/or position changed)", "ERROR_DATABASE_PROBLEM");
                     
                         return FALSE;
                     }
@@ -390,7 +390,7 @@ class ListTable extends UserDatabaseTable
                 $result = $this->_database->query($query);
                 if ($result == FALSE)
                 {
-                    $this->_handle_error("could add the new field", ERROR_DATABASE_PROBLEM);
+                    $this->_handle_error("could add the new field", "ERROR_DATABASE_PROBLEM");
                 
                     return FALSE;
                 }                
@@ -407,7 +407,7 @@ class ListTable extends UserDatabaseTable
             $this->_log->debug("remove field");
 
             # check if a notes field is changed
-            if ($old_definition[$old_definition_key][1] == "LABEL_DEFINITION_NOTES_FIELD")
+            if ($old_definition[$old_definition_key][1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
             {
                 $this->_log->debug("field was a notes field");
                 array_push($notes_to_delete, $old_definition[$old_definition_key][0]);
@@ -418,7 +418,7 @@ class ListTable extends UserDatabaseTable
             $result = $this->_database->query($query);
             if ($result == FALSE)
             {
-                $this->_handle_error("could not remove the field", ERROR_DATABASE_PROBLEM);
+                $this->_handle_error("could not remove the field", "ERROR_DATABASE_PROBLEM");
             
                 return FALSE;
             }
@@ -474,7 +474,7 @@ class ListTable extends UserDatabaseTable
             $counter = 0;
             foreach ($fields_to_fill as $field_definition)
             {
-                if ($field_definition[1] == "LABEL_DEFINITION_SELECTION")
+                if ($field_definition[1] == FIELD_TYPE_DEFINITION_SELECTION)
                 {
                     # fill a selection field with the first option
                     $this->_log->debug("field is a selection");
@@ -492,7 +492,7 @@ class ListTable extends UserDatabaseTable
             $result = $this->_database->query($query);
             if ($result == FALSE)
             {
-                $this->_handle_error("could not fill new fields", ERROR_DATABASE_PROBLEM);
+                $this->_handle_error("could not fill new fields", "ERROR_DATABASE_PROBLEM");
         
                 return FALSE;
             }
@@ -530,7 +530,7 @@ class ListTable extends UserDatabaseTable
             $result_object = $this->_database->query($query);
             if ($result_object == FALSE)
             {
-                $this->_handle_error("could not rename list table name", ERROR_DATABASE_PROBLEM);
+                $this->_handle_error("could not rename list table name", "ERROR_DATABASE_PROBLEM");
 
                 return FALSE;
             }
@@ -539,7 +539,7 @@ class ListTable extends UserDatabaseTable
 #            $found_note = FALSE;
 #            foreach($this->db_field_names as $db_field_name)
 #            {
-#                if ($this->fields[$db_field_name][1] == "LABEL_DEFINITION_NOTES_FIELD")
+#                if ($this->fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
 #                    $found_note = TRUE;
 #            }
             
@@ -553,7 +553,7 @@ class ListTable extends UserDatabaseTable
                 $result_object = $this->_database->query($query);
                 if ($result_object == FALSE)
                 {
-                    $this->_handle_error("could not rename list table notes name", ERROR_DATABASE_PROBLEM);
+                    $this->_handle_error("could not rename list table notes name", "ERROR_DATABASE_PROBLEM");
 
                     return FALSE;
                 }
@@ -585,7 +585,7 @@ class ListTable extends UserDatabaseTable
         $note_fields_array = array();
         foreach($this->db_field_names as $db_field_name)
         {
-            if ($this->fields[$db_field_name][1] == "LABEL_DEFINITION_NOTES_FIELD")
+            if ($this->fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
                 array_push($note_fields_array, $db_field_name);
         }
 
@@ -600,7 +600,7 @@ class ListTable extends UserDatabaseTable
             foreach ($this->db_field_names as $db_field_name)
             {
                 $field_type = $this->fields[$db_field_name][1];
-                if ((stristr($field_type, "TEXT")) || ($field_type == "LABEL_DEFINITION_SELECTION"))
+                if ((stristr($field_type, "TEXT")) || ($field_type == FIELD_TYPE_DEFINITION_SELECTION))
                     array_push($search_fields, $db_field_name);
             }
             
@@ -684,7 +684,7 @@ class ListTable extends UserDatabaseTable
             # get notes
             foreach($this->db_field_names as $db_field_name)
             {
-                if ($this->fields[$db_field_name][1] == "LABEL_DEFINITION_NOTES_FIELD")
+                if ($this->fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
                 {
                     if ($record[$db_field_name] > 0)
                     {
@@ -728,7 +728,7 @@ class ListTable extends UserDatabaseTable
             $notes_array = array();
             $value = $name_values[$db_field_name];
             
-            if ($this->fields[$db_field_name][1] == "LABEL_DEFINITION_NOTES_FIELD")
+            if ($this->fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
             {
                 foreach ($value as $note)
                 {
@@ -792,7 +792,7 @@ class ListTable extends UserDatabaseTable
             $value = $name_values_array[$db_field_name];
             $notes_array = array();
             
-            if ($this->fields[$db_field_name][1] == "LABEL_DEFINITION_NOTES_FIELD")
+            if ($this->fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
             {
                 foreach ($value as $note)
                 {
@@ -817,7 +817,7 @@ class ListTable extends UserDatabaseTable
         $result = $this->_database->query($query);
         if ($result == FALSE)
         {
-            $this->_handle_error("could not get id of ListTable (key_string=".$key_string.")", ERROR_DATABASE_PROBLEM);
+            $this->_handle_error("could not get id of ListTable (key_string=".$key_string.")", "ERROR_DATABASE_PROBLEM");
             
             return FALSE;
         }
@@ -923,7 +923,7 @@ class ListTable extends UserDatabaseTable
         $found_notes_field = FALSE;
         foreach($this->fields as $field)
         {
-            if ($field[1] == "LABEL_DEFINITION_NOTES_FIELD")
+            if ($field[1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
                 $found_notes_field = TRUE;
         }
         if ($found_notes_field)

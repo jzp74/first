@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This is the script to upgrade from version 0.7 to version 0.8
+ * This is the script to upgrade from version 0.8 to version 0.9
  *
  */
 

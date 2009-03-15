@@ -76,7 +76,7 @@ $list_table_configuration = array(
     HTML_TABLE_JS_NAME_PREFIX => "list_",
     HTML_TABLE_CSS_NAME_PREFIX => LIST_CSS_NAME_PREFIX,
     HTML_TABLE_DELETE_MODE => HTML_TABLE_DELETE_MODE_ARCHIVED,
-    HTML_TABLE_RECORD_NAME => LABEL_LIST_RECORD
+    HTML_TABLE_RECORD_NAME => translate("LABEL_LIST_RECORD")
 );
 
 
@@ -347,7 +347,7 @@ function action_insert_list_record ($list_title, $form_values)
         # set new value to the old value
         $new_form_value = $result->get_result_str();
 
-        if ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
+        if ($field_type == FIELD_TYPE_DEFINITION_NOTES_FIELD)
         {
             $new_note_array = array($field_number, $form_values[$name_key]);
             
@@ -461,7 +461,7 @@ function action_update_list_record ($list_title, $key_string, $form_values)
         # set new value to the old value
         $new_form_value = $result->get_result_str();
 
-        if ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
+        if ($field_type == FIELD_TYPE_DEFINITION_NOTES_FIELD)
         {
             $new_note_array = array($field_number, $form_values[$name_key]);
     
@@ -768,7 +768,7 @@ function action_set_list_filter($list_title, $filter_str)
     # check if filter_str is well formed
     if (str_is_well_formed("filter_str", $filter_str) == FALSE_RETURN_STRING)
     {
-        set_error_message("message_pane", ERROR_NOT_WELL_FORMED_STRING, "", "", $response);
+        set_error_message("message_pane", "ERROR_NOT_WELL_FORMED_STRING", "", "", $response);
         
         return $response;
     }
@@ -823,10 +823,10 @@ function get_footer ($creator_modifier_array)
 
     $html_str = "";
 
-    $html_str .= LABEL_CREATED_BY." <strong>".$creator_modifier_array[DB_CREATOR_FIELD_NAME];
-    $html_str .= "</strong> ".LABEL_AT." <strong>".$ts_created;
-    $html_str .= "</strong>, ".LABEL_LAST_MODIFICATION_BY." <strong>".$creator_modifier_array[DB_MODIFIER_FIELD_NAME];
-    $html_str .= "</strong> ".LABEL_AT." <strong>".$ts_modified."</strong>";
+    $html_str .= translate("LABEL_CREATED_BY")." <strong>".$creator_modifier_array[DB_CREATOR_FIELD_NAME];
+    $html_str .= "</strong> ".translate("LABEL_AT")." <strong>".$ts_created;
+    $html_str .= "</strong>, ".translate("LABEL_LAST_MODIFICATION_BY")." <strong>".$creator_modifier_array[DB_MODIFIER_FIELD_NAME];
+    $html_str .= "</strong> ".translate("LABEL_AT")." <strong>".$ts_modified."</strong>";
     $html_str .= "<input id=\"focus_on_this_input\" size=\"1\" readonly>";
     
     $logging->trace("got footer");

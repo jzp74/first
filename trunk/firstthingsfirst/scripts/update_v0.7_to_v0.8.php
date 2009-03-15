@@ -60,11 +60,11 @@ if ($result != FALSE)
         # add column for creator
         $query = "ALTER TABLE ".LISTTABLEDESCRIPTION_TABLE_NAME." ADD COLUMN ";
         $query .= LISTTABLEDESCRIPTION_CREATOR_FIELD_NAME." ";
-        $query .= $firstthingsfirst_field_descriptions["LABEL_DEFINITION_AUTO_CREATED"][FIELD_DESCRIPTION_FIELD_DB_DEFINITION];
+        $query .= $firstthingsfirst_field_descriptions[FIELD_TYPE_DEFINITION_AUTO_CREATED][FIELD_DESCRIPTION_FIELD_DB_DEFINITION];
         $query .= " AFTER ".LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME;
         # add column for modifier
         $query .= ", ADD COLUMN ".LISTTABLEDESCRIPTION_MODIFIER_FIELD_NAME." ";
-        $query .= $firstthingsfirst_field_descriptions["LABEL_DEFINITION_AUTO_MODIFIED"][FIELD_DESCRIPTION_FIELD_DB_DEFINITION];
+        $query .= $firstthingsfirst_field_descriptions[FIELD_TYPE_DEFINITION_AUTO_MODIFIED][FIELD_DESCRIPTION_FIELD_DB_DEFINITION];
         $query .= " AFTER ".LISTTABLEDESCRIPTION_CREATOR_FIELD_NAME;
 #        echo $query."<br>\n";
         $result = $database->query($query);
@@ -108,7 +108,7 @@ if ($query_result != FALSE)
             $definition[$field_name] = $new_field_definition;
 
             # update auto created or auto update field
-            if ($field_type == "LABEL_DEFINITION_AUTO_CREATED" || $field_type == "LABEL_DEFINITION_AUTO_CREATED")
+            if ($field_type == FIELD_TYPE_DEFINITION_AUTO_CREATED || $field_type == FIELD_TYPE_DEFINITION_AUTO_CREATED)
             {
                 # update list table description
                 echo "&nbsp;&nbsp;&nbsp;updating list table<br>\n";

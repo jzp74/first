@@ -16,7 +16,13 @@ $firstthingsfirst_date_string = DATE_FORMAT_EU;
 
 # maximum numbers of entries per page
 $firstthingsfirst_list_page_entries = 14;
-    
+
+# system language
+# choose between the following languages:
+# LANG_EN - English language
+# LANG_NL - Dutch language
+$firstthingsfirst_lang = LANG_EN;
+
 # database table prefix
 # define a prefix that is unique for this firstthingsfirst instance
 # this setting allows you have multiple firstthingsfirst instances to share the same db schema
@@ -31,9 +37,14 @@ $firstthingsfirst_db_user = "some_user";
 $firstthingsfirst_db_passwd = "password";
 $firstthingsfirst_db_schema = "some_schema";
 
-# loglevel
-# choose between LOGGING_OFF LOGGING_ERROR, LOGGING_WARN, LOGGING_INFO, LOGGING_DEBUG and LOGGING_TRACE
-# make sure you have write privileges on your hosting provider if you want to turn on logging
+# loglevel (make sure you have write privileges on your hosting provider if you want to turn on logging)
+# choose between the following log levels:
+# LOGGING_OFF - no logging
+# LOGGING_ERROR - log only error messages
+# LOGGING_WARN - log warning and error messages
+# LOGGING_INFO - log info, warning and error messages
+# LOGGING_DEBUG - log debug, info, warning and error messages (lots of log data!)
+# LOGGING_TRACE - log trace, debug, info, warning and error messages (lots of log data!)
 $firstthingsfirst_loglevel = LOGGING_OFF;
 
 # logfile, all logmessages will be written in this file

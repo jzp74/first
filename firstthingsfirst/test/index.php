@@ -17,10 +17,6 @@ require_once("../localsettings.php");
 require_once("../php/external/JSON.php");
 require_once("../xajax/xajax_core/xajaxAIO.inc.php");
 
-require_once("../php/Text.Buttons.php");
-require_once("../php/Text.Errors.php");
-require_once("../php/Text.Labels.php");
-
 require_once("../php/Class.Result.php");
 require_once("../php/Class.Database.php");
 require_once("../php/Class.ListState.php");
@@ -32,14 +28,12 @@ require_once("../php/Class.ListTable.php");
 require_once("../php/Class.ListTableNote.php");
 require_once("../php/Class.UserListTablePermissions.php");
 
-require_once("Html.RegressionTest.php");
-require_once("testfunctions.php");
-require_once("testdata.php");
-
 
 /**
- * create global objects
+ * Initialize global objects and language settings
  */
+$xajax = new xajax();
+$xajax->configure("javascript URI", "../xajax");
 $logging = new Logging($firstthingsfirst_loglevel, $firstthingsfirst_logfile);
 $database = new Database();
 $list_state = new ListState();
@@ -48,11 +42,19 @@ $result = new Result();
 $list_table_description = new ListTableDescription();
 $user_list_permissions = new UserListTablePermissions();
 
+$text_translations = array();
+require_once("../lang/".$firstthingsfirst_lang_prefix_array[$firstthingsfirst_lang].".Text.Buttons.php");
+require_once("../lang/".$firstthingsfirst_lang_prefix_array[$firstthingsfirst_lang].".Text.Errors.php");
+require_once("../lang/".$firstthingsfirst_lang_prefix_array[$firstthingsfirst_lang].".Text.Labels.php");
+
+
 /**
- * Initialize xajax
+ * Import HTML related files
  */
-$xajax = new xajax();
-$xajax->configure("javascript URI", "../xajax");
+require_once("Html.RegressionTest.php");
+require_once("testfunctions.php");
+require_once("testdata.php");
+
 
 /**
  * Register ajax functions

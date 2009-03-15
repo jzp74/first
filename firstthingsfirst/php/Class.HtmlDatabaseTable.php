@@ -164,11 +164,11 @@ class HtmlDatabaseTable
      * @param $result Result result object
      * @return void
      */
-    function get_print_page ($title, $result)
+    function get_print_page ($list_title, $result)
     {
         $html_str = "";
 
-        $this->_log->trace("getting print page (title=".$title.")");
+        $this->_log->trace("getting print page (title=".$list_title.")");
     
         $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
         $html_str .= "        <div id=\"page_title\">".$title."</div>\n\n";
@@ -209,7 +209,7 @@ class HtmlDatabaseTable
         # select entries
         $records = $database_table->select($order_by_field, $page);
 
-        if (strlen($database_table->get_error_message_str()) > 0 && $database_table->get_error_message_str() != ERROR_DATABASE_EXISTENCE)
+        if (strlen($database_table->get_error_message_str()) > 0 && $database_table->get_error_message_str() != translate("ERROR_DATABASE_EXISTENCE"))
         {
             $this->_handle_error($database_table, $result, MESSAGE_PANE_DIV);
             # no return statement here because we want the complete page to be displayed
@@ -268,8 +268,8 @@ class HtmlDatabaseTable
                 $last_record = (($first_record + count($records)) - 1);
             }
             $html_str .= "                        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."pages_top\">";
-            $html_str .= LABEL_RECORDS." ".$first_record." - ";
-            $html_str .= $last_record." ".LABEL_OF." ".$total_records." ".LABEL_RECORDS."</div>\n";
+            $html_str .= translate("LABEL_RECORDS")." ".$first_record." - ";
+            $html_str .= $last_record." ".translate("LABEL_OF")." ".$total_records." ".translate("LABEL_RECORDS")."</div>\n";
         }
         else
             $html_str .= "                        &nbsp;\n";
@@ -291,14 +291,18 @@ class HtmlDatabaseTable
             # replace all space chars with &nbsp
             $field_name_replaced = str_replace(' ', '&nbsp;', $field_name);
 
+            # translate field_name when this is not a list table
+            if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_LIST)
+                $field_name_replaced = str_replace(' ', '&nbsp;', translate($field_name));
+
             # only display field names that have a length
             if (strlen($field_name) > 0)
             {
                 $sort_name = $user_fields[$field_name];
                 # change names to sort by for automatic creator and modifier fields
-                if ($fields[$sort_name][1] == "LABEL_DEFINITION_AUTO_CREATED")
+                if ($fields[$sort_name][1] == FIELD_TYPE_DEFINITION_AUTO_CREATED)
                     $sort_name = DB_TS_CREATED_FIELD_NAME;
-                else if ($fields[$sort_name][1] == "LABEL_DEFINITION_AUTO_MODIFIED")
+                else if ($fields[$sort_name][1] == FIELD_TYPE_DEFINITION_AUTO_MODIFIED)
                     $sort_name = DB_TS_MODIFIED_FIELD_NAME;
                 # set class name to determine arrow image
                 $class_name = "database_table_contents_header_sort";
@@ -349,19 +353,19 @@ class HtmlDatabaseTable
                 else
                     $onclick_str = "onclick=\"xajax_check_list_permissions('".ACTION_GET_LIST_PAGE."', '".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."', 'window.location.assign(%27index.php?action=".ACTION_GET_LIST_PAGE."&list=".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."%27)')\"";
             
-                if ($fields[$db_field_name][1] == "LABEL_DEFINITION_BOOL")
+                if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_BOOL)
                 {
                     if ($value == 0)
-                        $html_str .= "                        <td ".$onclick_str.">".LABEL_NO."</td>\n";
+                        $html_str .= "                        <td ".$onclick_str.">".translate("LABEL_NO")."</td>\n";
                     else
-                        $html_str .= "                        <td ".$onclick_str.">".LABEL_YES."</td>\n";
+                        $html_str .= "                        <td ".$onclick_str.">".translate("LABEL_YES")."</td>\n";
                 }
                 else if (stristr($fields[$db_field_name][1], "DATE"))
                 {
                     $date_string = str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_WEEKDAY, $value));
                     $html_str .= "                        <td ".$onclick_str.">".$date_string."</td>\n";
                 }
-                else if ($fields[$db_field_name][1] == "LABEL_DEFINITION_AUTO_CREATED")
+                else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_AUTO_CREATED)
                 {
                     
                     if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME)
@@ -381,7 +385,7 @@ class HtmlDatabaseTable
                         }
                     }                        
                 }
-                else if ($fields[$db_field_name][1] == "LABEL_DEFINITION_AUTO_MODIFIED")
+                else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_AUTO_MODIFIED)
                 {
                     if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME)
                         $html_str .= "                        <td ".$onclick_str.">".str_replace('-', '&#8209;', $record[DB_MODIFIER_FIELD_NAME])."</td>\n";
@@ -400,7 +404,7 @@ class HtmlDatabaseTable
                         }
                     }                        
                 }
-                else if ($fields[$db_field_name][1] == "LABEL_DEFINITION_NOTES_FIELD")
+                else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
                 {
                     $html_str .= "                        <td ".$onclick_str.">";
                     if (count($value) > 0)
@@ -418,10 +422,15 @@ class HtmlDatabaseTable
                         $html_str .= "-";
                     $html_str .= "                        </td>\n";
                 }
-                else if ($fields[$db_field_name][1] == "LABEL_DEFINITION_TEXT_FIELD")
+                else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_TEXT_FIELD)
                 {
                     $html_str .= "                        <td ".$onclick_str.">".nl2br($value)."</td>\n";
                 }            
+                # translate language options in user admin page
+                else if (($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_USER_ADMIN) && ($db_field_name == USER_LANG_FIELD_NAME))
+                {
+                    $html_str .= "                        <td ".$onclick_str.">".translate($value)."</td>\n";
+                }
                 else
                 {
                     $html_str .= "                        <td ".$onclick_str.">".$value."</td>\n";
@@ -442,21 +451,21 @@ class HtmlDatabaseTable
                     if (($metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] != DATABASETABLE_METADATA_FALSE) && (strlen($record[DB_ARCHIVER_FIELD_NAME]) == 0))
                     {
                         $html_str .= "                        <td width=\"1%\">";
-                        $html_str .= get_href($js_button_archive, $this->permissions_list_title, "xajax_".$js_button_archive."(%27".$list_title."%27, %27".$encoded_key_string."%27)", BUTTON_ARCHIVE);
+                        $html_str .= get_href($js_button_archive, $this->permissions_list_title, "xajax_".$js_button_archive."(%27".$list_title."%27, %27".$encoded_key_string."%27)", translate("BUTTON_ARCHIVE"));
                         $html_str .= "</td>\n";
                     }
                     # add the delete link when it should always be displayed
                     if ($this->configuration[HTML_TABLE_DELETE_MODE] == HTML_TABLE_DELETE_MODE_ALWAYS)
                     {
                         $html_str .= "                        <td width=\"1%\">";
-                        $html_str .= get_href($js_button_delete, $this->permissions_list_title, "xajax_".$js_button_delete."(%27".$list_title."%27, %27".$encoded_key_string."%27)", BUTTON_DELETE);
+                        $html_str .= get_href($js_button_delete, $this->permissions_list_title, "xajax_".$js_button_delete."(%27".$list_title."%27, %27".$encoded_key_string."%27)", translate("BUTTON_DELETE"));
                         $html_str .= "</td>\n";
                     }
                     # or add the delete link when record is archived
                     else if (($this->configuration[HTML_TABLE_DELETE_MODE] == HTML_TABLE_DELETE_MODE_ARCHIVED) && (strlen($record[DB_ARCHIVER_FIELD_NAME]) > 0))
                     {
                         $html_str .= "                        <td width=\"1%\">";
-                        $html_str .= get_href($js_button_delete, $this->permissions_list_title, "xajax_".$js_button_delete."(%27".$list_title."%27, %27".$encoded_key_string."%27)", BUTTON_DELETE);
+                        $html_str .= get_href($js_button_delete, $this->permissions_list_title, "xajax_".$js_button_delete."(%27".$list_title."%27, %27".$encoded_key_string."%27)", translate("BUTTON_DELETE"));
                         $html_str .= "</td>\n";
                     }
                     else if ($this->configuration[HTML_TABLE_DELETE_MODE] == HTML_TABLE_DELETE_MODE_NEVER)
@@ -469,11 +478,11 @@ class HtmlDatabaseTable
             {
                 # add modify button
                 $html_str .= "                        <td width=\"1%\">";
-                $html_str .= get_query_href(ACTION_GET_LISTBUILDER_PAGE, $record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], "action=".ACTION_GET_LISTBUILDER_PAGE."&list=".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], BUTTON_MODIFY);
+                $html_str .= get_query_href(ACTION_GET_LISTBUILDER_PAGE, $record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], "action=".ACTION_GET_LISTBUILDER_PAGE."&list=".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], translate("BUTTON_MODIFY"));
                 $html_str .= "</td>\n";
                 # add delete button
                 $html_str .= "                        <td width=\"1%\">";
-                $html_str .= get_href_confirm(ACTION_DELETE_PORTAL_RECORD, $record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], "xajax_action_delete_portal_record(%27".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."%27)", LABEL_CONFIRM_DELETE, BUTTON_DELETE);
+                $html_str .= get_href_confirm(ACTION_DELETE_PORTAL_RECORD, $record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], "xajax_action_delete_portal_record(%27".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."%27)", translate("LABEL_CONFIRM_DELETE"), translate("BUTTON_DELETE"));
                 $html_str .= "</td>\n                    </tr>\n";
             }
             else
@@ -486,7 +495,7 @@ class HtmlDatabaseTable
         {
             $html_str .= "                    <tr>\n";
             foreach ($field_names_with_length as $field_name)
-                $html_str .= "                        <td>".LABEL_MINUS."</td>\n";
+                $html_str .= "                        <td>".translate("LABEL_MINUS")."</td>\n";
             $html_str .= "                        <td width=\"1%\">&nbsp</td>\n";
             $html_str .= "                    </tr>\n";
         }
@@ -506,7 +515,7 @@ class HtmlDatabaseTable
             # display 1 pagenumber when there is only one page (or none)
             if ($total_pages == 0 || $total_pages == 1)
             {
-                $html_str .= LABEL_PAGE.": <strong>".$total_pages."</strong>";
+                $html_str .= translate("LABEL_PAGE").": <strong>".$total_pages."</strong>";
             }
             # pagenumber display algorithm for 2 or more pages
             else
@@ -516,7 +525,7 @@ class HtmlDatabaseTable
                 
                 # display previous page link
                 if ($current_page > 1)                   
-                    $html_str .= get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".($current_page - 1).")", "&laquo;&nbsp;".BUTTON_PREVIOUS_PAGE)."&nbsp;&nbsp;";
+                    $html_str .= get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".($current_page - 1).")", "&laquo;&nbsp;".translate("BUTTON_PREVIOUS_PAGE"))."&nbsp;&nbsp;";
         
                 # display first pagenumber
                 if ($current_page == 1)
@@ -545,7 +554,7 @@ class HtmlDatabaseTable
     
                 # display next page link
                 if ($current_page < $total_pages)
-                    $html_str .= "&nbsp;&nbsp;".get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".($current_page + 1).")", BUTTON_NEXT_PAGE."&nbsp;&raquo;");        
+                    $html_str .= "&nbsp;&nbsp;".get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".($current_page + 1).")", translate("BUTTON_NEXT_PAGE")."&nbsp;&raquo;");        
             }
             $html_str .= "</div>\n";
         }
@@ -625,13 +634,17 @@ class HtmlDatabaseTable
             # replace all space chars with &nbsp
             $field_name_replaced = str_replace(' ', '&nbsp;', $field_names[$i]);
 
+            # translate field_name when this is not a list table
+            if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_LIST)
+                $field_name_replaced = str_replace(' ', '&nbsp;', translate($field_names[$i]));
+            
             # only add non auto_increment field types (check database definition for this)
-            if (!stristr($firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_DB_DEFINITION], "auto_increment"))
+            if (($field_type != FIELD_TYPE_DEFINITION_AUTO_NUMBER) && (strlen($field_name) > 0))
             {
                 $html_str .= "                                <tr id=\"".$db_field_name."\">\n";
                 $html_str .= "                                    <th>".$field_name_replaced."</th>\n";
             
-                if ($field_type != "LABEL_DEFINITION_NOTES_FIELD")
+                if ($field_type != FIELD_TYPE_DEFINITION_NOTES_FIELD)
                 {
                     $html_str .= "                                    <td id=\"".$db_field_name.GENERAL_SEPARATOR.$field_type.GENERAL_SEPARATOR."0";
                     $html_str .= "\" tabindex=\"".$i."\"><".$firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_HTML_DEFINITION];
@@ -642,7 +655,7 @@ class HtmlDatabaseTable
                 # set values from database
                 if (strlen($encoded_key_string))
                 {
-                    if ($field_type == "LABEL_DEFINITION_BOOL")
+                    if ($field_type == FIELD_TYPE_DEFINITION_BOOL)
                     {
                         if ($record[$db_field_name] == "1")
                             $html_str .= " checked";
@@ -652,7 +665,7 @@ class HtmlDatabaseTable
                         $date_string = get_date_str(DATE_FORMAT_NORMAL, $record[$db_field_name]);
                         $html_str .= " value=\"".$date_string."\"";
                     }
-                    else if ($fields[$db_field_name][1] == "LABEL_DEFINITION_AUTO_CREATED")
+                    else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_AUTO_CREATED)
                     {
                         if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME)
                             $html_str .= " value=\"".$record[DB_CREATOR_FIELD_NAME]."\"";
@@ -668,7 +681,7 @@ class HtmlDatabaseTable
                             }
                         }                        
                     }
-                    else if ($fields[$db_field_name][1] == "LABEL_DEFINITION_AUTO_MODIFIED")
+                    else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_AUTO_MODIFIED)
                     {
                         if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME)
                             $html_str .= " value=\"".$record[DB_MODIFIER_FIELD_NAME]."\"";
@@ -683,11 +696,11 @@ class HtmlDatabaseTable
                             }
                         }                        
                     }
-                    else if ($field_type == "LABEL_DEFINITION_TEXT_FIELD")
+                    else if ($field_type == FIELD_TYPE_DEFINITION_TEXT_FIELD)
                         $html_str .= ">".$record[$db_field_name]."</textarea";
-                    else if ($field_type == "LABEL_DEFINITION_PASSWORD")
+                    else if ($field_type == FIELD_TYPE_DEFINITION_PASSWORD)
                         $html_str .= " value=\"\"";
-                    else if ($field_type == "LABEL_DEFINITION_SELECTION")
+                    else if ($field_type == FIELD_TYPE_DEFINITION_SELECTION)
                     {
                         $html_str .= ">";
                         $option_list = explode("|", $field_options);
@@ -696,11 +709,15 @@ class HtmlDatabaseTable
                             $html_str .= "\n                                        <option value=\"".$option."\"";
                             if ($option == $record[$db_field_name])
                                 $html_str .= " selected";
-                            $html_str .= ">".$option."&nbsp;&nbsp;"."</option>";
+                            # translate language options in user admin page
+                            if (($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_USER_ADMIN) && ($db_field_name == USER_LANG_FIELD_NAME))
+                                $html_str .= ">".translate($option)."&nbsp;&nbsp;"."</option>";
+                            else
+                                $html_str .= ">".$option."&nbsp;&nbsp;"."</option>";
                         }
                         $html_str .= "\n                                    </select";
                     }
-                    else if ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
+                    else if ($field_type == FIELD_TYPE_DEFINITION_NOTES_FIELD)
                     {
                         $html_str .= get_list_record_notes($db_field_name, $record[$db_field_name]);
                     }
@@ -710,26 +727,31 @@ class HtmlDatabaseTable
                 # set initial values
                 else
                 {
-                    if ($field_type == "LABEL_DEFINITION_NON_EDIT_NUMBER")
+                    if ($field_type == FIELD_TYPE_DEFINITION_NON_EDIT_NUMBER)
                         $html_str .=  " value=\"0\"";
-                    else if (($field_type == "LABEL_DEFINITION_AUTO_CREATED") || ($field_type == "LABEL_DEFINITION_AUTO_MODIFIED"))
+                    else if (($field_type == FIELD_TYPE_DEFINITION_AUTO_CREATED) || ($field_type == FIELD_TYPE_DEFINITION_AUTO_MODIFIED))
                         $html_str .=  " value=\"-\"";
-                    else if ($field_type == "LABEL_DEFINITION_TEXT_FIELD")
+                    else if ($field_type == FIELD_TYPE_DEFINITION_TEXT_FIELD)
                         $html_str .= "></textarea";
-                    else if ($field_type == "LABEL_DEFINITION_NOTES_FIELD")
+                    else if ($field_type == FIELD_TYPE_DEFINITION_NOTES_FIELD)
                         $html_str .= get_list_record_notes($db_field_name, array());
-                    else if ($field_type == "LABEL_DEFINITION_SELECTION")
+                    else if ($field_type == FIELD_TYPE_DEFINITION_SELECTION)
                     {
                         $html_str .= ">";
                         $option_list = explode("|", $field_options);
                         foreach ($option_list as $option)
-                            $html_str .= "\n                                        <option value=\"".$option."\">".$option."&nbsp;&nbsp;"."</option>\n";
+                        {
+                            if (($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_USER_ADMIN) && ($db_field_name == USER_LANG_FIELD_NAME))
+                                $html_str .= "\n                                        <option value=\"".$option."\">".translate($option)."&nbsp;&nbsp;"."</option>\n";
+                            else
+                                $html_str .= "\n                                        <option value=\"".$option."\">".$option."&nbsp;&nbsp;"."</option>\n";
+                        }
                         $html_str .= "\n                                    </select";
                     }
                     else
                         $html_str .= " value=\"\"";
                 }
-                if ($field_type != "LABEL_DEFINITION_NOTES_FIELD")
+                if ($field_type != FIELD_TYPE_DEFINITION_NOTES_FIELD)
                     $html_str .= "></td>\n";
                     $html_str .= "                                    <td class=\"super_width\">&nbsp;</td>\n";
                 $html_str .= "                                </tr>\n";
@@ -749,11 +771,11 @@ class HtmlDatabaseTable
         $html_str .= "                        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents_buttons\">\n";
         $html_str .= "                            ";
         if (!strlen($encoded_key_string))
-            $html_str .= get_href($js_button_insert, $this->permissions_list_title, "xajax_".$js_button_insert."(%27".$list_title."%27, xajax.getFormValues(%27record_form%27))", BUTTON_ADD);
+            $html_str .= get_href($js_button_insert, $this->permissions_list_title, "xajax_".$js_button_insert."(%27".$list_title."%27, xajax.getFormValues(%27record_form%27))", translate("BUTTON_ADD"));
         else
-            $html_str .= get_href($js_button_update, $this->permissions_list_title, "xajax_".$js_button_update."(%27".$list_title."%27, %27".$encoded_key_string."%27, xajax.getFormValues(%27record_form%27))", BUTTON_COMMIT);
+            $html_str .= get_href($js_button_update, $this->permissions_list_title, "xajax_".$js_button_update."(%27".$list_title."%27, %27".$encoded_key_string."%27, xajax.getFormValues(%27record_form%27))", translate("BUTTON_COMMIT"));
         $html_str .= "\n                            ";
-        $html_str .= "&nbsp;&nbsp;".get_href($js_button_cancel, HTML_EMPTY_LIST_TITLE, "xajax_".$js_button_cancel."(%27".$list_title."%27)", BUTTON_CANCEL);
+        $html_str .= "&nbsp;&nbsp;".get_href($js_button_cancel, HTML_EMPTY_LIST_TITLE, "xajax_".$js_button_cancel."(%27".$list_title."%27)", translate("BUTTON_CANCEL"));
         $html_str .= "\n                        </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents_buttons -->\n";
 
         #end form
@@ -788,12 +810,12 @@ class HtmlDatabaseTable
         if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_PORTAL)
         {
             if ($action == "edit")
-                $html_str .= "<strong>".LABEL_EDIT_RECORD."</strong>";
+                $html_str .= "<strong>".translate("LABEL_EDIT_RECORD")."</strong>";
             else if ($action == "insert")
-                $html_str .= "<strong>".LABEL_ADD_RECORD."</strong>";
+                $html_str .= "<strong>".translate("LABEL_ADD_RECORD")."</strong>";
             else if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_USERLISTTABLEPERMISSIONS)
             {
-                $html_str .= get_href(ACTION_INSERT_LIST_RECORD, $this->permissions_list_title, "xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record(%27".$list_title."%27, %27%27)", BUTTON_ADD_RECORD.$this->configuration[HTML_TABLE_RECORD_NAME]);
+                $html_str .= get_href(ACTION_INSERT_LIST_RECORD, $this->permissions_list_title, "xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record(%27".$list_title."%27, %27%27)", translate("BUTTON_ADD_RECORD").$this->configuration[HTML_TABLE_RECORD_NAME]);
                 $html_str .= "&nbsp;&nbsp;&nbsp;&nbsp;";
             }
         }
@@ -801,7 +823,7 @@ class HtmlDatabaseTable
         if (($action == "") && ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_LIST))
         {
             $html_str .= "<a href=\"javascript:void(0);\" onclick=\"window.open('";
-            $html_str .= "index.php?action=".ACTION_GET_LIST_PRINT_PAGE."&list=".$list_title."')\">".BUTTON_PRINT_LIST."</a>";
+            $html_str .= "index.php?action=".ACTION_GET_LIST_PRINT_PAGE."&list=".$list_title."')\">".translate("BUTTON_PRINT_LIST")."</a>";
         }
         else
             $html_str .= "&nbsp;";
@@ -832,7 +854,7 @@ class HtmlDatabaseTable
         $this->_user->get_list_state($database_table->get_table_name());
         $archived = $this->_list_state->get_archived();
         
-        $html_str .= "                        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."archive_select_label\">".LABEL_DISPLAY."</div>\n";
+        $html_str .= "                        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."archive_select_label\">".translate("LABEL_DISPLAY")."</div>\n";
         $html_str .= "                        ";
         $html_str .= "<div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."archive_select\">";
         $html_str .= "                            <select id=\"archive_select\"";
@@ -840,11 +862,11 @@ class HtmlDatabaseTable
         $html_str .= "                                <option value=\"".LISTSTATE_SELECT_NON_ARCHIVED."\"";
         if ($archived == LISTSTATE_SELECT_NON_ARCHIVED)
             $html_str .= " selected";
-        $html_str .= ">".LABEL_NORMAL_RECORDS."</option>\n";
+        $html_str .= ">".translate("LABEL_NORMAL_RECORDS")."</option>\n";
         $html_str .= "                                <option value=\"".LISTSTATE_SELECT_ARCHIVED."\"";
         if ($archived == LISTSTATE_SELECT_ARCHIVED)
             $html_str .= " selected";
-        $html_str .= ">".LABEL_ARCHIVED_RECORDS."</option>\n";
+        $html_str .= ">".translate("LABEL_ARCHIVED_RECORDS")."</option>\n";
         $html_str .= "                            </select>\n";
         $html_str .= "                        </div>\n";    
 
@@ -868,13 +890,13 @@ class HtmlDatabaseTable
         $this->_user->get_list_state($database_table->get_table_name());
         $filter_str = $this->_list_state->get_filter_str();
         
-        $html_str .= "                        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."filter_label\">".LABEL_FILTER."</div>\n";
+        $html_str .= "                        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."filter_label\">".translate("LABEL_FILTER")."</div>\n";
         $html_str .= "                        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."filter\">\n";
         $html_str .= "                            <form name=\"filter_form_name\" id=\"filter_form\" ";
         $html_str .= "onsubmit=\"javascript:xajax_action_set_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."filter('".$list_title."', document.getElementById('filter_str').value); return false;\">\n";
         $html_str .= "                                <input size=\"34\" maxlength=\"100\" value=\"".$filter_str."\" id=\"filter_str\"><br>\n";
-        $html_str .= "                                <input type=submit class=\"button\" value=\"".BUTTON_FILTER."\">\n";
-        $html_str .= "                                <button type=\"button\" class=\"button\" onclick=\"javascript:xajax_action_set_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."filter('".$list_title."', '')\">".BUTTON_RESET_FILTER."</button>\n";
+        $html_str .= "                                <input type=submit class=\"button\" value=\"".translate("BUTTON_FILTER")."\">\n";
+        $html_str .= "                                <button type=\"button\" class=\"button\" onclick=\"javascript:xajax_action_set_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."filter('".$list_title."', '')\">".translate("BUTTON_RESET_FILTER")."</button>\n";
         $html_str .= "                            </form>\n";
         $html_str .= "                        </div>\n";
 

@@ -61,7 +61,7 @@ $user_list_permissions_table_configuration = array(
     HTML_TABLE_JS_NAME_PREFIX => "user_list_permissions_",
     HTML_TABLE_CSS_NAME_PREFIX => USERLISTTABLEPERMISSIONS_CSS_NAME_PREFIX,
     HTML_TABLE_DELETE_MODE => HTML_TABLE_DELETE_MODE_NEVER,
-    HTML_TABLE_RECORD_NAME => LABEL_USERLISTTABLEPERMISSIONS_RECORD
+    HTML_TABLE_RECORD_NAME => translate("LABEL_USERLISTTABLEPERMISSIONS_RECORD")
 );
 
 
@@ -86,7 +86,7 @@ function action_get_user_list_permissions_page ()
     $html_database_table = new HtmlDatabaseTable ($user_list_permissions_table_configuration);
     
     # set page
-    $html_database_table->get_page($user->get_current_list_name(), LABEL_USERLISTTABLEPERMISSIONS_TITLE, $result);
+    $html_database_table->get_page($user->get_current_list_name(), translate("LABEL_USERLISTTABLEPERMISSIONS_TITLE"), $result);
     $response->assign("main_body", "innerHTML", $result->get_result_str());
 
     # set filter value
@@ -102,7 +102,7 @@ function action_get_user_list_permissions_page ()
     set_login_status($response);
     
     # set action pane
-    $html_str = $html_database_table->get_action_bar(USER_TABLE_NAME, "");
+    $html_str = $html_database_table->get_action_bar(USERLISTTABLEPERMISSIONS_TABLE_NAME, "");
     $response->assign("action_pane", "innerHTML", $html_str);
     
     # set footer
@@ -252,7 +252,7 @@ function action_update_user_list_permissions_record ($title, $key_string, $form_
     # check if all booleans have been set
     foreach ($field_keys as $db_field_name)
     {        
-        if ($fields[$db_field_name][1] == "LABEL_DEFINITION_BOOL")
+        if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_BOOL)
         {
             if (!isset($new_form_values[$db_field_name]))
             {

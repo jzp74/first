@@ -36,6 +36,11 @@ define("USER_NAME_FIELD_NAME", "_name");
 define("USER_PW_FIELD_NAME", "_pw");
 
 /**
+ * definition of lang field name
+ */
+define("USER_LANG_FIELD_NAME", "_lang");
+
+/**
  * definition of create_list field name
  */
 define("USER_CAN_CREATE_LIST_FIELD_NAME", "_create_list");
@@ -54,12 +59,13 @@ define("USER_TIMES_LOGIN_FIELD_NAME", "_times_login");
  * definition of fields
  */
 $class_user_fields = array(
-    DB_ID_FIELD_NAME => array(LABEL_LIST_ID, "LABEL_DEFINITION_AUTO_NUMBER", ""),
-    USER_NAME_FIELD_NAME => array(LABEL_USER_NAME, "LABEL_DEFINITION_USERNAME", DATABASETABLE_UNIQUE_FIELD),
-    USER_PW_FIELD_NAME => array(LABEL_USER_PW, "LABEL_DEFINITION_PASSWORD", ""),
-    USER_CAN_CREATE_LIST_FIELD_NAME => array(LABEL_USER_CAN_CREATE_LIST, "LABEL_DEFINITION_BOOL", ""),
-    USER_IS_ADMIN_FIELD_NAME => array(LABEL_USER_IS_ADMIN, "LABEL_DEFINITION_BOOL", ""),
-    USER_TIMES_LOGIN_FIELD_NAME => array(LABEL_USER_TIMES_LOGIN, "LABEL_DEFINITION_NON_EDIT_NUMBER", ""),
+    DB_ID_FIELD_NAME => array("LABEL_LIST_ID", FIELD_TYPE_DEFINITION_AUTO_NUMBER, ""),
+    USER_NAME_FIELD_NAME => array("LABEL_USER_NAME", FIELD_TYPE_DEFINITION_USERNAME, DATABASETABLE_UNIQUE_FIELD),
+    USER_PW_FIELD_NAME => array("LABEL_USER_PW", FIELD_TYPE_DEFINITION_PASSWORD, ""),
+    USER_LANG_FIELD_NAME => array("LABEL_USER_LANG", FIELD_TYPE_DEFINITION_SELECTION, implode(array_keys($firstthingsfirst_lang_prefix_array), '|')),
+    USER_CAN_CREATE_LIST_FIELD_NAME => array("LABEL_USER_CAN_CREATE_LIST", FIELD_TYPE_DEFINITION_BOOL, ""),
+    USER_IS_ADMIN_FIELD_NAME => array("LABEL_USER_IS_ADMIN", FIELD_TYPE_DEFINITION_BOOL, ""),
+    USER_TIMES_LOGIN_FIELD_NAME => array("LABEL_USER_TIMES_LOGIN", FIELD_TYPE_DEFINITION_NON_EDIT_NUMBER, ""),
 );
 
 /**
@@ -127,6 +133,15 @@ class User extends UserDatabaseTable
     function get_current_list_name ()
     {
         return $_SESSION["current_list_name"];
+    }
+
+    /**
+     * get value of SESSION variable lang.
+     * @return string value of SESSION variable lang.
+     */
+    function get_lang ()
+    {
+        return $_SESSION["lang"];
     }
 
     /**
@@ -211,6 +226,16 @@ class User extends UserDatabaseTable
     }
         
     /**
+     * set value of SESSION variable lang
+     * @param string $lang preferred language
+     * @return void
+     */
+    function set_lang ($lang)
+    {
+        $_SESSION["lang"] = $lang;
+    }
+        
+    /**
     * set value of SESSION variable can_create_list
     * @param bool $permission indicates if current user is allowed to create a new list
     * @return void
@@ -277,9 +302,10 @@ class User extends UserDatabaseTable
         $this->set_id(USER_ID_RESET_VALUE);
         $this->set_name(USER_NAME_RESET_VALUE);
         $this->set_current_list_name("");
-        $this->set_times_login("0");
+        $this->set_lang(LANG_EN);
         $this->set_can_create_list("0");
         $this->set_is_admin("0");
+        $this->set_times_login("0");
         $this->set_login("0");
         $_SESSION["list_states"] = $this->_json->encode(array());
     }
@@ -304,6 +330,7 @@ class User extends UserDatabaseTable
     function login ($name, $pw)
     {
         global $firstthingsfirst_admin_passwd;
+        global $firstthingsfirst_lang;
         
         $this->_log->trace("login (name=".$name.")");
         
@@ -317,6 +344,7 @@ class User extends UserDatabaseTable
             $name_value_array = array();
             $name_value_array[USER_NAME_FIELD_NAME] = $name;
             $name_value_array[USER_PW_FIELD_NAME] = $firstthingsfirst_admin_passwd;
+            $name_value_array[USER_LANG_FIELD_NAME] = $firstthingsfirst_lang;
             $name_value_array[USER_CAN_CREATE_LIST_FIELD_NAME] = 1;
             $name_value_array[USER_IS_ADMIN_FIELD_NAME] = 1;
             $name_value_array[USER_TIMES_LOGIN_FIELD_NAME] = 0;
@@ -334,7 +362,7 @@ class User extends UserDatabaseTable
         {
             if ($this->error_message_str != ERROR_DATABASE_CONNECT)
             {
-                $this->_handle_error("", ERROR_INCORRECT_NAME_PASSWORD);
+                $this->_handle_error("", "ERROR_INCORRECT_NAME_PASSWORD");
                 $this->error_str = "";
             }
             
@@ -350,6 +378,7 @@ class User extends UserDatabaseTable
             $this->set_id($record[DB_ID_FIELD_NAME]);
             $this->set_name($record[USER_NAME_FIELD_NAME]);
             $this->set_current_list_name("");
+            $this->set_lang($record[USER_LANG_FIELD_NAME]);
             $this->set_can_create_list($record[USER_CAN_CREATE_LIST_FIELD_NAME]);
             $this->set_is_admin($record[USER_IS_ADMIN_FIELD_NAME]);
             $this->set_times_login($record[USER_TIMES_LOGIN_FIELD_NAME] + 1);
@@ -372,7 +401,7 @@ class User extends UserDatabaseTable
         {        
             $this->_log->warn("passwords do not match (name=".$name."), user is not logged in");
             $this->error_str = "";
-            $this->_handle_error("", ERROR_INCORRECT_NAME_PASSWORD);
+            $this->_handle_error("", "ERROR_INCORRECT_NAME_PASSWORD");
             
             return FALSE;
         }
@@ -454,7 +483,7 @@ class User extends UserDatabaseTable
         
         if ($this->exists($user_name))
         {
-            $this->_handle_error("user already exists", ERROR_DUPLICATE_USER_NAME);
+            $this->_handle_error("user already exists", "ERROR_DUPLICATE_USER_NAME");
             
             return FALSE;
         }

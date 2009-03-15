@@ -11,6 +11,21 @@
 
 
 /**
+ * return translation of given string
+ * @param string $str string to translate
+ * @return string translated string
+ */
+function translate ($string)
+{
+    global $text_translations;
+    
+    if (array_key_exists($string, $text_translations)) 
+        return $text_translations[$string];
+    else
+        return "NO TRANSLATION";
+}
+
+/**
  * perform a number of test functions on given string
  * @param array $check_functions array containing names of zero or more test functions
  * @param string $field_name name of field that contains this string
@@ -33,7 +48,7 @@ function check_field ($check_functions, $field_name, $str, $result)
             $result_str = str_is_not_empty($field_name, $result_str);
             if ($result_str == FALSE_RETURN_STRING)
             {
-                $result->set_error_message_str(ERROR_NO_FIELD_VALUE_GIVEN);
+                $result->set_error_message_str("ERROR_NO_FIELD_VALUE_GIVEN");
                 
                 return;
             }
@@ -43,7 +58,7 @@ function check_field ($check_functions, $field_name, $str, $result)
             $result_str = str_is_number($field_name, $result_str);
             if ($result_str == FALSE_RETURN_STRING)
             {
-                $result->set_error_message_str(ERROR_NO_NUMBER_GIVEN);
+                $result->set_error_message_str("ERROR_NO_NUMBER_GIVEN");
                 
                 return;
             }
@@ -53,7 +68,7 @@ function check_field ($check_functions, $field_name, $str, $result)
             $result_str = str_is_date($field_name, $result_str);
             if ($result_str == FALSE_RETURN_STRING)
             {
-                $result->set_error_message_str(ERROR_DATE_WRONG_FORMAT);
+                $result->set_error_message_str("ERROR_DATE_WRONG_FORMAT");
                 
                 return;
             }
@@ -239,7 +254,7 @@ function get_date_str ($format, $value)
         # get normal date format
         $date_str = strftime($firstthingsfirst_date_string, (strtotime($value)));
         
-        return constant($first_things_first_day_definitions[$weekday])."&nbsp;".$date_str;
+        return translate($first_things_first_day_definitions[$weekday])."&nbsp;".$date_str;
     }
     else
         return $value;

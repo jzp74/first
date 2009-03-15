@@ -64,7 +64,7 @@ $user_admin_table_configuration = array(
     HTML_TABLE_JS_NAME_PREFIX => "user_admin_",
     HTML_TABLE_CSS_NAME_PREFIX => USER_ADMIN_CSS_NAME_PREFIX,
     HTML_TABLE_DELETE_MODE => HTML_TABLE_DELETE_MODE_ALWAYS,
-    HTML_TABLE_RECORD_NAME => LABEL_USER_ADMIN_RECORD
+    HTML_TABLE_RECORD_NAME => translate("LABEL_USER_ADMIN_RECORD")
 );
 
 
@@ -87,7 +87,7 @@ function action_get_user_admin_page ()
     $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
     
     # set page
-    $html_database_table->get_page(LABEL_USER_ADMIN_TITLE, "", $result);
+    $html_database_table->get_page(translate("LABEL_USER_ADMIN_TITLE"), "", $result);
     $response->assign("main_body", "innerHTML", $result->get_result_str());
 
     # set content
@@ -245,7 +245,7 @@ function action_insert_user_admin_record ($title, $form_values)
     # check if all booleans have been set and copy old values into new array
     foreach ($field_keys as $db_field_name)
     {        
-        if ($fields[$db_field_name][1] == "LABEL_DEFINITION_BOOL")
+        if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_BOOL)
         {
             if (!isset($new_form_values[$db_field_name]))
             {
@@ -350,7 +350,7 @@ function action_update_user_admin_record ($title, $key_string, $form_values)
     # check if all booleans have been set
     foreach ($field_keys as $db_field_name)
     {        
-        if ($fields[$db_field_name][1] == "LABEL_DEFINITION_BOOL")
+        if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_BOOL)
         {
             if (!isset($new_form_values[$db_field_name]))
             {
@@ -416,6 +416,37 @@ function action_delete_user_admin_record ($title, $key_string)
     # remove any error messages
     $response->remove("error_message");
 
+    $logging->info("get user record");
+    $user_array = $user->select_record($key_string);
+    if (count($user_array) == 0)
+    {
+        $logging->warn("select user admin record returns empty array");
+        $error_message_str = $user->get_error_message_str();
+        $error_log_str = $user->get_error_log_str();
+        $error_str = $user->get_error_str();
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
+                    
+        return $response;
+    }
+    $user_name = $user_array[USER_NAME_FIELD_NAME];
+    $logging->info("found user: ".$user_name);
+    
+    # display error when current user wants to delete user admin
+    if ($user_name == "admin")
+    {
+        set_error_message(MESSAGE_PANE_DIV, "ERROR_CANNOT_DELETE_USER_ADMIN", "", "", $response);
+                    
+        return $response;
+    }
+    
+    # display error when current user wants to delete him/herself
+    if ($user_name == $user->get_name())
+    {
+        set_error_message(MESSAGE_PANE_DIV, "ERROR_CANNOT_DELETE_YOURSELF", "", "", $response);
+                    
+        return $response;
+    }
+    
     # display error when delete returns false
     if (!$user->delete($key_string))
     {

@@ -62,7 +62,7 @@ function check_permissions ($action, $js_function_call_str)
     if ($can_create_list && !$user->get_can_create_list())
     {
         # display error message
-        set_error_message(MESSAGE_PANE_DIV, ERROR_PERMISSION_CREATE_LIST, "", "", $response);
+        set_error_message(MESSAGE_PANE_DIV, "ERROR_PERMISSION_CREATE_LIST", "", "", $response);
 
         return $response;
     }
@@ -71,7 +71,7 @@ function check_permissions ($action, $js_function_call_str)
     if ($is_admin && !$user->get_is_admin())
     {
         # display error message
-        set_error_message(MESSAGE_PANE_DIV, ERROR_PERMISSION_ADMIN, "", "", $response);
+        set_error_message(MESSAGE_PANE_DIV, "ERROR_PERMISSION_ADMIN", "", "", $response);
 
         return $response;
     }
@@ -133,7 +133,7 @@ function check_list_permissions ($action, $list_title, $js_function_call_str)
     if ($can_view_specific_list && !$permission_array[PERMISSION_CAN_VIEW_SPECIFIC_LIST])
     {
         # display error message
-        set_error_message(MESSAGE_PANE_DIV, ERROR_PERMISSION_LIST_VIEW, "", "", $response);
+        set_error_message(MESSAGE_PANE_DIV, "ERROR_PERMISSION_LIST_VIEW", "", "", $response);
 
         return $response;
     }
@@ -142,7 +142,7 @@ function check_list_permissions ($action, $list_title, $js_function_call_str)
     if ($can_edit_specific_list && !$permission_array[PERMISSION_CAN_EDIT_SPECIFIC_LIST])
     {
         # display error message
-        set_error_message(MESSAGE_PANE_DIV, ERROR_PERMISSION_LIST_EDIT, "", "", $response);
+        set_error_message(MESSAGE_PANE_DIV, "ERROR_PERMISSION_LIST_EDIT", "", "", $response);
 
         return $response;
     }
@@ -151,7 +151,7 @@ function check_list_permissions ($action, $list_title, $js_function_call_str)
     if ($is_admin_specific_list && !$permission_array[PERMISSION_IS_ADMIN_SPECIFIC_LIST])
     {
         # display error message
-        set_error_message(MESSAGE_PANE_DIV, ERROR_PERMISSION_LIST_ADMIN, "", "", $response);
+        set_error_message(MESSAGE_PANE_DIV, "ERROR_PERMISSION_LIST_ADMIN", "", "", $response);
 
         return $response;
     }
@@ -238,13 +238,13 @@ function set_error_message ($error_element, $error_message_str, $error_log_str, 
     $response->remove("info_message");
     
     # now create the HTML for the error message
-    $html_str = "<p id=\"error_message\"><strong>".$error_message_str."</strong>";
+    $html_str = "<p id=\"error_message\"><strong>".translate($error_message_str)."</strong>";
     if (strlen($error_log_str) > 0 || strlen($error_str) > 0)
         $html_str .= "<br>";
     if (strlen($error_log_str) > 0)
-        $html_str .= "<br><strong>".LABEL_ADDED_TO_LOG_FILE.":</strong> ".$error_log_str;
+        $html_str .= "<br><strong>".translate("LABEL_ADDED_TO_LOG_FILE").":</strong> ".$error_log_str;
     if (strlen($error_str) > 0)
-        $html_str .= "<br><strong>".LABEL_DATABASE_MESSAGE.":</strong> ".$error_str;
+        $html_str .= "<br><strong>".translate("LABEL_DATABASE_MESSAGE").":</strong> ".$error_str;
     $html_str .= "</p>";
 
     $response->append($error_element, "innerHTML", $html_str);
@@ -393,27 +393,27 @@ function get_page_navigation ($page_type)
     {
         # show portal page link clickable when this is not the portal page
         if ($page_type != PAGE_TYPE_PORTAL)
-            $html_str .= get_query_href(ACTION_GET_PORTAL_PAGE, HTML_EMPTY_LIST_TITLE, "action=".ACTION_GET_PORTAL_PAGE, BUTTON_PORTAL);
+            $html_str .= get_query_href(ACTION_GET_PORTAL_PAGE, HTML_EMPTY_LIST_TITLE, "action=".ACTION_GET_PORTAL_PAGE, translate("BUTTON_PORTAL"));
         else  
-            $html_str .= "<span class=\"navigation_link_highlight\">".BUTTON_PORTAL."</span>";
+            $html_str .= "<span class=\"navigation_link_highlight\">".translate("BUTTON_PORTAL")."</span>";
         
         # show create new list link clickable when this not the list builder page
         if ($page_type != PAGE_TYPE_LISTBUILDER)
-            $html_str .= get_query_href(ACTION_GET_LISTBUILDER_PAGE, HTML_EMPTY_LIST_TITLE, "action=".ACTION_GET_LISTBUILDER_PAGE, BUTTON_CREATE_NEW_LIST);
+            $html_str .= get_query_href(ACTION_GET_LISTBUILDER_PAGE, HTML_EMPTY_LIST_TITLE, "action=".ACTION_GET_LISTBUILDER_PAGE, translate("BUTTON_CREATE_NEW_LIST"));
         else  
-            $html_str .= "<span class=\"navigation_link_highlight\">".BUTTON_CREATE_NEW_LIST."</span>";
+            $html_str .= "<span class=\"navigation_link_highlight\">".translate("BUTTON_CREATE_NEW_LIST")."</span>";
         
         # show list link non clickable but highlighted when this is list page
         if ($page_type == PAGE_TYPE_LIST)
-            $html_str .= "<span class=\"navigation_link_highlight\">".LABEL_NAVIGATION_LIST."</span>";
+            $html_str .= "<span class=\"navigation_link_highlight\">".translate("LABEL_NAVIGATION_LIST")."</span>";
         else if (strlen($user->get_current_list_name()) > 0)
-            $html_str .= get_query_href(ACTION_GET_LIST_PAGE, $user->get_current_list_name(), "action=".ACTION_GET_LIST_PAGE."&list=".$user->get_current_list_name(), LABEL_NAVIGATION_LIST);
+            $html_str .= get_query_href(ACTION_GET_LIST_PAGE, $user->get_current_list_name(), "action=".ACTION_GET_LIST_PAGE."&list=".$user->get_current_list_name(), translate("LABEL_NAVIGATION_LIST"));
 
         # show the user list permissions only when this is a list page
         if ($page_type == PAGE_TYPE_LIST)
-            $html_str .= get_query_href(ACTION_GET_USERLISTTABLEPERMISSIONS_PAGE, $user->get_current_list_name(), "action=".ACTION_GET_USERLISTTABLEPERMISSIONS_PAGE, BUTTON_USERLISTTABLEPERMISSIONS);
+            $html_str .= get_query_href(ACTION_GET_USERLISTTABLEPERMISSIONS_PAGE, $user->get_current_list_name(), "action=".ACTION_GET_USERLISTTABLEPERMISSIONS_PAGE, translate("BUTTON_USERLISTTABLEPERMISSIONS"));
         else if ($page_type == PAGE_TYPE_USERLISTTABLEPERMISSIONS)
-            $html_str .= "<span class=\"navigation_link_highlight\">".BUTTON_USERLISTTABLEPERMISSIONS."</span>";
+            $html_str .= "<span class=\"navigation_link_highlight\">".translate("BUTTON_USERLISTTABLEPERMISSIONS")."</span>";
             
         
         # show user admin link only when user has admin permissions
@@ -421,9 +421,9 @@ function get_page_navigation ($page_type)
         {
             # show user admin link clickable when this is not the user admin page
             if ($page_type != PAGE_TYPE_USER_ADMIN)
-                $html_str .= get_query_href(ACTION_GET_USER_ADMIN_PAGE, HTML_EMPTY_LIST_TITLE, "action=".ACTION_GET_USER_ADMIN_PAGE, BUTTON_USER_ADMINISTRATION);
+                $html_str .= get_query_href(ACTION_GET_USER_ADMIN_PAGE, HTML_EMPTY_LIST_TITLE, "action=".ACTION_GET_USER_ADMIN_PAGE, translate("BUTTON_USER_ADMINISTRATION"));
             else
-                $html_str .= "<span class=\"navigation_link_highlight\">".BUTTON_USER_ADMINISTRATION."</span>";
+                $html_str .= "<span class=\"navigation_link_highlight\">".translate("BUTTON_USER_ADMINISTRATION")."</span>";
         }
     }
     

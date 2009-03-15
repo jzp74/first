@@ -35,7 +35,7 @@ function get_login_page_html ()
     $html_str = "";
  
     # get html for page header
-    $html_str = get_page_header(LABEL_PLEASE_LOGIN, "", PAGE_TYPE_LOGIN);
+    $html_str = get_page_header(translate("LABEL_PLEASE_LOGIN"), "", PAGE_TYPE_LOGIN);
 
     $html_str .= "        <div id=\"login_white_space\">&nbsp;</div>\n\n";
     $html_str .= "        <div id=\"login_pane\">\n";
@@ -48,16 +48,16 @@ function get_login_page_html ()
     $html_str .= "                                    <div id=\"login_contents\">\n";    
     $html_str .= "                                        <form name=\"login_form\" id=\"login_form\" action=\"\" method=\"post\">\n";
     $html_str .= "                                            <div class=\"login_line\">\n";
-    $html_str .= "                                                <div class=\"login_line_left\">".LABEL_USER_NAME."</div>\n";
+    $html_str .= "                                                <div class=\"login_line_left\">".translate("LABEL_USER_NAME")."</div>\n";
     $html_str .= "                                                <div id=\"user_name_id\" class=\"login_line_right\"><input name=\"user_name\" id=\"user_name\" size=\"16\" maxlength=\"16\" value= \"\" type=\"text\"></div>\n";
     $html_str .= "                                            </div> <!-- login_line -->\n";
     $html_str .= "                                            <div class=\"login_line\">\n";
-    $html_str .= "                                                <div class=\"login_line_left\">".LABEL_PASSWORD."</div>\n";
+    $html_str .= "                                                <div class=\"login_line_left\">".translate("LABEL_PASSWORD")."</div>\n";
     $html_str .= "                                                <div id=\"password_id\" class=\"login_line_right\"><input name=\"password\" id=\"password\" size=\"16\" maxlength=\"16\" type=\"password\"></div>\n";
     $html_str .= "                                            </div> <!-- login_line -->\n";
     $html_str .= "                                            <div class=\"login_line\">\n";
     $html_str .= "                                                <div class=\"login_line_left\">&nbsp;</div>\n";
-    $html_str .= "                                                <div class=\"login_line_right\"><input type=submit class=\"button\" value=\"".BUTTON_LOGIN."\" onclick=\"javascript:xajax_action_login(document.getElementById('user_name').value, document.getElementById('password').value); return false;\"></div>\n";
+    $html_str .= "                                                <div class=\"login_line_right\"><input type=submit class=\"button\" value=\"".translate("BUTTON_LOGIN")."\" onclick=\"javascript:xajax_action_login(document.getElementById('user_name').value, document.getElementById('password').value); return false;\"></div>\n";
     $html_str .= "                                            </div> <!-- login_line -->\n";
     $html_str .= "                                        </form> <!-- login_form -->\n";
     $html_str .= "                                    </div> <!-- login_contents -->\n";
@@ -95,7 +95,7 @@ function action_login ($user_name, $password)
     if (strlen($user_name) == 0)
     {
         $logging->warn("no user name given");
-        set_error_message("user_name_id", ERROR_NO_USER_NAME_GIVEN, "", "", $response);
+        set_error_message("user_name_id", "ERROR_NO_USER_NAME_GIVEN", "", "", $response);
 
         # set focus on user name
         $response->script("document.getElementById('user_name').focus()");
@@ -106,7 +106,7 @@ function action_login ($user_name, $password)
     if (strlen($password) == 0)
     {
         $logging->warn("no password given");
-        set_error_message("password_id", ERROR_NO_PASSWORD_GIVEN, "", "", $response);
+        set_error_message("password_id", "ERROR_NO_PASSWORD_GIVEN", "", "", $response);
 
         # set focus on password
         $response->script("document.getElementById('password').focus()");
@@ -176,17 +176,17 @@ function get_login_status ()
 
     $logging->trace("getting login_status");
         
-    $html_str .= LABEL_USER.": ";
+    $html_str .= translate("LABEL_USER").": ";
     if ($user->is_login())
     {        
         $logging->debug("user: ".$user->get_name()." is logged in");
         $html_str .= $user->get_name();
-        $html_str .= "&nbsp;&nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"xajax_action_logout()\">".BUTTON_LOGOUT."</a>&nbsp;";
+        $html_str .= "&nbsp;&nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"xajax_action_logout()\">".translate("BUTTON_LOGOUT")."</a>&nbsp;";
     }
     else
     {
         $logging->warn("no user is logged in");
-        $html_str .= LABEL_MINUS;
+        $html_str .= translate("LABEL_MINUS");
     }
         
     $logging->trace("got login_status");

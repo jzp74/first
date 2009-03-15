@@ -43,12 +43,12 @@ define("USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME", "_is_admin");
  * definition of fields
  */
 $class_userlisttablepermissions_fields = array(
-    DB_ID_FIELD_NAME => array("", "LABEL_DEFINITION_AUTO_NUMBER", ""),
-    USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE_FIELD_NAME => array(LABEL_USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE, "LABEL_DEFINITION_NON_EDIT_TEXT_LINE", ""),
-    USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME => array(LABEL_USERLISTTABLEPERMISSIONS_USER_NAME, "LABEL_DEFINITION_NON_EDIT_TEXT_LINE", ""),
-    USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME => array(LABEL_USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST, "LABEL_DEFINITION_BOOL", ""),
-    USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME => array(LABEL_USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST, "LABEL_DEFINITION_BOOL", ""),
-    USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME => array(LABEL_USERLISTTABLEPERMISSIONS_IS_AMDIN, "LABEL_DEFINITION_BOOL", ""),
+    DB_ID_FIELD_NAME => array("", FIELD_TYPE_DEFINITION_AUTO_NUMBER, ""),
+    USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE_FIELD_NAME => array("", FIELD_TYPE_DEFINITION_NON_EDIT_TEXT_LINE, ""),
+    USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME => array("LABEL_USERLISTTABLEPERMISSIONS_USER_NAME", FIELD_TYPE_DEFINITION_NON_EDIT_TEXT_LINE, ""),
+    USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME => array("LABEL_USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST", FIELD_TYPE_DEFINITION_BOOL, ""),
+    USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME => array("LABEL_USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST", FIELD_TYPE_DEFINITION_BOOL, ""),
+    USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME => array("LABEL_USERLISTTABLEPERMISSIONS_IS_AMDIN", FIELD_TYPE_DEFINITION_BOOL, ""),
 );
 
 /**
@@ -103,7 +103,7 @@ class UserListTablePermissions extends UserDatabaseTable
         $results = $this->_user->select("", DATABASETABLE_ALL_PAGES, array(0 => USER_NAME_FIELD_NAME));
         if (count($results) == 0)
         {
-            $this->_handle_error("could not select all users", ERROR_DATABASE_PROBLEM);
+            $this->_handle_error("could not select all users", "ERROR_DATABASE_PROBLEM");
                         
             return FALSE;
         }
@@ -135,7 +135,7 @@ class UserListTablePermissions extends UserDatabaseTable
             $result = $this->insert($name_values_array);
             if ($result == 0)
             {
-                $this->_handle_error("could not insert user permissions (user=".$user_name.")", ERROR_DATABASE_PROBLEM);
+                $this->_handle_error("could not insert user permissions (user=".$user_name.")", "ERROR_DATABASE_PROBLEM");
                         
                 return FALSE;
             }
@@ -176,7 +176,7 @@ class UserListTablePermissions extends UserDatabaseTable
                 $result = $this->insert($name_values_array);
                 if ($result == 0)
                 {
-                    $this->_handle_error("could not insert user permissions (list=".$list_title.")", ERROR_DATABASE_PROBLEM);
+                    $this->_handle_error("could not insert user permissions (list=".$list_title.")", "ERROR_DATABASE_PROBLEM");
                             
                     return FALSE;
                 }
@@ -252,7 +252,7 @@ class UserListTablePermissions extends UserDatabaseTable
         }
         else
         {
-            $this->_handle_error("could not read user list permissions row from table", ERROR_DATABASE_PROBLEM);
+            $this->_handle_error("could not read user list permissions row from table", "ERROR_DATABASE_PROBLEM");
             
             return array();
         }

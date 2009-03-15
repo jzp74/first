@@ -52,7 +52,7 @@ $portal_table_configuration = array(
     HTML_TABLE_JS_NAME_PREFIX => "portal_",
     HTML_TABLE_CSS_NAME_PREFIX => PORTAL_CSS_NAME_PREFIX,
     HTML_TABLE_DELETE_MODE => HTML_TABLE_DELETE_MODE_ALWAYS, # not used in portal
-    HTML_TABLE_RECORD_NAME => LABEL_LIST_RECORD # not used in portal
+    HTML_TABLE_RECORD_NAME => translate("LABEL_LIST_RECORD") # not used in portal
 );
 
 

@@ -91,28 +91,26 @@ class UserDatabaseTable extends DatabaseTable
         # get previous field order
         $prev_order_by_field = $this->_list_state->get_order_by_field();
 
-        if (!strlen($order_by_field))
+        if (strlen($order_by_field) == 0)
         {
             # no order_by_field had been given
-            if (strlen($this->_list_state->get_order_by_field()))
+            if (strlen($this->_list_state->get_order_by_field()) > 0)
             {
                 # order by previously given field
                 $order_by_field = $prev_order_by_field;
-                # hack for special table ListTableDescription (avoid sorting by _id)
-                if (($this->table_name == LISTTABLEDESCRIPTION_TABLE_NAME) && ($order_by_field = DB_ID_FIELD_NAME))
-                {
-                    $order_by_field = LISTTABLEDESCRIPTION_TITLE_FIELD_NAME;
-                    $this->_list_state->set_order_by_field(LISTTABLEDESCRIPTION_TITLE_FIELD_NAME);
-                }
             }
             else
             {
                 # no field to order by has been given previously
-                # order by first field of this UserDatabaseTable
-                $order_by_field = $this->db_field_names[0];
-                # hack for special table ListTableDescription (avoid sorting by _id)
-                if ($this->table_name == LISTTABLEDESCRIPTION_TABLE_NAME)
-                    $order_by_field = LISTTABLEDESCRIPTION_TITLE_FIELD_NAME;
+                # order by first field that has a non empty field_name of this UserDatabaseTable
+                foreach ($this->db_field_names as $db_field_name)
+                {
+                    if (strlen($this->fields[$db_field_name][0]) > 0)
+                    {
+                        $order_by_field = $db_field_name;
+                        break;
+                    }
+                }
                 $this->_list_state->set_order_by_field($order_by_field);
                 $this->_list_state->set_order_ascending(1);
             }

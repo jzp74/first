@@ -20,6 +20,7 @@ define("ACTION_GET_LIST_RECORD", "action_get_list_record");
 define("ACTION_INSERT_LIST_RECORD", "action_insert_list_record");
 define("ACTION_UPDATE_LIST_RECORD", "action_update_list_record");
 define("ACTION_ARCHIVE_LIST_RECORD", "action_archive_list_record");
+define("ACTION_ACTIVATE_LIST_RECORD", "action_activate_list_record");
 define("ACTION_DELETE_LIST_RECORD", "action_delete_list_record");
 define("ACTION_CANCEL_LIST_ACTION", "action_cancel_list_action");
 define("ACTION_SET_LIST_ARCHIVE", "action_set_list_archive");
@@ -35,6 +36,7 @@ $xajax->register(XAJAX_FUNCTION, ACTION_GET_LIST_RECORD);
 $xajax->register(XAJAX_FUNCTION, ACTION_INSERT_LIST_RECORD);
 $xajax->register(XAJAX_FUNCTION, ACTION_UPDATE_LIST_RECORD);
 $xajax->register(XAJAX_FUNCTION, ACTION_ARCHIVE_LIST_RECORD);
+$xajax->register(XAJAX_FUNCTION, ACTION_ACTIVATE_LIST_RECORD);
 $xajax->register(XAJAX_FUNCTION, ACTION_DELETE_LIST_RECORD);
 $xajax->register(XAJAX_FUNCTION, ACTION_CANCEL_LIST_ACTION);
 $xajax->register(XAJAX_FUNCTION, ACTION_SET_LIST_ARCHIVE);
@@ -57,6 +59,7 @@ $firstthingsfirst_action_description[ACTION_GET_LIST_RECORD] = "---P-";
 $firstthingsfirst_action_description[ACTION_INSERT_LIST_RECORD] = "---P-";
 $firstthingsfirst_action_description[ACTION_UPDATE_LIST_RECORD] = "---P-";
 $firstthingsfirst_action_description[ACTION_ARCHIVE_LIST_RECORD] = "---P-";
+$firstthingsfirst_action_description[ACTION_ACTIVATE_LIST_RECORD] = "---P-";
 $firstthingsfirst_action_description[ACTION_DELETE_LIST_RECORD] = "---P-";
 $firstthingsfirst_action_description[ACTION_CANCEL_LIST_ACTION] = "-----";
 $firstthingsfirst_action_description[ACTION_SET_LIST_ARCHIVE] = "-----";
@@ -592,6 +595,70 @@ function action_archive_list_record ($list_title, $key_string)
         return $response;
 
     $logging->trace("archived list record");
+
+    return $response;
+}
+
+/**
+ * activat an archived record from current list
+ * this function is registered in xajax
+ * @param string $list_title title of list
+ * @param string $key_string comma separated name value pairs
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
+function action_activate_list_record ($list_title, $key_string)
+{
+    global $logging;
+    global $list_table_configuration;
+    
+    $logging->info("ACTION: activate list record (list_title=".$list_title.", key_string=".$key_string.")");
+
+    # create necessary objects
+    $result = new Result();
+    $response = new xajaxResponse();
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
+
+    # remove any error messages
+    $response->remove("error_message");
+
+    # create list table object
+    $list_table = new ListTable($list_title);
+    if ($list_table->get_is_valid() == FALSE)
+    {
+        $logging->warn("create list object returns false");
+        $error_message_str = $list_table->get_error_message_str();
+        $error_log_str = $list_table->get_error_log_str();
+        $error_str = $list_table->get_error_str();
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
+       
+        return $response;
+    }
+
+    # display error when archive returns false
+    if (!$list_table->activate($key_string))
+    {
+        $logging->warn("activate list record returns false");
+        $error_message_str = $list_table->get_error_message_str();
+        $error_log_str = $list_table->get_error_log_str();
+        $error_str = $list_table->get_error_str();
+        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
+                
+        return $response;
+    }
+
+    # set content
+    $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    
+    # set footer
+    $html_str = get_footer($list_table->get_creator_modifier_array()); 
+    set_footer($html_str, $response);
+
+    # check post conditions
+    if (check_postconditions($result, $response) == FALSE)
+        return $response;
+
+    $logging->trace("activated list record");
 
     return $response;
 }

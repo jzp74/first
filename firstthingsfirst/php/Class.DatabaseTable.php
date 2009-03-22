@@ -977,6 +977,56 @@ class DatabaseTable
     }
 
     /**
+     * activate an archived existing record in database
+     * @param $encoded_key_string string unique identifier of record
+     * @param $user_name string name of current user
+     * @return bool indicates if record has been archived
+     */
+    function activate ($encoded_key_string, $user_name)
+    {
+        # decode key string
+        $key_string = $this->_decode_key_string($encoded_key_string);
+
+        $this->_log->trace("activating record from DatabaseTable (key_string=".$key_string.", user_name=".$user_name.")");
+
+        if ($this->metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] == DATABASETABLE_METADATA_FALSE)
+        {
+            $this->_log->warn("archiving not enabled for this DatabaseTable");
+            
+            return FALSE;
+        }
+            
+        # select row from database to see if it really exists
+        $row = self::select_record($key_string);
+        if (count($row) == 0)
+            return FALSE;
+        
+        # check if row is actually archived
+        if ($row[DB_TS_ARCHIVED_FIELD_NAME] == DB_NULL_DATETIME)
+        {
+            $this->_handle_error("can not activate an active record from DatabaseTable (key_string=".$key_string.")", "ERROR_DATABASE_PROBLEM");
+
+            return FALSE;
+        }
+        
+        $query = "UPDATE ".$this->table_name." SET ";
+        $query .= DB_ARCHIVER_FIELD_NAME."=\"\", ";
+        $query .= DB_TS_ARCHIVED_FIELD_NAME."=\"".DB_NULL_DATETIME."\" WHERE ".$key_string;
+        $result = $this->_database->query($query);
+
+        if ($result == FALSE)
+        {
+            $this->_handle_error("could not activate record from DatabaseTable (key_string=".$key_string.")", "ERROR_DATABASE_PROBLEM");
+            
+            return FALSE;
+        }
+
+        $this->_log->trace("activated record from DatabaseTable");
+        
+        return TRUE;
+    }
+
+    /**
     * delete an existing record from database
     * @param $encoded_key_string string unique identifier of record
     * @return bool indicates if record has been deleted

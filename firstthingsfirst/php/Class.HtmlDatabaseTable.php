@@ -211,7 +211,9 @@ class HtmlDatabaseTable
 
         if (strlen($database_table->get_error_message_str()) > 0 && $database_table->get_error_message_str() != translate("ERROR_DATABASE_EXISTENCE"))
         {
-            $this->_handle_error($database_table, $result, MESSAGE_PANE_DIV);
+            # only show an error when this is not the portal page
+            if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_PORTAL)
+                $this->_handle_error($database_table, $result, MESSAGE_PANE_DIV);
             # no return statement here because we want the complete page to be displayed
         }
     
@@ -438,11 +440,12 @@ class HtmlDatabaseTable
                 $col_number += 1;
             }
         
-            # only add buttons when not all pages need to be displayed at once
+            # only add buttons when all pages do not need to be displayed at once
             if ($page != DATABASETABLE_ALL_PAGES)
             {
                 # define delete and archive buttons
                 $js_button_archive ="action_archive_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record";
+                $js_button_activate ="action_activate_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record";
                 $js_button_delete ="action_delete_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record";
                 # add buttons for normal lists
                 if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_PORTAL)
@@ -464,6 +467,9 @@ class HtmlDatabaseTable
                     # or add the delete link when record is archived
                     else if (($this->configuration[HTML_TABLE_DELETE_MODE] == HTML_TABLE_DELETE_MODE_ARCHIVED) && (strlen($record[DB_ARCHIVER_FIELD_NAME]) > 0))
                     {
+                        $html_str .= "                        <td width=\"1%\">";
+                        $html_str .= get_href($js_button_archive, $this->permissions_list_title, "xajax_".$js_button_activate."(%27".$list_title."%27, %27".$encoded_key_string."%27)", translate("BUTTON_ACTIVATE"));
+                        $html_str .= "</td>\n";
                         $html_str .= "                        <td width=\"1%\">";
                         $html_str .= get_href($js_button_delete, $this->permissions_list_title, "xajax_".$js_button_delete."(%27".$list_title."%27, %27".$encoded_key_string."%27)", translate("BUTTON_DELETE"));
                         $html_str .= "</td>\n";

@@ -223,5 +223,23 @@ class UserDatabaseTable extends DatabaseTable
         return TRUE;
     }
     
+    /**
+     * activate an existing record in database
+     * @param $encoded_key_string string unique identifier of record to be archived
+     * @return bool indicates if record has been archived
+     */
+    function activate ($encoded_key_string)
+    {
+        $this->_log->trace("activating record from UserDatabaseTable (encoded_key_string=".$encoded_key_string.")");
+
+        # call parent archive()
+        if (parent::activate($encoded_key_string, $this->_user->get_name()) == FALSE)
+            return FALSE;
+
+        $this->_log->trace("activated record from UserDatabaseTable");
+        
+        return TRUE;
+    }
+
 }
    

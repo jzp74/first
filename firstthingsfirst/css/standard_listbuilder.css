@@ -121,12 +121,12 @@
     }
     
 #listbuilder_definition th {
-    padding: 5px 4px 5px 4px;
+    padding: 5px 4px 5px 6px;
     color: rgb(0, 0, 0);
     }
 
 #listbuilder_definition td {
-    padding: 3px 4px 3px 4px;
+    padding: 3px 8px 3px 4px;
     vertical-align: top;
     border-top: 1px solid rgb(197, 214, 232);
     }
@@ -136,7 +136,7 @@
     }
 
 #listbuilder_definition a, #listbuilder_definition a:link, #listbuilder_definition a:visited {
-    padding: 1px 2px 1px 2px;
+    padding: 1px 0px 1px 0px;
     color: rgb(5, 114, 197);
     }
 

@@ -715,9 +715,9 @@ function get_field_definition_table ($definition)
     $logging->trace("getting field definition table");
 
     $input_html_id = "<input type=text size=\"2\" maxlength=\"2\"";
-    $input_html_name = "<input type=text size=\"16\" maxlength=\"16\" class=\"input_box\"";
-    $input_html_value = "<input type=text size=\"20\" maxlength=\"100\" class=\"input_box\"";
-    $input_html_value_invisible = "<input style=\"visibility: hidden;\" type=text size=\"20\" maxlength=\"100\"";
+    $input_html_name = "<input type=text size=\"24\" maxlength=\"40\"";
+    $input_html_options = "<input type=text size=\"32\" maxlength=\"100\"";
+    $input_html_value_invisible = "<input style=\"visibility: hidden;\" type=text size=\"1\" maxlength=\"100\"";
     $html_str = "";    
     
     $html_str .= "\n\n                                <form id=\"database_definition_form\" action=\"javascript:void(0);\" method=\"javascript:void(0);\" onsubmit=\"javascript:void(0);\">\n";
@@ -727,7 +727,7 @@ function get_field_definition_table ($definition)
     $html_str .= "                                                <th>".translate("LABEL_FIELDTYPE")."</th>\n";
     $html_str .= "                                                <th>".translate("LABEL_FIELDNAME")."</th>\n";
     $html_str .= "                                                <th>".translate("LABEL_OPTIONS")."</th>\n";
-    $html_str .= "                                                <th>".translate("LABEL_COMMENT")."</th>\n";
+    $html_str .= "                                                <th>&nbsp;</th>\n";
     $html_str .= "                                                <th colspan=\"3\">&nbsp;</th>\n";
     $html_str .= "                                            </tr>\n";
     $html_str .= "                                        </thead>\n";
@@ -750,7 +750,7 @@ function get_field_definition_table ($definition)
         # the first column - type
         if ($row == 0)
         {
-            $html_str .= "                                                <td id=\"row_".$row."_1\"><select class=\"selection_box\" name=\"row_".$row."_1\">\n";
+            $html_str .= "                                                <td id=\"row_".$row."_1\"><select class=\"inactive_input\" name=\"row_".$row."_1\">\n";
             $html_str .= "                                                    <option value=\"".$definition[$position_type]."\" selected>".translate($definition[$position_type])."</option>\n";
             $html_str .= "                                                </select></td>\n";
         }
@@ -758,17 +758,23 @@ function get_field_definition_table ($definition)
             $html_str .= "                                                <td id=\"row_".$row."_1\">".get_select("", "row_".$row."_1", $definition[$position_type])."</td>\n";
         
         # the second column - name
-        $html_str .= "                                                <td id=\"row_".$row."_2\">".$input_html_value." name=\"row_".$row."_2\" ";
+        $html_str .= "                                                <td id=\"row_".$row."_2\">".$input_html_name." name=\"row_".$row."_2\" ";
         if ($row == 0)
-            $html_str .="readonly ";
+            $html_str .= "readonly class=\"inactive_input\" ";
+        else
+            $html_str .= "class=\"input_box\" ";
         $html_str .= "value=\"".$definition[$position_name]."\"></td>\n";
 
         # the third column - options
         if ($definition[$position_type] == FIELD_TYPE_DEFINITION_SELECTION)
-            $html_str .= "                                                <td id=\"row_".$row."_3\">".$input_html_value." name=\"row_".$row."_3\" value=\"".$definition[$position_options]."\"></td>\n";
+            $html_str .= "                                                <td id=\"row_".$row."_3\">".$input_html_name." name=\"row_".$row."_3\" value=\"".$definition[$position_options]."\"></td>\n";
         else if (($definition[$position_type] == FIELD_TYPE_DEFINITION_AUTO_CREATED) || ($definition[$position_type] == FIELD_TYPE_DEFINITION_AUTO_MODIFIED))
         {
             $html_str .= "                                                <td id=\"row_".$row."_3\"><select class=\"selection_box\" name=\"row_".$row."_3\">\n";
+            $html_str .= "                                                    <option value=\"".NAME_DATE_OPTION_DATE_NAME."\"";
+            if ($definition[$position_options] == NAME_DATE_OPTION_DATE_NAME)
+                $html_str .= " selected";            
+            $html_str .= ">".translate("LABEL_DATE_NAME")."</option>\n";
             $html_str .= "                                                    <option value=\"".NAME_DATE_OPTION_DATE."\"";
             if ($definition[$position_options] == NAME_DATE_OPTION_DATE)
                 $html_str .= " selected";            
@@ -777,40 +783,44 @@ function get_field_definition_table ($definition)
             if ($definition[$position_options] == NAME_DATE_OPTION_NAME)
                 $html_str .= " selected";            
             $html_str .= ">".translate("LABEL_NAME_ONLY")."</option>\n";
-            $html_str .= "                                                    <option value=\"".NAME_DATE_OPTION_DATE_NAME."\"";
-            if ($definition[$position_options] == NAME_DATE_OPTION_DATE_NAME)
+            $html_str .= "                                                </select></td>\n";
+        }
+        else if ($definition[$position_type] == FIELD_TYPE_DEFINITION_AUTO_NUMBER)
+        {
+            $html_str .= "                                                <td id=\"row_".$row."_3\"><select class=\"selection_box\" name=\"row_".$row."_3\">\n";
+            $html_str .= "                                                    <option value=\"".ID_COLUMN_SHOW."\"";
+            if ($definition[$position_options] == ID_COLUMN_SHOW)
                 $html_str .= " selected";            
-            $html_str .= ">".translate("LABEL_DATE_NAME")."</option>\n";
+            $html_str .= ">".translate("LABEL_ID_COLUMN_SHOW")."</option>\n";
+            $html_str .= "                                                    <option value=\"".ID_COLUMN_NO_SHOW."\"";
+            if ($definition[$position_options] == ID_COLUMN_NO_SHOW)
+                $html_str .= " selected";            
+            $html_str .= ">".translate("LABEL_ID_COLUMN_NO_SHOW")."</option>\n";
             $html_str .= "                                                </select></td>\n";
         }
         else
-            $html_str .= "                                                <td>".$input_html_value_invisible." name=\"row_".$row."_3\" value=\"\"></td>\n";
+            $html_str .= "                                                <td>&nbsp;-&nbsp;".$input_html_value_invisible." name=\"row_".$row."_3\" value=\"\"></td>\n";
 
         # the fourth column - remarks
-        if ($row == 0)
-            $html_str .= "                                                <td><em>".translate("LABEL_FIELD_CANNOT_BE_CHANGED")."</em></td>\n";
-        else if ($definition[$position_type] == FIELD_TYPE_DEFINITION_SELECTION)
-            $html_str .= "                                                <td><em>".translate("LABEL_OPTIONS_EXAMPLE")."</em></td>\n";
-        else
-            $html_str .= "                                                <td>&nbsp</td>\n";
+        $html_str .= "                                                <td>".translate($definition[$position_type]."_EXPLANATION")."</td>\n";
         
         # the fifth column - up
         if ($row > 1)
             $html_str .= "                                                <td width=\"1%\"><div class=\"arrow_up\" onclick=\"xajax_action_move_listbuilder_row(".$row.", 'up', xajax.getFormValues('database_definition_form'))\"</div></td>\n";
         else
-            $html_str .= "                                                <td width=\"1%\"><p style=\"visibility: hidden;\">**UP**</p></td>\n";
+            $html_str .= "                                                <td width=\"1%\"><p style=\"visibility: hidden;\">up</p></td>\n";
         
         # the sixth column - down
         if ($row > 0 && $row < ((count($definition) / 4) - 1))
             $html_str .= "                                                <td width=\"1%\"><div class=\"arrow_down\" onclick=\"xajax_action_move_listbuilder_row(".$row.", 'down', xajax.getFormValues('database_definition_form'))\"</div></td>\n";
         else
-            $html_str .= "                                                <td width=\"1%\"><p style=\"visibility: hidden;\">**DOWN**</p></td>\n";
+            $html_str .= "                                                <td width=\"1%\"><p style=\"visibility: hidden;\">dn</p></td>\n";
         
         # the seventh column - delete
         if ($row > 0)
             $html_str .= "                                                <td width=\"1%\">".get_href(ACTION_DELETE_LISTBUILDER_ROW, HTML_EMPTY_LIST_TITLE, "xajax_action_delete_listbuilder_row(".$row.", xajax.getFormValues('database_definition_form'))", translate("BUTTON_DELETE"))."</td>\n";
         else
-            $html_str .= "                                                <td width=\"1%\"><p style=\"visibility: hidden;\">".translate("BUTTON_DELETE")."</p></td>\n";
+            $html_str .= "                                                <td width=\"1%\"><p style=\"visibility: hidden;\">dl</p></td>\n";
     
         $html_str .= "                                            </tr>\n";        
     }

@@ -15,6 +15,7 @@
  */
 $text_translations["BUTTON_PORTAL"] = "overzicht";
 $text_translations["BUTTON_ARCHIVE"] = "archiveer";
+$text_translations["BUTTON_ACTIVATE"] = "activeer";
 $text_translations["BUTTON_FILTER"] = "filter";
 $text_translations["BUTTON_RESET_FILTER"] = "reset filter";
 $text_translations["BUTTON_DELETE"] = "verwijder";
@@ -38,12 +39,12 @@ $text_translations["BUTTON_PRINT_LIST"] = "deze&nbsp;lijst&nbsp;afdrukken";
 /**
  * user listtable permissions buttons
  */
-$text_translations["BUTTON_USERLISTTABLEPERMISSIONS"] = "lijstpermissies&nbsp;voor&nbsp;gebruikers";
+$text_translations["BUTTON_USERLISTTABLEPERMISSIONS"] = "lijsttoegang";
 
 /**
  * list builder buttons
  */
-$text_translations["BUTTON_ADD_FIELD"] = "dit&nbsp;veld&nbsp;toevoegen";
+$text_translations["BUTTON_ADD_FIELD"] = "deze&nbsp;kolom&nbsp;toevoegen";
 $text_translations["BUTTON_CREATE_LIST"] = "maak&nbsp;deze&nbsp;lijst";
 $text_translations["BUTTON_MODIFY_LIST"] = "wijzig&nbsp;deze&nbsp;lijst";
 

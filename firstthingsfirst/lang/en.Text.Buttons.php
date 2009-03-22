@@ -16,6 +16,7 @@
  */
 $text_translations["BUTTON_PORTAL"] = "portal";
 $text_translations["BUTTON_ARCHIVE"] = "archive";
+$text_translations["BUTTON_ACTIVATE"] = "activate";
 $text_translations["BUTTON_FILTER"] = "filter";
 $text_translations["BUTTON_RESET_FILTER"] = "reset filter";
 $text_translations["BUTTON_DELETE"] = "delete";

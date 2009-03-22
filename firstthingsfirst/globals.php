@@ -130,6 +130,12 @@ define("FIELD_DESCRIPTION_FIELD_INITIAL_DATA", 3);
 define("FIELD_DESCRIPTION_FIELD_TYPE", 4);
 
 /**
+ * 
+ */
+define("ID_COLUMN_SHOW", "do show");
+define("ID_COLUMN_NO_SHOW", "do not show");
+
+/**
  * name_date options
  */
 define("NAME_DATE_OPTION_NAME", "name");

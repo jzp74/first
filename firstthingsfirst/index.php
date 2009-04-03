@@ -172,36 +172,35 @@ function process_url ()
 <title>First Things First</title>
 <link rel="shortcut icon" href="images/favicon.ico">
 <link rel="stylesheet" href="css/standard.css">
+<link rel="stylesheet" href="css/standard_print.css">
 <link rel="stylesheet" href="css/standard_listbuilder.css">
 <link rel="stylesheet" href="css/standard_database_table.css">
 <link rel="stylesheet" href="css/standard_print.css" media="print">
 
 <?php $xajax->printJavascript("xajax"); ?>
     
-<?php
-    # define js functions
-    print("        <script type=\"text/javascript\">\n");
-
-    # set a permission error in the message pane
-    # each page should have a message pane
-    print("function set_permission_error()\n");
-    print("{\n");
-    print("    alert(\"no permissions\");\n");
-    print("}\n");
-    
-    # end of js functions
-    print("        </script>\n");
-?>
-
 </head>
 
 <body>
 <div id="upper_margin"></div>
 
 <div id="header">
-    <div id="header_left_margin">&nbsp</div>
-    <div id="header_right_margin">&nbsp</div>
-    <?php echo "<div id=\"header_text\">&nbsp;&nbsp;".file_get_contents("VERSION")."    </div>\n" ?>
+    <div id="header_left_margin"></div>
+    <div id="header_right_margin"></div>
+    <div id="header_contents">
+<?php 
+echo "        <div id=\"software_version\">&nbsp;&nbsp;".file_get_contents("VERSION")."</div>\n";
+
+# TEMPORARY SOLUTION
+if (isset($_GET['action']) && $_GET['action'] == ACTION_GET_LOGIN_PAGE)
+    echo "        <div id=\"page_title\">".translate("LABEL_PLEASE_LOGIN")."</div>\n";
+else
+    echo "        <div id=\"page_title\">&nbsp;</div>\n";
+
+echo "        <div id=\"page_explanation\">&nbsp;</div>\n";
+echo "        <div id=\"navigation_container\">&nbsp;</div> <!-- navigation_container -->\n";
+?>
+    </div> <!-- header_contents -->
 </div> <!-- header -->
     
 <div id="outer_body">
@@ -211,7 +210,7 @@ function process_url ()
     # logout any active user and serve the html page for login
     # TEMPORARY SOLUTION
     # for some reason firefox needs the login page served as a whole
-    if ($_GET['action'] == ACTION_GET_LOGIN_PAGE)
+    if (isset($_GET['action']) && $_GET['action'] == ACTION_GET_LOGIN_PAGE)
     {
         $user->logout();
         print get_login_page_html();
@@ -226,8 +225,7 @@ function process_url ()
     <div id="footer_right_margin">&nbsp</div>
     <div id="footer_text"></div>
 </div> <!-- footer -->
-
-<div id="lower_margin"></div>
+<div id="lower_margin"><input id="focus_on_this_input" size="1" readonly></div>
 
 <script language="javascript">xajax_process_url()</script>
         

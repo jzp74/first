@@ -102,7 +102,16 @@ function test_2 ()
 <div id="header">
     <div id="header_left_margin">&nbsp</div>
     <div id="header_right_margin">&nbsp</div>
-    <?php echo "<div id=\"header_text\">&nbsp;&nbsp;".file_get_contents("../VERSION")."    </div>\n" ?>
+    <div id="header_contents">
+<?php 
+echo "        <div id=\"software_version\">&nbsp;&nbsp;".file_get_contents("../VERSION")."</div>\n";
+?>
+        <div id="page_title">Regression test</div>
+        <div id="page_explanation">&nbsp;</div>
+        <div id="navigation_container">&nbsp;</div>
+    </div> <!-- header_contents -->
+</div> <!-- header -->
+
 </div> <!-- header -->
     
 <div id="outer_body">
@@ -118,8 +127,9 @@ function test_2 ()
 <div id="footer">
     <div id="footer_left_margin">&nbsp</div>
     <div id="footer_right_margin">&nbsp</div>
-    <div id="footer_text">&nbsp;</div>
+    <div id="footer_text"></div>
 </div> <!-- footer -->
+<div id="lower_margin"><input id="focus_on_this_input" size="1" readonly></div>
 
 <div id="lower_margin"></div>
         

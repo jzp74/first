@@ -105,9 +105,12 @@ function action_get_list_page ($list_title)
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
     
-    # set page
-    $html_database_table->get_page($list_title, "", $result);    
+    # set page, title, explanation and navigation
+    $html_database_table->get_page($list_title, $result);    
     $response->assign("main_body", "innerHTML", $result->get_result_str());
+    $response->assign("page_title", "innerHTML", $list_title);
+    $response->assign("page_explanation", "innerHTML", "&nbsp;");
+    $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_LIST));
 
     # set login status
     set_login_status($response);
@@ -164,10 +167,11 @@ function action_get_list_print_page ($list_title)
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
 
-    # set page
-    $html_database_table->get_print_page($list_title, $result);
+    # set page and title
+    $html_database_table->get_page($list_title, $result);    
     $response->assign("main_body", "innerHTML", $result->get_result_str());
-
+    $response->assign("page_title", "innerHTML", $list_title);
+    
     # create list table object
     $list_table = new ListTable($list_title);
     if ($list_table->get_is_valid() == FALSE)
@@ -288,16 +292,16 @@ function action_get_list_record ($list_title, $key_string)
     }
 
     # set action pane
-    $html_database_table->get_record($list_table, $list_title, $key_string, $result);
+    $focus_element_name = $html_database_table->get_record($list_table, $list_title, $key_string, $result);
     $response->assign("action_pane", "innerHTML", $result->get_result_str());
     
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    # set focus on last input element and then on first input element
-    $response->script("document.getElementById('focus_on_this_input').blur()");
+    # set focus on hidden input element and then on first editable input element
     $response->script("document.getElementById('focus_on_this_input').focus()");
+    $response->script("document.getElementById('".$focus_element_name."').focus()");
 
     $logging->trace("got list record");
 
@@ -343,7 +347,7 @@ function action_insert_list_record ($list_title, $form_values)
         check_field($check_functions, $db_field_name, $form_values[$name_key], $result);
         if (strlen($result->get_error_message_str()) > 0)
         {
-            set_error_message($name_key, $result->get_error_message_str(), "", "", $response);
+            set_error_message($db_field_name, $result->get_error_message_str(), "", "", $response);
             
             return $response;
         }
@@ -457,7 +461,7 @@ function action_update_list_record ($list_title, $key_string, $form_values)
         check_field($check_functions, $db_field_name, $form_values[$name_key], $result);
         if (strlen($result->get_error_str()) > 0)
         {
-            set_error_message($name_key, $result->get_error_message_str(), "", "", $response);
+            set_error_message($db_field_name, $result->get_error_message_str(), "", "", $response);
             
             return $response;
         }
@@ -894,7 +898,6 @@ function get_footer ($creator_modifier_array)
     $html_str .= "</strong> ".translate("LABEL_AT")." <strong>".$ts_created;
     $html_str .= "</strong>, ".translate("LABEL_LAST_MODIFICATION_BY")." <strong>".$creator_modifier_array[DB_MODIFIER_FIELD_NAME];
     $html_str .= "</strong> ".translate("LABEL_AT")." <strong>".$ts_modified."</strong>";
-    $html_str .= "<input id=\"focus_on_this_input\" size=\"1\" readonly>";
     
     $logging->trace("got footer");
 

@@ -85,9 +85,12 @@ function action_get_user_list_permissions_page ()
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($user_list_permissions_table_configuration);
     
-    # set page
-    $html_database_table->get_page($user->get_current_list_name(), translate("LABEL_USERLISTTABLEPERMISSIONS_TITLE"), $result);
+    # set page, title, explanation and navigation
+    $html_database_table->get_page(translate("LABEL_USERLISTTABLEPERMISSIONS_TITLE"), $result);    
     $response->assign("main_body", "innerHTML", $result->get_result_str());
+    $response->assign("page_title", "innerHTML", $user->get_current_list_name());
+    $response->assign("page_explanation", "innerHTML", translate("LABEL_USERLISTTABLEPERMISSIONS_TITLE"));
+    $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_USERLISTTABLEPERMISSIONS));
 
     # set filter value
     $user->get_list_state(USERLISTTABLEPERMISSIONS_TABLE_NAME);
@@ -184,10 +187,9 @@ function action_get_user_list_permissions_record ($title, $key_string)
     # set action pane    
     $response->assign("action_pane", "innerHTML", $result->get_result_str());
 
-    # set focus on last input element and then on first input element
-    $response->script("document.record_form_name.elements[0].blur()");
-    $response->script("document.record_form_name.elements[document.record_form_name.length].focus()");
-    $response->script("document.record_form_name.elements[0].focus()");
+    # set focus on hidden input element and then on first editable input element
+    $response->script("document.getElementById('focus_on_this_input').focus()");
+    $response->script("document.record_form_name.elements[1].focus()");
 
     $logging->trace("got user list permissions record");
 

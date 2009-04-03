@@ -12,7 +12,6 @@
 
 /**
  * shared button
- * definition of 'modify' button
  */
 $text_translations["BUTTON_PORTAL"] = "portal";
 $text_translations["BUTTON_ARCHIVE"] = "archive";
@@ -31,6 +30,7 @@ $text_translations["BUTTON_PREVIOUS_PAGE"] = "previous";
 /**
  * list buttons
  */
+$text_translations["BUTTON_LIST"] = "current&nbsp;list";
 $text_translations["BUTTON_ADD_RECORD"] = "insert&nbsp;new&nbsp;";
 $text_translations["BUTTON_PREVIOUS_NOTE"] = "previous&nbsp;note";
 $text_translations["BUTTON_NEXT_NOTE"] = "next&nbsp;note";
@@ -40,7 +40,7 @@ $text_translations["BUTTON_PRINT_LIST"] = "print&nbsp;this&nbsp;list";
 /**
  * user listtable permissions buttons
  */
-$text_translations["BUTTON_USERLISTTABLEPERMISSIONS"] = "user&nbsp;list&nbsp;permissions";
+$text_translations["BUTTON_USERLISTTABLEPERMISSIONS"] = "current&nbsp;list&nbsp;permissions";
 
 /**
  * list builder buttons

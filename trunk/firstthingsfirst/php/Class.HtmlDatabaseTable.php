@@ -129,19 +129,16 @@ class HtmlDatabaseTable
     /**
      * get the html (use Result object) for a database table
      * @param $list_title string title of list
-     * @param $list_explanation string user explanation
      * @param $result Result result object
      * @return xajaxResponse every xajax registered function needs to return this object
      */
-    function get_page ($list_title, $list_explanation, $result)
+    function get_page ($list_title, $result)
     {
         $html_str = "";
 
         $this->_log->trace("getting page (title=".$list_title.")");
 
-        # get html for page header
-        $html_str .= get_page_header ($list_title, $list_explanation, $this->configuration[HTML_TABLE_PAGE_TYPE]);
-
+        $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
         $html_str .= "        <div class=\"white_area\"></div>\n\n";
         $html_str .= "        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane\">\n\n";
         $html_str .= "        </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane -->\n\n";
@@ -160,18 +157,16 @@ class HtmlDatabaseTable
 
     /**
      * get the html (use Result object) for a database table to print
-     * @param $list_title string title of list
      * @param $result Result result object
      * @return void
      */
-    function get_print_page ($list_title, $result)
+    function get_print_page ($result)
     {
         $html_str = "";
 
         $this->_log->trace("getting print page (title=".$list_title.")");
     
         $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
-        $html_str .= "        <div id=\"page_title\">".$title."</div>\n\n";
         $html_str .= "        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane\">\n\n";
         $html_str .= "        </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane -->\n\n";
         $html_str .= "        <div id=\"".MESSAGE_PANE_DIV."\">\n";
@@ -581,7 +576,7 @@ class HtmlDatabaseTable
      * @param $list_title string title of list
      * @param $encoded_key_string string comma separated name value pairs
      * @param $result Result result object
-     * @return void
+     * @return string name of input element that should get focus
      */
     function get_record ($database_table, $list_title, $encoded_key_string, $result)
     {
@@ -605,6 +600,7 @@ class HtmlDatabaseTable
         }
 
         $html_str = "";
+        $return_name_tag = "";
         $field_names = $database_table->get_user_field_names();
         $fields = $database_table->get_fields();
 
@@ -647,16 +643,23 @@ class HtmlDatabaseTable
             # only add non auto_increment field types (check database definition for this)
             if (($field_type != FIELD_TYPE_DEFINITION_AUTO_NUMBER) && (strlen($field_name) > 0))
             {
-                $html_str .= "                                <tr id=\"".$db_field_name."\">\n";
+                $html_str .= "                                <tr>\n";
                 $html_str .= "                                    <th>".$field_name_replaced."</th>\n";
-            
+                
+                # the name tag
+                $tag = $db_field_name.GENERAL_SEPARATOR.$field_type.GENERAL_SEPARATOR."0";
+                
                 if ($field_type != FIELD_TYPE_DEFINITION_NOTES_FIELD)
                 {
-                    $html_str .= "                                    <td id=\"".$db_field_name.GENERAL_SEPARATOR.$field_type.GENERAL_SEPARATOR."0";
+                    $html_str .= "                                    <td id=\"".$db_field_name;
                     $html_str .= "\" tabindex=\"".$i."\"><".$firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_HTML_DEFINITION];
                     # create a name tag
-                    $html_str .= " name=".$db_field_name.GENERAL_SEPARATOR.$field_type.GENERAL_SEPARATOR."0";
+                    $html_str .= " name=".$tag." id=".$tag;
                 }
+                
+                # set element name for return value
+                if ((strlen($return_name_tag) == 0) && !stristr($field_type, "AUTO"))
+                    $return_name_tag = $tag;
             
                 # set values from database
                 if (strlen($encoded_key_string))
@@ -792,7 +795,10 @@ class HtmlDatabaseTable
     
         $result->set_result_str($html_str);    
 
-        $this->_log->trace("got record");
+        $this->_log->trace("got record (return_name_tag=".$return_name_tag.")");
+            
+        # return the element name
+        return $return_name_tag;
     }
 
     /**

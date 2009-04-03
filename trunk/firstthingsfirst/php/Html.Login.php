@@ -34,9 +34,7 @@ function get_login_page_html ()
 
     $html_str = "";
  
-    # get html for page header
-    $html_str = get_page_header(translate("LABEL_PLEASE_LOGIN"), "", PAGE_TYPE_LOGIN);
-
+    $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
     $html_str .= "        <div id=\"login_white_space\">&nbsp;</div>\n\n";
     $html_str .= "        <div id=\"login_pane\">\n";
     $html_str .= "            <div id=\"login_contents_outer_border\">\n";
@@ -176,18 +174,21 @@ function get_login_status ()
 
     $logging->trace("getting login_status");
         
+    $html_str .= "\n                <div id=\"login_status_content\">";
     $html_str .= translate("LABEL_USER").": ";
     if ($user->is_login())
     {        
         $logging->debug("user: ".$user->get_name()." is logged in");
         $html_str .= $user->get_name();
-        $html_str .= "&nbsp;&nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"xajax_action_logout()\">".translate("BUTTON_LOGOUT")."</a>&nbsp;";
+        $html_str .= "&nbsp;&nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"xajax_action_logout()\">".translate("BUTTON_LOGOUT")."</a>";
     }
     else
     {
         $logging->warn("no user is logged in");
         $html_str .= translate("LABEL_MINUS");
     }
+    $html_str .= "</div>\n";
+    $html_str .= "                <div id=\"login_status_right\"></div>\n            ";
         
     $logging->trace("got login_status");
 

@@ -30,6 +30,7 @@ $text_translations["BUTTON_PREVIOUS_PAGE"] = "vorige";
 /**
  * list buttons
  */
+$text_translations["BUTTON_LIST"] = "actieve&nbsp;lijst";
 $text_translations["BUTTON_ADD_RECORD"] = "nieuwe&nbsp;";
 $text_translations["BUTTON_PREVIOUS_NOTE"] = "vorige&nbsp;opmerking";
 $text_translations["BUTTON_NEXT_NOTE"] = "volgende&nbsp;opmerking";

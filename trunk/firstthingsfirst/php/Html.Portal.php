@@ -76,9 +76,12 @@ function action_get_portal_page ()
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($portal_table_configuration);
     
-    # set page
-    $html_database_table->get_page($firstthingsfirst_portal_title, $firstthingsfirst_portal_intro_text, $result);    
+    # set page, title, explanation and navigation
+    $html_database_table->get_page($firstthingsfirst_portal_title, $result);    
     $response->assign("main_body", "innerHTML", $result->get_result_str());
+    $response->assign("page_title", "innerHTML", $firstthingsfirst_portal_title);
+    $response->assign("page_explanation", "innerHTML", $firstthingsfirst_portal_intro_text);
+    $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_PORTAL));
     
     # set content
     $html_database_table->get_content($list_table_description, LISTTABLEDESCRIPTION_TABLE_NAME, "", DATABASETABLE_ALL_PAGES, $result);

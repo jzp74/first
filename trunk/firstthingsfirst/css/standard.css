@@ -117,11 +117,12 @@ html, body {
 
 /*  defines the header of all pages which only contains the software name and version */
 #header {
+    height: 119px;
     width: 100%;
     position: absolute;
     top: 18px;
     left: 0px;
-    background-color: rgb(5, 114, 197);
+    background: url(../images/twirl-II-light.gif) left top repeat;
     color: rgb(255, 255, 255);
     z-index: 20;
     }
@@ -129,59 +130,40 @@ html, body {
 /* defines the white margins on both side of the header */
 #header_left_margin, #header_right_margin {
     width: 23px;
-    padding: 4px 0px 4px 0px;
+    height: 119px;
+    background-color: rgb(255, 255, 255);
     z-index: 30;
     }
     
 #header_left_margin {
     float: left;
-    margin: 0px -7px 0px 0px;
     background: url(../images/standard_header_left.gif) right top no-repeat;
     }
 
 #header_right_margin {
     float: right;
-    margin: 0px 0px 0px -7px;
-    background: url(../images/standard_header_right.gif) left top no-repeat;
+    background: url(../images/standard_header_right.gif) right top no-repeat;
     }
 
-#header_text {
-    float: left;
-    padding: 4px 0px 4px 6px;
-    font-size: 10px;
-}    
-
-/*  defines the body which has borders on both sides and stretches to the bottom of the page */
-#outer_body {
-    min-height: 100%;
-    height: auto !important;
-    height: 100%;
-    margin: 0px 16px -38px 16px;
-    background-color: rgb(255, 255, 255);
-    border-left: 6px solid rgb(5, 114, 197);
-    border-right: 6px solid rgb(5, 114, 197);
-    }    
-
-/*  this style is used only to prevent content to disappear under the header
-    the height of this style is the combined height of #header and #upper_margin */
-#hidden_upper_margin {
+#header_contents {
+    height: 119px;
+    }
+    
+/*  defines the software version */    
+#software_version {
     width: 100%;
-    padding: 22px 0px 4px 0px;
-    visibility: hidden;
+    height: 10px;
+    padding: 2px 0px 2px 0px;
+    font-family: Arial;
+    font-size: 10px;
+    font-weight: normal;
     }
-
-/*  container for all page contents */
-#main_body {
-    }
-
-/*  container for most header contents */    
-#page_header {
-    background-color: rgb(5, 114, 197);
-    color: rgb(255, 255, 255);
-    }
-
+    
 /*  defines the title of a page */    
 #page_title {
+    width: 100%;
+    height: 32px;
+    padding: 0px 0px 12px 0px;
     font-family: Arial Black;    
     font-size: 32px;
     font-weight: bold;
@@ -190,7 +172,9 @@ html, body {
 
 /*  defines the explanation below the title */
 #page_explanation {
-    padding: 4px 0px 4px 0px;
+    width: 100%;
+    height: 16px;
+    padding: 6px 0px 12px 0px;
     font-family: Arial;    
     font-size: 16px;
     font-weight: bold;
@@ -199,54 +183,100 @@ html, body {
 
 /*  defines the navigation container */
 #navigation_container {
-    padding: 6px 6px 6px 6px;
+    width: 100%;
+    height: 12px;
+    padding: 6px 0px 6px 0px;
 }
 
 /*  defines navigation links */
 #navigation {
     float: left;
+    display: inline;
     margin: -6px 0px -6px 0px;
     padding: 6px 0px 6px 0px;
     color: rgb(50, 50, 50);
     font-weight: bold;
     }
 
+#navigation .tab {
+    float: left;
+    margin: -2px 0px -4px 2px;
+    padding: 2px 0px 4px 0px;
+    background: url(../images/standard_tab_left.png) left top no-repeat;
+    }
+
 #navigation a, #navigation a:link, #navigation a:visited {
-    padding: 4px 10px 4px 10px;
-    margin: 0px 0px 0px 3px;
-    background-color: rgb(60, 171, 255);
+    float: left;
+    margin: -2px 0px -4px 6px;
+    padding: 4px 0px 4px 0px;
     color: rgb(50, 50, 50);
+    background: url(../images/standard_tab.png) left top repeat;
     font-weight: bold;
     }
 
-#navigation a:hover { 
-    padding: 6px 10px 6px 10px;
+#navigation a:hover {
+    color: rgb(255, 255, 255);
+    }
+
+#navigation .tab_right {
+    float: left;
+    width: 6px;
+    height: 14px;
+    margin: -2px 0px -6px 0px;
+    padding: 4px 0px 5px 0px;
+    background: url(../images/standard_tab_right.png) right top no-repeat;
+    }
+
+#navigation .tab_highlight {
+    float: left;
+    margin: -6px 0px -6px 2px;
+    padding: 6px 0px 6px 0px;
+    background: url(../images/standard_tab_left_highlight.png) left top no-repeat;
+    }
+
+#navigation .tab_highlight_content {
+    float: left;
+    margin: -6px 0px -6px 6px;
+    padding: 6px 0px 6px 0px;
     background-color: rgb(255, 255, 255);
     }
 
-#navigation .navigation_link {
-    padding: 4px 10px 4px 10px;
-    margin: 0px 0px 0px 3px;
-    background-color: rgb(60, 171, 255);
-    }
-
-#navigation .navigation_link_highlight {
-    padding: 6px 10px 6px 10px;
-    margin: 0px 0px 0px 3px;
-    background-color: rgb(255, 255, 255);
+#navigation .tab_right_highlight {
+    float: left;
+    width: 6px;
+    height: 14px;
+    margin: -6px 0px -6px 0px;
+    padding: 6px 0px 7px 0px;
+    background: url(../images/standard_tab_right_highlight.png) right top no-repeat;
     }
 
 /*  defines login status of a user */    
 #login_status {
-    margin: -4px 0px -6px 0px;
-    padding: 4px 6px 4px 10px;
     float: right;
-    background-color: rgb(60, 171, 255);
-    color: rgb(50, 50, 50);
+    display: inline;
+    margin: -4px 6px -4px 0px;
+    padding: 4px 0px 4px 0px;
+    background: url(../images/standard_login_status_left.png) left top no-repeat;
+    }
+
+#login_status_content {
+    float: left;
+    margin: -4px 0px 0px 6px;
+    padding: 4px 0px 4px 4px;
+    background: url(../images/standard_login_status.png) left top repeat;
+    }
+    
+#login_status_right {
+    float: left;
+    width: 6px;
+    height: 12px;
+    margin: -4px 0px -4px 0px;
+    padding: 6px 0px 5px 0px;
+    background: url(../images/standard_login_status_right.png) right top no-repeat;
     }
 
 #login_status_invisible {
-    margin: -4px 0px -6px 0px;
+    margin: -4px 0px -4px 0px;
     padding: 4px 6px 4px 10px;
     float: right;
     }
@@ -260,18 +290,46 @@ html, body {
     color: rgb(255, 255, 255);
     }
 
+/*  defines the body which has borders on both sides and stretches to the bottom of the page */
+#outer_body {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0px 16px -44px 16px;
+    background-color: rgb(255, 255, 255);
+    border-left: 4px solid rgb(95, 148, 206);
+    border-right: 4px solid rgb(95, 148, 206);
+    }    
+
+/*  this style is used only to prevent content to disappear under the header
+    the height of this style is the combined height of #header and #upper_margin */
+#hidden_upper_margin {
+    width: 100%;
+    padding: 118px 0px 4px 0px;
+    visibility: hidden;
+    }
+
+/*  container for all page contents */
+#main_body {
+    }
+
+/*  container for most header contents */    
+#page_header {
+    color: rgb(255, 255, 255);
+    }
+
 /*  this style is used only to prevent content to disappear under the footer
     the height of this style is the combined height of #footer and #lower_margin */
 #hidden_lower_margin {
     width: 100%;
-    height: 38px;
+    height: 44px;
     visibility: hidden;
     }
     
 /*  defines the footer of all pages */
 #footer {
-    height: 20px;
-    background-color: rgb(5, 114, 197);
+    height: 26px;
+    background: url(../images/twirl-II-light.gif) left top repeat;
     color: rgb(255, 255, 255);
     text-align: center;
     font-size: 12px;
@@ -280,8 +338,7 @@ html, body {
 /* defines the white margins on both side of the footer */
 #footer_left_margin, #footer_right_margin {
     width: 23px;
-    height: 20px;
-    background-color: rgb(255, 255, 255);
+    height: 26px;
     z-index: 30;
     }
     
@@ -298,15 +355,15 @@ html, body {
     }
 
 #footer_text {
-    padding: 2px 0px 0px 0px;
+    padding: 6px 0px 0px 0px;
     text-align: center;
 }    
 
 /*  defines a very small input */
 #focus_on_this_input {
-    background-color: rgb(5, 114, 197);
-    color: rgb(5, 114, 197);
-    border: 1px solid rgb(5, 114, 197);
+    background-color: rgb(255, 255, 255);
+    color: rgb(255, 255, 255);
+    border: 1px solid rgb(255, 255, 255);
     font-size: 2px;
     padding: 0px 0px 0px 0px;
     margin: 0px 0px 0px 0px;
@@ -349,7 +406,7 @@ html, body {
     float: none;
     padding: 8px 8px 8px 8px;
     background-color: rgb(197, 214, 232);
-    color: rgb(5, 114, 197);
+    color: rgb(95, 148, 206);
     }
     
 #action_bar_top_left {
@@ -386,12 +443,12 @@ html, body {
     padding: 1px 1px 3px 0px;
     margin: -4px 4px -4px 4px;
     background-color: rgb(255, 255, 255);
-    border: 1px solid rgb(5, 114, 197);
+    border: 1px solid rgb(95, 148, 206);
     }
 
 #action_bar a, #action_bar a:link, #action_bar a:visited {
     padding: 1px 4px 1px 4px;
-    color: rgb(5, 114, 197);
+    color: rgb(95, 148, 206);
     }
 
 #action_bar a:hover { 

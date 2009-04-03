@@ -55,18 +55,16 @@ function start_regression_test ()
 
     # create html for page layout
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
-    $html_str .= "        <div id=\"page_header\">\n";
-    $html_str .= "            <div id=\"page_title\">Regression test</div>\n";
-    $html_str .= "            <div id=\"page_explanation\">&nbsp;</div>\n";
-    $html_str .= "        </div> <!-- page_header -->\n\n";
     $html_str .= "            <div id=\"test_body\">\n\n";
     $html_str .= "            </div> <!-- test_body -->\n\n";
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
             
     $response->assign("main_body", "innerHTML", $html_str);
+    $response->assign("page_title", "innerHTML", "Regression test");
+    $response->assign("page_explanation", "innerHTML", "&nbsp;");
     
     # create html for footer
-    $html_str = "<input id=\"focus_on_this_input\" size=\"1\" readonly>test start: ";
+    $html_str = "test start: ";
     $html_str .= "<strong>".strftime(DATETIME_FORMAT_EU)."</strong>, test end: ";
     if ($firstthingsfirst_date_string == DATE_FORMAT_US)
         $html_str .= "<strong>".strftime(DATETIME_FORMAT_US)."</strong>, test end: ";

@@ -86,9 +86,12 @@ function action_get_user_admin_page ()
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
     
-    # set page
-    $html_database_table->get_page(translate("LABEL_USER_ADMIN_TITLE"), "", $result);
+    # set page, title, explanation and navigation
+    $html_database_table->get_page(translate("LABEL_USER_ADMIN_TITLE"), $result);    
     $response->assign("main_body", "innerHTML", $result->get_result_str());
+    $response->assign("page_title", "innerHTML", translate("LABEL_USER_ADMIN_TITLE"));
+    $response->assign("page_explanation", "innerHTML", "&nbsp;");
+    $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_USER_ADMIN));
 
     # set content
     $html_database_table->get_content($user, USER_TABLE_NAME, "", DATABASETABLE_UNKWOWN_PAGE, $result);
@@ -180,9 +183,8 @@ function action_get_user_admin_record ($title, $key_string)
     # set action pane    
     $response->assign("action_pane", "innerHTML", $result->get_result_str());
 
-    # set focus on last input element and then on first input element
-    $response->script("document.record_form_name.elements[0].blur()");
-    $response->script("document.record_form_name.elements[document.record_form_name.length].focus()");
+    # set focus on hidden input element and then on first editable input element
+    $response->script("document.getElementById('focus_on_this_input').focus()");
     $response->script("document.record_form_name.elements[0].focus()");
 
     $logging->trace("got user admin record");

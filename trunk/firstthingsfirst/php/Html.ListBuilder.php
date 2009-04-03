@@ -115,17 +115,14 @@ function action_get_listbuilder_page ($list_title)
         $largest_id = 1;
     }
             
-    $html_str = "";
-    $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
-    
     # different page title when list title has been given
     if ($old_list_loaded == TRUE)
         $page_title = translate("LABEL_MODIFY_LIST")." '".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."'";
     else        
         $page_title = translate("LABEL_CONFIGURE_NEW_LIST");
-    # get html for page header
-    $html_str = get_page_header($page_title, "", PAGE_TYPE_LISTBUILDER);
-    
+
+    $html_str = "";
+    $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";    
     $html_str .= "        <div class=\"white_area\"></div>\n\n";
     $html_str .= "        <div id=\"listbuilder_pane\">\n\n";
     $html_str .= "            <div class=\"listbuilder_title_pane\">\n";
@@ -244,6 +241,9 @@ function action_get_listbuilder_page ($list_title)
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
         
     $response->assign("main_body", "innerHTML", $html_str);
+    $response->assign("page_title", "innerHTML", $page_title);
+    $response->assign("page_explanation", "innerHTML", "&nbsp;");
+    $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_LISTBUILDER));
 
     if ($old_list_loaded == FALSE && strlen($list_title) > 0)
     {

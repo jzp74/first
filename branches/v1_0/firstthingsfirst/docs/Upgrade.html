@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+
+<head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+    
+<title>First Things First - Upgrade</title>
+<link rel="shortcut icon" href="../images/favicon.ico">
+<link rel="stylesheet" href="../css/documents.css">
+</head>
+
+<body>
+
+<div id="title">First Things First - Upgrade</div>
+
+<p>Please follow these instructions and you'll have First Things First upgraded in no time.</p>
+<h1>Upgrade procedure</h1>
+<ul>
+    <li><a href="http://www.jaspershome.org/firstthingsfirst/index.php?option=com_content&amp;task=view&amp;id=6&amp;Itemid=5">Download</a> the latest release of FirstThingsFirst (zip format)</li>
+    <li>Dowload your <em>'localsettings.php'</em> from your hosting provider.</li>
+    <li>Backup your database (very important!)</li>
+    <li>Upload the '<em>firstthingsfirst</em>' directory from the zipfile to your hosting provider.</li>
+    <li>Upload your local copy of <em>'localsettings.php'</em> to your hosting provider. Make sure that you add new settings to your version of <em>'localsettings.php'</em>. Refer to the paragraph below to see if new settings have been added to the <em>'localsettings.php'</em> of your new version.</li>
+</ul>
+<ul>
+    <li>Run the release specific upgrade script (if present). You can find this script in the <em>'scripts'</em> directory. Refer to the paragraph below to see if you need to run an update script for your new version.</li>
+    <li>Open a browser and go the webadress of the location to which you copied the application. You will get a login screen. Login as user '<em>admin</em>' with your admin password.</li>
+    <li>If login is succesful, chances are that your installation was succesful. I recommend you to do the following just to be sure:
+    <ul>
+        <li>Go to the following URL: http://www.YOURDOMAIN/LOCATION_OF_FIRSTTHINGSFIRST/test</li>
+        <li>You are presented with the testresults. If they are all green, your installation was definitely a success. If not, the problem usually has something to do with your database settings.</li>
+    </ul>
+    </li>
+</ul>
+<p>That's all!</p>
+<p>As you can see this was really simple. Now you can start creating and using all kinds of lists. Have fun!</p>
+<h1>Upgrade scripts</h1>
+<h2>Upgrade from version 0.9 to version 1.0</h2>
+<ul>
+    <li>Run upgrade script from following URL:<br />
+    http://www.YOURDOMAIN/LOCATION_OF_FIRSTTHINGSFIRST/scripts/update_v0.9_to_v1.0.php</li>
+    <li>Add the following lines to <em>'localsettings.php'</em> (you can also copy them from the new <em>'localsettings.php'</em> that comes with your new version):<br />
+    # system language<br />
+    # choose between the following languages:<br />
+    # LANG_EN - English language<br />
+    # LANG_NL - Dutch language<br />
+    $firstthingsfirst_lang = LANG_EN;</li>
+</ul>
+<h2>Upgrade from version 0.8 to version 0.9</h2>
+<ul>
+    <li>Run upgrade script from following URL:<br />
+    http://www.YOURDOMAIN/LOCATION_OF_FIRSTTHINGSFIRST/scripts/update_v0.8_to_v0.9.php</li>
+    <li>No new settings added to <em>'localsettings.php'</em>.</li>
+</ul>
+<h2>Upgrade from version 0.7 to version 0.8</h2>
+<ul>
+    <li>Run upgrade script from following URL:<br />
+    http://www.YOURDOMAIN/LOCATION_OF_FIRSTTHINGSFIRST/scripts/update_v0.7_to_v0.8.php</li>
+    <li>No new settings added to <em>'localsettings.php'</em>.</li>
+</ul>
+<h2>Upgrade from version 0.6 to version 0.7</h2>
+<ul>
+    <li>Run upgrade script from following URL:<br />
+    http://www.YOURDOMAIN/LOCATION_OF_FIRSTTHINGSFIRST/scripts/update_v0.6_to_v0.7.php</li>
+    <li>No new settings added to <em>'localsettings.php'</em>.</li>
+</ul>
+<h2>Upgrade from version 0.5 to version 0.6</h2>
+<ul>
+    <li>Run upgrade script from following URL:<br />
+    http://www.YOURDOMAIN/LOCATION_OF_FIRSTTHINGSFIRST/scripts/update_v0.5_to_v0.6.php</li>
+    <li>No new settings added to <em>'localsettings.php'</em>.</li>
+</ul>
+<h2>Upgrade from vesion 0.4 to version 0.5</h2>
+<ul>
+    <li>No update script needed</li>
+    <li>No new settings added to <em>'localsettings.php'</em>.</li>
+</ul>
+
+</body>
+
+<html>
+

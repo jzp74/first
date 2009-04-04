@@ -360,7 +360,7 @@ class User extends UserDatabaseTable
         $record = parent::select_record($encoded_key_string);
         if (count($record) == 0)
         {
-            if ($this->error_message_str != ERROR_DATABASE_CONNECT)
+            if ($this->error_message_str != "ERROR_DATABASE_CONNECT")
             {
                 $this->_handle_error("", "ERROR_INCORRECT_NAME_PASSWORD");
                 $this->error_str = "";

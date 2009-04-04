@@ -172,7 +172,6 @@ function process_url ()
 <title>First Things First</title>
 <link rel="shortcut icon" href="images/favicon.ico">
 <link rel="stylesheet" href="css/standard.css">
-<link rel="stylesheet" href="css/standard_print.css">
 <link rel="stylesheet" href="css/standard_listbuilder.css">
 <link rel="stylesheet" href="css/standard_database_table.css">
 <link rel="stylesheet" href="css/standard_print.css" media="print">

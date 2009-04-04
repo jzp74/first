@@ -285,6 +285,8 @@ class HtmlDatabaseTable
         $field_names_with_length = array();
         foreach ($field_names as $field_name)
         {
+            $db_field_name = $user_fields[$field_name];
+            
             # replace all space chars with &nbsp
             $field_name_replaced = str_replace(' ', '&nbsp;', $field_name);
 
@@ -293,7 +295,7 @@ class HtmlDatabaseTable
                 $field_name_replaced = str_replace(' ', '&nbsp;', translate($field_name));
 
             # only display field names that have a length
-            if (strlen($field_name) > 0)
+            if ((strlen($field_name) > 0) && ($fields[$db_field_name][2] != ID_COLUMN_NO_SHOW))
             {
                 $sort_name = $user_fields[$field_name];
                 # change names to sort by for automatic creator and modifier fields

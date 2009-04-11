@@ -129,6 +129,6 @@ $text_translations["LABEL_LIST_DESCRIPTION"] = "beschrijving";
 $text_translations["LABEL_LIST_DEFINITION"] = "definitie";
 $text_translations["LABEL_LIST_CREATOR"] = "gemaakt";
 $text_translations["LABEL_LIST_MODIFIER"] = "laatste wijziging";
-$text_translations["LABEL_CONFIRM_DELETE"] = "Weet je zeker dat je deze lijst wilt wijzigen?";
+$text_translations["LABEL_CONFIRM_DELETE"] = "Weet je zeker dat je deze lijst wilt verwijderen?";
 
 ?>

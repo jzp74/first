@@ -195,10 +195,9 @@ if (isset($_GET['action']) && $_GET['action'] == ACTION_GET_LOGIN_PAGE)
     echo "        <div id=\"page_title\">".translate("LABEL_PLEASE_LOGIN")."</div>\n";
 else
     echo "        <div id=\"page_title\">&nbsp;</div>\n";
-
-echo "        <div id=\"page_explanation\">&nbsp;</div>\n";
-echo "        <div id=\"navigation_container\">&nbsp;</div> <!-- navigation_container -->\n";
 ?>
+        <div id="page_explanation">&nbsp;</div>
+        <div id="navigation_container">&nbsp;</div> <!-- navigation_container -->
     </div> <!-- header_contents -->
 </div> <!-- header -->
     

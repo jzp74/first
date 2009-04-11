@@ -818,7 +818,7 @@ function get_field_definition_table ($definition)
         
         # the seventh column - delete
         if ($row > 0)
-            $html_str .= "                                                <td width=\"1%\">".get_href(ACTION_DELETE_LISTBUILDER_ROW, HTML_EMPTY_LIST_TITLE, "xajax_action_delete_listbuilder_row(".$row.", xajax.getFormValues('database_definition_form'))", translate("BUTTON_DELETE"))."</td>\n";
+            $html_str .= "                                                <td width=\"1%\">".get_href(ACTION_DELETE_LISTBUILDER_ROW, HTML_EMPTY_LIST_TITLE, "xajax_action_delete_listbuilder_row(".$row.", xajax.getFormValues(%27database_definition_form%27))", translate("BUTTON_DELETE"))."</td>\n";
         else
             $html_str .= "                                                <td width=\"1%\"><p style=\"visibility: hidden;\">dl</p></td>\n";
     

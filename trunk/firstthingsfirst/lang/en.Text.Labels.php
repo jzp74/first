@@ -76,8 +76,8 @@ $text_translations["LABEL_ARCHIVED_RECORDS"] = "archived records&nbsp;&nbsp;";
 $text_translations["LABEL_LIST_RECORD"] = "list record";
 $text_translations["LABEL_PAGE"] = "page";
 $text_translations["LABEL_OF"] = "of";
-$text_translations["LABEL_ADD_RECORD"] = "Enter details and press 'ok'";
-$text_translations["LABEL_EDIT_RECORD"] = "Enter modifications and press 'ok'";
+$text_translations["LABEL_ADD_RECORD"] = "Add a new ";
+$text_translations["LABEL_EDIT_RECORD"] = "Change this ";
 
 /**
  * listtableitemnote labels

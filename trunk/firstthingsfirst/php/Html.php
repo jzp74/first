@@ -15,9 +15,10 @@ $xajax->register(XAJAX_FUNCTION, "check_list_permissions");
 
 
 /**
- * definition of an empty list title
+ * definition of an empty action and an empty list title
  */
 define("HTML_EMPTY_LIST_TITLE", "-!@#$$#@!-");
+define("HTML_NO_ACTION", "-@#$$#@-");
 
 
 /**
@@ -280,15 +281,25 @@ function set_info_message ($info_element, $info_str, $response)
  * @param string $list_title the title of the list on which this action is performed
  * @param string $func_str contains the complete js function name and all its parameters
  * @param string $name_str contains the name of the button
+ * @param string $icon_name contains the name of the icon to display
  * @return string html containing button
  */
-function get_href ($action, $list_title, $func_str, $name_str)
+function get_href ($action, $list_title, $func_str, $name_str, $icon_name)
 {
-    if ($list_title == HTML_EMPTY_LIST_TITLE)
-        $onclick_str = "onclick=\"xajax_check_permissions('".$action."', '".$func_str."')";
+    if ($action == HTML_NO_ACTION)
+        $onclick_str = "onclick=\"".$func_str;
     else
-        $onclick_str = "onclick=\"xajax_check_list_permissions('".$action."', '".$list_title."', '".$func_str."')";
-    return "<a href=\"javascript:void(0);\" ".$onclick_str."\">".$name_str."</a>";
+    {
+        if ($list_title == HTML_EMPTY_LIST_TITLE)
+            $onclick_str = "onclick=\"xajax_check_permissions('".$action."', '".$func_str."')";
+        else
+            $onclick_str = "onclick=\"xajax_check_list_permissions('".$action."', '".$list_title."', '".$func_str."')";
+    }
+    
+    if (strlen($icon_name) == 0)
+        return "<a href=\"javascript:void(0);\" ".$onclick_str."\">".$name_str."</a>";
+    else
+        return "<a href=\"javascript:void(0);\" class=\"".$icon_name."\" ".$onclick_str."\">".$name_str."</a>";
 }
 
 /**
@@ -297,15 +308,25 @@ function get_href ($action, $list_title, $func_str, $name_str)
  * @param string $list_title the title of the list on which this action is performed
  * @param string $func_str contains the complete js function name and all its parameters
  * @param string $name_str contains the name of the button
+ * @param string $icon_name contains the name of the icon to display
  * @return string html containing button
  */
-function get_href_confirm ($action, $list_title, $func_str, $confirm_str, $name_str)
+function get_href_confirm ($action, $list_title, $func_str, $confirm_str, $name_str, $icon_name)
 {
-    if ($list_title == HTML_EMPTY_LIST_TITLE)
-        $onclick_str = "onclick=\"if (confirm('".$confirm_str."')) { xajax_check_permissions('".$action."', '".$func_str."') }";
+    if ($action == HTML_NO_ACTION)
+        $onclick_str = "onclick=\"".$func_str;
     else
-        $onclick_str = "onclick=\"if (confirm('".$confirm_str."')) { xajax_check_list_permissions('".$action."', '".$list_title."', '".$func_str."') }";
-    return "<a href=\"javascript:void(0);\" ".$onclick_str."\">".$name_str."</a>";
+    {
+        if ($list_title == HTML_EMPTY_LIST_TITLE)
+            $onclick_str = "onclick=\"if (confirm('".$confirm_str."')) { xajax_check_permissions('".$action."', '".$func_str."') }";
+        else
+            $onclick_str = "onclick=\"if (confirm('".$confirm_str."')) { xajax_check_list_permissions('".$action."', '".$list_title."', '".$func_str."') }";
+    }
+    
+    if (strlen($icon_name) == 0)
+        return "<a href=\"javascript:void(0);\" ".$onclick_str."\">".$name_str."</a>";
+    else
+        return "<a href=\"javascript:void(0);\" class=\"".$icon_name."\" ".$onclick_str."\">".$name_str."</a>";
 }
 
 /**
@@ -314,15 +335,25 @@ function get_href_confirm ($action, $list_title, $func_str, $confirm_str, $name_
  * @param string $list_title the title of the list on which this action is performed
  * @param string $query_str contains the query string
  * @param string $name_str contains the name of the button
+ * @param string $icon_name contains the name of the icon to display
  * @return string html containing button
  */
-function get_query_href ($action, $list_title, $query_str, $name_str)
+function get_query_href ($action, $list_title, $query_str, $name_str, $icon_name)
 {
-    if ($list_title == HTML_EMPTY_LIST_TITLE)
-        $onclick_str = "onclick=\"xajax_check_permissions('".$action."', 'window.location.assign(%27index.php?".$query_str."%27)')";
+    if ($action == HTML_NO_ACTION)
+        $onclick_str = "onclick=\"".$func_str;
     else
-        $onclick_str = "onclick=\"xajax_check_list_permissions('".$action."', '".$list_title."', 'window.location.assign(%27index.php?".$query_str."%27)')";
-    return "<a href=\"javascript:void(0);\" ".$onclick_str."\">".$name_str."</a>";
+    {
+        if ($list_title == HTML_EMPTY_LIST_TITLE)
+            $onclick_str = "onclick=\"xajax_check_permissions('".$action."', 'window.location.assign(%27index.php?".$query_str."%27)')";
+        else
+            $onclick_str = "onclick=\"xajax_check_list_permissions('".$action."', '".$list_title."', 'window.location.assign(%27index.php?".$query_str."%27)')";
+    }
+    
+    if (strlen($icon_name) == 0)
+        return "<a href=\"javascript:void(0);\" ".$onclick_str."\">".$name_str."</a>";
+    else
+        return "<a href=\"javascript:void(0);\" class=\"".$icon_name."\" ".$onclick_str."\">".$name_str."</a>";
 }
 
 /**
@@ -358,7 +389,7 @@ function get_page_navigation ($page_type)
         if ($page_type != PAGE_TYPE_PORTAL)
         {
             $html_str .= "                <div class=\"tab\">\n";
-            $html_str .= "                    ".get_query_href(ACTION_GET_PORTAL_PAGE, HTML_EMPTY_LIST_TITLE, "action=".ACTION_GET_PORTAL_PAGE, translate("BUTTON_PORTAL"))."\n";
+            $html_str .= "                    ".get_query_href(ACTION_GET_PORTAL_PAGE, HTML_EMPTY_LIST_TITLE, "action=".ACTION_GET_PORTAL_PAGE, translate("BUTTON_PORTAL"), "")."\n";
             $html_str .= "                    <div class=\"tab_right\"></div>\n";
             $html_str .= "                </div>\n";
         }
@@ -374,7 +405,7 @@ function get_page_navigation ($page_type)
         if ($page_type != PAGE_TYPE_LISTBUILDER)
         {
             $html_str .= "                <div class=\"tab\">\n";
-            $html_str .= "                    ".get_query_href(ACTION_GET_LISTBUILDER_PAGE, HTML_EMPTY_LIST_TITLE, "action=".ACTION_GET_LISTBUILDER_PAGE, translate("BUTTON_CREATE_NEW_LIST"))."\n";
+            $html_str .= "                    ".get_query_href(ACTION_GET_LISTBUILDER_PAGE, HTML_EMPTY_LIST_TITLE, "action=".ACTION_GET_LISTBUILDER_PAGE, translate("BUTTON_CREATE_NEW_LIST"), "")."\n";
             $html_str .= "                    <div class=\"tab_right\"></div>\n";
             $html_str .= "                </div>\n";
         }
@@ -397,7 +428,7 @@ function get_page_navigation ($page_type)
         else if (strlen($user->get_current_list_name()) > 0)
         {
             $html_str .= "                <div class=\"tab\">\n";
-            $html_str .= "                    ".get_query_href(ACTION_GET_LIST_PAGE, $user->get_current_list_name(), "action=".ACTION_GET_LIST_PAGE."&list=".$user->get_current_list_name(), translate("BUTTON_LIST"))."\n";
+            $html_str .= "                    ".get_query_href(ACTION_GET_LIST_PAGE, $user->get_current_list_name(), "action=".ACTION_GET_LIST_PAGE."&list=".$user->get_current_list_name(), translate("BUTTON_LIST"), "")."\n";
             $html_str .= "                    <div class=\"tab_right\"></div>\n";
             $html_str .= "                </div>\n";
         }
@@ -406,7 +437,7 @@ function get_page_navigation ($page_type)
         if ($page_type == PAGE_TYPE_LIST)
         {
             $html_str .= "                <div class=\"tab\">\n";
-            $html_str .= "                    ".get_query_href(ACTION_GET_USERLISTTABLEPERMISSIONS_PAGE, $user->get_current_list_name(), "action=".ACTION_GET_USERLISTTABLEPERMISSIONS_PAGE, translate("BUTTON_USERLISTTABLEPERMISSIONS"))."\n";
+            $html_str .= "                    ".get_query_href(ACTION_GET_USERLISTTABLEPERMISSIONS_PAGE, $user->get_current_list_name(), "action=".ACTION_GET_USERLISTTABLEPERMISSIONS_PAGE, translate("BUTTON_USERLISTTABLEPERMISSIONS"), "")."\n";
             $html_str .= "                    <div class=\"tab_right\"></div>\n";
             $html_str .= "                </div>\n";
         }
@@ -425,7 +456,7 @@ function get_page_navigation ($page_type)
             if ($page_type != PAGE_TYPE_USER_ADMIN)
             {
                 $html_str .= "                <div class=\"tab\">\n";
-                $html_str .= "                    ".get_query_href(ACTION_GET_USER_ADMIN_PAGE, HTML_EMPTY_LIST_TITLE, "action=".ACTION_GET_USER_ADMIN_PAGE, translate("BUTTON_USER_ADMINISTRATION"))."\n";
+                $html_str .= "                    ".get_query_href(ACTION_GET_USER_ADMIN_PAGE, HTML_EMPTY_LIST_TITLE, "action=".ACTION_GET_USER_ADMIN_PAGE, translate("BUTTON_USER_ADMINISTRATION"), "")."\n";
                 $html_str .= "                    <div class=\"tab_right\"></div>\n";
                 $html_str .= "                </div>\n";
             }

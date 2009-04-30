@@ -26,18 +26,17 @@
 
 /*  defines archive selector in database table contents top */
 #database_table_archive_select {
-    display: inline;
     float: left;
-    margin: 4px 20px 0px 0px;
+    margin: 4px 24px 0px 0px;
+    padding: 0px 0px 0px 28px;
+    background: url(../images/icons/boomy_icon_folder_bw.png) left top no-repeat;
     }    
 
-#database_table_archive_select_label {
-    margin: 7px 10px 0px 0px;
-    display: inline;
-    float: left;
-    }    
+#database_table_archive_select:hover {
+    background: url(../images/icons/boomy_icon_folder_highlight.png) left top no-repeat;
+    }
 
-#database_table_archive_select select, #database_table_archive_select input { 
+#database_table_archive_select select { 
     margin: 0px 0px 0px 0px;
     border: 1px solid rgb(171, 187, 202);
     color: rgb(50, 50, 50);
@@ -45,39 +44,38 @@
 
 /*  defines filter in database table contents top */
 #database_table_filter {
-    margin: -6px 0px 0px 0px;
-    display: inline;
     float: left;
-    }    
-
-#database_table_filter_label {
-    margin: 7px 10px 0px 0px;
-    display: inline;
-    float: left;
+    margin: 4px 20px 0px 0px;
     }    
 
 #database_table_filter form {
-    text-align: left;
+    display: inline;
+    float: left;
+    margin: 0px 8px 0px 0px;
+    background: url(../images/icons/boomy_icon_search_bw.png) right top no-repeat;
     }
 
-#database_table_filter .button {
-    margin: 4px 6px 0px 0px;
-    background-color: rgb(232, 232, 232);
+#database_table_filter form:hover {
+    background: url(../images/icons/boomy_icon_search_highlight.png) right top no-repeat;
+    }
+
+#database_table_filter input { 
+    margin: 0px 0px 0px 0px;
+    padding: 2px 5px 3px 5px;
+    border: 1px solid rgb(171, 187, 202);
     color: rgb(50, 50, 50);
-    border: 1px solid rgb(255, 255, 255);
     }
 
-#database_table_filter .button:hover {
-    background-color: rgb(255, 255, 255);
-    border: 1px solid rgb(50, 50, 50);
+#database_table_filter .icon_delete {
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 5px 18px;
     }
 
 /*  defines database table pages in database table contents top */
 #database_table_pages_top {
     margin: 7px 0px 0px 0px;
-    display: inline;
     float: right;
-    }    
+    }
     
 /*  defines table that contains database table contents */
 #database_table_contents {
@@ -125,17 +123,32 @@
     vertical-align: top;
     }
 
+#database_table_contents .icon_delete {
+    margin: -2px 0px -2px 0px;
+    }
+
+#database_table_contents .icon_edit {
+    margin: -2px 0px -2px 0px;
+    }
+
+#database_table_contents .icon_archive {
+    margin: -2px 0px -2px 0px;
+    }
+
+#database_table_contents .icon_unarchive {
+    margin: -2px 0px -2px 0px;
+    }
+
 #database_table_contents tbody tr:hover {
     background-color: rgb(197, 214, 232);
     }
     
 #database_table_contents a, #database_table_contents a:link, #database_table_contents a:visited {
-    padding: 1px 2px 1px 2px;
     color: rgb(50, 50, 50);
     }
 
 #database_table_contents a:hover {
-    color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     }
 
 /*  defines area below database table contents */
@@ -211,7 +224,6 @@
     }
     
 #database_table_record_contents a, #database_table_record_contents a:link, #database_table_record_contents a:visited {
-    padding: 1px 4px 1px 4px;
     color: rgb(95, 148, 206);
     }
 
@@ -226,14 +238,9 @@
     }
 
 #database_table_record_contents_buttons a, #database_table_record_contents_buttons a:link, #database_table_record_contents_buttons a:visited {
-    margin: 0px 0px 0px 0px;
-    padding: 1px 2px 1px 2px;
     color: rgb(95, 148, 206);
-    border: 1px solid rgb(95, 148, 206);
     }
 
 #database_table_record_contents_buttons a:hover {
     color: rgb(50, 50, 50);
-    background-color: rgb(255, 255, 255);
-    border: 1px solid rgb(50, 50, 50);
     }

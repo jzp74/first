@@ -158,11 +158,11 @@ function action_get_listbuilder_page ($list_title)
     # set value for description when list title has been given
     if ($old_list_loaded == TRUE)
     {
-        $html_str .= "<textarea cols=\"40\" rows=\"4\" id=\"listbuilder_list_description\">";
+        $html_str .= "<textarea cols=\"48\" rows=\"4\" id=\"listbuilder_list_description\">";
         $html_str .= $record[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME]."</textarea></div>\n";
     }
     else
-        $html_str .= "<textarea cols=\"40\" rows=\"4\" id=\"listbuilder_list_description\"></textarea></div>\n";
+        $html_str .= "<textarea cols=\"48\" rows=\"4\" id=\"listbuilder_list_description\"></textarea></div>\n";
 
     $html_str .= "                                </div> <!-- listbuilder_contents_pane_line -->\n";
     $html_str .= "                            </div> <!-- listbuilder_contents_pane_contents -->\n";
@@ -213,7 +213,7 @@ function action_get_listbuilder_page ($list_title)
     $html_str .= "                ".get_select("add_select", "add_it", "")."\n";
     $href_str = "xajax_action_insert_listbuilder_row(document.getElementById";
     $href_str .= "(%27add_select%27).value, xajax.getFormValues(%27database_definition_form%27), document.getElementById(%27largest_id%27).innerHTML)";
-    $html_str .= "                ".get_href(ACTION_INSERT_LISTBUILDER_ROW, HTML_EMPTY_LIST_TITLE, $href_str, translate("BUTTON_ADD_FIELD"))."\n";
+    $html_str .= "                ".get_href(ACTION_INSERT_LISTBUILDER_ROW, HTML_EMPTY_LIST_TITLE, $href_str, translate("BUTTON_ADD_FIELD"), "icon_add")."\n";
     
     # display the modify button when a title has been given
     if ($old_list_loaded == TRUE)
@@ -222,7 +222,7 @@ function action_get_listbuilder_page ($list_title)
         $href_str .= "%27, document.getElementById(%27listbuilder_list_title%27).value, ";
         $href_str .= "document.getElementById(%27listbuilder_list_description%27).value, ";
         $href_str .= "xajax.getFormValues(%27database_definition_form%27))";
-        $html_str .= "                &nbsp;&nbsp;&nbsp;".get_href_confirm(ACTION_MODIFY_LIST, $list_title, $href_str, translate("LABEL_CONFIRM_MODIFY"), translate("BUTTON_MODIFY_LIST"))."\n";
+        $html_str .= "                &nbsp;&nbsp;&nbsp;".get_href_confirm(ACTION_MODIFY_LIST, $list_title, $href_str, translate("LABEL_CONFIRM_MODIFY"), translate("BUTTON_MODIFY_LIST"), "icon_accept")."\n";
     }
     # display the create button when no title has been given
     else
@@ -230,7 +230,7 @@ function action_get_listbuilder_page ($list_title)
         $href_str = "xajax_action_create_list(document.getElementById";
         $href_str .= "(%27listbuilder_list_title%27).value, document.getElementById(%27listbuilder_list_description%27).value, ";
         $href_str .= "xajax.getFormValues(%27database_definition_form%27))";
-        $html_str .= "                &nbsp;&nbsp;&nbsp;".get_href(ACTION_CREATE_LIST, HTML_EMPTY_LIST_TITLE, $href_str, translate("BUTTON_CREATE_LIST"))."\n";
+        $html_str .= "                &nbsp;&nbsp;&nbsp;".get_href(ACTION_CREATE_LIST, HTML_EMPTY_LIST_TITLE, $href_str, translate("BUTTON_CREATE_LIST"), "icon_accept")."\n";
     }
     
     $html_str .= "            </div> <!-- action_bar -->\n\n";    
@@ -806,22 +806,46 @@ function get_field_definition_table ($definition)
         
         # the fifth column - up
         if ($row > 1)
-            $html_str .= "                                                <td width=\"1%\"><div class=\"arrow_up\" onclick=\"xajax_action_move_listbuilder_row(".$row.", 'up', xajax.getFormValues('database_definition_form'))\"</div></td>\n";
+        {
+            $html_str .= "                                                <td width=\"1%\">";
+            $html_str .= get_href(ACTION_MOVE_LISTBUILDER_ROW, HTML_EMPTY_LIST_TITLE, "xajax_action_move_listbuilder_row(".$row.", %27up%27, xajax.getFormValues(%27database_definition_form%27))", "&nbsp;", "icon_up");
+            $html_str .= "</td>\n";
+        }
         else
-            $html_str .= "                                                <td width=\"1%\"><p style=\"visibility: hidden;\">up</p></td>\n";
+        {
+            $html_str .= "                                                <td width=\"1%\">";
+            $html_str .= "<p style=\"visibility: hidden;\">up</p>";
+            $html_str .= "</td>\n";
+        }
         
         # the sixth column - down
         if ($row > 0 && $row < ((count($definition) / 4) - 1))
-            $html_str .= "                                                <td width=\"1%\"><div class=\"arrow_down\" onclick=\"xajax_action_move_listbuilder_row(".$row.", 'down', xajax.getFormValues('database_definition_form'))\"</div></td>\n";
+        {
+            $html_str .= "                                                <td width=\"1%\">";
+            $html_str .= get_href(ACTION_MOVE_LISTBUILDER_ROW, HTML_EMPTY_LIST_TITLE, "xajax_action_move_listbuilder_row(".$row.", %27down%27, xajax.getFormValues(%27database_definition_form%27))", "&nbsp;", "icon_down");
+            $html_str .= "</td>\n";
+        }
         else
-            $html_str .= "                                                <td width=\"1%\"><p style=\"visibility: hidden;\">dn</p></td>\n";
+        {
+            $html_str .= "                                                <td width=\"1%\">";
+            $html_str .= "<p style=\"visibility: hidden;\">dn</p>";
+            $html_str .= "</td>\n";
+        }
         
         # the seventh column - delete
         if ($row > 0)
-            $html_str .= "                                                <td width=\"1%\">".get_href(ACTION_DELETE_LISTBUILDER_ROW, HTML_EMPTY_LIST_TITLE, "xajax_action_delete_listbuilder_row(".$row.", xajax.getFormValues(%27database_definition_form%27))", translate("BUTTON_DELETE"))."</td>\n";
+        {
+            $html_str .= "                                                <td width=\"1%\">";
+            $html_str .= get_href(ACTION_DELETE_LISTBUILDER_ROW, HTML_EMPTY_LIST_TITLE, "xajax_action_delete_listbuilder_row(".$row.", xajax.getFormValues(%27database_definition_form%27))", translate("BUTTON_DELETE"), "icon_delete");
+            $html_str .= "</td>\n";
+        }
         else
-            $html_str .= "                                                <td width=\"1%\"><p style=\"visibility: hidden;\">dl</p></td>\n";
-    
+        {
+            $html_str .= "                                                <td width=\"1%\">";
+            $html_str .= "<p style=\"visibility: hidden;\">dl</p>";
+            $html_str .= "</td>\n";
+        }
+
         $html_str .= "                                            </tr>\n";        
     }
     

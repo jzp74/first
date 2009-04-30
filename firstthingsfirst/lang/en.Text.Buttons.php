@@ -20,9 +20,8 @@ $text_translations["BUTTON_FILTER"] = "filter";
 $text_translations["BUTTON_RESET_FILTER"] = "reset filter";
 $text_translations["BUTTON_DELETE"] = "delete";
 $text_translations["BUTTON_MODIFY"] = "modify";
-$text_translations["BUTTON_ADD"] = "ok";
+$text_translations["BUTTON_ADD"] = "add";
 $text_translations["BUTTON_CANCEL"] = "cancel";
-$text_translations["BUTTON_COMMIT"] = "ok";
 $text_translations["BUTTON_USER_ADMINISTRATION"] = "user&nbsp;administration";
 $text_translations["BUTTON_NEXT_PAGE"] = "next";
 $text_translations["BUTTON_PREVIOUS_PAGE"] = "previous";
@@ -30,6 +29,7 @@ $text_translations["BUTTON_PREVIOUS_PAGE"] = "previous";
 /**
  * list buttons
  */
+$text_translations["BUTTON_COMMIT_CHANGES"] = "modify";
 $text_translations["BUTTON_LIST"] = "current&nbsp;list";
 $text_translations["BUTTON_ADD_RECORD"] = "insert&nbsp;new&nbsp;";
 $text_translations["BUTTON_PREVIOUS_NOTE"] = "previous&nbsp;note";
@@ -48,6 +48,8 @@ $text_translations["BUTTON_USERLISTTABLEPERMISSIONS"] = "current&nbsp;list&nbsp;
 $text_translations["BUTTON_ADD_FIELD"] = "add&nbsp;this&nbsp;field";
 $text_translations["BUTTON_CREATE_LIST"] = "create&nbsp;this&nbsp;list";
 $text_translations["BUTTON_MODIFY_LIST"] = "modify&nbsp;this&nbsp;list";
+$text_translations["BUTTON_MOVE_UP"] = "up";
+$text_translations["BUTTON_MOVE_DOWN"] = "down";
 
 /**
  * login buttons

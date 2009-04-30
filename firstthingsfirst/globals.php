@@ -278,7 +278,7 @@ $firstthingsfirst_field_descriptions = array(
     ),
     FIELD_TYPE_DEFINITION_TEXT_FIELD => array(
         DB_DATATYPE_TEXTMESSAGE,
-        "textarea cols=40 rows=3",
+        "textarea cols=48 rows=3",
         "",
         DB_INITIAL_DATA_STRING,
         FIELD_DESCRIPTION_SELECTABLE_DATATYPE

@@ -76,8 +76,8 @@ $text_translations["LABEL_ARCHIVED_RECORDS"] = "gearchiveerde rijen&nbsp;&nbsp;"
 $text_translations["LABEL_LIST_RECORD"] = "rij";
 $text_translations["LABEL_PAGE"] = "pagina";
 $text_translations["LABEL_OF"] = "van";
-$text_translations["LABEL_ADD_RECORD"] = "Voer gegevens in en klik op 'ok'";
-$text_translations["LABEL_EDIT_RECORD"] = "Voer wijzigingen in en klik op 'ok'";
+$text_translations["LABEL_ADD_RECORD"] = "Nieuwe ";
+$text_translations["LABEL_EDIT_RECORD"] = "Wijzig deze ";
 
 /**
  * listtableitemnote labels

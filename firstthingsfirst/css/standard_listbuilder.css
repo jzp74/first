@@ -131,15 +131,22 @@
     border-top: 1px solid rgb(197, 214, 232);
     }
 
+#listbuilder_definition .icon_up {
+    padding: 3px 0px 3px 16px;
+    }
+
+#listbuilder_definition .icon_down {
+    padding: 3px 0px 3px 16px;
+    }
+
+#listbuilder_definition .icon_delete {
+    padding: 3px 0px 3px 24px;
+    }
+
 #listbuilder_definition select, #listbuilder_definition input { 
     border: 1px solid rgb(197, 214, 232);
     }
 
 #listbuilder_definition a, #listbuilder_definition a:link, #listbuilder_definition a:visited {
-    padding: 1px 0px 1px 0px;
-    color: rgb(95, 148, 206);
-    }
-
-#listbuilder_definition a:hover {
-    color: rgb(255, 255, 255);
+    color: rgb(50, 50, 50);
     }

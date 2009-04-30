@@ -303,8 +303,10 @@ class HtmlDatabaseTable
                     $sort_name = DB_TS_CREATED_FIELD_NAME;
                 else if ($fields[$sort_name][1] == FIELD_TYPE_DEFINITION_AUTO_MODIFIED)
                     $sort_name = DB_TS_MODIFIED_FIELD_NAME;
+
                 # set class name to determine arrow image
                 $class_name = "database_table_contents_header_sort";
+                
                 if ($order_by_field == $sort_name)
                 {
                     if ($order_ascending)
@@ -312,6 +314,7 @@ class HtmlDatabaseTable
                     else
                         $class_name .= "_down";
                 }
+
                 $html_str .= "                        <th onclick=\"xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX];
                 $html_str .= "content('".$list_title."', '".$sort_name."', ".$current_page.")\"><div class=\"".$class_name."\">";
                 # add some blanks for the arrow images
@@ -451,24 +454,24 @@ class HtmlDatabaseTable
                     if (($metadata_str[DATABASETABLE_METADATA_ENABLE_ARCHIVE] != DATABASETABLE_METADATA_FALSE) && (strlen($record[DB_ARCHIVER_FIELD_NAME]) == 0))
                     {
                         $html_str .= "                        <td width=\"1%\">";
-                        $html_str .= get_href($js_button_archive, $this->permissions_list_title, "xajax_".$js_button_archive."(%27".$list_title."%27, %27".$encoded_key_string."%27)", translate("BUTTON_ARCHIVE"));
+                        $html_str .= get_href($js_button_archive, $this->permissions_list_title, "xajax_".$js_button_archive."(%27".$list_title."%27, %27".$encoded_key_string."%27)", translate("BUTTON_ARCHIVE"), "icon_archive");
                         $html_str .= "</td>\n";
                     }
                     # add the delete link when it should always be displayed
                     if ($this->configuration[HTML_TABLE_DELETE_MODE] == HTML_TABLE_DELETE_MODE_ALWAYS)
                     {
                         $html_str .= "                        <td width=\"1%\">";
-                        $html_str .= get_href($js_button_delete, $this->permissions_list_title, "xajax_".$js_button_delete."(%27".$list_title."%27, %27".$encoded_key_string."%27)", translate("BUTTON_DELETE"));
+                        $html_str .= get_href($js_button_delete, $this->permissions_list_title, "xajax_".$js_button_delete."(%27".$list_title."%27, %27".$encoded_key_string."%27)", translate("BUTTON_DELETE"), "icon_delete");
                         $html_str .= "</td>\n";
                     }
                     # or add the delete link when record is archived
                     else if (($this->configuration[HTML_TABLE_DELETE_MODE] == HTML_TABLE_DELETE_MODE_ARCHIVED) && (strlen($record[DB_ARCHIVER_FIELD_NAME]) > 0))
                     {
                         $html_str .= "                        <td width=\"1%\">";
-                        $html_str .= get_href($js_button_archive, $this->permissions_list_title, "xajax_".$js_button_activate."(%27".$list_title."%27, %27".$encoded_key_string."%27)", translate("BUTTON_ACTIVATE"));
+                        $html_str .= get_href($js_button_archive, $this->permissions_list_title, "xajax_".$js_button_activate."(%27".$list_title."%27, %27".$encoded_key_string."%27)", translate("BUTTON_ACTIVATE"), "icon_unarchive");
                         $html_str .= "</td>\n";
                         $html_str .= "                        <td width=\"1%\">";
-                        $html_str .= get_href($js_button_delete, $this->permissions_list_title, "xajax_".$js_button_delete."(%27".$list_title."%27, %27".$encoded_key_string."%27)", translate("BUTTON_DELETE"));
+                        $html_str .= get_href($js_button_delete, $this->permissions_list_title, "xajax_".$js_button_delete."(%27".$list_title."%27, %27".$encoded_key_string."%27)", translate("BUTTON_DELETE"), "icon_delete");
                         $html_str .= "</td>\n";
                     }
                     else if ($this->configuration[HTML_TABLE_DELETE_MODE] == HTML_TABLE_DELETE_MODE_NEVER)
@@ -481,11 +484,12 @@ class HtmlDatabaseTable
             {
                 # add modify button
                 $html_str .= "                        <td width=\"1%\">";
-                $html_str .= get_query_href(ACTION_GET_LISTBUILDER_PAGE, $record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], "action=".ACTION_GET_LISTBUILDER_PAGE."&list=".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], translate("BUTTON_MODIFY"));
+                $html_str .= get_query_href(ACTION_GET_LISTBUILDER_PAGE, $record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], "action=".ACTION_GET_LISTBUILDER_PAGE."&list=".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], translate("BUTTON_MODIFY"), "icon_edit");
                 $html_str .= "</td>\n";
                 # add delete button
                 $html_str .= "                        <td width=\"1%\">";
-                $html_str .= get_href_confirm(ACTION_DELETE_PORTAL_RECORD, $record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], "xajax_action_delete_portal_record(%27".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."%27)", translate("LABEL_CONFIRM_DELETE"), translate("BUTTON_DELETE"));
+#                $html_str .= "<div class=\"icon_delete\">delete</div>";
+                $html_str .= get_href_confirm(ACTION_DELETE_PORTAL_RECORD, $record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], "xajax_action_delete_portal_record(%27".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."%27)", translate("LABEL_CONFIRM_DELETE"), translate("BUTTON_DELETE"), "icon_delete");
                 $html_str .= "</td>\n                    </tr>\n";
             }
             else
@@ -528,24 +532,24 @@ class HtmlDatabaseTable
                 
                 # display previous page link
                 if ($current_page > 1)                   
-                    $html_str .= get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".($current_page - 1).")", "&laquo;&nbsp;".translate("BUTTON_PREVIOUS_PAGE"))."&nbsp;&nbsp;";
+                    $html_str .= get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".($current_page - 1).")", "&laquo;&nbsp;".translate("BUTTON_PREVIOUS_PAGE"), "")."&nbsp;&nbsp;";
         
                 # display first pagenumber
                 if ($current_page == 1)
                     $html_str .= " <strong>1</strong>";
                 else
-                    $html_str .= " ".get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, 1)", 1);
+                    $html_str .= " ".get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, 1)", 1, "");
                 # display middle pagenumbers
                 for ($cnt = 2; $cnt<$total_pages; $cnt += 1)
                 {
                     if ($cnt == ($current_page - 2))
                         $html_str .= " <strong>...<strong>";
                     else if ($cnt == ($current_page - 1))
-                        $html_str .= " ".get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".$cnt.")", $cnt);
+                        $html_str .= " ".get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".$cnt.")", $cnt, "");
                     else if ($cnt == $current_page)
                         $html_str .= " <strong>".$cnt."</strong>";
                     else if ($cnt == ($current_page + 1))
-                        $html_str .= " ".get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".$cnt.")", $cnt);
+                        $html_str .= " ".get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".$cnt.")", $cnt, "");
                     if ($cnt == ($current_page + 2))
                         $html_str .= " <strong>...<strong>";
                 }
@@ -553,11 +557,11 @@ class HtmlDatabaseTable
                 if ($current_page == $total_pages)
                     $html_str .= "  <strong>".$total_pages."</strong>";
                 else
-                    $html_str .= "  ".get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".$total_pages.")", $total_pages);
+                    $html_str .= "  ".get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".$total_pages.")", $total_pages, "");
     
                 # display next page link
                 if ($current_page < $total_pages)
-                    $html_str .= "&nbsp;&nbsp;".get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".($current_page + 1).")", translate("BUTTON_NEXT_PAGE")."&nbsp;&raquo;");        
+                    $html_str .= "&nbsp;&nbsp;".get_href($js_href_get, $this->permissions_list_title, "xajax_".$js_href_get."(%27".$list_title."%27, %27%27, ".($current_page + 1).")", translate("BUTTON_NEXT_PAGE")."&nbsp;&raquo;", "");
             }
             $html_str .= "</div>\n";
         }
@@ -782,11 +786,11 @@ class HtmlDatabaseTable
         $html_str .= "                        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents_buttons\">\n";
         $html_str .= "                            ";
         if (!strlen($encoded_key_string))
-            $html_str .= get_href($js_button_insert, $this->permissions_list_title, "xajax_".$js_button_insert."(%27".$list_title."%27, xajax.getFormValues(%27record_form%27))", translate("BUTTON_ADD"));
+            $html_str .= get_href($js_button_insert, $this->permissions_list_title, "xajax_".$js_button_insert."(%27".$list_title."%27, xajax.getFormValues(%27record_form%27))", translate("BUTTON_ADD"), "icon_add");
         else
-            $html_str .= get_href($js_button_update, $this->permissions_list_title, "xajax_".$js_button_update."(%27".$list_title."%27, %27".$encoded_key_string."%27, xajax.getFormValues(%27record_form%27))", translate("BUTTON_COMMIT"));
+            $html_str .= get_href($js_button_update, $this->permissions_list_title, "xajax_".$js_button_update."(%27".$list_title."%27, %27".$encoded_key_string."%27, xajax.getFormValues(%27record_form%27))", translate("BUTTON_COMMIT_CHANGES"), "icon_accept");
         $html_str .= "\n                            ";
-        $html_str .= "&nbsp;&nbsp;".get_href($js_button_cancel, HTML_EMPTY_LIST_TITLE, "xajax_".$js_button_cancel."(%27".$list_title."%27)", translate("BUTTON_CANCEL"));
+        $html_str .= "&nbsp;&nbsp;".get_href($js_button_cancel, HTML_EMPTY_LIST_TITLE, "xajax_".$js_button_cancel."(%27".$list_title."%27)", translate("BUTTON_CANCEL"), "icon_cancel");
         $html_str .= "\n                        </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents_buttons -->\n";
 
         #end form
@@ -824,21 +828,18 @@ class HtmlDatabaseTable
         if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_PORTAL)
         {
             if ($action == "edit")
-                $html_str .= "<strong>".translate("LABEL_EDIT_RECORD")."</strong>";
+                $html_str .= "<strong>".translate("LABEL_EDIT_RECORD").$this->configuration[HTML_TABLE_RECORD_NAME]."</strong>";
             else if ($action == "insert")
-                $html_str .= "<strong>".translate("LABEL_ADD_RECORD")."</strong>";
+                $html_str .= "<strong>".translate("LABEL_ADD_RECORD").$this->configuration[HTML_TABLE_RECORD_NAME]."</strong>";
             else if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_USERLISTTABLEPERMISSIONS)
             {
-                $html_str .= get_href(ACTION_INSERT_LIST_RECORD, $this->permissions_list_title, "xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record(%27".$list_title."%27, %27%27)", translate("BUTTON_ADD_RECORD").$this->configuration[HTML_TABLE_RECORD_NAME]);
+                $html_str .= get_href(ACTION_INSERT_LIST_RECORD, $this->permissions_list_title, "xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record(%27".$list_title."%27, %27%27)", translate("BUTTON_ADD_RECORD").$this->configuration[HTML_TABLE_RECORD_NAME], "icon_add");
                 $html_str .= "&nbsp;&nbsp;&nbsp;&nbsp;";
             }
         }
         # only display the print button when no action is active and only when this is a list page
         if (($action == "") && ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_LIST))
-        {
-            $html_str .= "<a href=\"javascript:void(0);\" onclick=\"window.open('";
-            $html_str .= "index.php?action=".ACTION_GET_LIST_PRINT_PAGE."&list=".$list_title."')\">".translate("BUTTON_PRINT_LIST")."</a>";
-        }
+            $html_str .= get_href(ACTION_GET_LIST_PRINT_PAGE, $this->permissions_list_title, "window.open(%27index.php?action=".ACTION_GET_LIST_PRINT_PAGE."&list=".$list_title."%27)", translate("BUTTON_PRINT_LIST"), "icon_print");
         else
             $html_str .= "&nbsp;";
         
@@ -868,9 +869,8 @@ class HtmlDatabaseTable
         $this->_user->get_list_state($database_table->get_table_name());
         $archived = $this->_list_state->get_archived();
         
-        $html_str .= "                        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."archive_select_label\">".translate("LABEL_DISPLAY")."</div>\n";
         $html_str .= "                        ";
-        $html_str .= "<div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."archive_select\">";
+        $html_str .= "<div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."archive_select\">\n";
         $html_str .= "                            <select id=\"archive_select\"";
         $html_str .= " onChange=\"xajax_action_set_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."archive('".$list_title."', document.getElementById('archive_select').value);\">\n";
         $html_str .= "                                <option value=\"".LISTSTATE_SELECT_NON_ARCHIVED."\"";
@@ -904,14 +904,13 @@ class HtmlDatabaseTable
         $this->_user->get_list_state($database_table->get_table_name());
         $filter_str = $this->_list_state->get_filter_str();
         
-        $html_str .= "                        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."filter_label\">".translate("LABEL_FILTER")."</div>\n";
         $html_str .= "                        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."filter\">\n";
         $html_str .= "                            <form name=\"filter_form_name\" id=\"filter_form\" ";
         $html_str .= "onsubmit=\"javascript:xajax_action_set_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."filter('".$list_title."', document.getElementById('filter_str').value); return false;\">\n";
-        $html_str .= "                                <input size=\"34\" maxlength=\"100\" value=\"".$filter_str."\" id=\"filter_str\"><br>\n";
-        $html_str .= "                                <input type=submit class=\"button\" value=\"".translate("BUTTON_FILTER")."\">\n";
-        $html_str .= "                                <button type=\"button\" class=\"button\" onclick=\"javascript:xajax_action_set_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."filter('".$list_title."', '')\">".translate("BUTTON_RESET_FILTER")."</button>\n";
+        $html_str .= "                                <input size=\"34\" maxlength=\"100\" value=\"".$filter_str."\" id=\"filter_str\">\n";
+        $html_str .= "                                ".get_href(ACTION_SET_LIST_FILTER, $list_title, "xajax_action_set_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."filter(%27".$list_title."%27, document.getElementById(%27filter_str%27).value)", "&nbsp;", "icon_none")."\n";
         $html_str .= "                            </form>\n";
+        $html_str .= "                            ".get_href(ACTION_SET_LIST_FILTER, $list_title, "xajax_action_set_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."filter(%27".$list_title."%27, %27%27)", "&nbsp;", "icon_delete")."\n";
         $html_str .= "                        </div>\n";
 
         $this->_log->trace("got filter");

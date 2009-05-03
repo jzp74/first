@@ -626,9 +626,8 @@ class ListTable extends UserDatabaseTable
                 $filter_str_sql .= " LIKE '%".$filter_str."%')))";
             }
             
-            $this->_list_state->set_filter_str_sql($filter_str_sql);
-            
             # store list_state to session
+            $this->_list_state->set_filter_str_sql($filter_str_sql);
             $this->_user->set_list_state();
         }
 

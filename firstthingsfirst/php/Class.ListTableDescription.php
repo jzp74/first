@@ -60,7 +60,7 @@ $class_listtabledescription_fields = array(
 /**
  * definition of metadata
  */
-define("LISTTABLEDESCRIPTION_METADATA", "-11");
+define("LISTTABLEDESCRIPTION_METADATA","-11");
 
 
 /**
@@ -94,6 +94,18 @@ class ListTableDescription extends UserDatabaseTable
     {
         $this->_log->trace("selecting ListTableDescription (order_by_field=".$order_by_field.", page=".$page.")");
 
+        # get list_state from session
+        $this->_user->get_list_state($this->table_name);
+
+        # set filter to select only listst for which current user has at least view permission
+        $filter_str_sql = "(".LISTTABLEDESCRIPTION_TITLE_FIELD_NAME." IN (SELECT DISTINCT ".USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE_FIELD_NAME;
+        $filter_str_sql .= " FROM ".USERLISTTABLEPERMISSIONS_TABLE_NAME." WHERE ".USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME;
+        $filter_str_sql .= "='".$this->_user->get_name()."' AND ".USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME."=1))";        
+
+        # store list_state to session
+        $this->_list_state->set_filter_str_sql($filter_str_sql);
+        $this->_user->set_list_state();
+        
         $records = parent::select($order_by_field, $page, $db_field_names);
         if (count($records) == 0)
             return array();

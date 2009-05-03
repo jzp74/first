@@ -46,7 +46,7 @@ $text_translations["ERROR_DATABASE_PROBLEM"] = "Er is een onbekende fout opgetre
 /**
  * creation errors
  */
-$text_translations["ERROR_DUPLICATE_LIST_NAME"] = "Er bestaat al een lijst met de zelfde naam";
+$text_translations["ERROR_DUPLICATE_LIST_NAME"] = "Er bestaat al een lijst met de zelfde naam (door jou of een andere gebruiker gemaakt)";
 $text_translations["ERROR_DUPLICATE_USER_NAME"] = "Er bestaat al een gebruikers met de zelfde naam";
 
 /**

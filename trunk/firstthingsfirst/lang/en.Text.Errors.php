@@ -46,7 +46,7 @@ $text_translations["ERROR_DATABASE_PROBLEM"] = "An unkwown error occurred. Pleas
 /**
  * creation errors
  */
-$text_translations["ERROR_DUPLICATE_LIST_NAME"] = "A list with the same name already exists";
+$text_translations["ERROR_DUPLICATE_LIST_NAME"] = "You or another user has already created a list with given name";
 $text_translations["ERROR_DUPLICATE_USER_NAME"] = "A user with the same name already exists";
 
 /**

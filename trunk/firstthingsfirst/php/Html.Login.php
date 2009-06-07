@@ -20,8 +20,22 @@ define("ACTION_LOGOUT", "action_logout");
 /**
  * register all actions in xajax
  */
+$xajax->register(XAJAX_FUNCTION, ACTION_GET_LOGIN_PAGE);
 $xajax->register(XAJAX_FUNCTION, ACTION_LOGIN);
 $xajax->register(XAJAX_FUNCTION, ACTION_LOGOUT);
+
+/**
+ * definition of action permissions
+ * permission are stored in a six character string (P means permissions, - means don't care):
+ *  - user has to have create list permission to be able to execute action
+ *  - user has to have admin permission to be able to execute action
+ *  - user has to have permission to view this list to execute list action for this list
+ *  - user has to have permission to edit this list to execute action for this list
+ *  - user has to have admin permission for this list to exectute action for this list
+ */
+$firstthingsfirst_action_description[ACTION_GET_LOGIN_PAGE] = "-----";
+$firstthingsfirst_action_description[ACTION_LOGIN] = "-----";
+$firstthingsfirst_action_description[ACTION_LOGOUT] = "-----";
 
 
 /**
@@ -35,7 +49,7 @@ function get_login_page_html ()
     $logging->trace("get login page html");
 
     $html_str = "";
- 
+
     $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
     $html_str .= "        <div id=\"login_white_space\">&nbsp;</div>\n\n";
     $html_str .= "        <div id=\"login_pane\">\n";
@@ -45,31 +59,31 @@ function get_login_page_html ()
     $html_str .= "                        <div id=\"login_overview_top_right\">\n";
     $html_str .= "                            <div id=\"login_overview_bottom_left\">\n";
     $html_str .= "                                <div id=\"login_overview_bottom_right\">\n";
-    $html_str .= "                                    <div id=\"login_contents\">\n";    
+    $html_str .= "                                    <div id=\"login_contents\">\n";
     $html_str .= "                                        <form name=\"login_form\" id=\"login_form\" action=\"\" method=\"post\">\n";
     $html_str .= "                                            <div class=\"login_line\">\n";
     $html_str .= "                                                <div class=\"login_line_left\">".translate("LABEL_USER_NAME")."</div>\n";
-    $html_str .= "                                                <div id=\"user_name_id\" class=\"login_line_right\"><input name=\"user_name\" id=\"user_name\" size=\"16\" maxlength=\"16\" value= \"\" type=\"text\"></div>\n";
+    $html_str .= "                                                <div class=\"login_line_right\"><input name=\"user_name\" id=\"user_name_id\" size=\"16\" maxlength=\"16\" value= \"\" type=\"text\"></div>\n";
     $html_str .= "                                            </div> <!-- login_line -->\n";
     $html_str .= "                                            <div class=\"login_line\">\n";
     $html_str .= "                                                <div class=\"login_line_left\">".translate("LABEL_PASSWORD")."</div>\n";
-    $html_str .= "                                                <div id=\"password_id\" class=\"login_line_right\"><input name=\"password\" id=\"password\" size=\"16\" maxlength=\"16\" type=\"password\"></div>\n";
+    $html_str .= "                                                <div class=\"login_line_right\"><input name=\"password\" id=\"password_id\" size=\"16\" maxlength=\"16\" type=\"password\"></div>\n";
     $html_str .= "                                            </div> <!-- login_line -->\n";
     $html_str .= "                                            <div class=\"login_line\">\n";
-    $html_str .= "                                                <div class=\"login_line_left\"><input type=submit class=\"invisible_collapsed\" value=\"".translate("BUTTON_LOGIN")."\" onclick=\"javascript:xajax_action_login(document.getElementById('user_name').value, document.getElementById('password').value); return false;\"></div>\n";
-    $html_str .= "                                                <div class=\"login_line_right\">".get_href(HTML_NO_ACTION, HTML_EMPTY_LIST_TITLE, "xajax_action_login(document.getElementById('user_name').value, document.getElementById('password').value)", translate("BUTTON_LOGIN"), "icon_accept")."</div>\n";
+    $html_str .= "                                                <div class=\"login_line_left\">&nbsp;</div>\n";
+    $html_str .= "                                                <div class=\"login_line_right\"><input type=submit class=\"icon_accept\" value=\"".translate("BUTTON_LOGIN")."\" onclick=\"javascript:xajax_action_login(document.getElementById('user_name_id').value, document.getElementById('password_id').value); return false;\"></div>\n";
     $html_str .= "                                            </div> <!-- login_line -->\n";
     $html_str .= "                                        </form> <!-- login_form -->\n";
     $html_str .= "                                    </div> <!-- login_contents -->\n";
     $html_str .= "                                </div> <!-- login_overview_bottom_right -->\n";
-    $html_str .= "                            </div> <!-- login_overview_bottom_left -->\n";    
-    $html_str .= "                        </div> <!-- login_overview_top_right -->\n";    
-    $html_str .= "                    </div> <!-- login_overview_top_left -->\n";    
-    $html_str .= "                </div> <!-- login_contents_inner_border -->\n";    
-    $html_str .= "            </div> <!-- login_contents_outer_border -->\n";    
+    $html_str .= "                            </div> <!-- login_overview_bottom_left -->\n";
+    $html_str .= "                        </div> <!-- login_overview_top_right -->\n";
+    $html_str .= "                    </div> <!-- login_overview_top_left -->\n";
+    $html_str .= "                </div> <!-- login_contents_inner_border -->\n";
+    $html_str .= "            </div> <!-- login_contents_outer_border -->\n";
     $html_str .= "        </div> <!-- login_pane -->\n\n";
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
-    
+
     $logging->trace("got login page html");
 
     return $html_str;
@@ -86,7 +100,7 @@ function action_login ($user_name, $password)
 {
     global $logging;
     global $user;
-    
+
     $logging->info("ACTION: login (user_name=".$user_name.")");
 
     # create necessary objects
@@ -95,32 +109,32 @@ function action_login ($user_name, $password)
     if (strlen($user_name) == 0)
     {
         $logging->warn("no user name given");
-        set_error_message("user_name_id", "ERROR_NO_USER_NAME_GIVEN", "", "", $response);
+        set_error_message("user_name_id", "right", "ERROR_NO_USER_NAME_GIVEN", "", "", $response);
 
         # set focus on user name
-        $response->script("document.getElementById('user_name').focus()");
-        
+        $response->script("document.getElementById('user_name_id').focus()");
+
         return $response;
     }
-    
+
     if (strlen($password) == 0)
     {
         $logging->warn("no password given");
-        set_error_message("password_id", "ERROR_NO_PASSWORD_GIVEN", "", "", $response);
+        set_error_message("password_id", "right", "ERROR_NO_PASSWORD_GIVEN", "", "", $response);
 
         # set focus on password
-        $response->script("document.getElementById('password').focus()");
+        $response->script("document.getElementById('password_id').focus()");
 
-        return $response;        
+        return $response;
     }
 
     if ($user->login($user_name, $password))
-    {    
+    {
         $logging->trace("user is logged in");
-        
+
         # redirect to portal page
         $response->script("window.location.assign('index.php?action=".ACTION_GET_PORTAL_PAGE."')");
-        
+
         return $response;
     }
     else
@@ -129,15 +143,15 @@ function action_login ($user_name, $password)
         $error_message_str = $user->get_error_message_str();
         $error_log_str = $user->get_error_log_str();
         $error_str = $user->get_error_str();
-        set_error_message("password_id", $error_message_str, $error_log_str, $error_str, $response);
-        
+        set_error_message("password_id", "right", $error_message_str, $error_log_str, $error_str, $response);
+
         # set focus on user name
-        $response->script("document.getElementById('user_name').focus()");
+        $response->script("document.getElementById('user_name_id').focus()");
 
         return $response;
     }
 }
-    
+
 /**
  * logout a user
  * this function is registered in xajax
@@ -147,7 +161,7 @@ function action_logout ()
 {
     global $logging;
     global $user;
-    
+
     $logging->info("ACTION: logout");
 
     # create necessary objects
@@ -171,19 +185,19 @@ function get_login_status ()
 {
     global $user;
     global $logging;
-    
+
     $html_str = "";
 
     $logging->trace("getting login_status");
-        
+
     $html_str .= "\n                <div id=\"login_status_content\">";
 #    $html_str .= translate("LABEL_USER").": ";
     $html_str .= "\n                <div id=\"login_status_content_user\">";
     if ($user->is_login())
-    {        
+    {
         $logging->debug("user: ".$user->get_name()." is logged in");
         $html_str .= $user->get_name();
-        $html_str .= get_href(HTML_NO_ACTION, HTML_EMPTY_LIST_TITLE, "xajax_action_logout()", translate("BUTTON_LOGOUT"), "icon_cancel");
+        $html_str .= get_href(HTML_NO_ACTION, "", "", HTML_EMPTY_LIST_TITLE, "xajax_action_logout()", translate("BUTTON_LOGOUT"), "icon_cancel");
     }
     else
     {
@@ -192,7 +206,7 @@ function get_login_status ()
     }
     $html_str .= "</div></div>\n";
     $html_str .= "                <div id=\"login_status_right\"></div>\n            ";
-        
+
     $logging->trace("got login_status");
 
     return $html_str;
@@ -205,9 +219,9 @@ function get_login_status ()
 function set_login_status ($response)
 {
     global $logging;
-    
+
     $logging->trace("setting login status");
-        
+
     $response->assign("login_status", "innerHTML", get_login_status());
 
     $logging->trace("set login status");

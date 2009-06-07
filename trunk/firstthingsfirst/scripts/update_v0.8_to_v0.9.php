@@ -48,7 +48,7 @@ function fatal ($str)
 # opening message
 echo "<strong>starting ".$update_string."</strong><br><br>\n";
 
-echo "reading all lists<br>";
+echo "converting all lists<br>";
 $query = "SELECT _title, _creator FROM ".LISTTABLEDESCRIPTION_TABLE_NAME;
 $query_result = $database->query($query);
 if ($query_result != FALSE)

@@ -22,7 +22,7 @@ class UserDatabaseTable extends DatabaseTable
     * @var Services_JSON
     */
     protected $_json;
-    
+
     /**
     * reference to global list_state object
     * @var ListState
@@ -34,7 +34,13 @@ class UserDatabaseTable extends DatabaseTable
     * @var User
     */
     protected $_user;
-    
+
+    /**
+     * reference to global user_list_permissions object
+     * @var Database
+     */
+    protected $_user_list_permissions;
+
     /**
     * overwrite __construct() function
     * @param $table_name string table name of this DatabaseTable object
@@ -47,18 +53,20 @@ class UserDatabaseTable extends DatabaseTable
         # these variables are assumed to be globally available
         global $list_state;
         global $user;
-        
+        global $user_list_permissions;
+
         # call parent __construct()
         parent::__construct($table_name, $fields, $metadata_str);
-        
+
         # set global references for this object
         $this->_list_state =& $list_state;
         $this->_user =& $user;
-        
+        $this->_user_list_permissions =& $user_list_permissions;
+
         $this->_json = new Services_JSON();
 
         self::reset();
-        
+
         $this->_log->debug("constructed UserDatabaseTable (table_name=".$this->table_name.", metadata_str=".$metadata_str.")");
     }
 
@@ -69,7 +77,7 @@ class UserDatabaseTable extends DatabaseTable
     function reset ()
     {
         $this->_log->trace("resetting UserDatabaseTable");
-                
+
         $this->_list_state->reset();
     }
 
@@ -87,7 +95,7 @@ class UserDatabaseTable extends DatabaseTable
 
         # get list_state from session
         $this->_user->get_list_state($this->table_name);
-        
+
         # get previous field order
         $prev_order_by_field = $this->_list_state->get_order_by_field();
 
@@ -137,21 +145,21 @@ class UserDatabaseTable extends DatabaseTable
             }
             # set fixed sort order when user sorts by differen field
             else
-                $this->_list_state->set_order_ascending(1);                
+                $this->_list_state->set_order_ascending(1);
         }
-        
+
         $order_ascending = $this->_list_state->get_order_ascending();
         $archived = $this->_list_state->get_archived();
-        $filter_str_sql = $this->_list_state->get_filter_str_sql();        
-                        
+        $filter_str_sql = $this->_list_state->get_filter_str_sql();
+
         if ($page == DATABASETABLE_UNKWOWN_PAGE)
             $page = $this->_list_state->get_current_page();
-        
+
         # call parent select()
         $rows = parent::select($order_by_field, $order_ascending, $archived, $filter_str_sql, $page, $db_field_names);
-        
+
         if ($page != DATABASETABLE_ALL_PAGES)
-            $this->_list_state->set_current_page($page);        
+            $this->_list_state->set_current_page($page);
         if (count($rows) > 0)
         {
             $this->_list_state->set_total_records($rows[0][DB_TOTAL_RECORDS]);
@@ -169,7 +177,7 @@ class UserDatabaseTable extends DatabaseTable
         $this->_user->set_list_state();
 
         $this->_log->trace("selected UserDatabaseTable");
-    
+
         return $rows;
     }
 
@@ -181,17 +189,17 @@ class UserDatabaseTable extends DatabaseTable
     function insert ($name_values_array)
     {
         $this->_log->trace("inserting record into UserDatabaseTable");
-        
+
         # call parent insert()
         $result = parent::insert($name_values_array, $this->_user->get_name());
         if ($result == 0)
             return 0;
 
         $this->_log->trace("inserted record into UserDatabaseTable (result=".$result.")");
-        
+
         return $result;
     }
-    
+
     /**
     * update an existing record in database
     * @param $encoded_key_string string unique identifier of record
@@ -201,16 +209,16 @@ class UserDatabaseTable extends DatabaseTable
     function update ($encoded_key_string, $name_values_array = array())
     {
         $this->_log->trace("updating record from UserDatabaseTable (encoded_key_string=".$encoded_key_string.")");
-        
+
         # call parent update()
         if (parent::update($encoded_key_string, $this->_user->get_name(), $name_values_array) == FALSE)
             return FALSE;
 
         $this->_log->trace("updated record from UserDatabaseTable");
-        
+
         return TRUE;
     }
-    
+
     /**
     * archive an existing record in database
     * @param $encoded_key_string string unique identifier of record to be archived
@@ -225,10 +233,10 @@ class UserDatabaseTable extends DatabaseTable
             return FALSE;
 
         $this->_log->trace("archived record from UserDatabaseTable");
-        
+
         return TRUE;
     }
-    
+
     /**
      * activate an existing record in database
      * @param $encoded_key_string string unique identifier of record to be archived
@@ -243,9 +251,8 @@ class UserDatabaseTable extends DatabaseTable
             return FALSE;
 
         $this->_log->trace("activated record from UserDatabaseTable");
-        
+
         return TRUE;
     }
 
 }
-   

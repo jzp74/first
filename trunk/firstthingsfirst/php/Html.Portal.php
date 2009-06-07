@@ -68,28 +68,28 @@ function action_get_portal_page ()
     global $list_table_description;
     global $firstthingsfirst_portal_title;
     global $firstthingsfirst_portal_intro_text;
-    
+
     $logging->info("ACTION: get portal page");
 
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($portal_table_configuration);
-    
+
     # set page, title, explanation and navigation
-    $html_database_table->get_page($firstthingsfirst_portal_title, $result);    
+    $html_database_table->get_page($firstthingsfirst_portal_title, $result);
     $response->assign("main_body", "innerHTML", $result->get_result_str());
     $response->assign("page_title", "innerHTML", $firstthingsfirst_portal_title);
     $response->assign("page_explanation", "innerHTML", $firstthingsfirst_portal_intro_text);
     $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_PORTAL));
-    
+
     # set content
     $html_database_table->get_content($list_table_description, LISTTABLEDESCRIPTION_TABLE_NAME, "", DATABASETABLE_ALL_PAGES, $result);
     $response->assign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
     # set login status
     set_login_status($response);
-    
+
     # no action pane
 
     # set footer
@@ -117,7 +117,7 @@ function action_get_portal_content ($title, $order_by_field, $page)
     global $logging;
     global $list_table_description;
     global $portal_table_configuration;
-    
+
     $logging->info("ACTION: get portal content (title=".$title.", order_by_field=".$order_by_field.", page=".$page.")");
 
     # create necessary objects
@@ -151,7 +151,7 @@ function action_delete_portal_record ($list_title)
     global $user;
     global $list_table_description;
     global $portal_table_configuration;
-    
+
     $logging->info("ACTION: delete portal record (list_title=".$list_title.")");
 
     # create necessary objects
@@ -164,14 +164,14 @@ function action_delete_portal_record ($list_title)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
-       
+        set_error_message("tab_portal_id", "below", $error_message_str, $error_log_str, $error_str, $response);
+
         return $response;
     }
-    $html_database_table = new HtmlDatabaseTable ($portal_table_configuration);    
+    $html_database_table = new HtmlDatabaseTable ($portal_table_configuration);
 
     # remove any error messages
-    $response->remove("error_message");
+    $response->script("$('*').qtip('destroy')");
 
     # display error when delete returns false
     if ($list_table->drop() == FALSE)
@@ -180,15 +180,15 @@ function action_delete_portal_record ($list_title)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
-                
+        set_error_message("tab_portal_id", "below", $error_message_str, $error_log_str, $error_str, $response);
+
         return $response;
     }
 
     # set content
     $html_database_table->get_content($list_table_description, $list_title, "", DATABASETABLE_ALL_PAGES, $result);
     $response->assign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
-    
+
     # reset current list name
     $user->set_current_list_name("");
 

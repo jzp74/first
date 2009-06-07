@@ -17,7 +17,7 @@
 a, a:link, a:visited {
     font-weight: bold;
     }
- 
+
 /*  define style for all 12x12 images */
 .image {
     padding: 4px 0px 4px 0px;
@@ -38,7 +38,7 @@ a, a:link, a:visited {
     background: url(../images/icons/boomy_icon_up_highlight.png) left bottom no-repeat;
     color: rgb(255, 255, 255);
     }
-    
+
 .icon_down {
     padding: 2px 0px 2px 24px;
     background: url(../images/icons/boomy_icon_down_bw.png) left bottom no-repeat;
@@ -138,7 +138,7 @@ a, a:link, a:visited {
     background: url(../images/icons/boomy_icon_cancel_highlight.png) left bottom no-repeat;
     color: rgb(255, 255, 255);
     }
-    
+
 .icon_print {
     padding: 2px 0px 2px 24px;
     background: url(../images/icons/boomy_icon_print_bw.png) left bottom no-repeat;
@@ -148,7 +148,7 @@ a, a:link, a:visited {
     background: url(../images/icons/boomy_icon_print_highlight.png) left bottom no-repeat;
     color: rgb(255, 255, 255);
     }
-    
+
 .icon_user {
     padding: 2px 0px 2px 24px;
     background: url(../images/icons/boomy_icon_user_bw.png) left bottom no-repeat;
@@ -158,13 +158,13 @@ a, a:link, a:visited {
     background: url(../images/icons/boomy_icon_user_highlight.png) left bottom no-repeat;
     color: rgb(255, 255, 255);
     }
-    
+
 /*  defines standard tags */
 em, strong {
     font-size: inherit;
     font-family: inherit;
     }
-    
+
 /*  defines a standard input */
 input, select, textarea {
     text-align: left;
@@ -172,15 +172,15 @@ input, select, textarea {
     font-size: 12px;
     font-weight: normal;
     }
-    
+
 input, textarea {
     padding: 1px 5px 3px 5px;
     }
-    
+
 select {
     padding: 1px 1px 3px 0px;
     }
-    
+
 .inactive_input {
     background-color: rgb(240, 240, 240);
     color: rgb(120, 120, 120)
@@ -200,7 +200,7 @@ select {
     width: 100%;
     background-color: rgb(255, 255, 255);
     }
-    
+
 /*  defines an invisible and collapsed style */
 .invisible_collapsed {
     display: none;
@@ -221,7 +221,7 @@ html, body {
     left: 0px;
     background-color: rgb(255, 255, 255);
     z-index: 20;
-    }    
+    }
 
 /*  defines the header of all pages which only contains the software name and version */
 #header {
@@ -234,7 +234,7 @@ html, body {
     color: rgb(255, 255, 255);
     z-index: 20;
     }
-    
+
 /* defines the white margins on both side of the header */
 #header_left_margin, #header_right_margin {
     width: 23px;
@@ -242,7 +242,7 @@ html, body {
     background-color: rgb(255, 255, 255);
     z-index: 30;
     }
-    
+
 #header_left_margin {
     float: left;
     background: url(../images/standard_header_left.gif) right top no-repeat;
@@ -256,8 +256,8 @@ html, body {
 #header_contents {
     height: 119px;
     }
-    
-/*  defines the software version */    
+
+/*  defines the software version */
 #software_version {
     width: 100%;
     height: 10px;
@@ -266,13 +266,13 @@ html, body {
     font-size: 10px;
     font-weight: normal;
     }
-    
-/*  defines the title of a page */    
+
+/*  defines the title of a page */
 #page_title {
     width: 100%;
     height: 32px;
     padding: 0px 0px 12px 0px;
-    font-family: Arial Black;    
+    font-family: Arial Black;
     font-size: 32px;
     font-weight: bold;
     text-align: center;
@@ -283,7 +283,7 @@ html, body {
     width: 100%;
     height: 16px;
     padding: 6px 0px 12px 0px;
-    font-family: Arial;    
+    font-family: Arial;
     font-size: 16px;
     font-weight: bold;
     text-align: center;
@@ -358,7 +358,7 @@ html, body {
     background: url(../images/standard_tab_right_highlight.png) right top no-repeat;
     }
 
-/*  defines login status of a user */    
+/*  defines login status of a user */
 #login_status {
     float: right;
     margin: -4px 6px -4px 0px;
@@ -382,7 +382,7 @@ html, body {
 #login_status_content_user:hover {
     background: url(../images/icons/boomy_icon_user_highlight.png) left bottom no-repeat;
 }
-        
+
 #login_status_right {
     float: left;
     width: 6px;
@@ -402,9 +402,9 @@ html, body {
     margin: -4px 0px -3px 12px;
     padding: 4px 0px 3px 24px;
     color: rgb(50, 50, 50);
-    }    
+    }
 
-#login_status a:hover { 
+#login_status a:hover {
     color: rgb(255, 255, 255);
     }
 
@@ -417,7 +417,7 @@ html, body {
     background-color: rgb(255, 255, 255);
     border-left: 4px solid rgb(95, 148, 206);
     border-right: 4px solid rgb(95, 148, 206);
-    }    
+    }
 
 /*  this style is used only to prevent content to disappear under the header
     the height of this style is the combined height of #header and #upper_margin */
@@ -431,7 +431,7 @@ html, body {
 #main_body {
     }
 
-/*  container for most header contents */    
+/*  container for most header contents */
 #page_header {
     color: rgb(255, 255, 255);
     }
@@ -443,7 +443,7 @@ html, body {
     height: 44px;
     visibility: hidden;
     }
-    
+
 /*  defines the footer of all pages */
 #footer {
     height: 26px;
@@ -459,7 +459,7 @@ html, body {
     height: 26px;
     z-index: 30;
     }
-    
+
 #footer_left_margin {
     float: left;
     margin: 0px -7px 0px 0px;
@@ -475,7 +475,7 @@ html, body {
 #footer_text {
     padding: 6px 0px 0px 0px;
     text-align: center;
-}    
+}
 
 /*  defines a very small input */
 #focus_on_this_input {
@@ -486,7 +486,7 @@ html, body {
     padding: 0px 0px 0px 0px;
     margin: 0px 0px 0px 0px;
 }
-    
+
 /*  defines the white margin at the bottom of the page */
 #lower_margin {
     height: 18px;
@@ -517,7 +517,7 @@ html, body {
     margin: -7px 0px 0px 0px;
     background: url(../images/standard_pane_bottom_right.gif) right bottom no-repeat;
     }
-    
+
 /*  defines the action bar that contains a number of actions (hrefs) */
 #action_bar {
     display: block;
@@ -526,7 +526,7 @@ html, body {
     background-color: rgb(197, 214, 232);
     color: rgb(95, 148, 206);
     }
-    
+
 #action_bar_top_left {
     float: left;
     height: 7px;
@@ -548,7 +548,7 @@ html, body {
     margin: -7px 0px 0px 0px;
     background: url(../images/standard_action_bar_bottom_left.gif) left bottom no-repeat;
     }
-    
+
 #action_bar_bottom_right {
     float: right;
     height: 7px;
@@ -556,8 +556,8 @@ html, body {
     margin: -7px 0px 0px 0px;
     background: url(../images/standard_action_bar_bottom_right.gif) right bottom no-repeat;
     }
-    
-#action_bar select { 
+
+#action_bar select {
     padding: 1px 1px 3px 0px;
     margin: -4px 4px -4px 4px;
     background-color: rgb(255, 255, 255);
@@ -570,7 +570,7 @@ html, body {
     color: rgb(95, 148, 206);
     }
 
-#action_bar a:hover { 
+#action_bar a:hover {
     color: rgb(255, 255, 255);
     }
 
@@ -578,7 +578,7 @@ html, body {
     clear: both;
     visibility: hidden;
     }
-    
+
 /*  defines some white space between the the top of the screen and the login pane */
 #login_white_space {
     height: 40px;
@@ -594,8 +594,8 @@ html, body {
 #login_contents_outer_border {
     float: left;
     padding: 2px 2px 2px 2px;
-    margin: 0% 32% 0% 32%;
-    width: 36%;
+    margin: 0% 36% 0% 36%;
+    width: 28%;
     color: rgb(50, 50, 50);
     background-color: rgb(197, 214, 232);
     }
@@ -611,21 +611,21 @@ html, body {
 #login_overview_top_left {
     float: left;
     width: 100%;
-    margin: -2px 0px 0px -2px; 
+    margin: -2px 0px 0px -2px;
     background: url(../images/standard_login_top_left.gif) left top no-repeat;
     }
 
 #login_overview_top_right {
     float: right;
     width: 100%;
-    margin: 0px -4px 0px 0px; 
+    margin: 0px -4px 0px 0px;
     background: url(../images/standard_login_top_right.gif) right top no-repeat;
     }
 
 #login_overview_bottom_left {
     float: left;
     width: 100%;
-    margin: 0px 0px -2px -4px; 
+    margin: 0px 0px -2px -4px;
     background: url(../images/standard_login_bottom_left.gif) left bottom no-repeat;
     }
 
@@ -635,74 +635,89 @@ html, body {
     margin: 0px -4px 0px 0px;
     background: url(../images/standard_login_bottom_right.gif) right bottom no-repeat;
     }
-    
+
 /*  defines the login contents which contains the divs with all the rounded corners */
 #login_contents {
     float: left;
     width: 100%;
-    padding: 20px 0px 20px 0px;
+    padding: 14px 0px 14px 0px;
     }
 
-/*  defines a login line */
+#login_contents input {
+    padding: 1px 5px 3px 5px;
+    border: 1px solid rgb(197, 214, 232);
+    }
+
+#login_contents .icon_accept {
+    padding: 2px 0px 2px 24px;
+    color: rgb(120, 120, 120);
+    font-weight: bold;
+    border: none;
+    }
+
+#login_contents .icon_accept:hover {
+    color: rgb(50, 50, 50);
+    }
+
+/*  defines a line in the login screen */
 .login_line {
     float: left;
     width: 100%;
-    padding: 6px 0px 6px 0px;
+    padding: 4px 0px 4px 0px;
     }
 
 .login_line_left {
+    width: 30%;
     float: left;
-    width: 36%;
     text-align: right;
     }
 
 .login_line_right {
+    margin: -2px 0px -2px 0px;
+    padding: 2px 0px 2px 0px;
     float: right;
-    width: 56%;
+    width: 60%;
     text-align: left;
-    }
-
-#login_contents input { 
-    padding: 1px 5px 3px 5px;
-    border: 1px solid rgb(197, 214, 232);
-    }    
-
-#login_contents a, #login_contents a:link, #login_contents a:visited {
-    color: rgb(120, 120, 120);
-    font-weight: bold;
-    }
-
-#login_contents a:hover {
-    color: rgb(50, 50, 50);
     }
 
 /*  defines message pane */
 #message_pane {
     margin: 4px 10px 4px 10px;
+    width: 20%;
     }
 
-/*  defines error messages */
-#error_message {
-    float: none;
-    background-color: rgb(251, 227, 227);
-    color: rgb(151, 48, 0);
-    margin: 6px 12px 6px 6px;
-    padding: 14px 10px 14px 10px;
-    border-top: 1px dotted rgb(151, 48, 0);
-    border-bottom: 1px dotted rgb(151, 48, 0);
-    font-size: 11px;
+/*  defines qtips */
+.qtip {
+    -moz-opacity: 0.7;
+    -webkit-opacity: 0.7;
+    opacity: 0.7;
+    filter: alpha(opacity=70);
     }
 
-/*  defines info messages */
-#info_message {
-    float: none;
-    background-color: rgb(255, 243, 197);
-    color: rgb(100, 100, 100);
-    margin: 6px 12px 6px 6px;
-    padding: 14px 10px 14px 10px;
-    border-top: 1px dotted rgb(100, 100, 100);
-    border-bottom: 1px dotted rgb(100, 100, 100);
-    font-size: 11px;
+#qtip_message_table {
+    margin: 0px 0px 3px 0px;
+    padding: 0px 0px 0px 0px;
+    width: 100%;
+    text-align: left;
+    }
+
+#qtip_message_table .icon_delete {
+    padding: 2px 0px 2px 18px;
+    background: url(../images/icons/boomy_icon_delete.png) left bottom no-repeat;
+    }
+
+#qtip_message_table .icon_delete:hover {
+    background: url(../images/icons/boomy_icon_delete_highlight.png) left bottom no-repeat;
+    color: rgb(255, 255, 255);
+    }
+
+#qtip_message_table th {
+    padding: 4px 2px 4px 0px;
+    text-align: right;
+    }
+
+#qtip_message_table td {
+    padding: 4px 4px 0px 4px;
     font-weight: bold;
     }
 
@@ -710,7 +725,7 @@ html, body {
 #test_body {
     margin: 12px 10px 12px 10px;
     }
-    
+
 /*  defines a test item (only used in regression test) */
 .test_item {
     float: left;

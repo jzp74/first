@@ -76,14 +76,15 @@ class ListTableDescription extends UserDatabaseTable
     */
     function __construct ()
     {
+        # these variables are assumed to be globally available
         global $class_listtabledescription_fields;
-        
+
         # call parent __construct()
         parent::__construct(LISTTABLEDESCRIPTION_TABLE_NAME, $class_listtabledescription_fields, LISTTABLEDESCRIPTION_METADATA);
-        
+
         $this->_log->debug("constructed new ListTableDescription object");
     }
-                
+
     /**
     * select a fixed number of records from database
     * @param $order_by_field string order records by this db_field_name
@@ -100,27 +101,27 @@ class ListTableDescription extends UserDatabaseTable
         # set filter to select only listst for which current user has at least view permission
         $filter_str_sql = "(".LISTTABLEDESCRIPTION_TITLE_FIELD_NAME." IN (SELECT DISTINCT ".USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE_FIELD_NAME;
         $filter_str_sql .= " FROM ".USERLISTTABLEPERMISSIONS_TABLE_NAME." WHERE ".USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME;
-        $filter_str_sql .= "='".$this->_user->get_name()."' AND ".USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME."=1))";        
+        $filter_str_sql .= "='".$this->_user->get_name()."' AND ".USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME."=1))";
 
         # store list_state to session
         $this->_list_state->set_filter_str_sql($filter_str_sql);
         $this->_user->set_list_state();
-        
+
         $records = parent::select($order_by_field, $page, $db_field_names);
         if (count($records) == 0)
             return array();
-        
+
         $new_records = array();
         foreach ($records as $record)
-        {            
+        {
             # convert value
-            if (array_key_exists(LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME, $record) == TRUE) 
+            if (array_key_exists(LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME, $record) == TRUE)
                 $record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = (array)$this->_json->decode($record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME]);
             array_push($new_records, $record);
         }
-        
+
         $this->_log->trace("selected ListTableDescription");
-        
+
         return $new_records;
     }
 
@@ -132,23 +133,23 @@ class ListTableDescription extends UserDatabaseTable
     function select_record ($title)
     {
         $this->_log->trace("selecting ListTableDescription record (title=".$title.")");
-        
+
         # create encoded_key_string
         parent::_encode_key_string($encoded_key_string = LISTTABLEDESCRIPTION_TITLE_FIELD_NAME."='".$title."'");
-        
+
         $record = parent::select_record($encoded_key_string);
         if (count($record) == 0)
             return array();
-        
+
         # convert value
-        if (array_key_exists(LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME, $record) == TRUE) 
+        if (array_key_exists(LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME, $record) == TRUE)
             $record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = (array)$this->_json->decode($record[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME]);
 
         $this->_log->trace("selected ListTableDescription record (title=\"".$title."\")");
 
         return $record;
     }
-    
+
     /**
     * add new ListTableDescription object to database
     * @param array $name_values_array values of new ListTableDescription
@@ -156,39 +157,37 @@ class ListTableDescription extends UserDatabaseTable
     */
     function insert ($name_values_array)
     {
-        global $user_list_permissions;
-        
         $title = $name_values_array[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME];
 
         $this->_log->trace("inserting ListTableDescription (title=".$title.")");
-        
+
         $record = parent::select_record(LISTTABLEDESCRIPTION_TITLE_FIELD_NAME."='".$title."'");
         if (count($record) > 0)
         {
             $this->_handle_error("this is a duplicate list", "ERROR_DUPLICATE_LIST_NAME");
-            
+
             return FALSE;
         }
 
         # convert value
-        if (array_key_exists(LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME, $name_values_array) == TRUE) 
+        if (array_key_exists(LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME, $name_values_array) == TRUE)
             $name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = $this->_json->encode($name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME]);
 
         if (parent::insert($name_values_array) == 0)
             return FALSE;
-        
-        if ($user_list_permissions->insert_list_permissions_new_list($title) == FALSE) 
+
+        if ($this->_user_list_permissions->insert_list_permissions_new_list($title) == FALSE)
         {
             # copy error strings from user_list_permissions
-            $this->error_message_str = $user_list_permissions->get_error_message_str();
-            $this->error_log_str = $user_list_permissions->get_error_log_str();
-            $this->error_str = $user_list_permissions->get_error_str();
-            
+            $this->error_message_str = $this->_user_list_permissions->get_error_message_str();
+            $this->error_log_str = $this->_user_list_permissions->get_error_log_str();
+            $this->error_str = $this->_user_list_permissions->get_error_str();
+
             return FALSE;
         }
-                    
+
         $this->_log->trace("inserted ListTableDescription (title=".$title.")");
-        
+
         return TRUE;
     }
 
@@ -206,12 +205,33 @@ class ListTableDescription extends UserDatabaseTable
         $encoded_key_string = parent::_encode_key_string(LISTTABLEDESCRIPTION_TITLE_FIELD_NAME."='".$title."'");
 
         # convert value
-        if (array_key_exists(LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME, $name_values_array))
+        if (array_key_exists(LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME, $name_values_array) == TRUE)
             $name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = $this->_json->encode($name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME]);
-        
+
         if (parent::update($encoded_key_string, $name_values_array) == FALSE)
-            return FALSE;        
-                                    
+            return FALSE;
+
+        # update list title in user_list_permissions
+        if (array_key_exists(LISTTABLEDESCRIPTION_TITLE_FIELD_NAME, $name_values_array) == TRUE)
+        {
+            # create key string for user_list_permissions
+            $permission_key_string = USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE_FIELD_NAME."='".$title."'";
+
+            # create array with new title
+            $new_title_array = array();
+            $new_title_array[USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE_FIELD_NAME] = $name_values_array[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME];
+
+            if ($this->_user_list_permissions->update($permission_key_string, $new_title_array) == FALSE)
+            {
+                # copy error strings from user_list_permissions
+                $this->error_message_str = $this->_user_list_permissions->get_error_message_str();
+                $this->error_log_str = $this->_user_list_permissions->get_error_log_str();
+                $this->error_str = $this->_user_list_permissions->get_error_str();
+
+                return FALSE;
+            }
+        }
+
         $this->_log->trace("updated ListTableDescription (title=".$title.")");
 
         return TRUE;
@@ -231,13 +251,26 @@ class ListTableDescription extends UserDatabaseTable
         $encoded_key_string = parent::_encode_key_string(LISTTABLEDESCRIPTION_TITLE_FIELD_NAME."='".$title."'");
 
         if (parent::delete($encoded_key_string) == FALSE)
-            return FALSE;        
-            
+            return FALSE;
+
+        # create key string for user_list_permissions
+        $permission_key_string = USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE_FIELD_NAME."='".$title."'";
+
+        if ($this->_user_list_permissions->delete($permission_key_string) == FALSE)
+        {
+            # copy error strings from user_list_permissions
+            $this->error_message_str = $this->_user_list_permissions->get_error_message_str();
+            $this->error_log_str = $this->_user_list_permissions->get_error_log_str();
+            $this->error_str = $this->_user_list_permissions->get_error_str();
+
+            return FALSE;
+        }
+
         $this->_log->trace("deleted ListTableDescription (title=".$title.")");
 
         return TRUE;
     }
-    
+
 }
 
 ?>

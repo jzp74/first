@@ -53,19 +53,19 @@ define("LOGGING_NAME", "logfile.log");
  * @package Class_FirstThingsFirst
  */
 class Logging
-{        
+{
     /**
     * current loglevel
     * @var int
     */
     protected $level;
-    
+
     /**
     * current name of the logfile
     * @var string
     */
     protected $name;
-    
+
     /**
     * overwrite __construct() function
     * @param $level int loglevel
@@ -76,11 +76,11 @@ class Logging
     {
         # globals defined in localsetting.php
         global $firstthingsfirst_full_pathname;
-        
+
         $this->name = $firstthingsfirst_full_pathname."/".$name;
         $this->level = $level;
     }
-        
+
     /**
     * write given string to fixed log file as given type
     * this function should not be called directly but is used by main logging functions
@@ -95,18 +95,19 @@ class Logging
         {
             $func = $trace[2]['function'];
             $filename = $trace[1]['file'];
-            $line = $trace[1]['line'];    
+            $line = $trace[1]['line'];
         }
         else
         {
             $func = "";
             $filename = $trace[1]['file'];
-            $line = $trace[1]['line'];    
+            $line = $trace[1]['line'];
         }
-        
+
         $the_time = strftime("%d-%m-%Y %H:%M:%S");
-    
-        error_log($the_time." [".$log_level."] ".$filename.":".$line." [".$func."] ".$str."\n", 3, $this->name);        
+
+        # try to log something
+        error_log($the_time." [".$log_level."] ".$filename.":".$line." [".$func."] ".$str."\n", 3, $this->name);
     }
 
     /**
@@ -134,7 +135,7 @@ class Logging
         else
             $log_str .= "<empty>";
         $log_str .= ")";
-                
+
         if ($level == LOGGING_TRACE)
             $this->trace($log_str);
         else if ($level == LOGGING_DEBUG)

@@ -8,7 +8,7 @@ $firstthingsfirst_portal_title = "My Portal";
 $firstthingsfirst_portal_intro_text = "Welcome to My Portal. Please select a list or create a new one";
 
 # full path name to portal on host
-$firstthingsfirst_full_pathname = "e:///sites/firstthingsfirst";
+$firstthingsfirst_full_pathname = "d:///sites/firstthingsfirst";
 
 # date setting for all lists
 # choose between DATE_FORMAT_EU and DATE_FORMAT_US
@@ -45,7 +45,7 @@ $firstthingsfirst_db_schema = "some_schema";
 # LOGGING_INFO - log info, warning and error messages
 # LOGGING_DEBUG - log debug, info, warning and error messages (lots of log data!)
 # LOGGING_TRACE - log trace, debug, info, warning and error messages (lots of log data!)
-$firstthingsfirst_loglevel = LOGGING_OFF;
+$firstthingsfirst_loglevel = LOGGING_INFO;
 
 # logfile, all logmessages will be written in this file
 $firstthingsfirst_logfile = "firstthingsfirst.log";

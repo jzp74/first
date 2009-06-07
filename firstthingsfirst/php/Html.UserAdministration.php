@@ -78,16 +78,16 @@ function action_get_user_admin_page ()
     global $logging;
     global $user;
     global $user_admin_table_configuration;
-    
+
     $logging->info("ACTION: get user admin page");
 
     # create necessary objects
     $result = new Result();
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
-    
+
     # set page, title, explanation and navigation
-    $html_database_table->get_page(translate("LABEL_USER_ADMIN_TITLE"), $result);    
+    $html_database_table->get_page(translate("LABEL_USER_ADMIN_TITLE"), $result);
     $response->assign("main_body", "innerHTML", $result->get_result_str());
     $response->assign("page_title", "innerHTML", translate("LABEL_USER_ADMIN_TITLE"));
     $response->assign("page_explanation", "innerHTML", "&nbsp;");
@@ -99,11 +99,11 @@ function action_get_user_admin_page ()
 
     # set login status
     set_login_status($response);
-    
+
     # set action pane
     $html_str = $html_database_table->get_action_bar(USER_TABLE_NAME, "");
     $response->assign("action_pane", "innerHTML", $html_str);
-    
+
     # set footer
     set_footer("", $response);
 
@@ -129,7 +129,7 @@ function action_get_user_admin_content ($title, $order_by_field, $page)
     global $logging;
     global $user;
     global $user_admin_table_configuration;
-    
+
     $logging->info("ACTION: get user admin content (title=".$title.", order_by_field=".$order_by_field.", page=".$page.")");
 
     # create necessary objects
@@ -162,7 +162,7 @@ function action_get_user_admin_record ($title, $key_string)
     global $logging;
     global $user;
     global $user_admin_table_configuration;
-    
+
     $logging->info("ACTION: get user admin record (title=".$title.", key_string=".$key_string.")");
 
     # create necessary objects
@@ -171,16 +171,16 @@ function action_get_user_admin_record ($title, $key_string)
     $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
 
     # remove any error messages
-    $response->remove("error_message");
+    $response->script("$('*').qtip('destroy')");
 
     # get html for one user record
     $html_database_table->get_record($user, $title, $key_string, $result);
-    
+
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
         return $response;
-    
-    # set action pane    
+
+    # set action pane
     $response->assign("action_pane", "innerHTML", $result->get_result_str());
 
     # set focus on hidden input element and then on first editable input element
@@ -205,14 +205,14 @@ function action_insert_user_admin_record ($title, $form_values)
     global $user;
     global $user_admin_table_configuration;
     global $firstthingsfirst_field_descriptions;
-    
+
     $html_str = "";
     $name_keys = array_keys($form_values);
     $new_form_values = array();
     $final_form_values = array();
     $fields = $user->get_fields();
     $field_keys = array_keys($fields);
-    
+
     $logging->info("ACTION: insert user admin record (title=".$title.")");
 
     # create necessary objects
@@ -228,25 +228,25 @@ function action_insert_user_admin_record ($title, $form_values)
         $field_number = $value_array[2];
         $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_INPUT_CHECKS]);
         $result->reset();
-        
+
         $logging->debug("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
-        
+
         # check field values
         check_field($check_functions, $db_field_name, $form_values[$name_key], $result);
         if (strlen($result->get_error_message_str()) > 0)
         {
-            set_error_message($name_key, $result->get_error_message_str(), "", "", $response);
-            
+            set_error_message($name_key, "right", $result->get_error_message_str(), "", "", $response);
+
             return $response;
         }
         # set new value
         $new_form_values[$db_field_name] = $result->get_result_str();
-        $logging->debug("setting new form value (db_field_name=".$db_field_name.", result=".$result->get_result_str().")");        
+        $logging->debug("setting new form value (db_field_name=".$db_field_name.", result=".$result->get_result_str().")");
     }
-    
+
     # check if all booleans have been set and copy old values into new array
     foreach ($field_keys as $db_field_name)
-    {        
+    {
         if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_BOOL)
         {
             if (!isset($new_form_values[$db_field_name]))
@@ -260,10 +260,10 @@ function action_insert_user_admin_record ($title, $form_values)
         else if (isset($new_form_values[$db_field_name]))
             $final_form_values[$db_field_name] = $new_form_values[$db_field_name];
     }
-    
+
     # remove any error messages
-    $response->remove("error_message");
-    
+    $response->script("$('*').qtip('destroy')");
+
     # display error when insertion returns false
     if (!$user->insert($final_form_values))
     {
@@ -271,20 +271,20 @@ function action_insert_user_admin_record ($title, $form_values)
         $error_message_str = $user->get_error_message_str();
         $error_log_str = $user->get_error_log_str();
         $error_str = $user->get_error_str();
-        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
-        
+        set_error_message("record_contents_buttons", "right", $error_message_str, $error_log_str, $error_str, $response);
+
         return $response;
     }
-    
+
     # set content
     $result->reset();
     $html_database_table->get_content($user, $title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
     $response->assign(USER_ADMIN_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
-    
+
     # set action pane
     $html_str = $html_database_table->get_action_bar($title, "");
     $response->assign("action_pane", "innerHTML", $html_str);
-    
+
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
         return $response;
@@ -308,14 +308,14 @@ function action_update_user_admin_record ($title, $key_string, $form_values)
     global $user;
     global $user_admin_table_configuration;
     global $firstthingsfirst_field_descriptions;
-    
+
     $html_str = "";
     $name_keys = array_keys($form_values);
     $new_form_values = array();
     $fields = $user->get_fields();
     $field_keys = array_keys($fields);
-    
-    $logging->info("ACTION: update user admin record (title=".$title.", key_string=".$key_string.")");
+    # create the key_string for user admin (who always has id=1)
+    $key_string_admin_user = DatabaseTable::_get_encoded_key_string(array(DB_ID_FIELD_NAME => "1"));
 
     # create necessary objects
     $result = new Result();
@@ -330,28 +330,29 @@ function action_update_user_admin_record ($title, $key_string, $form_values)
         $field_number = $value_array[2];
         $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_INPUT_CHECKS]);
         $result->reset();
-        
+
         $logging->debug("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
-        
+
         # check field values (check password field only when new password has been set)
         if (($db_field_name != USER_PW_FIELD_NAME) || (($db_field_name == USER_PW_FIELD_NAME) && (strlen($form_values[$name_key]) > 0)))
         {
             check_field($check_functions, $db_field_name, $form_values[$name_key], $result);
             if (strlen($result->get_error_str()) > 0)
             {
-                set_error_message($name_key, $result->get_error_str(), "", "", $response);
-            
+                set_error_message($name_key, "right", $result->get_error_str(), "", "", $response);
+
                 return $response;
             }
         }
+
         # set new value
         $new_form_values[$db_field_name] = $result->get_result_str();
         $logging->debug("setting new form value (db_field_name=".$db_field_name.", result=".$result->get_result_str().")");
     }
-    
+
     # check if all booleans have been set
     foreach ($field_keys as $db_field_name)
-    {        
+    {
         if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_BOOL)
         {
             if (!isset($new_form_values[$db_field_name]))
@@ -361,9 +362,29 @@ function action_update_user_admin_record ($title, $key_string, $form_values)
             }
         }
     }
-    
+
+    # check if someone tries to change user admin
+    if ($key_string_admin_user == $key_string)
+    {
+        # check if the name of user admin is changed
+        if ($new_form_values[USER_NAME_FIELD_NAME] != "admin")
+        {
+            set_error_message("tab_user_admin_id", "below", "ERROR_CANNOT_UPDATE_NAME_USER_ADMIN", "", "", $response);
+
+            return $response;
+        }
+
+        # check if the permissions of user admin is changed
+        if (($new_form_values[USER_CAN_CREATE_LIST_FIELD_NAME] != "1") || ($new_form_values[USER_IS_ADMIN_FIELD_NAME] != "1"))
+        {
+            set_error_message("tab_user_admin_id", "below", "ERROR_CANNOT_UPDATE_PERMISSIONS_USER_ADMIN", "", "", $response);
+
+            return $response;
+        }
+    }
+
     # remove any error messages
-    $response->remove("error_message");
+    $response->script("$('*').qtip('destroy')");
 
     # display error when insertion returns false
     if (!$user->update($key_string, $new_form_values))
@@ -372,20 +393,20 @@ function action_update_user_admin_record ($title, $key_string, $form_values)
         $error_message_str = $user->get_error_message_str();
         $error_log_str = $user->get_error_log_str();
         $error_str = $user->get_error_str();
-        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
-        
+        set_error_message("record_contents_buttons", "right", $error_message_str, $error_log_str, $error_str, $response);
+
         return $response;
     }
-    
+
     # set content
     $result->reset();
     $html_database_table->get_content($user, $title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
     $response->assign(USER_ADMIN_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
-    
+
     # set action pane
     $html_str = $html_database_table->get_action_bar($title, "");
     $response->assign("action_pane", "innerHTML", $html_str);
-    
+
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
         return $response;
@@ -407,7 +428,7 @@ function action_delete_user_admin_record ($title, $key_string)
     global $logging;
     global $user;
     global $user_admin_table_configuration;
-    
+
     $logging->info("ACTION: delete user admin record (title=".$title.", key_string=".$key_string.")");
 
     # create necessary objects
@@ -416,55 +437,55 @@ function action_delete_user_admin_record ($title, $key_string)
     $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
 
     # remove any error messages
-    $response->remove("error_message");
+    $response->script("$('*').qtip('destroy')");
 
     $logging->info("get user record");
     $user_array = $user->select_record($key_string);
     if (count($user_array) == 0)
     {
-        $logging->warn("select user admin record returns empty array");
+        $logging->warn("select user record returns empty array");
         $error_message_str = $user->get_error_message_str();
         $error_log_str = $user->get_error_log_str();
         $error_str = $user->get_error_str();
-        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
-                    
+        set_error_message("tab_user_admin_id", "below", $error_message_str, $error_log_str, $error_str, $response);
+
         return $response;
     }
     $user_name = $user_array[USER_NAME_FIELD_NAME];
     $logging->info("found user: ".$user_name);
-    
+
     # display error when current user wants to delete user admin
     if ($user_name == "admin")
     {
-        set_error_message(MESSAGE_PANE_DIV, "ERROR_CANNOT_DELETE_USER_ADMIN", "", "", $response);
-                    
+        set_error_message("tab_user_admin_id", "below", "ERROR_CANNOT_DELETE_USER_ADMIN", "", "", $response);
+
         return $response;
     }
-    
+
     # display error when current user wants to delete him/herself
     if ($user_name == $user->get_name())
     {
-        set_error_message(MESSAGE_PANE_DIV, "ERROR_CANNOT_DELETE_YOURSELF", "", "", $response);
-                    
+        set_error_message("tab_user_admin_id", "below", "ERROR_CANNOT_DELETE_YOURSELF", "", "", $response);
+
         return $response;
     }
-    
+
     # display error when delete returns false
-    if (!$user->delete($key_string))
+    if ($user->delete($key_string) == FALSE)
     {
-        $logging->warn("delete user admin record returns false");
+        $logging->warn("delete user record returns false");
         $error_message_str = $user->get_error_message_str();
         $error_log_str = $user->get_error_log_str();
         $error_str = $user->get_error_str();
-        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
-                
+        set_error_message("tab_user_admin_id", "below", $error_message_str, $error_log_str, $error_str, $response);
+
         return $response;
     }
 
     # set content
     $html_database_table->get_content($user, $title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
     $response->assign(USER_ADMIN_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
-    
+
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
         return $response;
@@ -485,7 +506,7 @@ function action_cancel_user_admin_action ($title)
     global $logging;
     global $user;
     global $user_admin_table_configuration;
-    
+
     $logging->info("ACTION: cancel user admin action (title=".$title.")");
 
     # create necessary objects
@@ -493,7 +514,7 @@ function action_cancel_user_admin_action ($title)
     $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
 
     # remove any error messages
-    $response->remove("error_message");
+    $response->script("$('*').qtip('destroy')");
 
     # set action pane
     $html_str = $html_database_table->get_action_bar($title, "");

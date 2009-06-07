@@ -81,7 +81,7 @@ define("USER_METADATA", "-11");
  * @package Class_FirstThingsFirst
  */
 class User extends UserDatabaseTable
-{    
+{
     /**
     * overwrite __construct() function
     * @return void
@@ -90,21 +90,21 @@ class User extends UserDatabaseTable
     {
         # these variables are assumed to be globally available
         global $class_user_fields;
-        
+
         # call parent __construct()
         parent::__construct(USER_TABLE_NAME, $class_user_fields, USER_METADATA);
-        
+
         # start a session
         session_cache_limiter('private, must-revalidate');
         session_start();
-        
+
         # reset relevant session parameters
-        
+
         if (isset($_SESSION["login"]))
             $this->_log->debug("user session is still active (name=".$this->get_name().")");
         else
             $this->reset();
-        
+
         $this->_log->debug("constructed new User object");
     }
 
@@ -116,7 +116,7 @@ class User extends UserDatabaseTable
     {
         return $_SESSION["id"];
     }
-    
+
     /**
     * get value of SESSION variable name.
     * @return string value of SESSION variable name.
@@ -177,24 +177,24 @@ class User extends UserDatabaseTable
     * @param string $list_title set blobal list_state varible with state of this list
     * @return string value of SESSION variable list_state.
     */
-    function get_list_state ($list_title)        
+    function get_list_state ($list_title)
     {
         global $list_state;
-        
+
         # for some reason a cast is needed here
         $list_states = (array)$this->_json->decode($_SESSION["list_states"]);
-        
+
         if (array_key_exists($list_title, $list_states))
             $list_state->set($list_title, (array)$list_states[$list_title]); # mind the cast
         else
         {
             $this->_log->trace("list_state not found in session (list_title=".$list_title.")");
-            
+
             $list_state->reset();
             $list_state->set_list_title($list_title);
         }
     }
-    
+
     /**
     * set value of SESSION variable id
     * @param int $id id of current user
@@ -204,7 +204,7 @@ class User extends UserDatabaseTable
     {
         $_SESSION["id"] = $id;
     }
-    
+
     /**
     * set value of SESSION variable name
     * @param int $name name of current user
@@ -224,7 +224,7 @@ class User extends UserDatabaseTable
     {
         $_SESSION["current_list_name"] = $list_name;
     }
-        
+
     /**
      * set value of SESSION variable lang
      * @param string $lang preferred language
@@ -234,7 +234,7 @@ class User extends UserDatabaseTable
     {
         $_SESSION["lang"] = $lang;
     }
-        
+
     /**
     * set value of SESSION variable can_create_list
     * @param bool $permission indicates if current user is allowed to create a new list
@@ -276,21 +276,21 @@ class User extends UserDatabaseTable
     }
 
     /**
-    * store values from global list state object in session 
+    * store values from global list state object in session
     * @return void
     */
     function set_list_state ()
     {
         global $list_state;
-        
+
         # for some reason a cast is needed here
         $list_states = (array)$this->_json->decode($_SESSION["list_states"]);
 
-        $list_states[$list_state->get_list_title()] = $list_state->pass();        
+        $list_states[$list_state->get_list_title()] = $list_state->pass();
         $_SESSION["list_states"] = $this->_json->encode($list_states);
     }
-        
-    
+
+
     /**
     * reset attributes to initial values
     * @return void
@@ -331,13 +331,13 @@ class User extends UserDatabaseTable
     {
         global $firstthingsfirst_admin_passwd;
         global $firstthingsfirst_lang;
-        
+
         $this->_log->trace("login (name=".$name.")");
-        
+
         if ($this->is_login())
             $this->logout();
-            
-        # create user admin the first time user admin tries to login    
+
+        # create user admin the first time user admin tries to login
         if ($name == "admin" && !$this->exists("admin"))
         {
             $this->_log->info("first time login for admin");
@@ -348,7 +348,7 @@ class User extends UserDatabaseTable
             $name_value_array[USER_CAN_CREATE_LIST_FIELD_NAME] = 1;
             $name_value_array[USER_IS_ADMIN_FIELD_NAME] = 1;
             $name_value_array[USER_TIMES_LOGIN_FIELD_NAME] = 0;
-            
+
             if (!$this->insert($name_value_array))
                 return FALSE;
         }
@@ -365,13 +365,13 @@ class User extends UserDatabaseTable
                 $this->_handle_error("", "ERROR_INCORRECT_NAME_PASSWORD");
                 $this->error_str = "";
             }
-            
+
             return FALSE;
         }
-        
+
         $password = md5($pw);
         $db_password = $record[USER_PW_FIELD_NAME];
-            
+
         if ($db_password == $password)
         {
             # set session parameters
@@ -383,30 +383,30 @@ class User extends UserDatabaseTable
             $this->set_is_admin($record[USER_IS_ADMIN_FIELD_NAME]);
             $this->set_times_login($record[USER_TIMES_LOGIN_FIELD_NAME] + 1);
             $this->set_login(1);
-                
+
             $name_values_array = array();
             $name_values_array[USER_TIMES_LOGIN_FIELD_NAME] = ($record[USER_TIMES_LOGIN_FIELD_NAME] + 1);
-            
+
             # update the number of times this user has logged in
-            if (parent::update($encoded_key_string, $name_values_array) == FALSE)                
+            if (parent::update($encoded_key_string, $name_values_array) == FALSE)
                 return FALSE;
             else
             {
                 $this->_log->debug("user logged in (name=".$name.")");
-            
+
                 return TRUE;
             }
         }
         else
-        {        
+        {
             $this->_log->warn("passwords do not match (name=".$name."), user is not logged in");
             $this->error_str = "";
             $this->_handle_error("", "ERROR_INCORRECT_NAME_PASSWORD");
-            
+
             return FALSE;
         }
-    } 
-    
+    }
+
     /**
     * logout current user
     * @return void
@@ -414,14 +414,14 @@ class User extends UserDatabaseTable
     function logout ()
     {
         $name = $this->get_name();
-        
+
         $this->_log->trace("log out (name=".$name.")");
-        
+
         $this->reset();
 
-        $this->_log->trace("user logged out (name=".$name.")");        
+        $this->_log->trace("user logged out (name=".$name.")");
     }
-    
+
     /**
     * check if user already exists
     * @param string $name name of user
@@ -436,18 +436,18 @@ class User extends UserDatabaseTable
         if (count($record) > 0)
         {
             $this->_log->debug("user already exists (name=".$name.")");
-                
+
             return TRUE;
         }
         else if (strlen($this->get_error_message_str()) == 0)
         {
             $this->_log->debug("user does not exist (name=".$name.")");
-                
+
             return FALSE;
         }
         else
             return FALSE;
-    }                    
+    }
 
     /**
     * insert a new user to database
@@ -457,11 +457,11 @@ class User extends UserDatabaseTable
     function insert ($name_values_array)
     {
         global $user_list_permissions;
-        
+
         $user_name = $name_values_array[USER_NAME_FIELD_NAME];
 
         $this->_log->trace("insert user (name=".$user_name.")");
-                
+
         if (strlen($name_values_array[USER_PW_FIELD_NAME]) > 0)
         {
             $this->_log->debug("found a password");
@@ -470,7 +470,7 @@ class User extends UserDatabaseTable
         else
         {
             $this->_log->error("could not find a password");
-            
+
             return FALSE;
         }
 
@@ -480,34 +480,34 @@ class User extends UserDatabaseTable
             if ($name_values_array[USER_IS_ADMIN_FIELD_NAME] == 1)
                 $name_values_array[USER_CAN_CREATE_LIST_FIELD_NAME] = 1;
         }
-        
+
         if ($this->exists($user_name))
         {
             $this->_handle_error("user already exists", "ERROR_DUPLICATE_USER_NAME");
-            
+
             return FALSE;
         }
-        
+
         if (parent::insert($name_values_array) == FALSE)
             return FALSE;
-        
-        if ($user_list_permissions->insert_list_permissions_new_user($user_name) == FALSE) 
+
+        if ($user_list_permissions->insert_list_permissions_new_user($user_name) == FALSE)
         {
             # copy error strings from user_list_permissions
             $this->error_message_str = $user_list_permissions->get_error_message_str();
             $this->error_log_str = $user_list_permissions->get_error_log_str();
             $this->error_str = $user_list_permissions->get_error_str();
-            
+
             return FALSE;
         }
-        
+
         $this->_log->info("user added (name=".$user_name.")");
-        
+
         return TRUE;
     }
 
     /**
-    * update a user
+    * update a user in database
     * @param string encoded_key_string encoded_key_string of user
     * @param $name_values array array containing new name-values of record
     * @return bool indicates if user has been updated
@@ -515,7 +515,7 @@ class User extends UserDatabaseTable
     function update ($encoded_key_string, $name_values_array)
     {
         $this->_log->trace("update user (encoded_key_string=".$encoded_key_string.")");
-                
+
         if (array_key_exists(USER_PW_FIELD_NAME, $name_values_array) == TRUE)
         {
             $password_str = $name_values_array[USER_PW_FIELD_NAME];
@@ -533,13 +533,79 @@ class User extends UserDatabaseTable
 
         # if user is admin then user must also be able to create lists
         if (array_key_exists(USER_IS_ADMIN_FIELD_NAME, $name_values_array) == TRUE)
-            if ($name_values_array[USER_IS_ADMIN_FIELD_NAME] == 1) 
+            if ($name_values_array[USER_IS_ADMIN_FIELD_NAME] == 1)
                 $name_values_array[USER_CAN_CREATE_LIST_FIELD_NAME] = 1;
+
+        # update user name in user_list_permissions
+        if (array_key_exists(USER_NAME_FIELD_NAME, $name_values_array) == TRUE)
+        {
+            # first get the current user name
+            $user_array = $this->select_record($encoded_key_string);
+            if (count($user_array) == 0)
+                return FALSE;
+
+            $current_user_name = $user_array[USER_NAME_FIELD_NAME];
+
+            # create key string for user_list_permissions
+            $permission_key_string = USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME."='".$current_user_name."'";
+
+            # create array with new title
+            $new_title_array = array();
+            $new_title_array[USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME] = $name_values_array[USER_NAME_FIELD_NAME];
+
+            if ($this->_user_list_permissions->update($permission_key_string, $new_title_array) == FALSE)
+            {
+                # copy error strings from user_list_permissions
+                $this->error_message_str = $this->_user_list_permissions->get_error_message_str();
+                $this->error_log_str = $this->_user_list_permissions->get_error_log_str();
+                $this->error_str = $this->_user_list_permissions->get_error_str();
+
+                return FALSE;
+            }
+        }
 
         if (parent::update($encoded_key_string, $name_values_array) == FALSE)
             return FALSE;
-        
+
         $this->_log->info("user updated (encoded_key_string=".$encoded_key_string.")");
+
+        return TRUE;
+    }
+
+    /**
+     * delete a user from database
+     * @param $encoded_key_string string unique identifier of user
+     * @return bool indicates if user has been deleted
+     */
+    function delete ($encoded_key_string)
+    {
+        $this->_log->trace("delete user (encoded_key_string=".$encoded_key_string.")");
+
+        # first get the user name
+        $user_array = $this->select_record($encoded_key_string);
+        if (count($user_array) == 0)
+            return FALSE;
+
+        $user_name = $user_array[USER_NAME_FIELD_NAME];
+
+        # delete the user
+        if (parent::delete($encoded_key_string) == FALSE)
+            return FALSE;
+
+        # create key string for user_list_permissions
+        $permission_key_string = USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME."='".$user_name."'";
+
+        if ($this->_user_list_permissions->delete($permission_key_string) == FALSE)
+        {
+            # copy error strings from user_list_permissions
+            $this->error_message_str = $this->_user_list_permissions->get_error_message_str();
+            $this->error_log_str = $this->_user_list_permissions->get_error_log_str();
+            $this->error_str = $this->_user_list_permissions->get_error_str();
+
+            return FALSE;
+        }
+
+        $this->_log->info("user deleted (encoded_key_string=".$encoded_key_string.")");
 
         return TRUE;
     }

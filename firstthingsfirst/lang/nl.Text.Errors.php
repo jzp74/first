@@ -33,7 +33,7 @@ $text_translations["ERROR_INCORRECT_NAME_PASSWORD"] = "De gebruikersnaam/wachtwo
 $text_translations["ERROR_NO_TITLE_GIVEN"] = "Je hebt deze lijst geen naam gegeven";
 $text_translations["ERROR_NO_DESCRIPTION_GIVEN"] = "Je hebt deze lijst geen beschrijving gegeven";
 $text_translations["ERROR_NOT_WELL_FORMED_STRING"] = "Dit veld mag alleen alfanumerieke tekens bevatten";
-$text_translations["ERROR_NOT_WELL_FORMED_SELECTION_STRING"] = "Dit veld mag alleen alfanumerieke tekens en het '|' teken bevatten";
+$text_translations["ERROR_NOT_WELL_FORMED_SELECTION_STRING"] = "Dit veld mag alleen alfanumerieke tekens en het | teken bevatten";
 
 /**
  * database errors
@@ -52,6 +52,8 @@ $text_translations["ERROR_DUPLICATE_USER_NAME"] = "Er bestaat al een gebruikers 
 /**
  *  user administration errors
  */
+$text_translations["ERROR_CANNOT_UPDATE_NAME_USER_ADMIN"] = "Je kunt de naam van de administrator niet wijzigen";
+$text_translations["ERROR_CANNOT_UPDATE_PERMISSIONS_USER_ADMIN"] = "Je kunt de rechten van de administrator niet wijzigen";
 $text_translations["ERROR_CANNOT_DELETE_USER_ADMIN"] = "Je kunt de administrator niet verwijderen";
 $text_translations["ERROR_CANNOT_DELETE_YOURSELF"] = "Je kunt jezelf niet verwijderen";
 

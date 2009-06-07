@@ -90,14 +90,14 @@ function process_url ()
 {
     global $logging;
     global $user;
-    
+
     $logging->trace("PROCESS_URL (request_uri=".$_SERVER["REQUEST_URI"].")");
-    
+
     # show portal page if no action is set
     $action = "";
     if (isset($_GET['action']))
         $action = $_GET['action'];
-    
+
     # do nothing for the login page
     # TEMPORARY SOLUTION
     # for some reason firefox needs the login page served as a whole
@@ -105,8 +105,8 @@ function process_url ()
     {
         $response = new xajaxResponse();
 
-        $response->script("document.getElementById('user_name').focus()");
-        
+        $response->script("document.getElementById('user_name_id').focus()");
+
         return $response;
     }
     # redirect to login page when user is not logged in
@@ -115,11 +115,11 @@ function process_url ()
         $response = new xajaxResponse();
 
         $response->script("window.location.assign('index.php?action=".ACTION_GET_LOGIN_PAGE."')");
-        $response->script("document.getElementById('user_name').focus()");
-    
+        $response->script("document.getElementById('user_name_id').focus()");
+
         return $response;
     }
-    
+
     # show portal page
     if ($action == ACTION_GET_PORTAL_PAGE)
         return action_get_portal_page();
@@ -168,7 +168,7 @@ function process_url ()
 
 <head>
 <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
-    
+
 <title>First Things First</title>
 <link rel="shortcut icon" href="images/favicon.ico">
 <link rel="stylesheet" href="css/standard.css">
@@ -177,7 +177,7 @@ function process_url ()
 <link rel="stylesheet" href="css/standard_print.css" media="print">
 
 <?php $xajax->printJavascript("xajax"); ?>
-    
+
 </head>
 
 <body>
@@ -187,7 +187,7 @@ function process_url ()
     <div id="header_left_margin"></div>
     <div id="header_right_margin"></div>
     <div id="header_contents">
-<?php 
+<?php
 echo "        <div id=\"software_version\">&nbsp;&nbsp;".file_get_contents("VERSION")."</div>\n";
 
 # TEMPORARY SOLUTION
@@ -200,10 +200,10 @@ else
         <div id="navigation_container">&nbsp;</div> <!-- navigation_container -->
     </div> <!-- header_contents -->
 </div> <!-- header -->
-    
+
 <div id="outer_body">
 
-    <div id="main_body">        
+    <div id="main_body">
 <?php
     # logout any active user and serve the html page for login
     # TEMPORARY SOLUTION
@@ -225,8 +225,13 @@ else
 </div> <!-- footer -->
 <div id="lower_margin"><input id="focus_on_this_input" size="1" readonly></div>
 
-<script language="javascript">xajax_process_url()</script>
-        
+<script language="javascript" src="js/external/jquery.min.js"></script>
+<script language="javascript" src="js/external/jquery.qtip.min.js"></script>
+<script language="javascript" src="js/tooltips.js"></script>
+<script language="javascript">
+xajax_process_url();
+</script>
+
 </body>
 
 <html>

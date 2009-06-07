@@ -63,7 +63,7 @@ define("USERLISTTABLEPERMISSIONS_METADATA", "--1");
  * @package Class_FirstThingsFirst
  */
 class UserListTablePermissions extends UserDatabaseTable
-{    
+{
     /**
     * overwrite __construct() function
     * @return void
@@ -72,20 +72,88 @@ class UserListTablePermissions extends UserDatabaseTable
     {
         # these variables are assumed to be globally available
         global $class_userlisttablepermissions_fields;
-        
-        # set correct foreign_key for list name
-        $foreign_key = DATABASETABLE_FOREIGN_FIELD." (".USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE_FIELD_NAME.") REFERENCES ";
-        $foreign_key .= LISTTABLEDESCRIPTION_TABLE_NAME."(".LISTTABLEDESCRIPTION_TITLE_FIELD_NAME.") ON DELETE CASCADE ON UPDATE CASCADE";
-        $class_userlisttablepermissions_fields[USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE_FIELD_NAME][2] = $foreign_key;
-        # set correct foreign_key for user name
-        $foreign_key = DATABASETABLE_FOREIGN_FIELD." (".USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME.") REFERENCES ";
-        $foreign_key .= USER_TABLE_NAME."(".USER_NAME_FIELD_NAME.") ON DELETE CASCADE ON UPDATE CASCADE";
-        $class_userlisttablepermissions_fields[USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME][2] = $foreign_key;
-        
+
         # call parent __construct()
         parent::__construct(USERLISTTABLEPERMISSIONS_TABLE_NAME, $class_userlisttablepermissions_fields, USERLISTTABLEPERMISSIONS_METADATA);
 
         $this->_log->debug("constructed new UserListTablePermissions object");
+    }
+
+    /**
+     * select user permissions for specified list
+     * this function is used to check if a user has list permissions
+     * @param $list_title string title of new list
+     * @param $user_name string name of user
+     * @return array array in specified format with permissions
+     */
+    function select_user_list_permissions ($list_title, $user_name)
+    {
+        $this->_log->trace("select user list permissions (list_title=".$list_title.", user_name=".$user_name.")");
+
+        # select only the permissions from database
+        $query = "SELECT ".USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME.", ";
+        $query .= USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME.", ".USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME;
+        $query .= " FROM ".USERLISTTABLEPERMISSIONS_TABLE_NAME." WHERE ";
+        $query .= USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE_FIELD_NAME."=\"".$list_title."\" AND ";
+        $query .= USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME."=\"".$user_name."\"";
+
+        $result = $this->_database->query($query);
+        if ($result != FALSE)
+        {
+            $row = $this->_database->fetch($result);
+            if (count($row) > 0)
+            {
+                # create a new array to store the permissions
+                $new_row = array();
+                $new_row[PERMISSION_CAN_VIEW_SPECIFIC_LIST] = $row[USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME];
+                $new_row[PERMISSION_CAN_EDIT_SPECIFIC_LIST] = $row[USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME];
+                $new_row[PERMISSION_IS_ADMIN_SPECIFIC_LIST] = $row[USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME];
+
+                $this->_log->trace("selected user list permissions (permissions=[".$new_row[PERMISSION_CAN_VIEW_SPECIFIC_LIST]."".$new_row[PERMISSION_CAN_EDIT_SPECIFIC_LIST]."".$new_row[PERMISSION_IS_ADMIN_SPECIFIC_LIST]."]");
+
+                return $new_row;
+            }
+            else
+            {
+                $this->_log->warn("fetching from database yielded no results");
+
+                return array();
+            }
+        }
+        else
+        {
+            $this->_handle_error("could not read user list permissions row from table", "ERROR_DATABASE_PROBLEM");
+
+            return array();
+        }
+    }
+
+    /**
+     * update a list permission
+     * @param string encoded_key_string encoded_key_string of list permission
+     * @param $name_values array array containing new name-values of record
+     * @return bool indicates if list permission has been updated
+     */
+    function update ($encoded_key_string, $name_values_array)
+    {
+        $this->_log->trace("update user list permission (encoded_key_string=".$encoded_key_string.")");
+
+        # if user is list admin then user must also be able to edit list
+        if (array_key_exists(USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME, $name_values_array) == TRUE)
+            if ($name_values_array[USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME] == 1)
+                $name_values_array[USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME] = 1;
+
+        # if user can edit list than user must also be able to view list
+        if (array_key_exists(USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME, $name_values_array) == TRUE)
+            if ($name_values_array[USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME] == 1)
+                $name_values_array[USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME] = 1;
+
+        if (parent::update($encoded_key_string, $name_values_array) == FALSE)
+            return FALSE;
+
+        $this->_log->trace("list permission updated (encoded_key_string=".$encoded_key_string.")");
+
+        return TRUE;
     }
 
     /**
@@ -104,45 +172,45 @@ class UserListTablePermissions extends UserDatabaseTable
         if (count($results) == 0)
         {
             $this->_handle_error("could not select all users", "ERROR_DATABASE_PROBLEM");
-                        
+
             return FALSE;
         }
 
         foreach($results as $user_name_array)
         {
             $user_name = $user_name_array[0];
-            
+
             $this->_log->trace("insert permissions for user (user=".$user_name.")");
             $name_values_array = array();
             $name_values_array[USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE_FIELD_NAME] = $list_title;
-            $name_values_array[USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME] = $user_name;            
+            $name_values_array[USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME] = $user_name;
             # give current user (creator of the list) and user admin all permissions
             if (($user_name == $current_user) || $user_name == "admin")
-            {                
+            {
                 $name_values_array[USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME] = 1;
                 $name_values_array[USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME] = 1;
                 $name_values_array[USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME] = 1;
             }
             # other users get no permissions
             else
-            {                
+            {
                 $name_values_array[USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME] = 0;
                 $name_values_array[USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME] = 0;
                 $name_values_array[USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME] = 0;
             }
-            
+
             # insert permissions
             $result = $this->insert($name_values_array);
             if ($result == 0)
             {
                 $this->_handle_error("could not insert user permissions (user=".$user_name.")", "ERROR_DATABASE_PROBLEM");
-                        
+
                 return FALSE;
             }
         }
-        
+
         $this->_log->trace("inserted list permissions");
-        
+
         return TRUE;
     }
 
@@ -171,92 +239,23 @@ class UserListTablePermissions extends UserDatabaseTable
                 $name_values_array[USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME] = 0;
                 $name_values_array[USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME] = 0;
                 $name_values_array[USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME] = 0;
-                
+
                 # insert permissions
                 $result = $this->insert($name_values_array);
                 if ($result == 0)
                 {
                     $this->_handle_error("could not insert user permissions (list=".$list_title.")", "ERROR_DATABASE_PROBLEM");
-                            
+
                     return FALSE;
                 }
             }
         }
-                
+
         $this->_log->trace("inserted list permissions");
-        
-        return TRUE;
-    }
-    
-    /**
-     * update a list permission
-     * @param string encoded_key_string encoded_key_string of list permission
-     * @param $name_values array array containing new name-values of record
-     * @return bool indicates if list permission has been updated
-     */
-    function update ($encoded_key_string, $name_values_array)
-    {
-        $this->_log->trace("update user list permission (encoded_key_string=".$encoded_key_string.")");
-                
-        # if user is list admin then user must also be able to edit list
-        if (array_key_exists(USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME, $name_values_array) == TRUE)
-            if ($name_values_array[USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME] == 1) 
-                $name_values_array[USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME] = 1;
-
-        # if user can edit list than user must also be able to view list
-        if (array_key_exists(USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME, $name_values_array) == TRUE)
-            if ($name_values_array[USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME] == 1) 
-                $name_values_array[USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME] = 1;
-
-        if (parent::update($encoded_key_string, $name_values_array) == FALSE)
-            return FALSE;
-        
-        $this->_log->info("list permission updated (encoded_key_string=".$encoded_key_string.")");
 
         return TRUE;
     }
 
-    function select_user_list_permissions ($list_title, $user_name)
-    {
-        $this->_log->trace("select user list permissions (list_title=".$list_title.", user_name=".$user_name.")");
-
-        # select only the permissions from database
-        $query = "SELECT ".USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME.", ";
-        $query .= USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME.", ".USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME;
-        $query .= " FROM ".USERLISTTABLEPERMISSIONS_TABLE_NAME." WHERE ";
-        $query .= USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE_FIELD_NAME."=\"".$list_title."\" AND ";
-        $query .= USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME."=\"".$user_name."\"";
-        
-        $result = $this->_database->query($query);
-        if ($result != FALSE)
-        {
-            $row = $this->_database->fetch($result);
-            if (count($row) > 0)
-            {
-                # create a new array to store the permissions
-                $new_row = array();
-                $new_row[PERMISSION_CAN_VIEW_SPECIFIC_LIST] = $row[USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME];
-                $new_row[PERMISSION_CAN_EDIT_SPECIFIC_LIST] = $row[USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME];
-                $new_row[PERMISSION_IS_ADMIN_SPECIFIC_LIST] = $row[USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME];
-                
-                $this->_log->trace("selected user list permissions (permissions=[".$new_row[PERMISSION_CAN_VIEW_SPECIFIC_LIST]."".$new_row[PERMISSION_CAN_EDIT_SPECIFIC_LIST]."".$new_row[PERMISSION_IS_ADMIN_SPECIFIC_LIST]."]");
-
-                return $new_row;
-            }
-            else
-            {
-                $this->_log->warn("fetching from database yielded no results");
-            
-                return array();
-            }                
-        }
-        else
-        {
-            $this->_handle_error("could not read user list permissions row from table", "ERROR_DATABASE_PROBLEM");
-            
-            return array();
-        }
-    }
 
 }
 

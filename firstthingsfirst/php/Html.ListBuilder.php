@@ -62,7 +62,7 @@ function action_get_listbuilder_page ($list_title)
     global $user;
     global $list_table_description;
     global $firstthingsfirst_field_descriptions;
-    
+
     $field_types = array_keys($firstthingsfirst_field_descriptions);
     $old_list_loaded = FALSE;
 
@@ -106,7 +106,7 @@ function action_get_listbuilder_page ($list_title)
             $old_list_loaded = TRUE;
         }
     }
-    
+
     # just create an empty list when no title has been given
     else
     {
@@ -114,15 +114,15 @@ function action_get_listbuilder_page ($list_title)
         $old_definition = htmlentities($json->encode($definition), ENT_QUOTES);
         $largest_id = 1;
     }
-            
+
     # different page title when list title has been given
     if ($old_list_loaded == TRUE)
         $page_title = translate("LABEL_MODIFY_LIST")." '".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."'";
-    else        
+    else
         $page_title = translate("LABEL_CONFIGURE_NEW_LIST");
 
     $html_str = "";
-    $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";    
+    $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
     $html_str .= "        <div class=\"white_area\"></div>\n\n";
     $html_str .= "        <div id=\"listbuilder_pane\">\n\n";
     $html_str .= "            <div class=\"listbuilder_title_pane\">\n";
@@ -139,30 +139,30 @@ function action_get_listbuilder_page ($list_title)
     $html_str .= "                            <div class=\"listbuilder_contents_pane_contents\">\n";
     $html_str .= "                                <div class=\"listbuilder_contents_pane_line\">\n";
     $html_str .= "                                    <div class=\"listbuilder_contents_pane_line_left\">".translate("LABEL_TITLE_OF_THIS_LIST")."</div>\n";
-    $html_str .= "                                    <div class=\"listbuilder_contents_pane_line_right\" id=\"listbuilder_list_title_id\">";
+    $html_str .= "                                    <div class=\"listbuilder_contents_pane_line_right\">";
 
     # set value for title when list title has been given
     if ($old_list_loaded == TRUE)
     {
-        $html_str .= "<input size=\"20\" maxlength=\"100\" id=\"listbuilder_list_title\"";
+        $html_str .= "<input size=\"20\" maxlength=\"100\" id=\"listbuilder_list_title_id\"";
         $html_str .= " value=\"".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."\" type=\"text\"></div>\n";
     }
     else
-        $html_str .= "<input size=\"20\" maxlength=\"100\" id=\"listbuilder_list_title\" type=\"text\"></div>\n";
+        $html_str .= "<input size=\"20\" maxlength=\"100\" id=\"listbuilder_list_title_id\" type=\"text\"></div>\n";
 
     $html_str .= "                                </div> <!-- listbuilder_contents_pane_line -->\n";
     $html_str .= "                                <div class=\"listbuilder_contents_pane_line\">\n";
     $html_str .= "                                    <div class=\"listbuilder_contents_pane_line_left\">".translate("LABEL_SHORT_DESCRIPTION_OF_THIS_LIST")."</div>\n";
-    $html_str .= "                                    <div class=\"listbuilder_contents_pane_line_right\" id=\"listbuilder_list_description_id\">";
+    $html_str .= "                                    <div class=\"listbuilder_contents_pane_line_right\">";
 
     # set value for description when list title has been given
     if ($old_list_loaded == TRUE)
     {
-        $html_str .= "<textarea cols=\"48\" rows=\"4\" id=\"listbuilder_list_description\">";
+        $html_str .= "<textarea cols=\"48\" rows=\"4\" id=\"listbuilder_list_description_id\">";
         $html_str .= $record[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME]."</textarea></div>\n";
     }
     else
-        $html_str .= "<textarea cols=\"48\" rows=\"4\" id=\"listbuilder_list_description\"></textarea></div>\n";
+        $html_str .= "<textarea cols=\"48\" rows=\"4\" id=\"listbuilder_list_description_id\"></textarea></div>\n";
 
     $html_str .= "                                </div> <!-- listbuilder_contents_pane_line -->\n";
     $html_str .= "                            </div> <!-- listbuilder_contents_pane_contents -->\n";
@@ -208,38 +208,44 @@ function action_get_listbuilder_page ($list_title)
     $html_str .= "            <div id=\"action_bar_top_left\"></div>\n";
     $html_str .= "            <div id=\"action_bar_top_right\"></div>\n";
     $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
-    
+
     # display the selection box to add a new column
     $html_str .= "                ".get_select("add_select", "add_it", "")."\n";
     $href_str = "xajax_action_insert_listbuilder_row(document.getElementById";
-    $href_str .= "(%27add_select%27).value, xajax.getFormValues(%27database_definition_form%27), document.getElementById(%27largest_id%27).innerHTML)";
-    $html_str .= "                ".get_href(ACTION_INSERT_LISTBUILDER_ROW, HTML_EMPTY_LIST_TITLE, $href_str, translate("BUTTON_ADD_FIELD"), "icon_add")."\n";
-    
+    $href_str .= "('add_select').value, xajax.getFormValues('database_definition_form'), document.getElementById('largest_id').innerHTML)";
+    $html_str .= "                <span id=\"action_bar_button_add\"";
+    $html_str .= get_href(HTML_NO_ACTION, "", "", HTML_EMPTY_LIST_TITLE, $href_str, translate("BUTTON_ADD_FIELD"), "icon_add");
+    $html_str .= "</span>\n";
+
     # display the modify button when a title has been given
     if ($old_list_loaded == TRUE)
     {
         $href_str = "xajax_action_modify_list(%27".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME];
-        $href_str .= "%27, document.getElementById(%27listbuilder_list_title%27).value, ";
-        $href_str .= "document.getElementById(%27listbuilder_list_description%27).value, ";
+        $href_str .= "%27, document.getElementById(%27listbuilder_list_title_id%27).value, ";
+        $href_str .= "document.getElementById(%27listbuilder_list_description_id%27).value, ";
         $href_str .= "xajax.getFormValues(%27database_definition_form%27))";
-        $html_str .= "                &nbsp;&nbsp;&nbsp;".get_href_confirm(ACTION_MODIFY_LIST, $list_title, $href_str, translate("LABEL_CONFIRM_MODIFY"), translate("BUTTON_MODIFY_LIST"), "icon_accept")."\n";
+        $html_str .= "                &nbsp;&nbsp;&nbsp;<span id=\"action_bar_button_modify\"";
+        $html_str .= get_href_confirm(ACTION_MODIFY_LIST, "action_bar_button_modify", "above", $list_title, $href_str, translate("LABEL_CONFIRM_MODIFY"), translate("BUTTON_MODIFY_LIST"), "icon_accept");
+        $html_str .= "</span>\n";
     }
     # display the create button when no title has been given
     else
     {
         $href_str = "xajax_action_create_list(document.getElementById";
-        $href_str .= "(%27listbuilder_list_title%27).value, document.getElementById(%27listbuilder_list_description%27).value, ";
+        $href_str .= "(%27listbuilder_list_title_id%27).value, document.getElementById(%27listbuilder_list_description_id%27).value, ";
         $href_str .= "xajax.getFormValues(%27database_definition_form%27))";
-        $html_str .= "                &nbsp;&nbsp;&nbsp;".get_href(ACTION_CREATE_LIST, HTML_EMPTY_LIST_TITLE, $href_str, translate("BUTTON_CREATE_LIST"), "icon_accept")."\n";
+        $html_str .= "                &nbsp;&nbsp;&nbsp;<span id=\"action_bar_button_create\"";
+        $html_str .= get_href(ACTION_CREATE_LIST, "action_bar", "above", HTML_EMPTY_LIST_TITLE, $href_str, translate("BUTTON_CREATE_LIST"), "icon_accept");
+        $html_str .= "</span>\n";
     }
-    
-    $html_str .= "            </div> <!-- action_bar -->\n\n";    
+
+    $html_str .= "            </div> <!-- action_bar -->\n\n";
     $html_str .= "            <div id=\"action_bar_bottom_left\"></div>\n";
     $html_str .= "            <div id=\"action_bar_bottom_right\"></div>\n        ";
-    $html_str .= "        </div> <!-- action_pane -->\n\n";           
+    $html_str .= "        </div> <!-- action_pane -->\n\n";
     $html_str .= "        <div class=\"white_area\"></div>\n\n";
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
-        
+
     $response->assign("main_body", "innerHTML", $html_str);
     $response->assign("page_title", "innerHTML", $page_title);
     $response->assign("page_explanation", "innerHTML", "&nbsp;");
@@ -250,12 +256,12 @@ function action_get_listbuilder_page ($list_title)
         $error_message_str = $list_table_description->get_error_message_str();
         $error_log_str = $list_table_description->get_error_log_str();
         $error_str = $list_table_description->get_error_str();
-        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
-    }    
+        set_error_message("tab_listbuilder_id", "below", $error_message_str, $error_log_str, $error_str, $response);
+    }
 
     set_login_status($response);
     set_footer("&nbsp;", $response);
-    
+
     $logging->trace("got listbuilder page");
 
     return $response;
@@ -273,7 +279,7 @@ function action_insert_listbuilder_row ($field_type, $definition, $largest_id)
 {
     global $logging;
     global $user;
-    
+
     $new_row = array($largest_id + 1, $field_type, "", "");
     # get rid of keynames
     $new_definition = array_merge(array_values($definition), $new_row);
@@ -283,7 +289,7 @@ function action_insert_listbuilder_row ($field_type, $definition, $largest_id)
     # create necessary objects
     $response = new xajaxResponse();
 
-    $html_str = get_field_definition_table($new_definition);    
+    $html_str = get_field_definition_table($new_definition);
     $response->assign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
     $response->assign("largest_id", "innerHTML", $largest_id + 1);
 
@@ -304,7 +310,7 @@ function action_move_listbuilder_row ($row_number, $direction, $definition)
 {
     global $logging;
     global $user;
-    
+
     $backup_definition = array();
     # get rid of keynames
     $new_definition = array_values($definition);
@@ -333,14 +339,14 @@ function action_move_listbuilder_row ($row_number, $direction, $definition)
         $position_from = $row_number * 4;
         $position_to = ($row_number + 1) * 4;
     }
-    
+
     for ($position = 0; $position < 4; $position += 1)
     {
         $new_definition[$position_from + $position] = $new_definition[$position_to + $position];
         $new_definition[$position_to + $position] = $backup_definition[$position];
     }
-            
-    $html_str = get_field_definition_table($new_definition);    
+
+    $html_str = get_field_definition_table($new_definition);
     $response->assign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
 
     $logging->trace("moved listbuilder row");
@@ -359,7 +365,7 @@ function action_delete_listbuilder_row ($row_number, $definition)
 {
     global $logging;
     global $user;
-    
+
     # get rid of keynames
     $backup_definition = array_values($definition);
     $new_definition = array();
@@ -379,7 +385,7 @@ function action_delete_listbuilder_row ($row_number, $definition)
         }
     }
 
-    $html_str = get_field_definition_table($new_definition);    
+    $html_str = get_field_definition_table($new_definition);
     $response->assign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
 
     $logging->trace("deleted listbuilder row");
@@ -397,13 +403,13 @@ function action_refresh_listbuilder ($definition)
 {
     global $logging;
     global $user;
-    
+
     $logging->info("ACTION: refresh listbuilder");
 
     # create necessary objects
     $response = new xajaxResponse();
 
-    $html_str = get_field_definition_table(array_values($definition));    
+    $html_str = get_field_definition_table(array_values($definition));
     $response->assign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
 
     $logging->trace("refreshed listbuilder");
@@ -427,7 +433,7 @@ function action_modify_list ($former_title, $title, $description, $new_definitio
     global $database;
     global $logging;
     global $list_table_description;
-    
+
     $logging->info("ACTION: modify list (former_title=".$former_title.", title=".$title.")");
 
     # create necessary objects
@@ -441,12 +447,12 @@ function action_modify_list ($former_title, $title, $description, $new_definitio
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
-       
+        set_error_message("action_bar_button_modify", "above", $error_message_str, $error_log_str, $error_str, $response);
+
         return $response;
     }
     $list_table_note = $list_table->get_list_table_note();
-    
+
     # check if title and description have been given
     if (!check_title_and_description($title, $description, $response))
         return $response;
@@ -463,13 +469,13 @@ function action_modify_list ($former_title, $title, $description, $new_definitio
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
-       
+        set_error_message("action_bar_button_modify", "above", $error_message_str, $error_log_str, $error_str, $response);
+
         return $response;
     }
-    
+
     set_info_message(MESSAGE_PANE_DIV, translate("LABEL_LIST_MODIFICATIONS_DONE"), $response);
-    
+
     $logging->trace("modified list");
 
     return $response;
@@ -488,7 +494,7 @@ function action_create_list ($title, $description, $definition)
 {
     global $logging;
     global $list_table_description;
-    
+
     $logging->info("ACTION: create list (title=".$title.")");
 
     # create necessary objects
@@ -502,12 +508,12 @@ function action_create_list ($title, $description, $definition)
     $new_definition = check_definition($definition, $response);
     if (count($new_definition) == 0)
         return $response;
-    
+
     # transform the new definition to the correct format
     $correct_definition = array();
     foreach ($new_definition as $field_definition)
         $correct_definition[$field_definition[0]] = array($field_definition[1], $field_definition[2]);
-    
+
     $name_values_array = array();
     $name_values_array[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME] = $title;
     $name_values_array[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME] = $description;
@@ -522,8 +528,8 @@ function action_create_list ($title, $description, $definition)
         $error_message_str = $list_table_description->get_error_message_str();
         $error_log_str = $list_table_description->get_error_log_str();
         $error_str = $list_table_description->get_error_str();
-        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
-            
+        set_error_message("action_bar_button_create", "above", $error_message_str, $error_log_str, $error_str, $response);
+
         return $response;
     }
 
@@ -535,13 +541,13 @@ function action_create_list ($title, $description, $definition)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message(MESSAGE_PANE_DIV, $error_message_str, $error_log_str, $error_str, $response);
-       
+        set_error_message("action_bar_button_create", "above", $error_message_str, $error_log_str, $error_str, $response);
+
         return $response;
     }
 
     set_info_message(MESSAGE_PANE_DIV, translate("LABEL_NEW_LIST_CREATED"), $response);
-    
+
     $logging->trace("created list");
 
     return $response;
@@ -557,35 +563,35 @@ function action_create_list ($title, $description, $definition)
 function check_title_and_description ($title, $description, $response)
 {
     global $logging;
-    
+
     $logging->trace("check title and description");
 
     # check if title has been given
     if (strlen($title) == 0)
     {
         $logging->warn("no title given");
-        set_error_message("listbuilder_list_title_id", "ERROR_NO_TITLE_GIVEN", "", "", $response);
-        
+        set_error_message("listbuilder_list_title_id", "right", "ERROR_NO_TITLE_GIVEN", "", "", $response);
+
         return FALSE;
     }
-    
+
     # check if title is well formed
     if (str_is_well_formed("title", $title) == FALSE_RETURN_STRING)
     {
-        set_error_message("listbuilder_list_title_id", "ERROR_NOT_WELL_FORMED_STRING", "", "", $response);
-        
+        set_error_message("listbuilder_list_title_id", "right", "ERROR_NOT_WELL_FORMED_STRING", "", "", $response);
+
         return FALSE;
     }
-    
+
     # check if description has been given
     if (strlen($description) == 0)
     {
         $logging->warn("no description given");
-        set_error_message("listbuilder_list_description_id", "ERROR_NO_DESCRIPTION_GIVEN", "", "", $response);
-        
+        set_error_message("listbuilder_list_description_id", "right", "ERROR_NO_DESCRIPTION_GIVEN", "", "", $response);
+
         return FALSE;
     }
-    
+
     $logging->trace("checked title and description");
 
     return TRUE;
@@ -601,7 +607,7 @@ function check_title_and_description ($title, $description, $response)
 function check_definition ($definition, $response)
 {
     global $logging;
-    
+
     $logging->trace("check definition");
 
     $definition_values = array_values($definition);
@@ -615,21 +621,21 @@ function check_definition ($definition, $response)
         $field_name = $definition_values[($position * 4) + 2];
         $field_options = $definition_values[($position * 4) + 3];
         $logging->debug("found field (id=\"".$field_id."\" name=".$field_name." type=".$field_type." options=".$field_options.")");
-        
+
         # check if field name has been given
         if (strlen($field_name) == 0)
         {
             $logging->warn("no field name given");
-            set_error_message($definition_keys[($position * 4) + 2], "ERROR_NO_FIELD_NAME_GIVEN", "", "", $response);
-        
+            set_error_message($definition_keys[($position * 4) + 2], "right", "ERROR_NO_FIELD_NAME_GIVEN", "", "", $response);
+
             return array();
         }
-        
+
         # check if field name is well formed
         if (str_is_well_formed("field", $field_name) == FALSE_RETURN_STRING)
         {
-            set_error_message($definition_keys[($position * 4) + 2], "ERROR_NOT_WELL_FORMED_STRING", "", "", $response);
-        
+            set_error_message($definition_keys[($position * 4) + 2], "right", "ERROR_NOT_WELL_FORMED_STRING", "", "", $response);
+
             return array();
         }
 
@@ -640,25 +646,25 @@ function check_definition ($definition, $response)
             if (strlen($field_options) == 0)
             {
                 $logging->warn("no options given");
-                set_error_message($definition_keys[($position * 4) + 3], "ERROR_NO_FIELD_OPTIONS_GIVEN", "", "", $response);
-        
+                set_error_message($definition_keys[($position * 4) + 3], "right", "ERROR_NO_FIELD_OPTIONS_GIVEN", "", "", $response);
+
                 return array();
             }
             # check if options string is well formed
             if (str_is_well_formed("field", $field_options, 1) == FALSE_RETURN_STRING)
             {
-                set_error_message($definition_keys[($position * 4) + 3], translate("ERROR_NOT_WELL_FORMED_SELECTION_STRING"), "", "", $response);
-            
+                set_error_message($definition_keys[($position * 4) + 3], "right", "ERROR_NOT_WELL_FORMED_SELECTION_STRING", "", "", $response);
+
                 return array();
             }
         }
 
         $new_definition[$field_id] = array(ListTable::_get_db_field_name($field_name), $field_type, $field_options);
     }
-    
+
     $logging->trace("checked definition");
 
-    return $new_definition;    
+    return $new_definition;
 }
 
 /**
@@ -672,7 +678,7 @@ function get_select ($id, $name, $selection)
 {
     global $firstthingsfirst_field_descriptions;
     global $logging;
-    
+
     $field_types = array_keys($firstthingsfirst_field_descriptions);
     # remove the first item from this array (auto number)
     array_shift($field_types);
@@ -685,7 +691,7 @@ function get_select ($id, $name, $selection)
     else
         $html_str .= " onChange=\"xajax_action_refresh_listbuilder(xajax.getFormValues('database_definition_form'));\"";
     $html_str .= ">\n";
-    
+
     foreach ($field_types as $field_type)
     {
         if ($firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_TYPE])
@@ -697,7 +703,7 @@ function get_select ($id, $name, $selection)
         }
     }
     $html_str .= "                                                </select>";
-    
+
     $logging->trace("got select");
 
     return $html_str;
@@ -718,8 +724,8 @@ function get_field_definition_table ($definition)
     $input_html_name = "<input type=text size=\"24\" maxlength=\"40\"";
     $input_html_options = "<input type=text size=\"32\" maxlength=\"100\"";
     $input_html_value_invisible = "<input style=\"visibility: hidden;\" type=text size=\"1\" maxlength=\"100\"";
-    $html_str = "";    
-    
+    $html_str = "";
+
     $html_str .= "\n\n                                <form id=\"database_definition_form\" action=\"javascript:void(0);\" method=\"javascript:void(0);\" onsubmit=\"javascript:void(0);\">\n";
     $html_str .= "                                    <table id=\"listbuilder_definition\" align=\"left\" border=\"0\" cellspacing=\"0\">\n";
     $html_str .= "                                        <thead>\n";
@@ -732,7 +738,7 @@ function get_field_definition_table ($definition)
     $html_str .= "                                            </tr>\n";
     $html_str .= "                                        </thead>\n";
     $html_str .= "                                        <tbody>\n";
-    
+
     for ($row = 0; $row < (count($definition) / 4); $row += 1)
     {
         $html_str .= "                                            <tr>\n";
@@ -740,13 +746,13 @@ function get_field_definition_table ($definition)
         $position_type = ($row * 4) + 1;
         $position_name = ($row * 4) + 2;
         $position_options = ($row * 4) + 3;
-        
+
         $logging->debug("row ".$row." (id=".$definition[$position_id].", type=".$definition[$position_type].", name=".$definition[$position_name].", opt=".$definition[$position_options].")");
 
         # first an invisible column
         $html_str .= "                                                <td class=\"invisible_collapsed\">".$input_html_id." readonly ";
         $html_str .= "name=\"row_".$row."_0\" value=\"".$definition[$position_id]."\"</td>\n";
-        
+
         # the first column - type
         if ($row == 0)
         {
@@ -756,7 +762,7 @@ function get_field_definition_table ($definition)
         }
         else
             $html_str .= "                                                <td id=\"row_".$row."_1\">".get_select("", "row_".$row."_1", $definition[$position_type])."</td>\n";
-        
+
         # the second column - name
         $html_str .= "                                                <td id=\"row_".$row."_2\">".$input_html_name." name=\"row_".$row."_2\" ";
         if ($row == 0)
@@ -773,15 +779,15 @@ function get_field_definition_table ($definition)
             $html_str .= "                                                <td id=\"row_".$row."_3\"><select class=\"selection_box\" name=\"row_".$row."_3\">\n";
             $html_str .= "                                                    <option value=\"".NAME_DATE_OPTION_DATE_NAME."\"";
             if ($definition[$position_options] == NAME_DATE_OPTION_DATE_NAME)
-                $html_str .= " selected";            
+                $html_str .= " selected";
             $html_str .= ">".translate("LABEL_DATE_NAME")."</option>\n";
             $html_str .= "                                                    <option value=\"".NAME_DATE_OPTION_DATE."\"";
             if ($definition[$position_options] == NAME_DATE_OPTION_DATE)
-                $html_str .= " selected";            
+                $html_str .= " selected";
             $html_str .= ">".translate("LABEL_DATE_ONLY")."</option>\n";
             $html_str .= "                                                    <option value=\"".NAME_DATE_OPTION_NAME."\"";
             if ($definition[$position_options] == NAME_DATE_OPTION_NAME)
-                $html_str .= " selected";            
+                $html_str .= " selected";
             $html_str .= ">".translate("LABEL_NAME_ONLY")."</option>\n";
             $html_str .= "                                                </select></td>\n";
         }
@@ -790,11 +796,11 @@ function get_field_definition_table ($definition)
             $html_str .= "                                                <td id=\"row_".$row."_3\"><select class=\"selection_box\" name=\"row_".$row."_3\">\n";
             $html_str .= "                                                    <option value=\"".ID_COLUMN_SHOW."\"";
             if ($definition[$position_options] == ID_COLUMN_SHOW)
-                $html_str .= " selected";            
+                $html_str .= " selected";
             $html_str .= ">".translate("LABEL_ID_COLUMN_SHOW")."</option>\n";
             $html_str .= "                                                    <option value=\"".ID_COLUMN_NO_SHOW."\"";
             if ($definition[$position_options] == ID_COLUMN_NO_SHOW)
-                $html_str .= " selected";            
+                $html_str .= " selected";
             $html_str .= ">".translate("LABEL_ID_COLUMN_NO_SHOW")."</option>\n";
             $html_str .= "                                                </select></td>\n";
         }
@@ -803,12 +809,12 @@ function get_field_definition_table ($definition)
 
         # the fourth column - remarks
         $html_str .= "                                                <td>".translate($definition[$position_type]."_EXPLANATION")."</td>\n";
-        
+
         # the fifth column - up
         if ($row > 1)
         {
             $html_str .= "                                                <td width=\"1%\">";
-            $html_str .= get_href(ACTION_MOVE_LISTBUILDER_ROW, HTML_EMPTY_LIST_TITLE, "xajax_action_move_listbuilder_row(".$row.", %27up%27, xajax.getFormValues(%27database_definition_form%27))", "&nbsp;", "icon_up");
+            $html_str .= get_href(HTML_NO_ACTION, "", "", HTML_EMPTY_LIST_TITLE, "xajax_action_move_listbuilder_row(".$row.", 'up', xajax.getFormValues('database_definition_form'))", "&nbsp;", "icon_up");
             $html_str .= "</td>\n";
         }
         else
@@ -817,12 +823,12 @@ function get_field_definition_table ($definition)
             $html_str .= "<p style=\"visibility: hidden;\">up</p>";
             $html_str .= "</td>\n";
         }
-        
+
         # the sixth column - down
         if ($row > 0 && $row < ((count($definition) / 4) - 1))
         {
             $html_str .= "                                                <td width=\"1%\">";
-            $html_str .= get_href(ACTION_MOVE_LISTBUILDER_ROW, HTML_EMPTY_LIST_TITLE, "xajax_action_move_listbuilder_row(".$row.", %27down%27, xajax.getFormValues(%27database_definition_form%27))", "&nbsp;", "icon_down");
+            $html_str .= get_href(HTML_NO_ACTION, "", "", HTML_EMPTY_LIST_TITLE, "xajax_action_move_listbuilder_row(".$row.", 'down', xajax.getFormValues('database_definition_form'))", "&nbsp;", "icon_down");
             $html_str .= "</td>\n";
         }
         else
@@ -831,12 +837,12 @@ function get_field_definition_table ($definition)
             $html_str .= "<p style=\"visibility: hidden;\">dn</p>";
             $html_str .= "</td>\n";
         }
-        
+
         # the seventh column - delete
         if ($row > 0)
         {
             $html_str .= "                                                <td width=\"1%\">";
-            $html_str .= get_href(ACTION_DELETE_LISTBUILDER_ROW, HTML_EMPTY_LIST_TITLE, "xajax_action_delete_listbuilder_row(".$row.", xajax.getFormValues(%27database_definition_form%27))", translate("BUTTON_DELETE"), "icon_delete");
+            $html_str .= get_href(HTML_NO_ACTION, "", "", HTML_EMPTY_LIST_TITLE, "xajax_action_delete_listbuilder_row(".$row.", xajax.getFormValues('database_definition_form'))", translate("BUTTON_DELETE"), "icon_delete");
             $html_str .= "</td>\n";
         }
         else
@@ -846,13 +852,13 @@ function get_field_definition_table ($definition)
             $html_str .= "</td>\n";
         }
 
-        $html_str .= "                                            </tr>\n";        
+        $html_str .= "                                            </tr>\n";
     }
-    
+
     $html_str .= "                                        </tbody>\n";
     $html_str .= "                                    </table> <!-- listbuilder_general_settings -->\n";
     $html_str .= "                                </form> <!-- database_definition_form -->\n\n";
-        
+
     $logging->trace("got field definition table");
 
     return $html_str;

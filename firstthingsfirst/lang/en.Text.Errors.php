@@ -33,7 +33,7 @@ $text_translations["ERROR_INCORRECT_NAME_PASSWORD"] = "The name/password combina
 $text_translations["ERROR_NO_TITLE_GIVEN"] = "You have not given a name for this list";
 $text_translations["ERROR_NO_DESCRIPTION_GIVEN"] = "You have not given a description for this list";
 $text_translations["ERROR_NOT_WELL_FORMED_STRING"] = "This field can only contain alpha numerical characters";
-$text_translations["ERROR_NOT_WELL_FORMED_SELECTION_STRING"] = "This field can only contain alpha numerical characters and the '|' character";
+$text_translations["ERROR_NOT_WELL_FORMED_SELECTION_STRING"] = "This field can only contain alpha numerical characters and the | character";
 
 /**
  * database errors
@@ -52,6 +52,8 @@ $text_translations["ERROR_DUPLICATE_USER_NAME"] = "A user with the same name alr
 /**
  *  user administration errors
  */
+$text_translations["ERROR_CANNOT_UPDATE_NAME_USER_ADMIN"] = "You cannot change the name of user administrator";
+$text_translations["ERROR_CANNOT_UPDATE_PERMISSIONS_USER_ADMIN"] = "You cannot change the permissions of user administrator";
 $text_translations["ERROR_CANNOT_DELETE_USER_ADMIN"] = "You cannot delete user administator";
 $text_translations["ERROR_CANNOT_DELETE_YOURSELF"] = "You cannot delete yourself";
 

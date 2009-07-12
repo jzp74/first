@@ -16,15 +16,15 @@
 $text_translations["LABEL_YES"] = "ja";
 $text_translations["LABEL_NO"] = "nee";
 $text_translations["LABEL_NAVIGATION_LIST"] = "lijst";
-$text_translations["LABEL_ADDED_TO_LOG_FILE"] = "toegevoegd aan de log"; 
-$text_translations["LABEL_DATABASE_MESSAGE"] = "bericht van database"; 
-$text_translations["LABEL_SUNDAY"] = "zo"; 
-$text_translations["LABEL_MONDAY"] = "ma"; 
-$text_translations["LABEL_TUESDAY"] = "di"; 
-$text_translations["LABEL_WEDNESDAY"] = "wo"; 
-$text_translations["LABEL_THURSDAY"] = "do"; 
-$text_translations["LABEL_FRIDAY"] = "vr"; 
-$text_translations["LABEL_SATERDAY"] = "za"; 
+$text_translations["LABEL_ADDED_TO_LOG_FILE"] = "toegevoegd aan de log";
+$text_translations["LABEL_DATABASE_MESSAGE"] = "bericht van database";
+$text_translations["LABEL_SUNDAY"] = "zo";
+$text_translations["LABEL_MONDAY"] = "ma";
+$text_translations["LABEL_TUESDAY"] = "di";
+$text_translations["LABEL_WEDNESDAY"] = "wo";
+$text_translations["LABEL_THURSDAY"] = "do";
+$text_translations["LABEL_FRIDAY"] = "vr";
+$text_translations["LABEL_SATERDAY"] = "za";
 $text_translations["LABEL_MINUS"] = "-";
 $text_translations["LABEL_RECORDS"] = "records";
 $text_translations["LABEL_CREATED_BY"] = "aangemaakt door";
@@ -111,7 +111,7 @@ $text_translations["LABEL_ID_COLUMN_NO_SHOW"] = "toon dit veld niet&nbsp;&nbsp;"
 $text_translations["LABEL_NAME_ONLY"] = "alleen naam&nbsp;&nbsp;";
 $text_translations["LABEL_DATE_ONLY"] = "alleen datum&nbsp;&nbsp;";
 $text_translations["LABEL_DATE_NAME"] = "datum en naam&nbsp;&nbsp;";
-$text_translations["LABEL_CONFIRM_MODIFY"] = "De inhoud van velden die je gewijzigd hebt zal worden verwijderd.\\nDe inhoud van velden die je hebt verwijderd zal verwijderd worden.\\nWeet je zeker dat je deze lijst wilt wijzigen?";
+$text_translations["LABEL_CONFIRM_MODIFY"] = "De inhoud van velden die je gewijzigd hebt zal worden verwijderd.<br>De inhoud van velden die je hebt verwijderd zal verwijderd worden.<br>Weet je zeker dat je deze lijst wilt wijzigen?";
 
 /**
  * login labels

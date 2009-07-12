@@ -688,10 +688,10 @@ html, body {
 
 /*  defines qtips */
 .qtip {
-    -moz-opacity: 0.7;
-    -webkit-opacity: 0.7;
-    opacity: 0.7;
-    filter: alpha(opacity=70);
+    -moz-opacity: 0.85;
+    -webkit-opacity: 0.85;
+    opacity: 0.85;
+    filter: alpha(opacity=85);
     }
 
 #qtip_message_table {
@@ -718,7 +718,6 @@ html, body {
 
 #qtip_message_table td {
     padding: 4px 4px 0px 4px;
-    font-weight: bold;
     }
 
 /*  defines the main test body (only used in regression test) */

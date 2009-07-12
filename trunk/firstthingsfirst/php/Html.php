@@ -179,6 +179,8 @@ function add_js_function_call ($response, $js_function_call_str)
 {
     global $logging;
 
+    $logging->trace("call function: ".$js_function_call_str);
+
     # replace %27 into ' chars
     $js_function_call = str_replace('%27', "'", $js_function_call_str);
 
@@ -221,8 +223,8 @@ function check_postconditions ($result, $response)
 /**
  * show an error on screen
  * @param string $error_element DOM element in which error has to be shown
- * @param string $error_position position to display error tooltip
- * @param string $error_message_str error message for user
+ * @param string $error_position position to display error tooltip (left, above, below or right)
+ * @param string $error_message_str untranslated error message for user
  * @param string $error_log_str error message for log
  * @param string $error_str actual error string
  * @param $response xajaxResponse response object
@@ -232,16 +234,16 @@ function set_error_message ($error_element, $error_position, $error_message_str,
 {
     global $logging;
 
-    $logging->trace("set error (element=".$error_element.", position=".$error_position.")");
+    $logging->warn("set error (element=".$error_element.", position=".$error_position.")");
 
     # now create the HTML for the error message
     $html_str = "<strong>".translate($error_message_str)."</strong>";
     if (strlen($error_log_str) > 0 || strlen($error_str) > 0)
         $html_str .= "<br>";
     if (strlen($error_log_str) > 0)
-        $html_str .= "<br><strong>".translate("LABEL_ADDED_TO_LOG_FILE").":</strong> ".$error_log_str;
+        $html_str .= "<br><strong>".translate("LABEL_ADDED_TO_LOG_FILE").":</strong> ".htmlspecialchars($error_log_str, ENT_QUOTES);
     if (strlen($error_str) > 0)
-        $html_str .= "<br><strong>".translate("LABEL_DATABASE_MESSAGE").":</strong> ".$error_str;
+        $html_str .= "<br><strong>".translate("LABEL_DATABASE_MESSAGE").":</strong> ".htmlspecialchars($error_str, ENT_QUOTES);
 
     # create error tooltip with the error message
     $response->script("showTooltip('#".$error_element."', '".$html_str."', 'error', '".$error_position."')");
@@ -252,17 +254,21 @@ function set_error_message ($error_element, $error_position, $error_message_str,
 /**
  * show an info message on screen
  * @param string $info_element DOM element in which info message has to be shown
- * @param string $info_str the info string
+ * @param string $error_position position to display error tooltip (left, above, below or right)
+ * @param string $info_str untranslated info string
  * @param $response xajaxResponse response object
  * @return void
  */
-function set_info_message ($info_element, $info_str, $response)
+function set_info_message ($info_element, $info_position, $info_str, $response)
 {
     global $logging;
 
-    $logging->trace("set info (element=".$info_element.")");
+    $logging->info("set info (element=".$info_element.", position=".$info_position.")");
 
-    $response->append($info_element, "innerHTML", "<p id=\"info_message\">".$info_str."</p>");
+    # now create the HTML for the info message
+    $html_str = "<strong>".translate($info_str)."</strong>";
+    # create info tooltip with the error message
+    $response->script("showTooltip('#".$info_element."', '".$html_str."', 'info', '".$info_position."')");
 
     $logging->trace("set info (element=".$info_element.")");
 }

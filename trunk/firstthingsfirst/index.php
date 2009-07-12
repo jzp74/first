@@ -227,7 +227,7 @@ else
 
 <script language="javascript" src="js/external/jquery.min.js"></script>
 <script language="javascript" src="js/external/jquery.qtip.min.js"></script>
-<script language="javascript" src="js/tooltips.js"></script>
+<script language="javascript" src="js/tooltips.min.js"></script>
 <script language="javascript">
 xajax_process_url();
 </script>

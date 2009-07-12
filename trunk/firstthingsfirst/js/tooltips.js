@@ -100,7 +100,7 @@ function showTooltip(domElementId, messageStr, type, position)
             effect:
             {
                 type: 'grow',
-                length: 300
+                length: 200
             }
         },
         hide:
@@ -117,8 +117,8 @@ function showTooltip(domElementId, messageStr, type, position)
             padding: '0px 0px 0px 0px',
             width:
             {
-                min: 260,
-                max: 260
+                min: 300,
+                max: 320
             },
             border:
             {

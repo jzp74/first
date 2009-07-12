@@ -235,7 +235,7 @@ function action_get_listbuilder_page ($list_title)
         $href_str .= "(%27listbuilder_list_title_id%27).value, document.getElementById(%27listbuilder_list_description_id%27).value, ";
         $href_str .= "xajax.getFormValues(%27database_definition_form%27))";
         $html_str .= "                &nbsp;&nbsp;&nbsp;<span id=\"action_bar_button_create\"";
-        $html_str .= get_href(ACTION_CREATE_LIST, "action_bar", "above", HTML_EMPTY_LIST_TITLE, $href_str, translate("BUTTON_CREATE_LIST"), "icon_accept");
+        $html_str .= get_href(ACTION_CREATE_LIST, "action_bar_button_create", "above", HTML_EMPTY_LIST_TITLE, $href_str, translate("BUTTON_CREATE_LIST"), "icon_accept");
         $html_str .= "</span>\n";
     }
 
@@ -474,7 +474,7 @@ function action_modify_list ($former_title, $title, $description, $new_definitio
         return $response;
     }
 
-    set_info_message(MESSAGE_PANE_DIV, translate("LABEL_LIST_MODIFICATIONS_DONE"), $response);
+    set_info_message("action_bar_button_modify", "above", "LABEL_LIST_MODIFICATIONS_DONE", $response);
 
     $logging->trace("modified list");
 
@@ -546,7 +546,7 @@ function action_create_list ($title, $description, $definition)
         return $response;
     }
 
-    set_info_message(MESSAGE_PANE_DIV, translate("LABEL_NEW_LIST_CREATED"), $response);
+    set_info_message("action_bar_button_create", "above", "LABEL_NEW_LIST_CREATED", $response);
 
     $logging->trace("created list");
 

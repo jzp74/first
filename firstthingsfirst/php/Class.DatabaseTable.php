@@ -460,11 +460,11 @@ class DatabaseTable
             $query .= DB_MODIFIER_FIELD_NAME." ".DB_DATATYPE_USERNAME.", ";
             $query .= DB_TS_MODIFIED_FIELD_NAME." ".DB_DATATYPE_DATETIME.", ";
         }
-        $query .= "PRIMARY KEY (".DB_ID_FIELD_NAME.") ENGINE=MyISAM";
+        $query .= "PRIMARY KEY (".DB_ID_FIELD_NAME.")";
         # add postfix
         if (strlen($query_postfix) > 0)
             $query .= $query_postfix;
-        $query .= ")";
+        $query .= ") ENGINE=MyISAM";
         $result = $this->_database->query($query);
         if ($result == FALSE)
         {

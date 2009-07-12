@@ -16,15 +16,15 @@
 $text_translations["LABEL_YES"] = "yes";
 $text_translations["LABEL_NO"] = "no";
 $text_translations["LABEL_NAVIGATION_LIST"] = "list";
-$text_translations["LABEL_ADDED_TO_LOG_FILE"] = "added to logfile"; 
-$text_translations["LABEL_DATABASE_MESSAGE"] = "database message"; 
-$text_translations["LABEL_SUNDAY"] = "Sun"; 
-$text_translations["LABEL_MONDAY"] = "Mon"; 
-$text_translations["LABEL_TUESDAY"] = "Tue"; 
-$text_translations["LABEL_WEDNESDAY"] = "Wed"; 
-$text_translations["LABEL_THURSDAY"] = "Thu"; 
-$text_translations["LABEL_FRIDAY"] = "Fri"; 
-$text_translations["LABEL_SATERDAY"] = "Sat"; 
+$text_translations["LABEL_ADDED_TO_LOG_FILE"] = "added to logfile";
+$text_translations["LABEL_DATABASE_MESSAGE"] = "database message";
+$text_translations["LABEL_SUNDAY"] = "Sun";
+$text_translations["LABEL_MONDAY"] = "Mon";
+$text_translations["LABEL_TUESDAY"] = "Tue";
+$text_translations["LABEL_WEDNESDAY"] = "Wed";
+$text_translations["LABEL_THURSDAY"] = "Thu";
+$text_translations["LABEL_FRIDAY"] = "Fri";
+$text_translations["LABEL_SATERDAY"] = "Sat";
 $text_translations["LABEL_MINUS"] = "-";
 $text_translations["LABEL_RECORDS"] = "records";
 $text_translations["LABEL_CREATED_BY"] = "created by";
@@ -111,7 +111,7 @@ $text_translations["LABEL_ID_COLUMN_NO_SHOW"] = "do not show this column&nbsp;&n
 $text_translations["LABEL_NAME_ONLY"] = "name only&nbsp;&nbsp;";
 $text_translations["LABEL_DATE_ONLY"] = "date only&nbsp;&nbsp;";
 $text_translations["LABEL_DATE_NAME"] = "date and name&nbsp;&nbsp;";
-$text_translations["LABEL_CONFIRM_MODIFY"] = "List content of fields whose type you changed will be removed.\\nList content of fields that you removed will be removed.\\nAre you sure you want to modify this list?";
+$text_translations["LABEL_CONFIRM_MODIFY"] = "List content of fields whose type you changed will be removed.</br>List content of fields that you removed will be removed.</br>Are you sure you want to modify this list?";
 
 /**
  * login labels

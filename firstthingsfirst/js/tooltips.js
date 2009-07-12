@@ -7,14 +7,12 @@
  */
 
 
-/*!
- * show a tooltip
- * @param string domElement id of DOM element that contains the tooltip
- * @param string messageStr message for user
- * @param string type indicates if this is an error or an info tooltip (values 'error' or 'info')
- * @param string position display this tooltip left or right (values 'left' or 'right')
- * @return void
- */
+// show a tooltip
+// @param string domElement id of DOM element that contains the tooltip
+// @param string messageStr message for user
+// @param string type indicates if this is an error or an info tooltip (values 'error' or 'info')
+// @param string position display this tooltip left or right (values 'left' or 'right')
+// @return void
 function showTooltip(domElementId, messageStr, type, position)
 {
     // determine screen dimensions
@@ -136,13 +134,11 @@ function showTooltip(domElementId, messageStr, type, position)
     });
 }
 
-/*!
- * return the HTML for a tooltip
- * @param string domElement id of DOM element that contains the tooltip
- * @param string messageStr message for user
- * @param string imageUrl url to image (either info or error image)
- * @return string
- */
+// return the HTML for a tooltip
+// @param string domElement id of DOM element that contains the tooltip
+// @param string messageStr message for user
+// @param string imageUrl url to image (either info or error image)
+// @return string
 function getTooltipContent (domElementId, messageStr, imageUrl)
 {
     htmlStr = "\n";

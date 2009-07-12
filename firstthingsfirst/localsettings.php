@@ -45,7 +45,7 @@ $firstthingsfirst_db_schema = "some_schema";
 # LOGGING_INFO - log info, warning and error messages
 # LOGGING_DEBUG - log debug, info, warning and error messages (lots of log data!)
 # LOGGING_TRACE - log trace, debug, info, warning and error messages (lots of log data!)
-$firstthingsfirst_loglevel = LOGGING_INFO;
+$firstthingsfirst_loglevel = LOGGING_OFF;
 
 # logfile, all logmessages will be written in this file
 $firstthingsfirst_logfile = "firstthingsfirst.log";

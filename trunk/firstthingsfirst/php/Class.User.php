@@ -16,6 +16,16 @@
 define("USER_TABLE_NAME", $firstthingsfirst_db_table_prefix."user");
 
 /**
+ * definition of the session life time in seconds (set to 30 minutes)
+ */
+define("USER_SESSION_LIFE_TIME", 1800);
+
+/**
+ * definition of the session name
+ */
+define("USER_SESSION_NAME", "FIRSTTHINGSFIRST_SESSION");
+
+/**
  * definition of id of an empty (non initialized) User object
  */
 define("USER_ID_RESET_VALUE", -1);
@@ -94,14 +104,37 @@ class User extends UserDatabaseTable
         # call parent __construct()
         parent::__construct(USER_TABLE_NAME, $class_user_fields, USER_METADATA);
 
+        # set session name
+        session_name(USER_SESSION_NAME);
+
+        # set cookie time and path
+        # the path is constructed from the request uri
+        $request_uri_array = explode('/', $_SERVER["REQUEST_URI"]);
+        $array_length = count($request_uri_array);
+        $cookie_path_str = "";
+        # firstthingsfirst is installed in the document root
+        if ($array_length == 1)
+            $cookie_path_str = "/";
+        # firstthingsfirst is not installed in the document root
+        else
+        {
+            for ($position = 0; $position < ($array_length - 1); $position += 1)
+                $cookie_path_str .= $request_uri_array[$position]."/";
+        }
+        session_set_cookie_params(USER_SESSION_LIFE_TIME, $cookie_path_str);
+
         # start a session
-        session_cache_limiter('private, must-revalidate');
+#        session_cache_limiter('private, must-revalidate');
         session_start();
 
         # reset relevant session parameters
-
         if (isset($_SESSION["login"]))
+        {
             $this->_log->debug("user session is still active (name=".$this->get_name().")");
+
+            # adjust cookie life time
+            setcookie(USER_SESSION_NAME, $_COOKIE[USER_SESSION_NAME], time() + USER_SESSION_LIFE_TIME);
+        }
         else
             $this->reset();
 
@@ -417,6 +450,7 @@ class User extends UserDatabaseTable
 
         $this->_log->trace("log out (name=".$name.")");
 
+        # reset this User object
         $this->reset();
 
         $this->_log->trace("user logged out (name=".$name.")");

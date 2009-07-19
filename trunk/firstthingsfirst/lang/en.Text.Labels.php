@@ -104,14 +104,14 @@ $text_translations["LABEL_DEFINITION_TEXT_LINE_EXPLANATION"] = "A short line of 
 $text_translations["LABEL_DEFINITION_TEXT_FIELD_EXPLANATION"] = "A box with several lines of text";
 $text_translations["LABEL_DEFINITION_NOTES_FIELD_EXPLANATION"] = "Users can add multiple notes. Each note shows which user has added the note and when";
 $text_translations["LABEL_DEFINITION_SELECTION_EXPLANATION"] = "Please specify the different options from which users can choose. Seperate the options with '|'. For instance 'open|busy|close'";
-$text_translations["LABEL_LIST_MODIFICATIONS_DONE"] = "List modifications done!<br>return to the portal page";
-$text_translations["LABEL_NEW_LIST_CREATED"] = "New list created!<br>create another new list or return to the portal page";
+$text_translations["LABEL_LIST_MODIFICATIONS_DONE"] = "List modifications done!<br>Return to the portal page or make other list modifications";
+$text_translations["LABEL_NEW_LIST_CREATED"] = "New list created!<br>Return to the portal page or create another new list";
 $text_translations["LABEL_ID_COLUMN_SHOW"] = "show this column&nbsp;&nbsp;";
 $text_translations["LABEL_ID_COLUMN_NO_SHOW"] = "do not show this column&nbsp;&nbsp;";
 $text_translations["LABEL_NAME_ONLY"] = "name only&nbsp;&nbsp;";
 $text_translations["LABEL_DATE_ONLY"] = "date only&nbsp;&nbsp;";
 $text_translations["LABEL_DATE_NAME"] = "date and name&nbsp;&nbsp;";
-$text_translations["LABEL_CONFIRM_MODIFY"] = "List content of fields whose type you changed will be removed.</br>List content of fields that you removed will be removed.</br>Are you sure you want to modify this list?";
+$text_translations["LABEL_CONFIRM_MODIFY"] = "List content of fields whose type you changed will be removed.<br>List content of fields that you removed will be removed.<br>Are you sure you want to modify this list?";
 
 /**
  * login labels

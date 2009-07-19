@@ -489,8 +489,7 @@ class HtmlDatabaseTable
                 $html_str .= "</td>\n";
                 # add delete button
                 $html_str .= "                        <td width=\"1%\">";
-#                $html_str .= "<div class=\"icon_delete\">delete</div>";
-                $html_str .= get_href_confirm(ACTION_DELETE_PORTAL_RECORD, $key_values_string, "below", $record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], "xajax_action_delete_portal_record(%27".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."%27)", translate("LABEL_CONFIRM_DELETE"), translate("BUTTON_DELETE"), "icon_delete");
+                $html_str .= get_href_confirm(ACTION_DELETE_PORTAL_RECORD, $key_values_string, "below", $record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], "xajax_action_delete_portal_record(%22".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."%22)", translate("LABEL_CONFIRM_DELETE"), translate("BUTTON_DELETE"), "icon_delete");
                 $html_str .= "</td>\n                    </tr>\n";
             }
             else

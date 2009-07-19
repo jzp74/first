@@ -7,6 +7,17 @@
  */
 
 
+// set global vars
+// we use these vars for translations
+
+// translation of ok
+var acceptStr = "OK";
+// translation of cancel
+var cancelStr = "CANCEL";
+// translation of close
+var closeStr = "CLOSE";
+
+
 // show a tooltip
 // @param string domElement id of DOM element that contains the tooltip
 // @param string messageStr message for user
@@ -71,7 +82,7 @@ function showTooltip(domElementId, messageStr, type, position)
         tipCorner = "leftMiddle";
     }
     // get the tooltip HTML
-    htmlStr = getTooltipContent (domElementId, messageStr, imageUrl);
+    htmlStr = getTooltipContent (domElementId, messageStr, imageUrl, "");
 
     // create the tooltip
     $(domElementId).qtip(
@@ -117,8 +128,8 @@ function showTooltip(domElementId, messageStr, type, position)
             padding: '0px 0px 0px 0px',
             width:
             {
-                min: 300,
-                max: 320
+                min: 350,
+                max: 350
             },
             border:
             {
@@ -134,18 +145,88 @@ function showTooltip(domElementId, messageStr, type, position)
     });
 }
 
+// show a modal dialog
+// @param string domElement id of DOM element that contains the tooltip
+// @param string messageStr message for user
+// @param string functionCall function to call in case user is ok
+// @return void
+function showModalDialog (domElementId, messageStr, functionStr)
+{
+    // get the image URL and the dialog HTML
+    imageUrl = "images/icons/nuove_info.png";
+    htmlStr = getTooltipContent (domElementId, messageStr, imageUrl, functionStr);
+
+    // create the tooltip
+    $(domElementId).qtip(
+    {
+        content:
+        {
+            text: htmlStr
+        },
+        position:
+        {
+            target: $(document.body),
+            corner: 'center'
+        },
+        show:
+        {
+            delay: 0,
+            solo: true,
+            ready: true,
+            when:
+            {
+                event: ''
+            },
+        },
+        hide: false,
+        style:
+        {
+            background: "rgb(255, 245, 189)",
+            color: "rgb(50, 50, 50)",
+            padding: '0px 0px 0px 0px',
+            width:
+            {
+                min: 350,
+                max: 350
+            },
+            border:
+            {
+                width: 0,
+                radius: 6,
+                color: "rgb(255, 173, 37)"
+            },
+        },
+        api:
+        {
+            beforeShow: function()
+            {
+                // set correct height of blanket and fade in
+                $('#modal_blanket').height($(document).height());
+                $('#modal_blanket').fadeIn(200);
+            },
+            beforeDestroy: function()
+            {
+                // fade out and set height of blanket to 0
+                $('#modal_blanket').fadeOut(200);
+                $('#modal_blanket').height($(document).height());
+            }
+        }
+    });
+}
+
 // return the HTML for a tooltip
 // @param string domElement id of DOM element that contains the tooltip
 // @param string messageStr message for user
 // @param string imageUrl url to image (either info or error image)
-// @return string
-function getTooltipContent (domElementId, messageStr, imageUrl)
+// @param string functionStr string with function to be called when user clicks ok
+// @return string string with resulting HTML
+function getTooltipContent (domElementId, messageStr, imageUrl, functionStr)
 {
     htmlStr = "\n";
     htmlStr += "    <table id=\"qtip_message_table\">\n";
     htmlStr += "        <thead>\n";
     htmlStr += "            <tr>\n";
-    htmlStr += "                <th colspan=2><a href=\"javascript:void(0);\" class=\"icon_delete\" onclick=\"$('" + domElementId + "').qtip('destroy'); return false;\">&nbsp</a></th>\n";
+    htmlStr += "                <th colspan=2><a href=\"javascript:void(0);\" class=\"icon_delete\" onclick=\"$('" + domElementId + "').qtip('destroy');\">" + closeStr + "</a></th>\n";
     htmlStr += "            </tr>\n";
     htmlStr += "        </thead>\n";
     htmlStr += "        <tbody>\n";
@@ -153,8 +234,33 @@ function getTooltipContent (domElementId, messageStr, imageUrl)
     htmlStr += "                <td><img src=\"" + imageUrl + "\"></td>\n";
     htmlStr += "                <td>" + messageStr + "</td>\n";
     htmlStr += "            </tr>\n";
+
+    // add an extra row for ok and cancel buttons when this is a modal dialog
+    if (functionStr.length > 0)
+    {
+        funcStr = functionStr.replace(/%22/g, "'");
+        htmlStr += "            <tr>\n";
+        htmlStr += "                <td colspan=2 class=\"buttons\">";
+        htmlStr += "<a href=\"javascript:void(0);\" class=\"icon_accept\" onclick=\"$('" + domElementId + "').qtip('destroy'); " + funcStr + "\">" + acceptStr + "</a>";
+        htmlStr += "<a href=\"javascript:void(0);\" class=\"icon_cancel\" onclick=\"$('" + domElementId + "').qtip('destroy');\">" + cancelStr + "</a></td>\n";
+        htmlStr += "            </tr>\n";
+    }
+
     htmlStr += "        </tbody>\n";
     htmlStr += "    </table>\n";
 
     return htmlStr;
+}
+
+// set translations
+// @param string okStr translation of ok
+// @param string cancelStr translation of cancel
+// @param string closeStr translation of close
+// @return void
+function setTranslations (accept, cancel, close)
+{
+    // set global vars
+    acceptStr = accept;
+    cancelStr = cancel;
+    closeStr = close;
 }

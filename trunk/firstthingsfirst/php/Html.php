@@ -179,10 +179,10 @@ function add_js_function_call ($response, $js_function_call_str)
 {
     global $logging;
 
-    $logging->trace("call function: ".$js_function_call_str);
-
     # replace %27 into ' chars
     $js_function_call = str_replace('%27', "'", $js_function_call_str);
+
+    $logging->trace("call function: ".$js_function_call);
 
     # call given js function
     $response->script($js_function_call);
@@ -327,13 +327,13 @@ function get_href_confirm ($action, $error_element, $error_position, $list_title
     {
         if ($list_title == HTML_EMPTY_LIST_TITLE)
         {
-            $onclick_str = "onclick=\"xajax_check_permissions('".$action."', 'if (confirm(%27".$confirm_str."%27)) { ";
-            $onclick_str .= $func_str." }', '".$error_element."', '".$error_position."') }";
+            $onclick_str = "onclick=\"xajax_check_permissions('".$action."', 'showModalDialog(%27#".$error_element."%27, ";
+            $onclick_str .= "%27".$confirm_str."%27, %27".$func_str."%27)', '".$error_element."', '".$error_position."') }";
         }
         else
         {
             $onclick_str = "onclick=\"xajax_check_list_permissions('".$action."', '".$list_title."', ";
-            $onclick_str .= "'if (confirm(%27".$confirm_str."%27)) { ".$func_str." }', '".$error_element."', '".$error_position."')";
+            $onclick_str .= "'showModalDialog(%27#".$error_element."%27, %27".$confirm_str."%27, %27".$func_str."%27)', '".$error_element."', '".$error_position."')";
         }
     }
 

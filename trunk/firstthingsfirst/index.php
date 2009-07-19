@@ -72,8 +72,9 @@ require_once("php/Html.UserListTablePermissions.php");
 
 
 /**
- * register process_url function
+ * register local functions
  */
+$xajax->register(XAJAX_FUNCTION, "set_translations");
 $xajax->register(XAJAX_FUNCTION, "process_url");
 
 /**
@@ -81,6 +82,26 @@ $xajax->register(XAJAX_FUNCTION, "process_url");
  */
 $xajax->processRequest();
 
+
+/**
+ * set translation vars in javascript
+ * @return void
+ */
+function set_translations ()
+{
+    global $logging;
+
+    $logging->trace("set translations");
+
+    $response = new xajaxResponse();
+    $accept_str = translate("BUTTON_ACCEPT");
+    $cancel_str = translate("BUTTON_CANCEL");
+    $close_str = translate("BUTTON_CLOSE");
+
+    $response->script("setTranslations('".$accept_str."', '".$cancel_str."', '".$close_str."')");
+
+    return $response;
+}
 
 /**
  * parse the url and return html code accordingly
@@ -157,6 +178,7 @@ function process_url ()
     {
         $response = new xajaxResponse();
         $response->call("window.location.assign('index.php?action=".ACTION_GET_PORTAL_PAGE."')");
+
         return $response;
     }
 }
@@ -229,8 +251,11 @@ else
 <script language="javascript" src="js/external/jquery.qtip.min.js"></script>
 <script language="javascript" src="js/tooltips.min.js"></script>
 <script language="javascript">
+xajax_set_translations();
 xajax_process_url();
 </script>
+
+<div id="modal_blanket"></div>
 
 </body>
 

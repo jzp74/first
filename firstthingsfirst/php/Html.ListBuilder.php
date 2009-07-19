@@ -220,10 +220,10 @@ function action_get_listbuilder_page ($list_title)
     # display the modify button when a title has been given
     if ($old_list_loaded == TRUE)
     {
-        $href_str = "xajax_action_modify_list(%27".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME];
-        $href_str .= "%27, document.getElementById(%27listbuilder_list_title_id%27).value, ";
-        $href_str .= "document.getElementById(%27listbuilder_list_description_id%27).value, ";
-        $href_str .= "xajax.getFormValues(%27database_definition_form%27))";
+        $href_str = "xajax_action_modify_list(%22".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME];
+        $href_str .= "%22, document.getElementById(%22listbuilder_list_title_id%22).value, ";
+        $href_str .= "document.getElementById(%22listbuilder_list_description_id%22).value, ";
+        $href_str .= "xajax.getFormValues(%22database_definition_form%22))";
         $html_str .= "                &nbsp;&nbsp;&nbsp;<span id=\"action_bar_button_modify\"";
         $html_str .= get_href_confirm(ACTION_MODIFY_LIST, "action_bar_button_modify", "above", $list_title, $href_str, translate("LABEL_CONFIRM_MODIFY"), translate("BUTTON_MODIFY_LIST"), "icon_accept");
         $html_str .= "</span>\n";

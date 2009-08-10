@@ -248,8 +248,8 @@ function action_get_listbuilder_page ($list_title)
 
     $response->assign("main_body", "innerHTML", $html_str);
     $response->assign("page_title", "innerHTML", $page_title);
-    $response->assign("page_explanation", "innerHTML", "&nbsp;");
     $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_LISTBUILDER));
+    $response->assign("footer_text", "innerHTML", "&nbsp;");
 
     if ($old_list_loaded == FALSE && strlen($list_title) > 0)
     {
@@ -258,9 +258,6 @@ function action_get_listbuilder_page ($list_title)
         $error_str = $list_table_description->get_error_str();
         set_error_message("tab_listbuilder_id", "below", $error_message_str, $error_log_str, $error_str, $response);
     }
-
-    set_login_status($response);
-    set_footer("&nbsp;", $response);
 
     $logging->trace("got listbuilder page");
 

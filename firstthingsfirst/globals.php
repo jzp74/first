@@ -89,6 +89,7 @@ define("PAGE_TYPE_LISTBUILDER", 2);
 define("PAGE_TYPE_LIST", 3);
 define("PAGE_TYPE_USER_ADMIN", 4);
 define("PAGE_TYPE_USERLISTTABLEPERMISSIONS", 5);
+define("PAGE_TYPE_USER_SETTINGS", 6);
 
 /**
  * general separator
@@ -105,7 +106,7 @@ define("EREG_ALLOWED_CHARS", "^A-Za-z0-9 ");
  */
 define("FALSE_RETURN_STRING", "<<FaLsE>>");
 
-/** 
+/**
  * user permissions
  */
 define("PERMISSION_CAN_CREATE_LIST", 0);
@@ -130,7 +131,7 @@ define("FIELD_DESCRIPTION_FIELD_INITIAL_DATA", 3);
 define("FIELD_DESCRIPTION_FIELD_TYPE", 4);
 
 /**
- * 
+ *
  */
 define("ID_COLUMN_SHOW", "do show");
 define("ID_COLUMN_NO_SHOW", "do not show");
@@ -184,10 +185,10 @@ define("FIELD_TYPE_DEFINITION_SELECTION", "LABEL_DEFINITION_SELECTION");
  * this array contains all supported field types
  * this array is of the following structure
  *   field_name => array(
- *      database_definition, 
- *      html_definition, 
- *      input_checks, 
- *      initial_data, 
+ *      database_definition,
+ *      html_definition,
+ *      input_checks,
+ *      initial_data,
  *      field_description_type
  *   )
  */

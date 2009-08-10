@@ -33,7 +33,6 @@ $xajax->register(XAJAX_FUNCTION, ACTION_CANCEL_USERLISTTABLEPERMISSIONS_ACTION);
 /**
  * definition of action permissions
  * permission are stored in a six character string (P means permissions, - means don't care):
- *  - user has to have edit list permission to be able to execute action
  *  - user has to have create list permission to be able to execute action
  *  - user has to have admin permission to be able to execute action
  *  - user has to have permission to view this list to execute list action for this list
@@ -88,8 +87,7 @@ function action_get_user_list_permissions_page ()
     # set page, title, explanation and navigation
     $html_database_table->get_page(translate("LABEL_USERLISTTABLEPERMISSIONS_TITLE"), $result);
     $response->assign("main_body", "innerHTML", $result->get_result_str());
-    $response->assign("page_title", "innerHTML", $user->get_current_list_name());
-    $response->assign("page_explanation", "innerHTML", translate("LABEL_USERLISTTABLEPERMISSIONS_TITLE"));
+    $response->assign("page_title", "innerHTML", translate("LABEL_USERLISTTABLEPERMISSIONS_TITLE")." ".translate("LABEL_MINUS")." ".$user->get_current_list_name());
     $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_USERLISTTABLEPERMISSIONS));
 
     # set filter value
@@ -101,15 +99,12 @@ function action_get_user_list_permissions_page ()
     $html_database_table->get_content($user_list_permissions, USER_TABLE_NAME, "", DATABASETABLE_UNKWOWN_PAGE, $result);
     $response->assign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
-    # set login status
-    set_login_status($response);
-
     # set action pane
     $html_str = $html_database_table->get_action_bar(USERLISTTABLEPERMISSIONS_TABLE_NAME, "");
     $response->assign("action_pane", "innerHTML", $html_str);
 
     # set footer
-    set_footer("", $response);
+    $response->assign("footer_text", "innerHTML", "&nbsp;");
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -178,7 +173,7 @@ function action_get_user_list_permissions_record ($title, $key_string)
     $response->script("$('*').qtip('destroy')");
 
     # get html for one user record
-    $html_database_table->get_record($user_list_permissions, $title, $key_string, $result);
+    $html_database_table->get_record($user_list_permissions, $title, $key_string, array(), $result);
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)

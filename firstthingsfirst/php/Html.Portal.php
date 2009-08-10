@@ -27,7 +27,6 @@ $xajax->register(XAJAX_FUNCTION, ACTION_DELETE_PORTAL_RECORD);
 /**
  * definition of action permissions
  * permission are stored in a six character string (P means permissions, - means don't care):
- *  - user has to have edit list permission to be able to execute action
  *  - user has to have create list permission to be able to execute action
  *  - user has to have admin permission to be able to execute action
  *  - user has to have permission to view this list to execute list action for this list
@@ -79,21 +78,17 @@ function action_get_portal_page ()
     # set page, title, explanation and navigation
     $html_database_table->get_page($firstthingsfirst_portal_title, $result);
     $response->assign("main_body", "innerHTML", $result->get_result_str());
-    $response->assign("page_title", "innerHTML", $firstthingsfirst_portal_title);
-    $response->assign("page_explanation", "innerHTML", $firstthingsfirst_portal_intro_text);
+    $response->assign("page_title", "innerHTML", $firstthingsfirst_portal_intro_text);
     $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_PORTAL));
 
     # set content
     $html_database_table->get_content($list_table_description, LISTTABLEDESCRIPTION_TABLE_NAME, "", DATABASETABLE_ALL_PAGES, $result);
     $response->assign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
-    # set login status
-    set_login_status($response);
-
     # no action pane
 
     # set footer
-    set_footer("", $response);
+    $response->assign("footer_text", "innerHTML", "&nbsp;");
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -195,7 +190,6 @@ function action_delete_portal_record ($list_title)
     # set page navigation and login status to update old 'list' links
     $page_navigation_str = get_page_navigation(PAGE_TYPE_PORTAL);
     $response->assign("navigation_container", "innerHTML", $page_navigation_str);
-    set_login_status($response);
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)

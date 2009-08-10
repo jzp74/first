@@ -661,7 +661,7 @@ class DatabaseTable
 
     /**
     * select exactly one record from database
-    * @param $db_field_names array array containing db_field_names to select for each record
+    * @param $db_field_names array array containing db_field_names to select for record
     * @param $encoded_key_string string unique identifier of record
     * @return array array containing exactly one record (which is an array)
     */

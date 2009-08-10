@@ -35,7 +35,6 @@ $xajax->register(XAJAX_FUNCTION, ACTION_CANCEL_USER_ADMIN_ACTION);
 /**
  * definition of action permissions
  * permission are stored in a six character string (P means permissions, - means don't care):
- *  - user has to have edit list permission to be able to execute action
  *  - user has to have create list permission to be able to execute action
  *  - user has to have admin permission to be able to execute action
  *  - user has to have permission to view this list to execute list action for this list
@@ -90,22 +89,18 @@ function action_get_user_admin_page ()
     $html_database_table->get_page(translate("LABEL_USER_ADMIN_TITLE"), $result);
     $response->assign("main_body", "innerHTML", $result->get_result_str());
     $response->assign("page_title", "innerHTML", translate("LABEL_USER_ADMIN_TITLE"));
-    $response->assign("page_explanation", "innerHTML", "&nbsp;");
     $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_USER_ADMIN));
 
     # set content
     $html_database_table->get_content($user, USER_TABLE_NAME, "", DATABASETABLE_UNKWOWN_PAGE, $result);
     $response->assign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
-    # set login status
-    set_login_status($response);
-
     # set action pane
     $html_str = $html_database_table->get_action_bar(USER_TABLE_NAME, "");
     $response->assign("action_pane", "innerHTML", $html_str);
 
     # set footer
-    set_footer("", $response);
+    $response->assign("footer_text", "innerHTML", "&nbsp;");
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -174,7 +169,7 @@ function action_get_user_admin_record ($title, $key_string)
     $response->script("$('*').qtip('destroy')");
 
     # get html for one user record
-    $html_database_table->get_record($user, $title, $key_string, $result);
+    $html_database_table->get_record($user, $title, $key_string, array(), $result);
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -309,6 +304,11 @@ function action_update_user_admin_record ($title, $key_string, $form_values)
     global $user_admin_table_configuration;
     global $firstthingsfirst_field_descriptions;
 
+    # WARNING: this function is almost identical to function UserSettings::action_update_user_setting_record
+    # changes in this function should also lead to changes in that function
+
+    $logging->info("ACTION: update user admin record (title=".$title.", key_string=".$key_string.")");
+
     $html_str = "";
     $name_keys = array_keys($form_values);
     $new_form_values = array();
@@ -369,7 +369,7 @@ function action_update_user_admin_record ($title, $key_string, $form_values)
         # check if the name of user admin is changed
         if ($new_form_values[USER_NAME_FIELD_NAME] != "admin")
         {
-            set_error_message("tab_user_admin_id", "below", "ERROR_CANNOT_UPDATE_NAME_USER_ADMIN", "", "", $response);
+            set_error_message("record_contents_buttons", "right", "ERROR_CANNOT_UPDATE_NAME_USER_ADMIN", "", "", $response);
 
             return $response;
         }
@@ -377,7 +377,7 @@ function action_update_user_admin_record ($title, $key_string, $form_values)
         # check if the permissions of user admin is changed
         if (($new_form_values[USER_CAN_CREATE_LIST_FIELD_NAME] != "1") || ($new_form_values[USER_IS_ADMIN_FIELD_NAME] != "1"))
         {
-            set_error_message("tab_user_admin_id", "below", "ERROR_CANNOT_UPDATE_PERMISSIONS_USER_ADMIN", "", "", $response);
+            set_error_message("record_contents_buttons", "right", "ERROR_CANNOT_UPDATE_PERMISSIONS_USER_ADMIN", "", "", $response);
 
             return $response;
         }

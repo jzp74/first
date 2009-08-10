@@ -109,7 +109,7 @@ class HtmlDatabaseTable
         else
             $this->permissions_list_title = HTML_EMPTY_LIST_TITLE;
 
-        $this->_log->debug("constructed new HtmlTable object");
+        $this->_log->debug("constructed new HtmlDatabaseTable object");
     }
 
     /**
@@ -140,11 +140,16 @@ class HtmlDatabaseTable
 
         $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
         $html_str .= "        <div class=\"white_area\"></div>\n\n";
-        $html_str .= "        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane\">\n\n";
-        $html_str .= "        </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane -->\n\n";
-        $html_str .= "        <div id=\"".MESSAGE_PANE_DIV."\">\n";
-        $html_str .= "        &nbsp;";
-        $html_str .= "        </div> <!-- ".MESSAGE_PANE_DIV." -->\n\n";
+
+        # always display the content pane unless this is a user settings page
+        if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_USER_SETTINGS)
+        {
+            $html_str .= "        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane\">\n\n";
+            $html_str .= "        </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."content_pane -->\n\n";
+            $html_str .= "        <div id=\"".MESSAGE_PANE_DIV."\">\n";
+            $html_str .= "        &nbsp;";
+            $html_str .= "        </div> <!-- ".MESSAGE_PANE_DIV." -->\n\n";
+        }
         $html_str .= "        <div id=\"action_pane\">\n\n";
         $html_str .= "        </div> <!-- action_pane -->\n\n";
         $html_str .= "        <div class=\"white_area\"></div>\n\n";
@@ -581,10 +586,11 @@ class HtmlDatabaseTable
      * @param $database_table DatabaseTable database table object
      * @param $list_title string title of list
      * @param $encoded_key_string string comma separated name value pairs
+     * @param $db_field_names array array containing db_field_names to select for record
      * @param $result Result result object
      * @return string name of input element that should get focus
      */
-    function get_record ($database_table, $list_title, $encoded_key_string, $result)
+    function get_record ($database_table, $list_title, $encoded_key_string, $db_field_names, $result)
     {
         global $firstthingsfirst_field_descriptions;
         global $firstthingsfirst_date_string;
@@ -607,8 +613,10 @@ class HtmlDatabaseTable
 
         $html_str = "";
         $return_name_tag = "";
-        $field_names = $database_table->get_user_field_names();
+        if (count($db_field_names) == 0)
+            $db_field_names = $database_table->get_db_field_names();
         $fields = $database_table->get_fields();
+        $tab_index = 0;
 
         # start with the action bar
         if (strlen($encoded_key_string))
@@ -623,11 +631,9 @@ class HtmlDatabaseTable
         $html_str .= "                            <tbody>\n";
 
         # add table record for each field type
-        for ($i=0; $i<count($field_names); $i++)
+        foreach($db_field_names as $db_field_name)
         {
-            $field_name = $field_names[$i];
-            $user_fields = $database_table->get_user_fields();
-            $db_field_name = $user_fields[$field_name];
+            $field_name = $fields[$db_field_name][0];
             $field_type = $fields[$db_field_name][1];
             $field_options = $fields[$db_field_name][2];
             $this->_log->debug("record (name=".$field_name." db_name=".$db_field_name." type=".$field_type.")");
@@ -640,11 +646,11 @@ class HtmlDatabaseTable
             $record[$db_field_name] = str_replace('"', '&quot', $record[$db_field_name]);
 
             # replace all space chars with &nbsp
-            $field_name_replaced = str_replace(' ', '&nbsp;', $field_names[$i]);
+            $field_name_replaced = str_replace(' ', '&nbsp;', $field_name);
 
             # translate field_name when this is not a list table
             if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_LIST)
-                $field_name_replaced = str_replace(' ', '&nbsp;', translate($field_names[$i]));
+                $field_name_replaced = str_replace(' ', '&nbsp;', translate($field_name));
 
             # only add non auto_increment field types (check database definition for this)
             if (($field_type != FIELD_TYPE_DEFINITION_AUTO_NUMBER) && (strlen($field_name) > 0))
@@ -658,7 +664,7 @@ class HtmlDatabaseTable
                 if ($field_type != FIELD_TYPE_DEFINITION_NOTES_FIELD)
                 {
                     $html_str .= "                                    <td id=\"".$db_field_name;
-                    $html_str .= "\" tabindex=\"".$i."\"><".$firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_HTML_DEFINITION];
+                    $html_str .= "\" tabindex=\"".$tab_index."\"><".$firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_HTML_DEFINITION];
                     # create a name tag
                     $html_str .= " name=".$tag." id=".$tag;
                 }
@@ -680,31 +686,31 @@ class HtmlDatabaseTable
                         $date_string = get_date_str(DATE_FORMAT_NORMAL, $record[$db_field_name]);
                         $html_str .= " value=\"".$date_string."\"";
                     }
-                    else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_AUTO_CREATED)
+                    else if ($field_type == FIELD_TYPE_DEFINITION_AUTO_CREATED)
                     {
-                        if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME)
+                        if ($field_options == NAME_DATE_OPTION_NAME)
                             $html_str .= " value=\"".$record[DB_CREATOR_FIELD_NAME]."\"";
                         else
                         {
                             $ts_created = get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_CREATED_FIELD_NAME]);
-                            if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
+                            if ($field_options == NAME_DATE_OPTION_DATE)
                                 $html_str .= " value=\"".get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_CREATED_FIELD_NAME])."\"";
-                            else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
+                            else if ($field_options == NAME_DATE_OPTION_DATE_NAME)
                             {
                                 $html_str .= " value=\"".get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_CREATED_FIELD_NAME]);
                                 $html_str .= "&nbsp;(".$record[DB_CREATOR_FIELD_NAME].")\"";
                             }
                         }
                     }
-                    else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_AUTO_MODIFIED)
+                    else if ($field_type == FIELD_TYPE_DEFINITION_AUTO_MODIFIED)
                     {
-                        if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME)
+                        if ($field_options == NAME_DATE_OPTION_NAME)
                             $html_str .= " value=\"".$record[DB_MODIFIER_FIELD_NAME]."\"";
                         else
                         {
-                            if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
+                            if ($field_options == NAME_DATE_OPTION_DATE)
                                 $html_str .= " value=\"".get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_MODIFIED_FIELD_NAME])."\"";
-                            else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
+                            else if ($field_options == NAME_DATE_OPTION_DATE_NAME)
                             {
                                 $html_str .= " value=\"".get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_MODIFIED_FIELD_NAME]);
                                 $html_str .= "&nbsp;(".$record[DB_MODIFIER_FIELD_NAME].")\"";
@@ -725,7 +731,7 @@ class HtmlDatabaseTable
                             if ($option == $record[$db_field_name])
                                 $html_str .= " selected";
                             # translate language options in user admin page
-                            if (($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_USER_ADMIN) && ($db_field_name == USER_LANG_FIELD_NAME))
+                            if ((($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_USER_ADMIN) || ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_USER_SETTINGS)) && ($db_field_name == USER_LANG_FIELD_NAME))
                                 $html_str .= ">".translate($option)."&nbsp;&nbsp;"."</option>";
                             else
                                 $html_str .= ">".$option."&nbsp;&nbsp;"."</option>";
@@ -771,6 +777,8 @@ class HtmlDatabaseTable
                     $html_str .= "                                    <td class=\"super_width\">&nbsp;</td>\n";
                 $html_str .= "                                </tr>\n";
             }
+
+            $tab_index += 1;
         }
 
         # end table definition
@@ -790,7 +798,10 @@ class HtmlDatabaseTable
         else
             $html_str .= get_href($js_button_update, "record_contents_buttons", "above", $this->permissions_list_title, "xajax_".$js_button_update."(%27".$list_title."%27, %27".$encoded_key_string."%27, xajax.getFormValues(%27record_form%27))", translate("BUTTON_COMMIT_CHANGES"), "icon_accept");
         $html_str .= "\n                            ";
-        $html_str .= "&nbsp;&nbsp;".get_href(HTML_NO_ACTION, "", "", HTML_EMPTY_LIST_TITLE, "xajax_".$js_button_cancel."('".$list_title."')", translate("BUTTON_CANCEL"), "icon_cancel");
+
+        # only display the cancel button when this is not the user settings page
+        if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_USER_SETTINGS)
+            $html_str .= "&nbsp;&nbsp;".get_href(HTML_NO_ACTION, "", "", HTML_EMPTY_LIST_TITLE, "xajax_".$js_button_cancel."('".$list_title."')", translate("BUTTON_CANCEL"), "icon_cancel");
         $html_str .= "\n                        </span> <!-- record_contents_buttons -->\n";
 
         #end form
@@ -825,7 +836,10 @@ class HtmlDatabaseTable
         $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
         $html_str .= "                ";
 
-        if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_PORTAL)
+        # set a different title when this is the user settings page
+        if ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_USER_SETTINGS)
+            $html_str .= "<strong>".$this->configuration[HTML_TABLE_RECORD_NAME]." ".$this->_user->get_name()."</strong>";
+        else if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_PORTAL)
         {
             if ($action == "edit")
                 $html_str .= "<strong>".translate("LABEL_EDIT_RECORD").$this->configuration[HTML_TABLE_RECORD_NAME]."</strong>";

@@ -253,36 +253,78 @@ html, body {
     background: url(../images/standard_header_right.gif) right top no-repeat;
     }
 
+/*  defines the contents of the header of every page */
 #header_contents {
     height: 119px;
     }
 
-/*  defines the software version */
-#software_version {
+/*  defines the top line of the header which contains the software version and login status */
+#header_contents_status {
     width: 100%;
-    height: 10px;
+    height: 19px;
     padding: 2px 0px 2px 0px;
+    }
+
+/*  defines the software version */
+#header_contents_status_software_version {
+    float: left;
+    padding: 4px 0px 4px 4px;
     font-family: Arial;
     font-size: 10px;
     font-weight: normal;
     }
 
-/*  defines the title of a page */
-#page_title {
+/*  defines the login status */
+#header_contents_status_login_status {
+    float: right;
+    padding: 3px 0px 3px 4px;
+    background: url(../images/standard_login_status_left.png) left top no-repeat;
+    color: rgb(50, 50, 50);
+    font-family: Arial;
+    font-size: 12px;
+    font-weight: bold;
+    }
+
+#header_contents_status_login_status_body {
+    float: left;
+    padding: 3px 2px 3px 2px;
+    margin: -3px 0px -3px 0px;
+    background: url(../images/standard_login_status.png) left top repeat;
+    }
+
+#header_contents_status_login_status_body a, #header_contents_status_login_status_body a:link, #header_contents_status_login_status_body a:visited {
+    color: rgb(50, 50, 50);
+    }
+
+#header_contents_status_login_status_body a:hover {
+    color: rgb(255, 255, 255);
+    }
+
+#header_contents_status_login_status_right {
+    float: left;
+    width: 4px;
+    height: 21px;
+    margin: -3px 0px -3px 0px;
+    background: url(../images/standard_login_status_right.png) right top no-repeat;
+    }
+
+/*  defines the title of the portal */
+#portal_title {
     width: 100%;
     height: 32px;
-    padding: 0px 0px 12px 0px;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
     font-family: Arial Black;
     font-size: 32px;
     font-weight: bold;
     text-align: center;
     }
 
-/*  defines the explanation below the title */
-#page_explanation {
+/*  defines the page title */
+#page_title {
     width: 100%;
     height: 16px;
-    padding: 6px 0px 12px 0px;
+    padding: 14px 0px 7px 0px;
     font-family: Arial;
     font-size: 16px;
     font-weight: bold;
@@ -296,8 +338,8 @@ html, body {
     padding: 6px 0px 6px 0px;
 }
 
-/*  defines navigation links */
-#navigation {
+/*  defines navigation links on left side of screen */
+#navigation_left {
     float: left;
     display: inline;
     margin: -6px 0px -6px 0px;
@@ -306,27 +348,14 @@ html, body {
     font-weight: bold;
     }
 
-#navigation .tab {
+#navigation_left .tab {
     float: left;
     margin: -2px 0px -4px 2px;
     padding: 2px 0px 4px 0px;
     background: url(../images/standard_tab_left.png) left top no-repeat;
     }
 
-#navigation a, #navigation a:link, #navigation a:visited {
-    float: left;
-    margin: -2px 0px -4px 6px;
-    padding: 4px 0px 4px 0px;
-    color: rgb(50, 50, 50);
-    background: url(../images/standard_tab.png) left top repeat;
-    font-weight: bold;
-    }
-
-#navigation a:hover {
-    color: rgb(255, 255, 255);
-    }
-
-#navigation .tab_right {
+#navigation_left .tab_right {
     float: left;
     width: 6px;
     height: 14px;
@@ -335,21 +364,21 @@ html, body {
     background: url(../images/standard_tab_right.png) right top no-repeat;
     }
 
-#navigation .tab_highlight {
+#navigation_left .tab_highlight {
     float: left;
     margin: -6px 0px -6px 2px;
     padding: 6px 0px 6px 0px;
     background: url(../images/standard_tab_left_highlight.png) left top no-repeat;
     }
 
-#navigation .tab_highlight_content {
+#navigation_left .tab_content_highlight {
     float: left;
     margin: -6px 0px -6px 6px;
     padding: 6px 0px 6px 0px;
     background-color: rgb(255, 255, 255);
     }
 
-#navigation .tab_right_highlight {
+#navigation_left .tab_right_highlight {
     float: left;
     width: 6px;
     height: 14px;
@@ -358,54 +387,88 @@ html, body {
     background: url(../images/standard_tab_right_highlight.png) right top no-repeat;
     }
 
-/*  defines login status of a user */
-#login_status {
-    float: right;
-    margin: -4px 6px -4px 0px;
-    padding: 4px 0px 4px 0px;
-    background: url(../images/standard_login_status_left.png) left top no-repeat;
-    }
-
-#login_status_content {
+#navigation_left a, #navigation_left a:link, #navigation_left a:visited {
     float: left;
-    margin: -4px 0px -4px 6px;
-    padding: 4px 0px 4px 4px;
-    background: url(../images/standard_login_status.png) left top repeat;
+    margin: -2px 0px -4px 6px;
+    padding: 4px 0px 4px 0px;
+    color: rgb(50, 50, 50);
+    background: url(../images/standard_tab.png) left top repeat;
+    font-weight: bold;
     }
 
-#login_status_content_user {
-    margin: -4px 0px -3px 0px;
-    padding: 4px 0px 3px 24px;
-    background: url(../images/icons/boomy_icon_user_bw.png) left bottom no-repeat;
-}
+#navigation_left a:hover {
+    color: rgb(255, 255, 255);
+    }
 
-#login_status_content_user:hover {
-    background: url(../images/icons/boomy_icon_user_highlight.png) left bottom no-repeat;
-}
+/*  defines navigation links on right side of screen */
+#navigation_right {
+    float: right;
+    display: inline;
+    margin: -6px 0px -6px 0px;
+    padding: 6px 0px 6px 0px;
+    color: rgb(50, 50, 50);
+    font-weight: bold;
+    }
 
-#login_status_right {
+#navigation_right .tab {
+    float: left;
+    margin: -2px 2px -4px 0px;
+    padding: 2px 0px 4px 0px;
+    background: url(../images/standard_tab_left.png) left top no-repeat;
+    }
+
+#navigation_right .tab_content {
+    float: left;
+    margin: -2px 0px -4px 6px;
+    padding: 4px 0px 4px 0px;
+    background: url(../images/standard_tab.png) left top repeat;
+    font-weight: bold;
+    }
+
+#navigation_right .tab_right {
     float: left;
     width: 6px;
-    height: 12px;
-    margin: -4px 0px -4px 0px;
-    padding: 6px 0px 5px 0px;
-    background: url(../images/standard_login_status_right.png) right top no-repeat;
+    height: 14px;
+    margin: -2px 0px -6px 0px;
+    padding: 4px 0px 5px 0px;
+    background: url(../images/standard_tab_right.png) right top no-repeat;
     }
 
-#login_status_invisible {
-    margin: -4px 0px -4px 0px;
-    padding: 4px 6px 4px 10px;
-    float: right;
+#navigation_right .tab_highlight {
+    float: left;
+    margin: -6px 0px -6px 2px;
+    padding: 6px 0px 6px 0px;
+    background: url(../images/standard_tab_left_highlight.png) left top no-repeat;
     }
 
-#login_status a, #login_status a:link, #login_status a:visited {
-    margin: -4px 0px -3px 12px;
-    padding: 4px 0px 3px 24px;
+#navigation_right .tab_content_highlight {
+    float: left;
+    margin: -6px 0px -6px 6px;
+    padding: 6px 0px 6px 0px;
+    background-color: rgb(255, 255, 255);
+    }
+
+#navigation_right .tab_right_highlight {
+    float: left;
+    width: 6px;
+    height: 14px;
+    margin: -6px 0px -6px 0px;
+    padding: 6px 0px 7px 0px;
+    background: url(../images/standard_tab_right_highlight.png) right top no-repeat;
+    }
+
+#navigation_right a, #navigation_right a:link, #navigation_right a:visited {
     color: rgb(50, 50, 50);
     }
 
-#login_status a:hover {
+#navigation_right a:hover {
     color: rgb(255, 255, 255);
+    }
+
+#navigation_right_invisible {
+    margin: -4px 0px -4px 0px;
+    padding: 4px 6px 4px 10px;
+    float: right;
     }
 
 /*  defines the body which has borders on both sides and stretches to the bottom of the page */

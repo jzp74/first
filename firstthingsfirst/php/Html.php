@@ -55,7 +55,7 @@ function check_permissions ($action, $js_function_call_str, $error_element, $err
     {
         # redirect to login page
         $response->script("window.location.assign('index.php?action=".ACTION_GET_LOGIN_PAGE."')");
-        set_footer("", $response);
+        $response->assign("footer_text", "innerHTML", "&nbsp;");
         $logging->warn("user is not logged in (action=".$action.")");
 
         return $response;
@@ -125,7 +125,7 @@ function check_list_permissions ($action, $list_title, $js_function_call_str, $e
     {
         # redirect to login page
         $response->script("window.location.assign('index.php?action=".ACTION_GET_LOGIN_PAGE."')");
-        set_footer("", $response);
+        $response->assign("footer_text", "innerHTML", "&nbsp;");
         $logging->warn("user is not logged in (action=".$action.")");
 
         return $response;
@@ -402,7 +402,7 @@ function get_page_navigation ($page_type)
 
     $logging->trace("setting page_navigation");
 
-    $html_str .= "\n            <div id=\"navigation\">\n";
+    $html_str .= "\n            <div id=\"navigation_left\">\n";
 
     # set only navigation links when page is not a login page
     if ($page_type != PAGE_TYPE_LOGIN)
@@ -418,7 +418,7 @@ function get_page_navigation ($page_type)
         else
         {
             $html_str .= "                <div class=\"tab_highlight\" id=\"tab_portal_id\">\n";
-            $html_str .= "                    <div class=\"tab_highlight_content\">".translate("BUTTON_PORTAL")."</div>\n";
+            $html_str .= "                    <div class=\"tab_content_highlight\">".translate("BUTTON_PORTAL")."</div>\n";
             $html_str .= "                    <div class=\"tab_right_highlight\"></div>\n";
             $html_str .= "                </div>\n";
         }
@@ -434,7 +434,7 @@ function get_page_navigation ($page_type)
         else
         {
             $html_str .= "                <div class=\"tab_highlight\" id=\"tab_listbuilder_id\">\n";
-            $html_str .= "                    <div class=\"tab_highlight_content\">".translate("BUTTON_CREATE_NEW_LIST")."</div>\n";
+            $html_str .= "                    <div class=\"tab_content_highlight\">".translate("BUTTON_CREATE_NEW_LIST")."</div>\n";
             $html_str .= "                    <div class=\"tab_right_highlight\"></div>\n";
             $html_str .= "                </div>\n";
         }
@@ -443,7 +443,7 @@ function get_page_navigation ($page_type)
         if ($page_type == PAGE_TYPE_LIST)
         {
             $html_str .= "                <div class=\"tab_highlight\" id=\"tab_list_id\">\n";
-            $html_str .= "                    <div class=\"tab_highlight_content\">".translate("BUTTON_LIST")."</div>\n";
+            $html_str .= "                    <div class=\"tab_content_highlight\">".translate("BUTTON_LIST")."</div>\n";
             $html_str .= "                    <div class=\"tab_right_highlight\"></div>\n";
             $html_str .= "                </div>\n";
         }
@@ -466,7 +466,7 @@ function get_page_navigation ($page_type)
         else if ($page_type == PAGE_TYPE_USERLISTTABLEPERMISSIONS)
         {
             $html_str .= "                <div class=\"tab_highlight\" id=\"tab_list_table_permissions_id\">\n";
-            $html_str .= "                    <div class=\"tab_highlight_content\">".translate("BUTTON_USERLISTTABLEPERMISSIONS")."</div>\n";
+            $html_str .= "                    <div class=\"tab_content_highlight\">".translate("BUTTON_USERLISTTABLEPERMISSIONS")."</div>\n";
             $html_str .= "                    <div class=\"tab_right_highlight\"></div>\n";
             $html_str .= "                </div>\n";
         }
@@ -485,24 +485,65 @@ function get_page_navigation ($page_type)
             else
             {
                 $html_str .= "                <div class=\"tab_highlight\" id=\"tab_user_admin_id\">\n";
-                $html_str .= "                    <div class=\"tab_highlight_content\">".translate("BUTTON_USER_ADMINISTRATION")."</div>\n";
+                $html_str .= "                    <div class=\"tab_content_highlight\">".translate("BUTTON_USER_ADMINISTRATION")."</div>\n";
                 $html_str .= "                    <div class=\"tab_right_highlight\"></div>\n";
                 $html_str .= "                </div>\n";
             }
         }
+
+        $html_str .= "            </div> <!-- navigation_left -->\n";
+
+        $html_str .= "            <div id=\"navigation_right\">\n";
+
+        # show user settings link non clickable but highlighted when this is the user settings page
+        if ($page_type == PAGE_TYPE_USER_SETTINGS)
+        {
+            $html_str .= "                <div class=\"tab_highlight\" id=\"tab_user_settings_id\">\n";
+            $html_str .= "                    <div class=\"tab_content_highlight\">".translate("BUTTON_USER_SETTINGS")."</div>\n";
+            $html_str .= "                    <div class=\"tab_right_highlight\"></div>\n";
+            $html_str .= "                </div>\n";
+        }
+        else
+        {
+            $html_str .= "                <div class=\"tab\" id=\"tab_user_settings_id\">\n";
+            $html_str .= "                    <div class=\"tab_content\">";
+            $html_str .= get_query_href(ACTION_GET_USER_SETTINGS_PAGE, "tab_user_settings_id", "left", HTML_EMPTY_LIST_TITLE, "action=".ACTION_GET_USER_SETTINGS_PAGE, translate("BUTTON_USER_SETTINGS"), "")."</div>\n";
+            $html_str .= "                    <div class=\"tab_right\"></div>\n";
+            $html_str .= "                </div>\n";
+        }
+
+        $html_str .= "            </div> <!-- navigation_right -->\n";
     }
-
-    $html_str .= "</div>\n";
-
-    # do not show login status for the login page
-    if ($page_type != PAGE_TYPE_LOGIN)
-        $html_str .= "            <div id=\"login_status\">&nbsp;</div> <!-- login_status -->\n";
-    else
-        $html_str .= "            <div id=\"login_status_invisible\">&nbsp;</div>&nbsp\n";
 
     $html_str .= "\n        ";
 
     $logging->trace("set page_navigation");
+
+    return $html_str;
+}
+
+/**
+ * get html to display the login status of a user
+ * @param $response xajaxResponse response object
+ * @return string html for login status
+ */
+function get_login_status ()
+{
+    global $user;
+    global $logging;
+
+    $html_str = "";
+
+    $logging->trace("getting login_status");
+
+    $html_str .= "<div id=\"header_contents_status_login_status_body\">";
+    if ($user->is_login())
+        $html_str .= get_href(HTML_NO_ACTION, "", "", HTML_EMPTY_LIST_TITLE, "xajax_action_logout()", translate("BUTTON_LOGOUT")." ".$user->get_name(), "icon_cancel")."</div>";
+    else
+        $html_str .= translate("LABEL_ANONYMOUS_USER")."</div>";
+    $html_str .= "<div id=\"header_contents_status_login_status_right\"></div>";
+
+    $logging->trace("got login_status");
 
     return $html_str;
 }

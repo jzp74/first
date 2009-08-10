@@ -69,6 +69,7 @@ require_once("php/Html.ListTable.php");
 require_once("php/Html.ListTableItemNotes.php");
 require_once("php/Html.ListBuilder.php");
 require_once("php/Html.UserListTablePermissions.php");
+require_once("php/Html.UserSettings.php");
 
 
 /**
@@ -144,6 +145,14 @@ function process_url ()
     # show portal page
     if ($action == ACTION_GET_PORTAL_PAGE)
         return action_get_portal_page();
+    # show list builder page
+    else if ($action == ACTION_GET_LISTBUILDER_PAGE)
+    {
+        if (isset($_GET['list']))
+            return action_get_listbuilder_page($_GET['list']);
+        else
+            return action_get_listbuilder_page("");
+    }
     # show or print list page
     else if ($action == ACTION_GET_LIST_PAGE)
     {
@@ -162,17 +171,12 @@ function process_url ()
     # show user list permissions page
     else if ($action == ACTION_GET_USERLISTTABLEPERMISSIONS_PAGE)
         return action_get_user_list_permissions_page();
-    # show add user page
+    # show user admin page
     else if ($action == ACTION_GET_USER_ADMIN_PAGE)
         return action_get_user_admin_page();
-    # show list builder page
-    else if ($action == ACTION_GET_LISTBUILDER_PAGE)
-    {
-        if (isset($_GET['list']))
-            return action_get_listbuilder_page($_GET['list']);
-        else
-            return action_get_listbuilder_page("");
-    }
+    # show user admin page
+    else if ($action == ACTION_GET_USER_SETTINGS_PAGE)
+        return action_get_user_settings_page();
     # redirect to portal page in all other instances
     else
     {
@@ -209,16 +213,18 @@ function process_url ()
     <div id="header_left_margin"></div>
     <div id="header_right_margin"></div>
     <div id="header_contents">
+        <div id="header_contents_status">
+            <div id="header_contents_status_software_version"><?php print(file_get_contents("VERSION")); ?></div>
+            <div id="header_contents_status_login_status"><?php print(get_login_status()); ?></div>
+        </div> <!-- header_contents_status -->
+        <div id="portal_title"><?php print($firstthingsfirst_portal_title); ?></div>
 <?php
-echo "        <div id=\"software_version\">&nbsp;&nbsp;".file_get_contents("VERSION")."</div>\n";
-
 # TEMPORARY SOLUTION
 if (isset($_GET['action']) && $_GET['action'] == ACTION_GET_LOGIN_PAGE)
     echo "        <div id=\"page_title\">".translate("LABEL_PLEASE_LOGIN")."</div>\n";
 else
     echo "        <div id=\"page_title\">&nbsp;</div>\n";
 ?>
-        <div id="page_explanation">&nbsp;</div>
         <div id="navigation_container">&nbsp;</div> <!-- navigation_container -->
     </div> <!-- header_contents -->
 </div> <!-- header -->

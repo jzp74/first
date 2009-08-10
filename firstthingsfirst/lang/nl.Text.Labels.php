@@ -116,6 +116,7 @@ $text_translations["LABEL_CONFIRM_MODIFY"] = "De inhoud van velden die je gewijz
 /**
  * login labels
  */
+$text_translations["LABEL_ANONYMOUS_USER"] = "anonymous user";
 $text_translations["LABEL_PLEASE_LOGIN"] = "Log in";
 $text_translations["LABEL_PASSWORD"] = "wachtwoord";
 $text_translations["LABEL_USER"] = "gebruiker";
@@ -130,5 +131,12 @@ $text_translations["LABEL_LIST_DEFINITION"] = "definitie";
 $text_translations["LABEL_LIST_CREATOR"] = "gemaakt";
 $text_translations["LABEL_LIST_MODIFIER"] = "laatste wijziging";
 $text_translations["LABEL_CONFIRM_DELETE"] = "Weet je zeker dat je deze lijst wilt verwijderen?";
+
+/**
+ * user settings labels
+ */
+$text_translations["LABEL_USER_SETTINGS_TITLE"] = "Gebruikersinstellingen";
+$text_translations["LABEL_USER_SETTINGS_RECORD"] = "gebruikersinstellingen van";
+$text_translations["LABEL_USER_SETTINGS_CHANGED"] = "Gebruikersinstellingen zijn gewijzigd!";
 
 ?>

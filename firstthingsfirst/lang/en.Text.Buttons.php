@@ -11,7 +11,7 @@
 
 
 /**
- * shared button
+ * shared buttons
  */
 $text_translations["BUTTON_PORTAL"] = "portal";
 $text_translations["BUTTON_ARCHIVE"] = "archive";
@@ -27,6 +27,9 @@ $text_translations["BUTTON_CLOSE"] = "close";
 $text_translations["BUTTON_USER_ADMINISTRATION"] = "user&nbsp;administration";
 $text_translations["BUTTON_NEXT_PAGE"] = "next";
 $text_translations["BUTTON_PREVIOUS_PAGE"] = "previous";
+$text_translations["BUTTON_CREATE_NEW_LIST"] = "create&nbsp;a&nbsp;new&nbsp;list";
+$text_translations["BUTTON_USERLISTTABLEPERMISSIONS"] = "current&nbsp;list&nbsp;permissions";
+$text_translations["BUTTON_USER_SETTINGS"] = "user settings";
 
 /**
  * list buttons
@@ -38,11 +41,6 @@ $text_translations["BUTTON_PREVIOUS_NOTE"] = "previous&nbsp;note";
 $text_translations["BUTTON_NEXT_NOTE"] = "next&nbsp;note";
 $text_translations["BUTTON_ADD_NOTE"] = "add&nbsp;note";
 $text_translations["BUTTON_PRINT_LIST"] = "print&nbsp;this&nbsp;list";
-
-/**
- * user listtable permissions buttons
- */
-$text_translations["BUTTON_USERLISTTABLEPERMISSIONS"] = "current&nbsp;list&nbsp;permissions";
 
 /**
  * list builder buttons
@@ -58,10 +56,5 @@ $text_translations["BUTTON_MOVE_DOWN"] = "down";
  */
 $text_translations["BUTTON_LOGIN"] = "login";
 $text_translations["BUTTON_LOGOUT"] = "logout";
-
-/**
- * portal buttons
- */
-$text_translations["BUTTON_CREATE_NEW_LIST"] = "create&nbsp;a&nbsp;new&nbsp;list";
 
 ?>

@@ -45,7 +45,6 @@ $xajax->register(XAJAX_FUNCTION, ACTION_SET_LIST_FILTER);
 /**
  * definition of action permissions
  * permission are stored in a six character string (P means permissions, - means don't care):
- *  - user has to have edit list permission to be able to execute action
  *  - user has to have create list permission to be able to execute action
  *  - user has to have admin permission to be able to execute action
  *  - user has to have permission to view this list to execute list action for this list
@@ -109,11 +108,7 @@ function action_get_list_page ($list_title)
     $html_database_table->get_page($list_title, $result);
     $response->assign("main_body", "innerHTML", $result->get_result_str());
     $response->assign("page_title", "innerHTML", $list_title);
-    $response->assign("page_explanation", "innerHTML", "&nbsp;");
     $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_LIST));
-
-    # set login status
-    set_login_status($response);
 
     # set action pane
     $html_str = $html_database_table->get_action_bar($list_title, "");
@@ -137,8 +132,7 @@ function action_get_list_page ($list_title)
     $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
     # set footer
-    $html_str = get_footer($list_table->get_creator_modifier_array());
-    set_footer($html_str, $response);
+    $response->assign("footer_text", "innerHTML", get_footer($list_table->get_creator_modifier_array()));
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -190,8 +184,7 @@ function action_get_list_print_page ($list_title)
     $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
     # set footer
-    $html_str = get_footer($list_table->get_creator_modifier_array());
-    set_footer($html_str, $response);
+    $response->assign("footer_text", "innerHTML", get_footer($list_table->get_creator_modifier_array()));
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -292,7 +285,7 @@ function action_get_list_record ($list_title, $key_string)
     }
 
     # set action pane
-    $focus_element_name = $html_database_table->get_record($list_table, $list_title, $key_string, $result);
+    $focus_element_name = $html_database_table->get_record($list_table, $list_title, $key_string, array(), $result);
     $response->assign("action_pane", "innerHTML", $result->get_result_str());
 
     # check post conditions
@@ -409,8 +402,7 @@ function action_insert_list_record ($list_title, $form_values)
     $response->assign("action_pane", "innerHTML", $html_str);
 
     # set footer
-    $html_str = get_footer($list_table->get_creator_modifier_array());
-    set_footer($html_str, $response);
+    $response->assign("footer_text", "innerHTML", get_footer($list_table->get_creator_modifier_array()));
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -523,8 +515,7 @@ function action_update_list_record ($list_title, $key_string, $form_values)
     $response->assign("action_pane", "innerHTML", $html_str);
 
     # set footer
-    $html_str = get_footer($list_table->get_creator_modifier_array());
-    set_footer($html_str, $response);
+    $response->assign("footer_text", "innerHTML", get_footer($list_table->get_creator_modifier_array()));
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -587,8 +578,7 @@ function action_archive_list_record ($list_title, $key_string)
     $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
     # set footer
-    $html_str = get_footer($list_table->get_creator_modifier_array());
-    set_footer($html_str, $response);
+    $response->assign("footer_text", "innerHTML", get_footer($list_table->get_creator_modifier_array()));
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -651,8 +641,7 @@ function action_activate_list_record ($list_title, $key_string)
     $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
     # set footer
-    $html_str = get_footer($list_table->get_creator_modifier_array());
-    set_footer($html_str, $response);
+    $response->assign("footer_text", "innerHTML", get_footer($list_table->get_creator_modifier_array()));
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -715,8 +704,7 @@ function action_delete_list_record ($list_title, $key_string)
     $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
     # set footer
-    $html_str = get_footer($list_table->get_creator_modifier_array());
-    set_footer($html_str, $response);
+    $response->assign("footer_text", "innerHTML", get_footer($list_table->get_creator_modifier_array()));
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)

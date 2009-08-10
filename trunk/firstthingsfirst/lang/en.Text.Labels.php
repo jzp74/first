@@ -116,6 +116,7 @@ $text_translations["LABEL_CONFIRM_MODIFY"] = "List content of fields whose type 
 /**
  * login labels
  */
+$text_translations["LABEL_ANONYMOUS_USER"] = "anonymous user";
 $text_translations["LABEL_PLEASE_LOGIN"] = "Please login";
 $text_translations["LABEL_PASSWORD"] = "password";
 $text_translations["LABEL_USER"] = "user";
@@ -130,5 +131,12 @@ $text_translations["LABEL_LIST_DEFINITION"] = "definition";
 $text_translations["LABEL_LIST_CREATOR"] = "created";
 $text_translations["LABEL_LIST_MODIFIER"] = "last modified";
 $text_translations["LABEL_CONFIRM_DELETE"] = "Are you sure you want to delete this list?";
+
+/**
+ * user settings labels
+ */
+$text_translations["LABEL_USER_SETTINGS_TITLE"] = "User settings";
+$text_translations["LABEL_USER_SETTINGS_RECORD"] = "user settings of";
+$text_translations["LABEL_USER_SETTINGS_CHANGED"] = "User settings have been changed!";
 
 ?>

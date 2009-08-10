@@ -27,6 +27,9 @@ $text_translations["BUTTON_CLOSE"] = "sluiten";
 $text_translations["BUTTON_USER_ADMINISTRATION"] = "gebruikers&nbsp;administratie";
 $text_translations["BUTTON_NEXT_PAGE"] = "volgende";
 $text_translations["BUTTON_PREVIOUS_PAGE"] = "vorige";
+$text_translations["BUTTON_CREATE_NEW_LIST"] = "maak&nbsp;een&nbsp;nieuwe&nbsp;lijst";
+$text_translations["BUTTON_USERLISTTABLEPERMISSIONS"] = "lijsttoegang";
+$text_translations["BUTTON_USER_SETTINGS"] = "gebruikersinstellingen";
 
 /**
  * list buttons
@@ -38,11 +41,6 @@ $text_translations["BUTTON_PREVIOUS_NOTE"] = "vorige&nbsp;opmerking";
 $text_translations["BUTTON_NEXT_NOTE"] = "volgende&nbsp;opmerking";
 $text_translations["BUTTON_ADD_NOTE"] = "nieuwe&nbsp;opmerking";
 $text_translations["BUTTON_PRINT_LIST"] = "deze&nbsp;lijst&nbsp;afdrukken";
-
-/**
- * user listtable permissions buttons
- */
-$text_translations["BUTTON_USERLISTTABLEPERMISSIONS"] = "lijsttoegang";
 
 /**
  * list builder buttons
@@ -58,10 +56,5 @@ $text_translations["BUTTON_MOVE_DOWN"] = "omlaag";
  */
 $text_translations["BUTTON_LOGIN"] = "log in";
 $text_translations["BUTTON_LOGOUT"] = "log uit";
-
-/**
- * portal buttons
- */
-$text_translations["BUTTON_CREATE_NEW_LIST"] = "maak&nbsp;een&nbsp;nieuwe&nbsp;lijst";
 
 ?>

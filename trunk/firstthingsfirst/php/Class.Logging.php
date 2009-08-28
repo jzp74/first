@@ -55,30 +55,28 @@ define("LOGGING_NAME", "logfile.log");
 class Logging
 {
     /**
-    * current loglevel
+    * current log level
     * @var int
     */
     protected $level;
 
     /**
-    * current name of the logfile
+    * current name of the log file
     * @var string
     */
-    protected $name;
+    protected $file_name;
 
     /**
     * overwrite __construct() function
     * @param $level int loglevel
-    * @param $name string name of logfile
+    * @param $file_name string name of log file
     * @return void
     */
-    function __construct ($level = LOGGING_INFO, $name = LOGGING_NAME)
+    function __construct ($level = LOGGING_INFO, $file_name = LOGGING_NAME)
     {
-        # globals defined in localsetting.php
-        global $firstthingsfirst_full_pathname;
-
-        $this->name = $firstthingsfirst_full_pathname."/".$name;
+        # set log level and file name
         $this->level = $level;
+        $this->file_name = $file_name;
     }
 
     /**
@@ -90,24 +88,40 @@ class Logging
     */
     function _log ($log_level, $str)
     {
+        # we need the backtrace to get the name of the current function
         $trace = debug_backtrace();
+
+        # only get the name of the function from which the log function has been called
         if (count($trace) > 2)
-        {
-            $func = $trace[2]['function'];
-            $filename = $trace[1]['file'];
-            $line = $trace[1]['line'];
-        }
+            $func_name = $trace[2]['function'];
         else
+            $func_name = "no_func";
+
+        # get the file name (with full path)
+        $file_name = $trace[1]['file'];
+        # check if the file name contains a path
+        if (strrchr($trace[1]['file'], "\\") != FALSE)
+            # extract the file name
+            $file_name = substr(strrchr($trace[1]['file'], "\\"), 1);
+
+        $line_number = $trace[1]['line'];
+
+        # get the full name of the file (file may contain strftime format parameters)
+        $full_file_name = strftime($this->file_name);
+
+        # open log file
+        $handler = fopen($full_file_name, 'a');
+        if ($handler == TRUE)
         {
-            $func = "";
-            $filename = $trace[1]['file'];
-            $line = $trace[1]['line'];
+            # get the date and time
+            $the_time = strftime("%d-%m-%Y %H:%M:%S");
+
+            # write log line to file
+            fwrite($handler, "$the_time [$log_level] $file_name:$line_number ($func_name) $str\n");
+
+            # close the log file
+            fclose($handler);
         }
-
-        $the_time = strftime("%d-%m-%Y %H:%M:%S");
-
-        # try to log something
-        error_log($the_time." [".$log_level."] ".$filename.":".$line." [".$func."] ".$str."\n", 3, $this->name);
     }
 
     /**
@@ -152,7 +166,7 @@ class Logging
     function trace ($str)
     {
         if (($this->level > 0) && (LOGGING_TRACE >= $this->level))
-            $this->_log ("trace", $str);
+            $this->_log ("trc", $str);
     }
 
     /**
@@ -163,7 +177,7 @@ class Logging
     function debug ($str)
     {
         if (($this->level > 0) && (LOGGING_DEBUG >= $this->level))
-            $this->_log ("debug", $str);
+            $this->_log ("dbg", $str);
     }
 
     /**
@@ -174,7 +188,7 @@ class Logging
     function info ($str)
     {
         if ($this->level > 0 && (LOGGING_INFO >= $this->level))
-            $this->_log ("info", $str);
+            $this->_log ("INF", $str);
     }
 
     /**
@@ -185,7 +199,7 @@ class Logging
     function warn ($str)
     {
         if ($this->level > 0 && (LOGGING_WARN >= $this->level))
-            $this->_log ("WARN", $str);
+            $this->_log ("WRN", $str);
     }
 
     /**
@@ -196,7 +210,7 @@ class Logging
     function error ($str)
     {
         if ($this->level > 0 && (LOGGING_ERROR >= $this->level))
-            $this->_log ("ERROR", $str);
+            $this->_log ("ERR", $str);
     }
 }
 

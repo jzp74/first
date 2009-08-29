@@ -63,12 +63,17 @@ $portal_table_configuration = array(
 function action_get_portal_page ()
 {
     global $logging;
+    global $user;
     global $portal_table_configuration;
     global $list_table_description;
     global $firstthingsfirst_portal_title;
     global $firstthingsfirst_portal_intro_text;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: get portal page");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().")");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -94,7 +99,8 @@ function action_get_portal_page ()
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("got portal page");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -110,10 +116,15 @@ function action_get_portal_page ()
 function action_get_portal_content ($title, $order_by_field, $page)
 {
     global $logging;
+    global $user;
     global $list_table_description;
     global $portal_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: get portal content (title=".$title.", order_by_field=".$order_by_field.", page=".$page.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", title=$title, order_by_field=$order_by_field, page=$page)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -128,7 +139,8 @@ function action_get_portal_content ($title, $order_by_field, $page)
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("got portal content");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -146,8 +158,12 @@ function action_delete_portal_record ($list_title)
     global $user;
     global $list_table_description;
     global $portal_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: delete portal record (list_title=".$list_title.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -195,7 +211,8 @@ function action_delete_portal_record ($list_title)
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("deleted list record");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }

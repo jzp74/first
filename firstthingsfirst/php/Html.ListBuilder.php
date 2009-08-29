@@ -62,11 +62,15 @@ function action_get_listbuilder_page ($list_title)
     global $user;
     global $list_table_description;
     global $firstthingsfirst_field_descriptions;
+    global $user_start_time_array;
 
     $field_types = array_keys($firstthingsfirst_field_descriptions);
     $old_list_loaded = FALSE;
 
-    $logging->info("ACTION: get listbuilder page");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().")");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $response = new xajaxResponse();
@@ -259,7 +263,8 @@ function action_get_listbuilder_page ($list_title)
         set_error_message("tab_listbuilder_id", "below", $error_message_str, $error_log_str, $error_str, $response);
     }
 
-    $logging->trace("got listbuilder page");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -276,12 +281,16 @@ function action_insert_listbuilder_row ($field_type, $definition, $largest_id)
 {
     global $logging;
     global $user;
+    global $user_start_time_array;
 
     $new_row = array($largest_id + 1, $field_type, "", "");
     # get rid of keynames
     $new_definition = array_merge(array_values($definition), $new_row);
 
-    $logging->info("ACTION: insert listbuilder row (field_type=".$field_type.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", field_type=$field_type)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $response = new xajaxResponse();
@@ -290,7 +299,8 @@ function action_insert_listbuilder_row ($field_type, $definition, $largest_id)
     $response->assign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
     $response->assign("largest_id", "innerHTML", $largest_id + 1);
 
-    $logging->trace("inserted listbuilder row");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -307,12 +317,16 @@ function action_move_listbuilder_row ($row_number, $direction, $definition)
 {
     global $logging;
     global $user;
+    global $user_start_time_array;
 
     $backup_definition = array();
     # get rid of keynames
     $new_definition = array_values($definition);
 
-    $logging->info("ACTION: move listbuilder row (row_number=".$row_number.", $direction=".$direction.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", row_number=$row_number, direction=$direction)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $response = new xajaxResponse();
@@ -346,7 +360,8 @@ function action_move_listbuilder_row ($row_number, $direction, $definition)
     $html_str = get_field_definition_table($new_definition);
     $response->assign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
 
-    $logging->trace("moved listbuilder row");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -362,12 +377,16 @@ function action_delete_listbuilder_row ($row_number, $definition)
 {
     global $logging;
     global $user;
+    global $user_start_time_array;
 
     # get rid of keynames
     $backup_definition = array_values($definition);
     $new_definition = array();
 
-    $logging->info("ACTION: delete listbuilder row (row=".$row_number.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", row_number=$row_number)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $response = new xajaxResponse();
@@ -385,7 +404,8 @@ function action_delete_listbuilder_row ($row_number, $definition)
     $html_str = get_field_definition_table($new_definition);
     $response->assign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
 
-    $logging->trace("deleted listbuilder row");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -400,8 +420,12 @@ function action_refresh_listbuilder ($definition)
 {
     global $logging;
     global $user;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: refresh listbuilder");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().")");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $response = new xajaxResponse();
@@ -409,7 +433,8 @@ function action_refresh_listbuilder ($definition)
     $html_str = get_field_definition_table(array_values($definition));
     $response->assign("listbuilder_contents_pane_contents", "innerHTML", $html_str);
 
-    $logging->trace("refreshed listbuilder");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -429,9 +454,14 @@ function action_modify_list ($former_title, $title, $description, $new_definitio
 {
     global $database;
     global $logging;
+    global $user;
     global $list_table_description;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: modify list (former_title=".$former_title.", title=".$title.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", former_title=$former_title, title=$title)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $response = new xajaxResponse();
@@ -473,7 +503,8 @@ function action_modify_list ($former_title, $title, $description, $new_definitio
 
     set_info_message("action_bar_button_modify", "above", "LABEL_LIST_MODIFICATIONS_DONE", $response);
 
-    $logging->trace("modified list");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -490,9 +521,14 @@ function action_modify_list ($former_title, $title, $description, $new_definitio
 function action_create_list ($title, $description, $definition)
 {
     global $logging;
+    global $user;
     global $list_table_description;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: create list (title=".$title.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", title=$title)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $response = new xajaxResponse();
@@ -545,7 +581,8 @@ function action_create_list ($title, $description, $definition)
 
     set_info_message("action_bar_button_create", "above", "LABEL_NEW_LIST_CREATED", $response);
 
-    $logging->trace("created list");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }

@@ -49,8 +49,12 @@ function action_get_previous_note ($this_id, $previous_id)
 {
     global $logging;
     global $user;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: get previous note (this_id=".$this_id.", previous_id=".$previous_id.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", this_id=$this_id, previous_id=$previous_id)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $response = new xajaxResponse();
@@ -61,7 +65,8 @@ function action_get_previous_note ($this_id, $previous_id)
     # show the previous note
     $response->assign($previous_id, "className", "");
 
-    $logging->trace("got previous note");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -77,8 +82,12 @@ function action_get_next_note ($this_id, $next_id)
 {
     global $logging;
     global $user;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: get next note (this_id=".$this_id.", next_id=".$next_id.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", this_id=$this_id, next_id=$next_id)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $response = new xajaxResponse();
@@ -89,7 +98,8 @@ function action_get_next_note ($this_id, $next_id)
     # show the previous note
     $response->assign($next_id, "className", "");
 
-    $logging->trace("got next note");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -105,11 +115,15 @@ function action_add_note ($db_field_name, $this_id)
 {
     global $logging;
     global $user;
+    global $user_start_time_array;
 
     $this_td_id = $db_field_name."_".$this_id;
     $next_td_id = $db_field_name."_0";
 
-    $logging->info("ACTION: add note (db_field_name=".$db_field_name.", this_id=".$this_id.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", db_field_name=$db_field_name, this_id=$this_id)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $response = new xajaxResponse();
@@ -124,7 +138,8 @@ function action_add_note ($db_field_name, $this_id)
     # show the new note
     $response->assign($next_td_id, "className", "");
 
-    $logging->trace("added note");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }

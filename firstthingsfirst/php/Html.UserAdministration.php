@@ -77,8 +77,12 @@ function action_get_user_admin_page ()
     global $logging;
     global $user;
     global $user_admin_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: get user admin page");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().")");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -106,7 +110,8 @@ function action_get_user_admin_page ()
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("got user admin page");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -124,8 +129,12 @@ function action_get_user_admin_content ($title, $order_by_field, $page)
     global $logging;
     global $user;
     global $user_admin_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: get user admin content (title=".$title.", order_by_field=".$order_by_field.", page=".$page.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", title=$title, order_by_field=$order_by_field, page=$page)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -140,7 +149,8 @@ function action_get_user_admin_content ($title, $order_by_field, $page)
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("got user admin content");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -157,8 +167,12 @@ function action_get_user_admin_record ($title, $key_string)
     global $logging;
     global $user;
     global $user_admin_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: get user admin record (title=".$title.", key_string=".$key_string.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", title=$title, key_string=$key_string)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -182,7 +196,8 @@ function action_get_user_admin_record ($title, $key_string)
     $response->script("document.getElementById('focus_on_this_input').focus()");
     $response->script("document.record_form_name.elements[0].focus()");
 
-    $logging->trace("got user admin record");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -200,6 +215,7 @@ function action_insert_user_admin_record ($title, $form_values)
     global $user;
     global $user_admin_table_configuration;
     global $firstthingsfirst_field_descriptions;
+    global $user_start_time_array;
 
     $html_str = "";
     $name_keys = array_keys($form_values);
@@ -208,7 +224,10 @@ function action_insert_user_admin_record ($title, $form_values)
     $fields = $user->get_fields();
     $field_keys = array_keys($fields);
 
-    $logging->info("ACTION: insert user admin record (title=".$title.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", title=$title)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -284,7 +303,8 @@ function action_insert_user_admin_record ($title, $form_values)
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("inserted user admin record");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -303,11 +323,15 @@ function action_update_user_admin_record ($title, $key_string, $form_values)
     global $user;
     global $user_admin_table_configuration;
     global $firstthingsfirst_field_descriptions;
+    global $user_start_time_array;
 
     # WARNING: this function is almost identical to function UserSettings::action_update_user_setting_record
     # changes in this function should also lead to changes in that function
 
-    $logging->info("ACTION: update user admin record (title=".$title.", key_string=".$key_string.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", title=$title, key_string=$key_string)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     $html_str = "";
     $name_keys = array_keys($form_values);
@@ -411,7 +435,8 @@ function action_update_user_admin_record ($title, $key_string, $form_values)
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("updated user admin record");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -428,8 +453,12 @@ function action_delete_user_admin_record ($title, $key_string)
     global $logging;
     global $user;
     global $user_admin_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: delete user admin record (title=".$title.", key_string=".$key_string.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", title=$title, key_string=$key_string)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -490,7 +519,8 @@ function action_delete_user_admin_record ($title, $key_string)
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("deleted user admin record");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -506,8 +536,12 @@ function action_cancel_user_admin_action ($title)
     global $logging;
     global $user;
     global $user_admin_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: cancel user admin action (title=".$title.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", title=$title)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $response = new xajaxResponse();
@@ -520,7 +554,8 @@ function action_cancel_user_admin_action ($title)
     $html_str = $html_database_table->get_action_bar($title, "");
     $response->assign("action_pane", "innerHTML", $html_str);
 
-    $logging->trace("canceled user admin action");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }

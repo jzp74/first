@@ -224,6 +224,17 @@
     margin: 4px 0px 4px 0px;
     }
 
+#database_table_record_contents #button_upload {
+    color: rgb(95, 148, 206);
+    font-weight: bold;
+    }
+
+/*  This id_name is needed for ajax uploader */
+#database_table_record_contents #button_upload.hover {
+    background: url(../images/icons/boomy_icon_add_highlight.png) left bottom no-repeat;
+    color: rgb(50, 50, 50);
+    }
+
 #database_table_record_contents select, #database_table_record_contents input, #database_table_record_contents textarea {
     border: 1px solid rgb(190, 190, 190);
     }

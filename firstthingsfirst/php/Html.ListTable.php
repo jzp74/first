@@ -17,10 +17,12 @@ define("ACTION_GET_LIST_PAGE", "action_get_list_page");
 define("ACTION_GET_LIST_PRINT_PAGE", "action_get_list_print_page");
 define("ACTION_GET_LIST_CONTENT", "action_get_list_content");
 define("ACTION_GET_LIST_RECORD", "action_get_list_record");
+define("ACTION_GET_LIST_IMPORT", "action_get_list_import");
 define("ACTION_INSERT_LIST_RECORD", "action_insert_list_record");
 define("ACTION_UPDATE_LIST_RECORD", "action_update_list_record");
 define("ACTION_ARCHIVE_LIST_RECORD", "action_archive_list_record");
 define("ACTION_ACTIVATE_LIST_RECORD", "action_activate_list_record");
+define("ACTION_IMPORT_LIST_RECORDS", "action_import_list_records");
 define("ACTION_DELETE_LIST_RECORD", "action_delete_list_record");
 define("ACTION_CANCEL_LIST_ACTION", "action_cancel_list_action");
 define("ACTION_SET_LIST_ARCHIVE", "action_set_list_archive");
@@ -33,10 +35,12 @@ $xajax->register(XAJAX_FUNCTION, ACTION_GET_LIST_PAGE);
 $xajax->register(XAJAX_FUNCTION, ACTION_GET_LIST_PRINT_PAGE);
 $xajax->register(XAJAX_FUNCTION, ACTION_GET_LIST_CONTENT);
 $xajax->register(XAJAX_FUNCTION, ACTION_GET_LIST_RECORD);
+$xajax->register(XAJAX_FUNCTION, ACTION_GET_LIST_IMPORT);
 $xajax->register(XAJAX_FUNCTION, ACTION_INSERT_LIST_RECORD);
 $xajax->register(XAJAX_FUNCTION, ACTION_UPDATE_LIST_RECORD);
 $xajax->register(XAJAX_FUNCTION, ACTION_ARCHIVE_LIST_RECORD);
 $xajax->register(XAJAX_FUNCTION, ACTION_ACTIVATE_LIST_RECORD);
+$xajax->register(XAJAX_FUNCTION, ACTION_IMPORT_LIST_RECORDS);
 $xajax->register(XAJAX_FUNCTION, ACTION_DELETE_LIST_RECORD);
 $xajax->register(XAJAX_FUNCTION, ACTION_CANCEL_LIST_ACTION);
 $xajax->register(XAJAX_FUNCTION, ACTION_SET_LIST_ARCHIVE);
@@ -55,10 +59,12 @@ $firstthingsfirst_action_description[ACTION_GET_LIST_PAGE] = "--P--";
 $firstthingsfirst_action_description[ACTION_GET_LIST_PRINT_PAGE] = "--P--";
 $firstthingsfirst_action_description[ACTION_GET_LIST_CONTENT] = "--P--";
 $firstthingsfirst_action_description[ACTION_GET_LIST_RECORD] = "---P-";
+$firstthingsfirst_action_description[ACTION_GET_LIST_IMPORT] = "---P-";
 $firstthingsfirst_action_description[ACTION_INSERT_LIST_RECORD] = "---P-";
 $firstthingsfirst_action_description[ACTION_UPDATE_LIST_RECORD] = "---P-";
 $firstthingsfirst_action_description[ACTION_ARCHIVE_LIST_RECORD] = "---P-";
 $firstthingsfirst_action_description[ACTION_ACTIVATE_LIST_RECORD] = "---P-";
+$firstthingsfirst_action_description[ACTION_IMPORT_LIST_RECORDS] = "---P-";
 $firstthingsfirst_action_description[ACTION_DELETE_LIST_RECORD] = "---P-";
 $firstthingsfirst_action_description[ACTION_CANCEL_LIST_ACTION] = "-----";
 $firstthingsfirst_action_description[ACTION_SET_LIST_ARCHIVE] = "-----";
@@ -93,8 +99,12 @@ function action_get_list_page ($list_title)
     global $logging;
     global $user;
     global $list_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: get list page (list_title=".$list_title.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # set current list name
     $user->set_current_list_name($list_title);
@@ -138,7 +148,8 @@ function action_get_list_page ($list_title)
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("got list page");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -152,9 +163,14 @@ function action_get_list_page ($list_title)
 function action_get_list_print_page ($list_title)
 {
     global $logging;
+    global $user;
     global $list_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: get print list (list_title=".$list_title.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -194,7 +210,8 @@ function action_get_list_print_page ($list_title)
     $response->call("window.print()");
     $response->call("window.close()");
 
-    $logging->trace("got print list");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -210,9 +227,14 @@ function action_get_list_print_page ($list_title)
 function action_get_list_content ($list_title, $order_by_field, $page)
 {
     global $logging;
+    global $user;
     global $list_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: get list content (list_title=".$list_title.", order_by_field=".$order_by_field.", page=".$page.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title, order_by_field=$order_by_field, page=$page)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -244,7 +266,8 @@ function action_get_list_content ($list_title, $order_by_field, $page)
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("got list content");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -259,9 +282,14 @@ function action_get_list_content ($list_title, $order_by_field, $page)
 function action_get_list_record ($list_title, $key_string)
 {
     global $logging;
+    global $user;
     global $list_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: get list record (list_title=".$list_title.", key_string=".$key_string.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title, key_string=$key_string)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -296,7 +324,70 @@ function action_get_list_record ($list_title, $key_string)
     $response->script("document.getElementById('focus_on_this_input').focus()");
     $response->script("document.getElementById('".$focus_element_name."').focus()");
 
-    $logging->trace("got list record");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
+
+    return $response;
+}
+
+/**
+ * get html of the import action
+ * this function is registered in xajax
+ * @param string $list_title title of list
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
+function action_get_list_import ($list_title)
+{
+    global $logging;
+    global $user;
+    global $list_table_configuration;
+    global $user_start_time_array;
+
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
+
+    # create necessary objects
+    $result = new Result();
+    $response = new xajaxResponse();
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
+
+    # remove any error messages
+    $response->script("$('*').qtip('destroy');");
+
+    # set action pane
+    $html_database_table->get_import($list_title, $result);
+    $response->assign("action_pane", "innerHTML", $result->get_result_str());
+
+    # disable the submit button
+    $response->script("$('#button_import').attr('disabled', 'disabled');");
+
+    # create ajax upload button for the import button
+    $response->script("
+        var button = $('#button_upload'), interval;
+        new AjaxUpload(button,
+        {
+            action: 'php/Html.Import.php?file_name=pietje.csv',
+            name: 'import_file',
+            onSubmit: function(file, ext)
+            {
+                this.disable();
+            },
+            onComplete: function(file, response)
+            {
+                this.enable();
+                $('#button_import').attr('disabled', '');
+                $('#button_import').html(response + file);
+        }
+        });
+    ");
+
+    # set focus on hidden input element
+    $response->script("document.getElementById('focus_on_this_input').focus()");
+
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -311,14 +402,19 @@ function action_get_list_record ($list_title, $key_string)
 function action_insert_list_record ($list_title, $form_values)
 {
     global $logging;
+    global $user;
     global $list_table_configuration;
     global $firstthingsfirst_field_descriptions;
+    global $user_start_time_array;
 
     $html_str = "";
     $name_keys = array_keys($form_values);
     $new_form_values = array();
 
-    $logging->info("ACTION: insert list record (list_title=".$list_title.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -408,7 +504,8 @@ function action_insert_list_record ($list_title, $form_values)
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("inserted list record");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -424,14 +521,19 @@ function action_insert_list_record ($list_title, $form_values)
 function action_update_list_record ($list_title, $key_string, $form_values)
 {
     global $logging;
+    global $user;
     global $list_table_configuration;
     global $firstthingsfirst_field_descriptions;
+    global $user_start_time_array;
 
     $html_str = "";
     $name_keys = array_keys($form_values);
     $new_form_values = array();
 
-    $logging->info("ACTION: update list record (list_title=".$list_title.", key_string=".$key_string.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title, key_string=$key_string)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -521,7 +623,8 @@ function action_update_list_record ($list_title, $key_string, $form_values)
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("updated list record");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -536,9 +639,14 @@ function action_update_list_record ($list_title, $key_string, $form_values)
 function action_archive_list_record ($list_title, $key_string)
 {
     global $logging;
+    global $user;
     global $list_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: archive list record (list_title=".$list_title.", key_string=".$key_string.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title, key_string=$key_string)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -584,7 +692,8 @@ function action_archive_list_record ($list_title, $key_string)
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("archived list record");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -599,9 +708,14 @@ function action_archive_list_record ($list_title, $key_string)
 function action_activate_list_record ($list_title, $key_string)
 {
     global $logging;
+    global $user;
     global $list_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: activate list record (list_title=".$list_title.", key_string=".$key_string.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title, key_string=$key_string)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -647,7 +761,72 @@ function action_activate_list_record ($list_title, $key_string)
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("activated list record");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
+
+    return $response;
+}
+
+/**
+ * import uploaded list records to current list
+ * this function is registered in xajax
+ * @param string $list_title title of list
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
+function action_import_list_records ($list_title)
+{
+    global $logging;
+    global $user;
+    global $list_table_configuration;
+    global $user_start_time_array;
+
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
+
+    # create necessary objects
+    $result = new Result();
+    $response = new xajaxResponse();
+    $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
+
+    # remove any error messages
+    $response->script("$('*').qtip('destroy')");
+
+    # create list table object
+    $list_table = new ListTable($list_title);
+    if ($list_table->get_is_valid() == FALSE)
+    {
+        $logging->warn("create list object returns false");
+        $error_message_str = $list_table->get_error_message_str();
+        $error_log_str = $list_table->get_error_log_str();
+        $error_str = $list_table->get_error_str();
+        set_error_message("button_import", "above", $error_message_str, $error_log_str, $error_str, $response);
+
+        return $response;
+    }
+
+    # display error when uploaded file cannot be found
+    $file_name = ini_get('upload_tmp_dir')."/pietje.csv";
+    $logging->debug("starting to read uploaded file (file_name=".$file_name.")");
+    if (file_exists($file_name) == FALSE)
+    {
+        set_error_message("button_import", "above", "uploaded file does not seem to exist", "", "", $response);
+
+        return $response;
+    }
+
+    $file_size = filesize($file_name);
+    $logging->debug("get filesize (file_size=".$file_size.")");
+
+    $logging->debug("delete file");
+    unlink($file_name);
+
+    $logging->debug("set info message");
+    set_info_message("button_import", "above", "read and deleted file", $response);
+
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -662,9 +841,14 @@ function action_activate_list_record ($list_title, $key_string)
 function action_delete_list_record ($list_title, $key_string)
 {
     global $logging;
+    global $user;
     global $list_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: delete list record (list_title=".$list_title.", key_string=".$key_string.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title, key_string=$key_string)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -710,7 +894,8 @@ function action_delete_list_record ($list_title, $key_string)
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("deleted list record");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -724,9 +909,14 @@ function action_delete_list_record ($list_title, $key_string)
 function action_cancel_list_action ($list_title)
 {
     global $logging;
+    global $user;
     global $list_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: cancel list action (list_title=".$list_title.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $response = new xajaxResponse();
@@ -739,7 +929,8 @@ function action_cancel_list_action ($list_title)
     $html_str = $html_database_table->get_action_bar($list_title, "");
     $response->assign("action_pane", "innerHTML", $html_str);
 
-    $logging->trace("canceled list action");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -757,8 +948,12 @@ function action_set_list_archive($list_title, $archive_value)
     global $user;
     global $list_state;
     global $list_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: set list archive (list_title=".$list_title.", archive_value=".$archive_value.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title, archive_value=$archive_value)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -794,7 +989,8 @@ function action_set_list_archive($list_title, $archive_value)
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("set list archive");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -812,8 +1008,12 @@ function action_set_list_filter($list_title, $filter_str)
     global $user;
     global $list_state;
     global $list_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: set list filter (list_title=".$list_title.", filter_str=".$filter_str.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title, filter_str=$filter_str)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -858,7 +1058,8 @@ function action_set_list_filter($list_title, $filter_str)
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("set list filter");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }

@@ -60,7 +60,7 @@ function get_login_page_html ()
     $html_str .= "                            <div id=\"login_overview_bottom_left\">\n";
     $html_str .= "                                <div id=\"login_overview_bottom_right\">\n";
     $html_str .= "                                    <div id=\"login_contents\">\n";
-    $html_str .= "                                        <form name=\"login_form\" id=\"login_form\" action=\"\" method=\"post\">\n";
+    $html_str .= "                                        <form name=\"login_form\" id=\"login_form\" action=\"\" method=\"POST\">\n";
     $html_str .= "                                            <div class=\"login_line\">\n";
     $html_str .= "                                                <div class=\"login_line_left\">".translate("LABEL_USER_NAME")."</div>\n";
     $html_str .= "                                                <div class=\"login_line_right\"><input name=\"user_name\" id=\"user_name_id\" size=\"16\" maxlength=\"16\" value= \"\" type=\"text\"></div>\n";
@@ -100,8 +100,12 @@ function action_login ($user_name, $password)
 {
     global $logging;
     global $user;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: login (user_name=".$user_name.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user_name=$user_name)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $response = new xajaxResponse();
@@ -130,10 +134,11 @@ function action_login ($user_name, $password)
 
     if ($user->login($user_name, $password))
     {
-        $logging->trace("user is logged in");
-
         # redirect to portal page
         $response->script("window.location.assign('index.php?action=".ACTION_GET_PORTAL_PAGE."')");
+
+        # log total time for this function
+        $logging->info(get_function_time_str(__METHOD__));
 
         return $response;
     }
@@ -161,8 +166,12 @@ function action_logout ()
 {
     global $logging;
     global $user;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: logout");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().")");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $response = new xajaxResponse();
@@ -171,7 +180,8 @@ function action_logout ()
     # redirect to login page
     $response->script("window.location.assign('index.php?action=".ACTION_GET_LOGIN_PAGE."')");
 
-    $logging->trace("user is logged out");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }

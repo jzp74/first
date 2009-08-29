@@ -115,9 +115,12 @@ class Logging
         {
             # get the date and time
             $the_time = strftime("%d-%m-%Y %H:%M:%S");
+            # get the time in ms
+            $time_array = gettimeofday();
+            $msecs = sprintf("%03d", $time_array["usec"]/1000);
 
             # write log line to file
-            fwrite($handler, "$the_time [$log_level] $file_name:$line_number ($func_name) $str\n");
+            fwrite($handler, "$the_time.$msecs [$log_level] $file_name:$line_number ($func_name) $str\n");
 
             # close the log file
             fclose($handler);

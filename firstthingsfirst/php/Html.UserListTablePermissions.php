@@ -76,8 +76,12 @@ function action_get_user_list_permissions_page ()
     global $list_state;
     global $user_list_permissions;
     global $user_list_permissions_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: get user list permissions page");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().")");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -110,7 +114,8 @@ function action_get_user_list_permissions_page ()
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("got user list permissions page");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -126,10 +131,15 @@ function action_get_user_list_permissions_page ()
 function action_get_user_list_permissions_content ($title, $order_by_field, $page)
 {
     global $logging;
+    global $user;
     global $user_list_permissions;
     global $user_list_permissions_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: get user list permissions content (title=".$title.", order_by_field=".$order_by_field.", page=".$page.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", title=$title, order_by_field=$order_by_field, page=$page)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -144,7 +154,8 @@ function action_get_user_list_permissions_content ($title, $order_by_field, $pag
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("got user list permissions content");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -159,10 +170,15 @@ function action_get_user_list_permissions_content ($title, $order_by_field, $pag
 function action_get_user_list_permissions_record ($title, $key_string)
 {
     global $logging;
+    global $user;
     global $user_list_permissions;
     global $user_list_permissions_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: get user list permissions record (title=".$title.", key_string=".$key_string.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", title=$title, key_string=$key_string)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -186,7 +202,8 @@ function action_get_user_list_permissions_record ($title, $key_string)
     $response->script("document.getElementById('focus_on_this_input').focus()");
     $response->script("document.record_form_name.elements[1].focus()");
 
-    $logging->trace("got user list permissions record");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -202,9 +219,11 @@ function action_get_user_list_permissions_record ($title, $key_string)
 function action_update_user_list_permissions_record ($title, $key_string, $form_values)
 {
     global $logging;
+    global $user;
     global $user_list_permissions;
     global $user_list_permissions_table_configuration;
     global $firstthingsfirst_field_descriptions;
+    global $user_start_time_array;
 
     $html_str = "";
     $name_keys = array_keys($form_values);
@@ -212,7 +231,10 @@ function action_update_user_list_permissions_record ($title, $key_string, $form_
     $fields = $user_list_permissions->get_fields();
     $field_keys = array_keys($fields);
 
-    $logging->info("ACTION: update user list permissions record (title=".$title.", key_string=".$key_string.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", title=$title, key_string=$key_string)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -287,7 +309,8 @@ function action_update_user_list_permissions_record ($title, $key_string, $form_
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("updated user list permissions record");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -302,10 +325,15 @@ function action_update_user_list_permissions_record ($title, $key_string, $form_
 function action_delete_user_list_permissions_record ($title, $key_string)
 {
     global $logging;
+    global $user;
     global $user_list_permissions;
     global $user_list_permissions_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: delete user list permissions record (title=".$title.", key_string=".$key_string.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", title=$title, key_string=$key_string)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -335,7 +363,8 @@ function action_delete_user_list_permissions_record ($title, $key_string)
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("deleted user list permissions record");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -349,10 +378,15 @@ function action_delete_user_list_permissions_record ($title, $key_string)
 function action_cancel_user_list_permissions_action ($title)
 {
     global $logging;
+    global $user;
     global $user_list_permissions;
     global $user_list_permissions_table_configuration;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: cancel user list permissions action (title=".$title.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", title=$title)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $response = new xajaxResponse();
@@ -365,7 +399,8 @@ function action_cancel_user_list_permissions_action ($title)
     $html_str = $html_database_table->get_action_bar($title, "");
     $response->assign("action_pane", "innerHTML", $html_str);
 
-    $logging->trace("canceled user list permissions action");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }

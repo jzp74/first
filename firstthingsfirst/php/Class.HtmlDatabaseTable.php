@@ -819,6 +819,48 @@ class HtmlDatabaseTable
     }
 
     /**
+     * get html (use Result object) of the import action
+     * @param $list_title string title of list
+     * @param $result Result result object
+     * @return string name of input element that should get focus
+     */
+    function get_import ($list_title, $result)
+    {
+        $this->_log->trace("getting import (list_title=".$list_title.")");
+
+        $html_str = "";
+        $js_button_import ="action_import_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."records";
+        $js_button_cancel ="action_cancel_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."action";
+
+        # start with the action bar
+        $html_str .= $this->get_action_bar($list_title, "import");
+
+        # then the form and table definition
+        $html_str .= "\n                <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents_pane\">\n";
+        $html_str .= "                    <table id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
+        $html_str .= "                        <tbody>\n";
+        $html_str .= "                            <tr>\n";
+        $html_str .= "                                <th><div id=\"button_upload\" class=\"icon_add\">".translate("BUTTON_SELECT_UPLOAD_FILE")."</a></th>\n";
+        $html_str .= "                                <td class=\"super_width\">&nbsp;</td>\n";
+        $html_str .= "                            </tr>\n";
+        $html_str .= "                        </tbody>\n";
+        $html_str .= "                    </table> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents -->\n";
+        $html_str .= "                    <span id=\"record_contents_buttons\">\n";
+        $html_str .= "                        ";
+        $html_str .= "<a id=\"button_import\" href=\"javascript:void(0);\" class=\"icon_unarchive\" onclick=\"xajax_action_import_list_records('".$list_title."')\">".translate("BUTTON_IMPORT_FROM_THIS_FILE")." - </a>";
+        $html_str .= "&nbsp;&nbsp;".get_href(HTML_NO_ACTION, "", "", HTML_EMPTY_LIST_TITLE, "xajax_".$js_button_cancel."('".$list_title."')", translate("BUTTON_CANCEL"), "icon_cancel");
+        $html_str .= "\n                        ";
+        $html_str .= "\n                    </span> <!-- record_contents_buttons -->\n";
+        $html_str .= "                </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents_pane -->\n";
+        $html_str .= "                <div id=\"action_pane_bottom_left\"></div>\n";
+        $html_str .= "                <div id=\"action_pane_bottom_right\"></div>\n\n            ";
+
+        $result->set_result_str($html_str);
+
+        $this->_log->trace("got import");
+    }
+
+    /**
      * get html for action bar
      * @param $list_title string title of list
      * @param $action string highlight given action in the action bar (highlight none when action is empty)
@@ -845,6 +887,8 @@ class HtmlDatabaseTable
                 $html_str .= "<strong>".translate("LABEL_EDIT_RECORD").$this->configuration[HTML_TABLE_RECORD_NAME]."</strong>";
             else if ($action == "insert")
                 $html_str .= "<strong>".translate("LABEL_ADD_RECORD").$this->configuration[HTML_TABLE_RECORD_NAME]."</strong>";
+            else if ($action == "import")
+                $html_str .= "<strong>".translate("LABEL_IMPORT_RECORDS")."</strong>";
             else if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_USERLISTTABLEPERMISSIONS)
             {
                 $html_str .= "<span id=\"action_bar_button_insert\">";
@@ -852,11 +896,15 @@ class HtmlDatabaseTable
                 $html_str .= "</span>&nbsp;&nbsp;&nbsp;&nbsp;";
             }
         }
-        # only display the print button when no action is active and only when this is a list page
+        # only display the import and print buttons when no action is active and only when this is a list page
         if (($action == "") && ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_LIST))
         {
             $html_str .= "<span id=\"action_bar_button_print\">";
             $html_str .= get_href(HTML_NO_ACTION, "", "", $this->permissions_list_title, "window.open(%27index.php?action=".ACTION_GET_LIST_PRINT_PAGE."&list=".$list_title."%27)", translate("BUTTON_PRINT_LIST"), "icon_print");
+            $html_str .= "</span>&nbsp;&nbsp;&nbsp;&nbsp;";
+
+            $html_str .= "<span id=\"action_bar_button_import\">";
+            $html_str .= get_href(ACTION_IMPORT_LIST_RECORDS, "action_bar_button_import", "above", $this->permissions_list_title, "xajax_action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."import(%27".$list_title."%27)", translate("BUTTON_IMPORT_RECORDS"), "icon_unarchive");
             $html_str .= "</span>";
         }
         else

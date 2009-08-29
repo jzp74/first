@@ -41,12 +41,13 @@ require_once("php/Class.UserListTablePermissions.php");
 $xajax = new xajax();
 $xajax->configure("javascript URI", "../xajax");
 
-$logging = new Logging($firstthingsfirst_loglevel, $firstthingsfirst_logfile);
+$logging = new Logging($firstthingsfirst_loglevel, "logs/".$firstthingsfirst_logfile);
 $database = new Database();
 $list_state = new ListState();
 $user = new User();
 $list_table_description = new ListTableDescription();
 $user_list_permissions = new UserListTablePermissions();
+$user_start_time_array = array();
 
 $text_translations = array();
 if ($user->is_login())
@@ -255,6 +256,7 @@ else
 
 <script language="javascript" src="js/external/jquery.min.js"></script>
 <script language="javascript" src="js/external/jquery.qtip.min.js"></script>
+<script language="javascript" src="js/external/ajaxupload.min.js"></script>
 <script language="javascript" src="js/tooltips.min.js"></script>
 <script language="javascript">
 xajax_set_translations();

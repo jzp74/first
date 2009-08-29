@@ -78,6 +78,7 @@ $text_translations["LABEL_PAGE"] = "pagina";
 $text_translations["LABEL_OF"] = "van";
 $text_translations["LABEL_ADD_RECORD"] = "Nieuwe ";
 $text_translations["LABEL_EDIT_RECORD"] = "Wijzig deze ";
+$text_translations["LABEL_IMPORT_RECORDS"] = "Selecteer een file om te uploaden en importeer deze vervolgens";
 
 /**
  * listtableitemnote labels

@@ -63,8 +63,12 @@ function action_get_user_settings_page ()
     global $user;
     global $user_settings_table_configuration;
     global $firstthingsfirst_portal_title;
+    global $user_start_time_array;
 
-    $logging->info("ACTION: get user settings page");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", title=$title)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     # create necessary objects
     $result = new Result();
@@ -92,7 +96,8 @@ function action_get_user_settings_page ()
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    $logging->trace("got user settings page");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }
@@ -111,11 +116,15 @@ function action_update_user_settings_record ($title, $key_string, $form_values)
     global $user;
     global $user_settings_table_configuration;
     global $firstthingsfirst_field_descriptions;
+    global $user_start_time_array;
 
     # WARNING: this function is almost identical to function UserAdministration::action_update_user_admin_record
     # changes in this function should also lead to changes in that function
 
-    $logging->info("ACTION: update user settings record (title=".$title.", key_string=".$key_string.")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", title=$title, key_string=$key_string)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
 
     $html_str = "";
     $name_keys = array_keys($form_values);
@@ -188,7 +197,8 @@ function action_update_user_settings_record ($title, $key_string, $form_values)
 
     # check post conditions not necessary
 
-    $logging->trace("updated user settings record");
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
 
     return $response;
 }

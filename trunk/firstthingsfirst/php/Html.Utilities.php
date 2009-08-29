@@ -22,7 +22,7 @@ function translate ($string)
     if (array_key_exists($string, $text_translations))
         return $text_translations[$string];
     else
-        return "NO TRANSLATION [".$string."]";
+        return "NO&nbsp;TRANSLATION&nbsp;[".$string."]";
 }
 
 /**
@@ -258,6 +258,23 @@ function get_date_str ($format, $value)
     }
     else
         return $value;
+}
+
+/**
+ * calculate the time (in ms) for complete function call and return a log message
+ * @param string name of function
+ * @return string log message
+ */
+function get_function_time_str ($function_name)
+{
+    global $user_start_time_array;
+
+    # substract start time from end time to calculate interval
+    $total_time_msec = (float)(microtime(TRUE) - $user_start_time_array[$function_name]) * 1000;
+    # round the number to two digits (Dutch number notation)
+    $total_rounded_time_msec = number_format($total_time_msec, 2, ',', '');
+
+    return "USER_ACTION $function_name TIME $total_rounded_time_msec ms";
 }
 
 ?>

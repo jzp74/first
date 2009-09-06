@@ -176,7 +176,7 @@ function showModalDialog (domElementId, messageStr, functionStr)
             when:
             {
                 event: ''
-            },
+            }
         },
         hide: false,
         style:
@@ -194,7 +194,7 @@ function showModalDialog (domElementId, messageStr, functionStr)
                 width: 0,
                 radius: 6,
                 color: "rgb(255, 173, 37)"
-            },
+            }
         },
         api:
         {

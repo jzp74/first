@@ -100,7 +100,7 @@ function action_get_user_list_permissions_page ()
     $user->set_list_state();
 
     # set content
-    $html_database_table->get_content($user_list_permissions, USER_TABLE_NAME, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $html_database_table->get_content($user_list_permissions, $user->get_current_list_name(), "", DATABASETABLE_UNKWOWN_PAGE, $result);
     $response->assign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
     # set action pane

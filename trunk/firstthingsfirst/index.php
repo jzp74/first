@@ -85,6 +85,22 @@ $xajax->register(XAJAX_FUNCTION, "process_url");
 $xajax->processRequest();
 
 
+function get_xajax_javascript ()
+{
+    $html_str = "<script language=\"javascript\">\n";
+    $html_str .= "    try { if (undefined == xajax.config) xajax.config = {}; } catch (e) { xajax = {}; xajax.config = {}; }\n";
+    $html_str .= "    xajax.config.requestURI = \"".$_SERVER["REQUEST_URI"]."\"\n";
+    $html_str .= "    xajax.config.statusMessages = false;\n";
+    $html_str .= "    xajax.config.waitCursor = true;\n";
+    $html_str .= "    xajax.config.version = \"xajax 0.5\";\n";
+    $html_str .= "    xajax.config.legacy = false;\n";
+    $html_str .= "    xajax.config.defaultMode = \"asynchronous\";\n";
+    $html_str .= "    xajax.config.defaultMethod = \"POST\";\n";
+    $html_str .= "</script>\n";
+
+    return $html_str;
+}
+
 /**
  * set translation vars in javascript
  * @return void
@@ -114,7 +130,7 @@ function process_url ()
     global $logging;
     global $user;
 
-    $logging->trace("PROCESS_URL (request_uri=".$_SERVER["REQUEST_URI"].")");
+    $logging->info("PROCESS_URL (request_uri=".$_SERVER["REQUEST_URI"].")");
 
     # show portal page if no action is set
     $action = "";
@@ -202,9 +218,6 @@ function process_url ()
 <link rel="stylesheet" href="css/standard_listbuilder.css">
 <link rel="stylesheet" href="css/standard_database_table.css">
 <link rel="stylesheet" href="css/standard_print.css" media="print">
-
-<?php $xajax->printJavascript("xajax"); ?>
-
 </head>
 
 <body>
@@ -254,13 +267,16 @@ else
 </div> <!-- footer -->
 <div id="lower_margin"><input id="focus_on_this_input" size="1" readonly></div>
 
+<script language="javascript" src="xajax/xajax_js/xajax_core.js" charset="UTF-8"></script>
+<?php print(get_xajax_javascript()); ?>
 <script language="javascript" src="js/external/jquery.min.js"></script>
 <script language="javascript" src="js/external/jquery.qtip.min.js"></script>
 <script language="javascript" src="js/external/ajaxupload.min.js"></script>
-<script language="javascript" src="js/tooltips.min.js"></script>
+<script language="javascript" src="js/tooltips.js"></script>
+<script language="javascript" src="js/handler.js"></script>
 <script language="javascript">
-xajax_set_translations();
-xajax_process_url();
+handleFunction('set_translations');
+handleFunction('process_url');
 </script>
 
 <div id="modal_blanket"></div>

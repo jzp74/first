@@ -215,31 +215,30 @@ function action_get_listbuilder_page ($list_title)
 
     # display the selection box to add a new column
     $html_str .= "                ".get_select("add_select", "add_it", "")."\n";
-    $href_str = "xajax_action_insert_listbuilder_row(document.getElementById";
-    $href_str .= "('add_select').value, xajax.getFormValues('database_definition_form'), document.getElementById('largest_id').innerHTML)";
+    $args_str = "(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'), ";
+    $args_str .= "document.getElementById('largest_id').innerHTML)";
     $html_str .= "                <span id=\"action_bar_button_add\"";
-    $html_str .= get_href(HTML_NO_ACTION, "", "", HTML_EMPTY_LIST_TITLE, $href_str, translate("BUTTON_ADD_FIELD"), "icon_add");
+    $html_str .= get_href(get_onclick(ACTION_INSERT_LISTBUILDER_ROW, HTML_NO_PERMISSION_CHECK, "", "", $args_str), translate("BUTTON_ADD_FIELD"), "icon_add");
     $html_str .= "</span>\n";
 
     # display the modify button when a title has been given
     if ($old_list_loaded == TRUE)
     {
-        $href_str = "xajax_action_modify_list(%22".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME];
-        $href_str .= "%22, document.getElementById(%22listbuilder_list_title_id%22).value, ";
-        $href_str .= "document.getElementById(%22listbuilder_list_description_id%22).value, ";
-        $href_str .= "xajax.getFormValues(%22database_definition_form%22))";
+        $args_str = "handleFunction(%22".ACTION_MODIFY_LIST."%22, %22".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME];
+        $args_str .= "%22, document.getElementById(%22listbuilder_list_title_id%22).value, ";
+        $args_str .= "document.getElementById(%22listbuilder_list_description_id%22).value, ";
+        $args_str .= "xajax.getFormValues(%22database_definition_form%22))";
         $html_str .= "                &nbsp;&nbsp;&nbsp;<span id=\"action_bar_button_modify\"";
-        $html_str .= get_href_confirm(ACTION_MODIFY_LIST, "action_bar_button_modify", "above", $list_title, $href_str, translate("LABEL_CONFIRM_MODIFY"), translate("BUTTON_MODIFY_LIST"), "icon_accept");
+        $html_str .= get_href(get_onclick_confirm(ACTION_MODIFY_LIST, $list_title, "action_bar_button_modify", "above", $args_str, translate("LABEL_CONFIRM_MODIFY")), translate("BUTTON_MODIFY_LIST"), "icon_accept");
         $html_str .= "</span>\n";
     }
     # display the create button when no title has been given
     else
     {
-        $href_str = "xajax_action_create_list(document.getElementById";
-        $href_str .= "(%27listbuilder_list_title_id%27).value, document.getElementById(%27listbuilder_list_description_id%27).value, ";
-        $href_str .= "xajax.getFormValues(%27database_definition_form%27))";
+        $args_str = "(document.getElementById(%27listbuilder_list_title_id%27).value, ";
+        $args_str .= "document.getElementById(%27listbuilder_list_description_id%27).value, xajax.getFormValues(%27database_definition_form%27))";
         $html_str .= "                &nbsp;&nbsp;&nbsp;<span id=\"action_bar_button_create\"";
-        $html_str .= get_href(ACTION_CREATE_LIST, "action_bar_button_create", "above", HTML_EMPTY_LIST_TITLE, $href_str, translate("BUTTON_CREATE_LIST"), "icon_accept");
+        $html_str .= get_href(get_onclick(ACTION_CREATE_LIST, HTML_NO_LIST_PERMISSION_CHECK, "action_bar_button_create", "above", $args_str), translate("BUTTON_CREATE_LIST"), "icon_accept");
         $html_str .= "</span>\n";
     }
 
@@ -723,7 +722,7 @@ function get_select ($id, $name, $selection)
     if ($id != "")
         $html_str .= " id=\"".$id."\"";
     else
-        $html_str .= " onChange=\"xajax_action_refresh_listbuilder(xajax.getFormValues('database_definition_form'));\"";
+        $html_str .= " onChange=\"handleFunction('".ACTION_REFRESH_LISTBUILDER."', xajax.getFormValues('database_definition_form')); \"";
     $html_str .= ">\n";
 
     foreach ($field_types as $field_type)
@@ -848,7 +847,7 @@ function get_field_definition_table ($definition)
         if ($row > 1)
         {
             $html_str .= "                                                <td width=\"1%\">";
-            $html_str .= get_href(HTML_NO_ACTION, "", "", HTML_EMPTY_LIST_TITLE, "xajax_action_move_listbuilder_row(".$row.", 'up', xajax.getFormValues('database_definition_form'))", "&nbsp;", "icon_up");
+            $html_str .= get_href(get_onclick(ACTION_MOVE_LISTBUILDER_ROW, HTML_NO_LIST_PERMISSION_CHECK, "", "", "($row, %27up%27, xajax.getFormValues(%27database_definition_form%27))"), "&nbsp;", "icon_up");
             $html_str .= "</td>\n";
         }
         else
@@ -862,7 +861,7 @@ function get_field_definition_table ($definition)
         if ($row > 0 && $row < ((count($definition) / 4) - 1))
         {
             $html_str .= "                                                <td width=\"1%\">";
-            $html_str .= get_href(HTML_NO_ACTION, "", "", HTML_EMPTY_LIST_TITLE, "xajax_action_move_listbuilder_row(".$row.", 'down', xajax.getFormValues('database_definition_form'))", "&nbsp;", "icon_down");
+            $html_str .= get_href(get_onclick(ACTION_MOVE_LISTBUILDER_ROW, HTML_NO_LIST_PERMISSION_CHECK, "", "", "($row, %27down%27, xajax.getFormValues(%27database_definition_form%27))"), "&nbsp;", "icon_down");
             $html_str .= "</td>\n";
         }
         else
@@ -876,7 +875,7 @@ function get_field_definition_table ($definition)
         if ($row > 0)
         {
             $html_str .= "                                                <td width=\"1%\">";
-            $html_str .= get_href(HTML_NO_ACTION, "", "", HTML_EMPTY_LIST_TITLE, "xajax_action_delete_listbuilder_row(".$row.", xajax.getFormValues('database_definition_form'))", translate("BUTTON_DELETE"), "icon_delete");
+            $html_str .= get_href(get_onclick(ACTION_DELETE_LISTBUILDER_ROW, HTML_NO_LIST_PERMISSION_CHECK, "", "", "($row, xajax.getFormValues(%27database_definition_form%27))"), translate("BUTTON_DELETE"), "icon_delete");
             $html_str .= "</td>\n";
         }
         else

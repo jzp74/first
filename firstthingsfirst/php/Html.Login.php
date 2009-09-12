@@ -71,7 +71,7 @@ function get_login_page_html ()
     $html_str .= "                                            </div> <!-- login_line -->\n";
     $html_str .= "                                            <div class=\"login_line\">\n";
     $html_str .= "                                                <div class=\"login_line_left\">&nbsp;</div>\n";
-    $html_str .= "                                                <div class=\"login_line_right\"><input type=submit class=\"icon_accept\" value=\"".translate("BUTTON_LOGIN")."\" onclick=\"javascript:xajax_action_login(document.getElementById('user_name_id').value, document.getElementById('password_id').value); return false;\"></div>\n";
+    $html_str .= "                                                <div class=\"login_line_right\"><input type=submit class=\"icon_accept\" value=\"".translate("BUTTON_LOGIN")."\" onclick=\"javascript:handleFunction('".ACTION_LOGIN."', document.getElementById('user_name_id').value, document.getElementById('password_id').value); return false;\"></div>\n";
     $html_str .= "                                            </div> <!-- login_line -->\n";
     $html_str .= "                                        </form> <!-- login_form -->\n";
     $html_str .= "                                    </div> <!-- login_contents -->\n";

@@ -96,7 +96,7 @@ function action_get_user_admin_page ()
     $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_USER_ADMIN));
 
     # set content
-    $html_database_table->get_content($user, USER_TABLE_NAME, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $html_database_table->get_content($user, HTML_NO_LIST_PERMISSION_CHECK, "", DATABASETABLE_UNKWOWN_PAGE, $result);
     $response->assign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
     # set action pane

@@ -364,11 +364,12 @@ function action_get_list_import ($list_title)
     $response->script("$('#button_import').attr('disabled', 'disabled');");
 
     # create ajax upload button for the import button
+    $file_name = "upload_".$user->get_name()."_".strftime("%d%m%Y_%H%M%S.csv");
     $response->script("
         var button = $('#button_upload'), interval;
         new AjaxUpload(button,
         {
-            action: 'php/Html.Import.php?file_name=pietje.csv',
+            action: 'php/Html.Upload.php?file_name=$file_name',
             name: 'import_file',
             onSubmit: function(file, ext)
             {
@@ -771,9 +772,10 @@ function action_activate_list_record ($list_title, $key_string)
  * import uploaded list records to current list
  * this function is registered in xajax
  * @param string $list_title title of list
+ * @param string $file_name name of uploaded file to be precessed
  * @return xajaxResponse every xajax registered function needs to return this object
  */
-function action_import_list_records ($list_title)
+function action_import_list_records ($list_title, $file_name)
 {
     global $logging;
     global $user;
@@ -806,8 +808,6 @@ function action_import_list_records ($list_title)
         return $response;
     }
 
-    # display error when uploaded file cannot be found
-    $file_name = ini_get('upload_tmp_dir')."/pietje.csv";
     $logging->debug("starting to read uploaded file (file_name=".$file_name.")");
     if (file_exists($file_name) == FALSE)
     {

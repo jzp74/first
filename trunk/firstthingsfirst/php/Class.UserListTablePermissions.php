@@ -168,7 +168,7 @@ class UserListTablePermissions extends UserDatabaseTable
 
         # get list of all users
         $current_user = $this->_user->get_name();
-        $results = $this->_user->select("", DATABASETABLE_ALL_PAGES, array(0 => USER_NAME_FIELD_NAME));
+        $results = $this->_user->select("", DATABASETABLE_ALL_PAGES, array(0 => USER_NAME_FIELD_NAME, 1 => USER_IS_ADMIN_FIELD_NAME));
         if (count($results) == 0)
         {
             $this->_handle_error("could not select all users", "ERROR_DATABASE_PROBLEM");
@@ -176,16 +176,17 @@ class UserListTablePermissions extends UserDatabaseTable
             return FALSE;
         }
 
-        foreach($results as $user_name_array)
+        foreach($results as $user_array)
         {
-            $user_name = $user_name_array[0];
+            $user_name = $user_array[0];
+            $user_is_admin = $user_array[1];
 
             $this->_log->trace("insert permissions for user (user=".$user_name.")");
             $name_values_array = array();
             $name_values_array[USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE_FIELD_NAME] = $list_title;
             $name_values_array[USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME] = $user_name;
             # give current user (creator of the list) and user admin all permissions
-            if (($user_name == $current_user) || $user_name == "admin")
+            if (($user_name == $current_user) || ($user_name == "admin") || ($user_is_admin == 1))
             {
                 $name_values_array[USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME] = 1;
                 $name_values_array[USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME] = 1;
@@ -236,9 +237,21 @@ class UserListTablePermissions extends UserDatabaseTable
                 $name_values_array = array();
                 $name_values_array[USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE_FIELD_NAME] = $list_title;
                 $name_values_array[USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME] = $user_name;
-                $name_values_array[USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME] = 0;
-                $name_values_array[USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME] = 0;
-                $name_values_array[USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME] = 0;
+                # check if new user has admin permission
+                if ($this->_user->get_is_admin() == 0)
+                {
+                    # user has no admin permission and therefore gets no list permissions
+                    $name_values_array[USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME] = 0;
+                    $name_values_array[USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME] = 0;
+                    $name_values_array[USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME] = 0;
+                }
+                else
+                {
+                    # user has admin permissions and get all permissions for all lists
+                    $name_values_array[USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME] = 1;
+                    $name_values_array[USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME] = 1;
+                    $name_values_array[USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME] = 1;
+                }
 
                 # insert permissions
                 $result = $this->insert($name_values_array);

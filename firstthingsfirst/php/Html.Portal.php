@@ -197,8 +197,9 @@ function action_delete_portal_record ($list_title)
     $html_database_table->get_content($list_table_description, $list_title, "", DATABASETABLE_ALL_PAGES, $result);
     $response->assign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
 
-    # reset current list name
-    $user->set_current_list_name("");
+    # reset current list name only when active list has been removed
+    if ($list_title == $user->get_current_list_name())
+        $user->set_current_list_name("");
 
     # set page navigation and login status to update old 'list' links
     $page_navigation_str = get_page_navigation(PAGE_TYPE_PORTAL);

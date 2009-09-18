@@ -500,6 +500,10 @@ function action_modify_list ($former_title, $title, $description, $new_definitio
         return $response;
     }
 
+    # reset current list name only when name of active list has been changed
+    if (($former_title != $title) && ($former_title == $user->get_current_list_name()))
+        $user->set_current_list_name("");
+
     set_info_message("action_bar_button_modify", "above", "LABEL_LIST_MODIFICATIONS_DONE", $response);
 
     # log total time for this function

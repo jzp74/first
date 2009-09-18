@@ -267,13 +267,13 @@ else
 </div> <!-- footer -->
 <div id="lower_margin"><input id="focus_on_this_input" size="1" readonly></div>
 
-<script language="javascript" src="xajax/xajax_js/xajax_core.js" charset="UTF-8"></script>
+<script language="javascript" src="xajax/xajax_js/xajax_core.js"></script>
 <?php print(get_xajax_javascript()); ?>
 <script language="javascript" src="js/external/jquery.min.js"></script>
 <script language="javascript" src="js/external/jquery.qtip.min.js"></script>
 <script language="javascript" src="js/external/ajaxupload.min.js"></script>
 <script language="javascript" src="js/tooltips.js"></script>
-<script language="javascript" src="js/handler.js"></script>
+<script language="javascript" src="js/handlers.js"></script>
 <script language="javascript">
 handleFunction('set_translations');
 handleFunction('process_url');

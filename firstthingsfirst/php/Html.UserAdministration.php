@@ -90,10 +90,10 @@ function action_get_user_admin_page ()
     $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
 
     # set page, title, explanation and navigation
-    $html_database_table->get_page(translate("LABEL_USER_ADMIN_TITLE"), $result);
-    $response->assign("main_body", "innerHTML", $result->get_result_str());
     $response->assign("page_title", "innerHTML", translate("LABEL_USER_ADMIN_TITLE"));
     $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_USER_ADMIN));
+    $html_database_table->get_page(translate("LABEL_USER_ADMIN_TITLE"), $result);
+    $response->assign("main_body", "innerHTML", $result->get_result_str());
 
     # set content
     $html_database_table->get_content($user, HTML_NO_LIST_PERMISSION_CHECK, "", DATABASETABLE_UNKWOWN_PAGE, $result);
@@ -178,9 +178,6 @@ function action_get_user_admin_record ($title, $key_string)
     $result = new Result();
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
-
-    # remove any error messages
-    $response->script("$('*').qtip('destroy')");
 
     # get html for one user record
     $html_database_table->get_record($user, $title, $key_string, array(), $result);
@@ -274,9 +271,6 @@ function action_insert_user_admin_record ($title, $form_values)
         else if (isset($new_form_values[$db_field_name]))
             $final_form_values[$db_field_name] = $new_form_values[$db_field_name];
     }
-
-    # remove any error messages
-    $response->script("$('*').qtip('destroy')");
 
     # display error when insertion returns false
     if (!$user->insert($final_form_values))
@@ -407,9 +401,6 @@ function action_update_user_admin_record ($title, $key_string, $form_values)
         }
     }
 
-    # remove any error messages
-    $response->script("$('*').qtip('destroy')");
-
     # display error when insertion returns false
     if (!$user->update($key_string, $new_form_values))
     {
@@ -464,9 +455,6 @@ function action_delete_user_admin_record ($title, $key_string)
     $result = new Result();
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
-
-    # remove any error messages
-    $response->script("$('*').qtip('destroy')");
 
     $logging->info("get user record");
     $user_array = $user->select_record($key_string);
@@ -546,9 +534,6 @@ function action_cancel_user_admin_action ($title)
     # create necessary objects
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
-
-    # remove any error messages
-    $response->script("$('*').qtip('destroy')");
 
     # set action pane
     $html_str = $html_database_table->get_action_bar($title, "");

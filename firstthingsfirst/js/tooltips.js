@@ -226,7 +226,7 @@ function getTooltipContent (domElementId, messageStr, imageUrl, functionStr)
     htmlStr += "    <table id=\"qtip_message_table\">\n";
     htmlStr += "        <thead>\n";
     htmlStr += "            <tr>\n";
-    htmlStr += "                <th colspan=2><a href=\"javascript:void(0);\" class=\"icon_delete\" onclick=\"$('" + domElementId + "').qtip('destroy');\">" + closeStr + "</a></th>\n";
+    htmlStr += "                <th colspan=2><a href=\"javascript:void(0);\" id=\"qtip_close_button\" class=\"icon_delete\" onclick=\"$('" + domElementId + "').qtip('destroy');\">" + closeStr + "</a></th>\n";
     htmlStr += "            </tr>\n";
     htmlStr += "        </thead>\n";
     htmlStr += "        <tbody>\n";

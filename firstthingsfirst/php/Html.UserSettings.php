@@ -76,18 +76,18 @@ function action_get_user_settings_page ()
     $html_database_table = new HtmlDatabaseTable ($user_settings_table_configuration);
 
     # set page, title, explanation and navigation
-    $html_database_table->get_page(translate("LABEL_USER_SETTINGS_TITLE"), $result);
-    $response->assign("main_body", "innerHTML", $result->get_result_str());
+    $response->assign("page_title", "innerHTML", translate("LABEL_USER_SETTINGS_TITLE"));
+    $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_USER_SETTINGS));
+    $user_record_key_string = DatabaseTable::_get_encoded_key_string(array(DB_ID_FIELD_NAME => $user->get_id()));
+    $html_database_table->get_record($user, USER_TABLE_NAME, $user_record_key_string, $db_fields_array, $result);
+    $response->assign("action_pane", "innerHTML", $result->get_result_str());
 
     # create an array with selection of fields that user may change
     $db_fields_array = array(DB_ID_FIELD_NAME, USER_NAME_FIELD_NAME, USER_PW_FIELD_NAME, USER_LANG_FIELD_NAME);
 
     # get action pane for current user
-    $user_record_key_string = DatabaseTable::_get_encoded_key_string(array(DB_ID_FIELD_NAME => $user->get_id()));
-    $html_database_table->get_record($user, USER_TABLE_NAME, $user_record_key_string, $db_fields_array, $result);
-    $response->assign("action_pane", "innerHTML", $result->get_result_str());
-    $response->assign("page_title", "innerHTML", translate("LABEL_USER_SETTINGS_TITLE"));
-    $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_USER_SETTINGS));
+    $html_database_table->get_page(translate("LABEL_USER_SETTINGS_TITLE"), $result);
+    $response->assign("main_body", "innerHTML", $result->get_result_str());
 
     # set footer
     $response->assign("footer_text", "innerHTML", "&nbsp;");
@@ -176,9 +176,6 @@ function action_update_user_settings_record ($title, $key_string, $form_values)
             return $response;
         }
     }
-
-    # remove any error messages
-    $response->script("$('*').qtip('destroy')");
 
     # display error when insertion returns false
     if (!$user->update($key_string, $new_form_values))

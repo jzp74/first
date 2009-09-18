@@ -81,10 +81,10 @@ function action_get_portal_page ()
     $html_database_table = new HtmlDatabaseTable ($portal_table_configuration);
 
     # set page, title, explanation and navigation
-    $html_database_table->get_page($firstthingsfirst_portal_title, $result);
-    $response->assign("main_body", "innerHTML", $result->get_result_str());
     $response->assign("page_title", "innerHTML", $firstthingsfirst_portal_intro_text);
     $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_PORTAL));
+    $html_database_table->get_page($firstthingsfirst_portal_title, $result);
+    $response->assign("main_body", "innerHTML", $result->get_result_str());
 
     # set content
     $html_database_table->get_content($list_table_description, LISTTABLEDESCRIPTION_TABLE_NAME, "", DATABASETABLE_ALL_PAGES, $result);
@@ -180,9 +180,6 @@ function action_delete_portal_record ($list_title)
         return $response;
     }
     $html_database_table = new HtmlDatabaseTable ($portal_table_configuration);
-
-    # remove any error messages
-    $response->script("$('*').qtip('destroy')");
 
     # display error when delete returns false
     if ($list_table->drop() == FALSE)

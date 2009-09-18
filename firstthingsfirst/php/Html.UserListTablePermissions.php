@@ -89,10 +89,10 @@ function action_get_user_list_permissions_page ()
     $html_database_table = new HtmlDatabaseTable ($user_list_permissions_table_configuration);
 
     # set page, title, explanation and navigation
-    $html_database_table->get_page(translate("LABEL_USERLISTTABLEPERMISSIONS_TITLE"), $result);
-    $response->assign("main_body", "innerHTML", $result->get_result_str());
     $response->assign("page_title", "innerHTML", translate("LABEL_USERLISTTABLEPERMISSIONS_TITLE")." ".translate("LABEL_MINUS")." ".$user->get_current_list_name());
     $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_USERLISTTABLEPERMISSIONS));
+    $html_database_table->get_page(translate("LABEL_USERLISTTABLEPERMISSIONS_TITLE"), $result);
+    $response->assign("main_body", "innerHTML", $result->get_result_str());
 
     # set filter value
     $user->get_list_state(USERLISTTABLEPERMISSIONS_TABLE_NAME);
@@ -184,9 +184,6 @@ function action_get_user_list_permissions_record ($title, $key_string)
     $result = new Result();
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($user_list_permissions_table_configuration);
-
-    # remove any error messages
-    $response->script("$('*').qtip('destroy')");
 
     # get html for one user record
     $html_database_table->get_record($user_list_permissions, $title, $key_string, array(), $result);
@@ -281,9 +278,6 @@ function action_update_user_list_permissions_record ($title, $key_string, $form_
         }
     }
 
-    # remove any error messages
-    $response->script("$('*').qtip('destroy')");
-
     # display error when insertion returns false
     if (!$user_list_permissions->update($key_string, $new_form_values))
     {
@@ -340,9 +334,6 @@ function action_delete_user_list_permissions_record ($title, $key_string)
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($user_list_permissions_table_configuration);
 
-    # remove any error messages
-    $response->script("$('*').qtip('destroy')");
-
     # display error when delete returns false
     if (!$user_list_permissions->delete($key_string))
     {
@@ -391,9 +382,6 @@ function action_cancel_user_list_permissions_action ($title)
     # create necessary objects
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($user_list_permissions_table_configuration);
-
-    # remove any error messages
-    $response->script("$('*').qtip('destroy')");
 
     # set action pane
     $html_str = $html_database_table->get_action_bar($title, "");

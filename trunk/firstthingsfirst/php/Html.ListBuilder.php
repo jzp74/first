@@ -249,9 +249,9 @@ function action_get_listbuilder_page ($list_title)
     $html_str .= "        <div class=\"white_area\"></div>\n\n";
     $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
 
-    $response->assign("main_body", "innerHTML", $html_str);
     $response->assign("page_title", "innerHTML", $page_title);
     $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_LISTBUILDER));
+    $response->assign("main_body", "innerHTML", $html_str);
     $response->assign("footer_text", "innerHTML", "&nbsp;");
 
     if ($old_list_loaded == FALSE && strlen($list_title) > 0)

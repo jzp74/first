@@ -115,10 +115,10 @@ function action_get_list_page ($list_title)
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
 
     # set page, title, explanation and navigation
-    $html_database_table->get_page($list_title, $result);
-    $response->assign("main_body", "innerHTML", $result->get_result_str());
     $response->assign("page_title", "innerHTML", $list_title);
     $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_LIST));
+    $html_database_table->get_page($list_title, $result);
+    $response->assign("main_body", "innerHTML", $result->get_result_str());
 
     # set action pane
     $html_str = $html_database_table->get_action_bar($list_title, "");
@@ -178,9 +178,9 @@ function action_get_list_print_page ($list_title)
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
 
     # set page and title
+    $response->assign("page_title", "innerHTML", $list_title);
     $html_database_table->get_page($list_title, $result);
     $response->assign("main_body", "innerHTML", $result->get_result_str());
-    $response->assign("page_title", "innerHTML", $list_title);
 
     # create list table object
     $list_table = new ListTable($list_title);
@@ -296,9 +296,6 @@ function action_get_list_record ($list_title, $key_string)
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
 
-    # remove any error messages
-    $response->script("$('*').qtip('destroy')");
-
     # create list table object
     $list_table = new ListTable($list_title);
     if ($list_table->get_is_valid() == FALSE)
@@ -352,9 +349,6 @@ function action_get_list_import ($list_title)
     $result = new Result();
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
-
-    # remove any error messages
-    $response->script("$('*').qtip('destroy');");
 
     # set action pane
     $html_database_table->get_import($list_title, $result);
@@ -460,9 +454,6 @@ function action_insert_list_record ($list_title, $form_values)
         else
             $new_form_values[$db_field_name] = $new_form_value;
     }
-
-    # remove any error messages
-    $response->script("$('*').qtip('destroy')");
 
     # create list table object
     $list_table = new ListTable($list_title);
@@ -580,9 +571,6 @@ function action_update_list_record ($list_title, $key_string, $form_values)
             $new_form_values[$db_field_name] = $new_form_value;
     }
 
-    # remove any error messages
-    $response->script("$('*').qtip('destroy')");
-
     # create list table object
     $list_table = new ListTable($list_title);
     if ($list_table->get_is_valid() == FALSE)
@@ -654,9 +642,6 @@ function action_archive_list_record ($list_title, $key_string)
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
 
-    # remove any error messages
-    $response->script("$('*').qtip('destroy')");
-
     # create list table object
     $list_table = new ListTable($list_title);
     if ($list_table->get_is_valid() == FALSE)
@@ -722,9 +707,6 @@ function action_activate_list_record ($list_title, $key_string)
     $result = new Result();
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
-
-    # remove any error messages
-    $response->script("$('*').qtip('destroy')");
 
     # create list table object
     $list_table = new ListTable($list_title);
@@ -792,9 +774,6 @@ function action_import_list_records ($list_title, $file_name)
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
 
-    # remove any error messages
-    $response->script("$('*').qtip('destroy')");
-
     # create list table object
     $list_table = new ListTable($list_title);
     if ($list_table->get_is_valid() == FALSE)
@@ -854,9 +833,6 @@ function action_delete_list_record ($list_title, $key_string)
     $result = new Result();
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
-
-    # remove any error messages
-    $response->script("$('*').qtip('destroy')");
 
     # create list table object
     $list_table = new ListTable($list_title);
@@ -922,9 +898,6 @@ function action_cancel_list_action ($list_title)
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
 
-    # remove any error messages
-    $response->script("$('*').qtip('destroy')");
-
     # set action pane
     $html_str = $html_database_table->get_action_bar($list_title, "");
     $response->assign("action_pane", "innerHTML", $html_str);
@@ -977,9 +950,6 @@ function action_set_list_archive($list_title, $archive_value)
     $user->get_list_state($list_table->get_table_name());
     $list_state->set_archived($archive_value);
     $user->set_list_state();
-
-    # remove any error messages
-    $response->script("$('*').qtip('destroy')");
 
     # set content
     $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
@@ -1046,9 +1016,6 @@ function action_set_list_filter($list_title, $filter_str)
     $list_state->set_filter_str($filter_str);
     $list_state->set_filter_str_sql("");
     $user->set_list_state();
-
-    # remove any error messages
-    $response->script("$('*').qtip('destroy')");
 
     # set content
     $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);

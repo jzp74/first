@@ -22,11 +22,12 @@ $text_translations["ERROR_PERMISSION_LIST_ADMIN"] = "Je bent geen administrator 
 /**
  * field check errors
  */
-$text_translations["ERROR_DATE_WRONG_FORMAT"] = "Je hebt een onjuist datumformaat gegeven";
-$text_translations["ERROR_NO_NUMBER_GIVEN"] = "jJe hebt geen nummer gegeven";
-$text_translations["ERROR_NO_FIELD_VALUE_GIVEN"] = "Je hebt geen waarde gegeven";
-$text_translations["ERROR_NO_FIELD_NAME_GIVEN"] = "Je hebt geen waarde gegeven";
-$text_translations["ERROR_NO_FIELD_OPTIONS_GIVEN"] = "Je hebt geen opties gegeven";
+$text_translations["ERROR_DATE_WRONG_FORMAT_US"] = "Je hebt een datum in onjuist formaat gegeven. Een datum moet volgens dit formaat zijn: MM/DD/JJJJ";
+$text_translations["ERROR_DATE_WRONG_FORMAT_EU"] = "Je hebt een datum in onjuist formaat gegeven. Een datum moet volgens dit formaat zijn: DD-MM-JJJJ of DD-MM";
+$text_translations["ERROR_NO_NUMBER_GIVEN"] = "Je moet een nummer in dit veld invoeren maar je hebt geen nummer ingevoerd";
+$text_translations["ERROR_NO_FIELD_VALUE_GIVEN"] = "Je moet een waarde in dit veld invoeren maar je hebt geen waarde ingevoerd";
+$text_translations["ERROR_NO_FIELD_NAME_GIVEN"] = "Je hebt geen kolomnaam ingevoerd";
+$text_translations["ERROR_NO_FIELD_OPTIONS_GIVEN"] = "Je hebt geen opties ingevoerd";
 $text_translations["ERROR_NO_USER_NAME_GIVEN"] = "Je hebt geen gebruikersnaam gegeven";
 $text_translations["ERROR_NO_PASSWORD_GIVEN"] = "Je hebt geen wachtwoord gegeven";
 $text_translations["ERROR_INCORRECT_NAME_PASSWORD"] = "De gebruikersnaam/wachtwoord combinatie is onjuist";

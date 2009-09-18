@@ -36,6 +36,7 @@ function translate ($string)
 function check_field ($check_functions, $field_name, $str, $result)
 {
     global $logging;
+    global $firstthingsfirst_date_string;
 
     $logging->trace("check_field (field_name=".$field_name.", str=".$str.")");
 
@@ -68,7 +69,10 @@ function check_field ($check_functions, $field_name, $str, $result)
             $result_str = str_is_date($field_name, $result_str);
             if ($result_str == FALSE_RETURN_STRING)
             {
-                $result->set_error_message_str("ERROR_DATE_WRONG_FORMAT");
+                if ($firstthingsfirst_date_string == DATE_FORMAT_US)
+                    $result->set_error_message_str("ERROR_DATE_WRONG_FORMAT_US");
+                else
+                    $result->set_error_message_str("ERROR_DATE_WRONG_FORMAT_EU");
 
                 return;
             }
@@ -188,7 +192,7 @@ function str_is_date ($field_name, $str)
         $month = intval($date_parts[0]);
         $day = intval($date_parts[1]);
         $year = intval($date_parts[2]);
-        $logging->trace("found us date (DD-MM-YYYY): ".$day."-".$month."-".$year);
+        $logging->trace("found us date (MM/DD/YYYY): ".$month."/".$day."/".$year);
     }
     else
     {

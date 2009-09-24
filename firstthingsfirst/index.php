@@ -276,8 +276,6 @@ handleFunction('set_translations');
 handleFunction('process_url');
 </script>
 
-<div id="modal_blanket"></div>
-
 </body>
 
 <html>

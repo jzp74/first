@@ -110,7 +110,7 @@ function showTooltip(domElementId, messageStr, type, position)
             },
             effect:
             {
-                type: 'grow',
+                type: 'fade',
                 length: 200
             }
         },
@@ -176,6 +176,11 @@ function showModalDialog (domElementId, messageStr, functionStr)
             when:
             {
                 event: ''
+            },
+            effect:
+            {
+                type: 'fade',
+                length: 200
             }
         },
         hide: false,
@@ -201,14 +206,12 @@ function showModalDialog (domElementId, messageStr, functionStr)
             beforeShow: function()
             {
                 // set correct height of blanket and fade in
-                $('#modal_blanket').height($(document).height());
-                $('#modal_blanket').fadeIn(200);
+                $('#modal_blanket').fadeIn("fast");
             },
             beforeDestroy: function()
             {
                 // fade out and set height of blanket to 0
-                $('#modal_blanket').fadeOut(200);
-                $('#modal_blanket').height($(document).height());
+                $('#modal_blanket').fadeOut("fast");
             }
         }
     });
@@ -264,3 +267,21 @@ function setTranslations (accept, cancel, close)
     cancelStr = cancel;
     closeStr = close;
 }
+
+// things to do at document load:
+//  - create blanket
+$(document).ready(function() {
+    $('<div id="modal_blanket">')
+    .css({
+        position: 'absolute',
+        top: $(document).scrollTop(),
+        left: 0,
+        height: $(document).height(),
+        width: '100%',
+        opacity: 0.6,
+        backgroundColor: 'black',
+        zIndex: 5000
+    })
+    .appendTo(document.body) // Append to the document body
+    .hide(); // Hide it initially
+});

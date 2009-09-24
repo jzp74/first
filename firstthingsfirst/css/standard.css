@@ -556,22 +556,6 @@ html, body {
     background-color: rgb(255, 255, 255);
     }
 
-/*  defines the blanket that prevents user from interacting with the application */
-#modal_blanket {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    height: 0px;
-    width: 100%;
-    background-color: rgb(0, 0, 0);
-    -moz-opacity: 0.60;
-    -webkit-opacity: 0.60;
-    opacity: 0.60;
-    filter: alpha(opacity=60);
-    z-index: 5000;
-    display: none;
-    }
-
 /*  defines the pane that contains the action bar */
 #action_pane {
     display: block;
@@ -767,8 +751,6 @@ html, body {
 
 /*  defines qtips */
 .qtip {
-    -moz-opacity: 0.85;
-    -webkit-opacity: 0.85;
     opacity: 0.85;
     filter: alpha(opacity=85);
     }

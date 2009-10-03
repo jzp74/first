@@ -339,6 +339,7 @@ function action_get_list_import ($list_title)
     global $user;
     global $list_table_configuration;
     global $user_start_time_array;
+    global $firstthingsfirst_lang;
 
     $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title)");
 
@@ -354,8 +355,8 @@ function action_get_list_import ($list_title)
     $html_database_table->get_import($list_title, $result);
     $response->assign("action_pane", "innerHTML", $result->get_result_str());
 
-    # disable the submit button
-    $response->script("$('#button_import').attr('disabled', 'disabled');");
+    # hide the submit button
+    $response->script("$('#button_import').hide();");
 
     # create ajax upload button for the import button
     $file_name = "upload_".$user->get_name()."_".strftime("%d%m%Y_%H%M%S.csv");
@@ -363,18 +364,28 @@ function action_get_list_import ($list_title)
         var button = $('#button_upload'), interval;
         new AjaxUpload(button,
         {
-            action: 'php/Html.Upload.php?file_name=$file_name',
+            action: 'php/Html.Upload.php?file_name=$file_name&lang=$firstthingsfirst_lang',
             name: 'import_file',
             onSubmit: function(file, ext)
             {
                 this.disable();
+                $('#file_to_upload_id').html('<img src=\"images/standard_wait_animation.gif\">');
             },
             onComplete: function(file, response)
             {
                 this.enable();
-                $('#button_import').attr('disabled', '');
-                $('#button_import').html(response + file);
-        }
+                if (response.substring(0, 6) != 'SUCCES')
+                {
+                    $('#file_to_upload_id').html('-');
+                    showTooltip('#file_to_upload_id', response, 'error', 'right');
+                }
+                else
+                {
+                    $('#file_to_upload_id').html(file);
+                    $('#button_import').show();
+                    $('#uploaded_file_name').html(response.substring(7));
+                }
+            }
         });
     ");
 
@@ -757,14 +768,15 @@ function action_activate_list_record ($list_title, $key_string)
  * @param string $file_name name of uploaded file to be precessed
  * @return xajaxResponse every xajax registered function needs to return this object
  */
-function action_import_list_records ($list_title, $file_name)
+function action_import_list_records ($list_title, $file_name, $field_seperator)
 {
     global $logging;
     global $user;
     global $list_table_configuration;
     global $user_start_time_array;
+    global $firstthingsfirst_field_descriptions;
 
-    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title)");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title, file_name=$file_name, field_seperator=$field_seperator)");
 
     # store start time
     $user_start_time_array[__METHOD__] = microtime(TRUE);
@@ -773,6 +785,17 @@ function action_import_list_records ($list_title, $file_name)
     $result = new Result();
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($list_table_configuration);
+
+    # check if a file_name has been given
+    if ($file_name == "NO_FILE")
+    {
+        $logging->warn("no file was uploaded");
+        set_error_message("button_import", "above", "ERROR_IMPORT_SELECT_FILE_UPLOAD", "", "", $response);
+
+        return $response;
+    }
+
+    $full_file_name = "uploads/$file_name";
 
     # create list table object
     $list_table = new ListTable($list_title);
@@ -787,22 +810,121 @@ function action_import_list_records ($list_title, $file_name)
         return $response;
     }
 
-    $logging->debug("starting to read uploaded file (file_name=".$file_name.")");
-    if (file_exists($file_name) == FALSE)
+    $logging->debug("starting to read uploaded file ($full_file_name=".$full_file_name.")");
+    if (file_exists($full_file_name) == FALSE)
     {
-        set_error_message("button_import", "above", "uploaded file does not seem to exist", "", "", $response);
+        $logging->warn("cannot find uploaded file");
+        set_error_message("button_import", "above", "ERROR_IMPORT_FILE_NOT_FOUND", "", "", $response);
 
         return $response;
     }
 
-    $file_size = filesize($file_name);
+    $file_size = filesize($full_file_name);
     $logging->debug("get filesize (file_size=".$file_size.")");
 
-    $logging->debug("delete file");
-    unlink($file_name);
+    $fields = $list_table->get_fields();
+    # line number counter
+    $line_number = 1;
+    # database field names of all columns to import
+    $import_db_field_names = array_slice($list_table->get_db_field_names(), 1);
+    $num_of_import_db_field_names = count($import_db_field_names);
+    # open file to import
+    $file_handler = fopen($full_file_name, "r");
+    if ($file_handler == FALSE)
+    {
+        $logging->warn("could not open file to import (file_name=$full_file_name)");
+        set_error_message("button_import", "above", "ERROR_IMPORT_COULD_NOT_OPEN", "", "", $response);
 
-    $logging->debug("set info message");
-    set_info_message("button_import", "above", "read and deleted file", $response);
+        return $response;
+    }
+
+    # read a line from the file to import
+    while (($line_str = fgetcsv($file_handler, 10000, $field_seperator)) !== FALSE)
+    {
+        $logging->debug("reading line (line_number=$line_number)");
+
+        $num_of_columns = count($line_str);
+        # check if number of columns is correct
+        if ($num_of_columns != $num_of_import_db_field_names)
+        {
+            $logging->warn("wrong colum count (num_of_columns=$num_of_columns, num_of_import_db_field_names=$num_of_import_db_field_names)");
+            $error_message_str = LABEL_IMPORT_LINE_NUMBER." $line_number <br> ".ERROR_IMPORT_WRONG_COLUMN_COUNT;
+            set_error_message("button_import", "above", $error_message_str, "", "", $response);
+
+            return $response;
+        }
+
+        $insert_array = array();
+        $counter = 0;
+        # create an array with all db_field_names and values from file
+        foreach ($import_db_field_names as $db_field_name)
+        {
+            $field_name = $fields[$db_field_name][0];
+            $field_type = $fields[$db_field_name][1];
+            $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_INPUT_CHECKS]);
+            $result->reset();
+
+            $logging->debug("field (name=$db_field_name, type=$field_type)");
+
+            # check field values and store new field value in result
+            check_field($check_functions, $db_field_name, $line_str[$counter], $result);
+            if (strlen($result->get_error_message_str()) > 0)
+            {
+                $error_message_str = LABEL_IMPORT_LINE_NUMBER." $line_number <br> ".LABEL_IMPORT_FIELDNAME." $field_name <br> ".$result->get_error_message_str();
+                #$error_message_str = $result->get_error_message_str();
+                set_error_message(button_import, "above", $error_message_str, "", "", $response);
+
+                return $response;
+            }
+
+            # store the new field value (either as note or as normal value)
+            if ($field_type == FIELD_TYPE_DEFINITION_NOTES_FIELD)
+                $insert_array[$db_field_name] = array(array(0, $result->get_result_str()));
+            else
+                $insert_array[$db_field_name] = $result->get_result_str();
+
+            $counter++;
+        }
+
+        # insert a line
+        $return_value = $list_table->insert($insert_array, $user->get_name());
+        if ($return_value == 0)
+        {
+            $logging->warn("insert list record returns false");
+            $error_message_str = LABEL_IMPORT_LINE_NUMBER." $line_number <br> ".$result->get_error_message_str();
+            #$error_message_str = $list_table->get_error_message_str();
+            $error_log_str = $list_table->get_error_log_str();
+            $error_str = $list_table->get_error_str();
+            set_error_message("button_import", "above", $error_message_str, $error_log_str, $error_str, $response);
+
+            return $response;
+        }
+
+        $line_number++;
+    }
+
+    $logging->debug("imported all lines from file (line_number=$line_number)");
+
+    # delete the import file
+    unlink($full_file_name);
+
+    # set content
+    $result->reset();
+    $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
+    $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+
+    # set action pane
+    $html_str = $html_database_table->get_action_bar($list_title, "");
+    $response->assign("action_pane", "innerHTML", $html_str);
+
+    # set footer
+    $response->assign("footer_text", "innerHTML", get_footer($list_table->get_creator_modifier_array()));
+
+    # check post conditions
+    if (check_postconditions($result, $response) == FALSE)
+        return $response;
+
+    set_info_message("action_bar_button_import", "above", "LABEL_IMPORT_SUCCESS", $response);
 
     # log total time for this function
     $logging->info(get_function_time_str(__METHOD__));

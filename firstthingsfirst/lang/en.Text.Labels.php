@@ -78,7 +78,15 @@ $text_translations["LABEL_PAGE"] = "page";
 $text_translations["LABEL_OF"] = "of";
 $text_translations["LABEL_ADD_RECORD"] = "Add a new ";
 $text_translations["LABEL_EDIT_RECORD"] = "Change this ";
-$text_translations["LABEL_IMPORT_RECORDS"] = "Select a file to upload and than import that file";
+$text_translations["LABEL_IMPORT_RECORDS"] = "Select a file and than import that file";
+$text_translations["LABEL_IMPORT_FILE_NAME"] = "file&nbsp;name";
+$text_translations["LABEL_IMPORT_FIELD_SEPERATOR"] = "field&nbsp;seperator";
+$text_translations["LABEL_IMPORT_FIELD_SEPERATOR_COMMA"] = "comma (,)";
+$text_translations["LABEL_IMPORT_FIELD_SEPERATOR_SEMI_COLON"] = "semi colon (;)";
+$text_translations["LABEL_IMPORT_CONFIRM"] = "It is important that the file you are about to import meets a number of requirements:<br>The file cannot contain a header line and the file has to have exactly the same number of fields as this list (minus the id field which cannot be part of the file).<br>All lines from the file will be added to the list as active records.<br>Are you sure you want to import the uploaded file?";
+$text_translations["LABEL_IMPORT_LINE_NUMBER"] = "Line number:";
+$text_translations["LABEL_IMPORT_FIELDNAME"] = "Field name:";
+$text_translations["LABEL_IMPORT_SUCCESS"] = "All lines from the file have been imported";
 
 /**
  * listtableitemnote labels
@@ -112,7 +120,6 @@ $text_translations["LABEL_ID_COLUMN_NO_SHOW"] = "do not show this column&nbsp;&n
 $text_translations["LABEL_NAME_ONLY"] = "name only&nbsp;&nbsp;";
 $text_translations["LABEL_DATE_ONLY"] = "date only&nbsp;&nbsp;";
 $text_translations["LABEL_DATE_NAME"] = "date and name&nbsp;&nbsp;";
-$text_translations["LABEL_CONFIRM_MODIFY"] = "List content of fields whose type you changed will be removed.<br>List content of fields that you removed will be removed.<br>Are you sure you want to modify this list?";
 
 /**
  * login labels
@@ -138,6 +145,6 @@ $text_translations["LABEL_CONFIRM_DELETE"] = "Are you sure you want to delete th
  */
 $text_translations["LABEL_USER_SETTINGS_TITLE"] = "User settings";
 $text_translations["LABEL_USER_SETTINGS_RECORD"] = "user settings of";
-$text_translations["LABEL_USER_SETTINGS_CHANGED"] = "User settings have been changed!";
+$text_translations["LABEL_USER_SETTINGS_CHANGED"] = "User settings have been changed! Please log off and log on again to activate your changes.";
 
 ?>

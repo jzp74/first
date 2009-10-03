@@ -43,7 +43,7 @@ $text_translations["BUTTON_ADD_NOTE"] = "nieuwe&nbsp;opmerking";
 $text_translations["BUTTON_PRINT_LIST"] = "deze&nbsp;lijst&nbsp;afdrukken";
 $text_translations["BUTTON_IMPORT_RECORDS"] = "importeer&nbsp;uit&nbsp;bestand";
 $text_translations["BUTTON_SELECT_UPLOAD_FILE"] = "selecteer&nbsp;een&nbsp;bestand&nbsp;om&nbsp;te&nbsp;uploaden";
-$text_translations["BUTTON_IMPORT_FROM_THIS_FILE"] = "importeer&nbsp;bestand:&nbsp;";
+$text_translations["BUTTON_IMPORT_FILE"] = "importeer&nbsp;bestand";
 $text_translations["BUTTON_EXPORT_RECORDS"] = "exporteer&nbsp;naar&nbsp;bestand";
 
 /**

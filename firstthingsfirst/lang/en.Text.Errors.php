@@ -51,11 +51,22 @@ $text_translations["ERROR_DUPLICATE_LIST_NAME"] = "You or another user has alrea
 $text_translations["ERROR_DUPLICATE_USER_NAME"] = "A user with the same name already exists";
 
 /**
- *  user administration errors
+ * user administration errors
  */
 $text_translations["ERROR_CANNOT_UPDATE_NAME_USER_ADMIN"] = "You cannot change the name of user administrator";
 $text_translations["ERROR_CANNOT_UPDATE_PERMISSIONS_USER_ADMIN"] = "You cannot change the permissions of user administrator";
 $text_translations["ERROR_CANNOT_DELETE_USER_ADMIN"] = "You cannot delete user administator";
 $text_translations["ERROR_CANNOT_DELETE_YOURSELF"] = "You cannot delete yourself";
+
+/**
+ * import errors
+ */
+$text_translations["ERROR_IMPORT_FILE_SIZE_TOO_LARGE"] = "You cannot import files larger than 1Mb";
+$text_translations["ERROR_IMPORT_FILE_WRONG_EXTENSION"] = "You cannot import files with file extensions other than .csv and .txt";
+$text_translations["ERROR_IMPORT_FILE_NOT_MOVE"] = "Unable to move temporary upload file to upload directory";
+$text_translations["ERROR_IMPORT_FILE_NOT_FOUND"] = "Unable to find temporary upload file";
+$text_translations["ERROR_IMPORT_SELECT_FILE_UPLOAD"] = "You have not selected a file to upload. Please select a file to upload first";
+$text_translations["ERROR_IMPORT_COULD_NOT_OPEN"] = "Unable to open temporary upload file";
+$text_translations["ERROR_IMPORT_WRONG_COLUMN_COUNT"] = "The number of fields does not match the number of fields of this list";
 
 ?>

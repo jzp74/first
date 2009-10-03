@@ -58,4 +58,15 @@ $text_translations["ERROR_CANNOT_UPDATE_PERMISSIONS_USER_ADMIN"] = "Je kunt de r
 $text_translations["ERROR_CANNOT_DELETE_USER_ADMIN"] = "Je kunt de administrator niet verwijderen";
 $text_translations["ERROR_CANNOT_DELETE_YOURSELF"] = "Je kunt jezelf niet verwijderen";
 
+/**
+ * import errors
+ */
+$text_translations["ERROR_IMPORT_FILE_SIZE_TOO_LARGE"] = "Je kunt geen bestanden groter dan 1Mb importeren";
+$text_translations["ERROR_IMPORT_FILE_WRONG_EXTENSION"] = "Je kunt geen bestanden met andere extensies dan .csv en .txt importeren";
+$text_translations["ERROR_IMPORT_FILE_NOT_MOVE"] = "Kan het tijdelijke upload bestand niet verplaatsen naar de upload map";
+$text_translations["ERROR_IMPORT_FILE_NOT_FOUND"] = "Kan het tijdelijke upload bestand niet vinden";
+$text_translations["ERROR_IMPORT_SELECT_FILE_UPLOAD"] = "Je hebt nog geen bestand geselecteerd om te uploaden. Selecteer eerst een bestand om te uploaden";
+$text_translations["ERROR_IMPORT_COULD_NOT_OPEN"] = "Kan het tijdelijke upload bestand niet openen";
+$text_translations["ERROR_IMPORT_WRONG_COLUMN_COUNT"] = "Het aantal kolommen komt niet overeen met het aantal kolommen van deze lijst";
+
 ?>

@@ -254,8 +254,20 @@ function set_error_message ($error_element, $error_position, $error_message_str,
 
     $logging->warn("set error (element=$error_element, position=$error_position)");
 
+    # translate all words from the error message seperately
+    $html_str = "<strong>";
+    $error_message_array = explode(" ", $error_message_str);
+    foreach ($error_message_array as $word)
+    {
+        # check if word should be translated
+        if ((strstr($word, "ERROR_") != FALSE) || (strstr($word, "LABEL_") != FALSE))
+            $html_str .= translate($word)." ";
+        else
+            $html_str .= $word." ";
+    }
+    $html_str .= "</strong>";
+
     # now create the HTML for the error message
-    $html_str = "<strong>".translate($error_message_str)."</strong>";
     if (strlen($error_log_str) > 0 || strlen($error_str) > 0)
         $html_str .= "<br>";
     if (strlen($error_log_str) > 0)

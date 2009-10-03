@@ -130,7 +130,7 @@ function process_url ()
     global $logging;
     global $user;
 
-    $logging->info("PROCESS_URL (request_uri=".$_SERVER["REQUEST_URI"].")");
+    $logging->debug("PROCESS_URL (request_uri=".$_SERVER["REQUEST_URI"].")");
 
     # show portal page if no action is set
     $action = "";

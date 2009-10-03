@@ -42,7 +42,7 @@ $firstthingsfirst_db_schema = "some_schema";
 # LOGGING_INFO - log info, warning and error messages
 # LOGGING_DEBUG - log debug, info, warning and error messages (lots of log data!)
 # LOGGING_TRACE - log trace, debug, info, warning and error messages (lots of log data!)
-$firstthingsfirst_loglevel = LOGGING_OFF;
+$firstthingsfirst_loglevel = LOGGING_INFO;
 
 # logfile, all logmessages will be written in this file in the ./uploads directory
 # you can add strftime styled parameters, see http://www.php.net/manual/en/function.strftime.php for detailed information

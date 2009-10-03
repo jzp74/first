@@ -206,11 +206,12 @@ function showModalDialog (domElementId, messageStr, functionStr)
             beforeShow: function()
             {
                 // set correct height of blanket and fade in
+                $('#modal_blanket').height($(document).height());
                 $('#modal_blanket').fadeIn("fast");
             },
             beforeDestroy: function()
             {
-                // fade out and set height of blanket to 0
+                // fade out
                 $('#modal_blanket').fadeOut("fast");
             }
         }

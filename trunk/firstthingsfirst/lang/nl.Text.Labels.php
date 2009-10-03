@@ -78,7 +78,15 @@ $text_translations["LABEL_PAGE"] = "pagina";
 $text_translations["LABEL_OF"] = "van";
 $text_translations["LABEL_ADD_RECORD"] = "Nieuwe ";
 $text_translations["LABEL_EDIT_RECORD"] = "Wijzig deze ";
-$text_translations["LABEL_IMPORT_RECORDS"] = "Selecteer een file om te uploaden en importeer deze vervolgens";
+$text_translations["LABEL_IMPORT_RECORDS"] = "Selecteer een bestand en importeer deze vervolgens";
+$text_translations["LABEL_IMPORT_FILE_NAME"] = "bestandsnaam";
+$text_translations["LABEL_IMPORT_FIELD_SEPERATOR"] = "kolomscheidingsteken";
+$text_translations["LABEL_IMPORT_FIELD_SEPERATOR_COMMA"] = "komma (,)";
+$text_translations["LABEL_IMPORT_FIELD_SEPERATOR_SEMI_COLON"] = "puntkomma (;)";
+$text_translations["LABEL_IMPORT_CONFIRM"] = "Het is belangrijk dat het bestand dat je wilt importeren aan een aantal eisen voldoet.<br>Het bestand mag geen kop regel bevatten en het bestand moet precies evenveel kolommen bevatten als deze lijst (minus de id-kolom).<br>Alle regels worden als nieuwe actieve rijen ann de lijst toegevoegd.<br>Weet je zeker dat je het gekozen bestand wilt importeren?";
+$text_translations["LABEL_IMPORT_LINE_NUMBER"] = "Regelnummer:";
+$text_translations["LABEL_IMPORT_FIELDNAME"] = "Kolomnaam:";
+$text_translations["LABEL_IMPORT_SUCCESS"] = "Alle regels uit het bestaand zijn geimporteerd";
 
 /**
  * listtableitemnote labels
@@ -138,6 +146,6 @@ $text_translations["LABEL_CONFIRM_DELETE"] = "Weet je zeker dat je deze lijst wi
  */
 $text_translations["LABEL_USER_SETTINGS_TITLE"] = "Gebruikersinstellingen";
 $text_translations["LABEL_USER_SETTINGS_RECORD"] = "gebruikersinstellingen van";
-$text_translations["LABEL_USER_SETTINGS_CHANGED"] = "Gebruikersinstellingen zijn gewijzigd!";
+$text_translations["LABEL_USER_SETTINGS_CHANGED"] = "Gebruikersinstellingen zijn gewijzigd!<br>Log uit en log opnieuw in zodat de wijzigingen actief worden.";
 
 ?>

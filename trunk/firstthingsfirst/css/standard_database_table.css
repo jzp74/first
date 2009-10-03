@@ -27,7 +27,7 @@
 /*  defines archive selector in database table contents top */
 #database_table_archive_select {
     float: left;
-    margin: 4px 24px 0px 0px;
+    margin: 18px 24px 0px 0px;
     padding: 0px 0px 0px 28px;
     background: url(../images/icons/boomy_icon_folder_bw.png) left top no-repeat;
     }
@@ -45,7 +45,7 @@
 /*  defines filter in database table contents top */
 #database_table_filter {
     float: left;
-    margin: 4px 20px 0px 0px;
+    margin: 18px 20px 0px 0px;
     }
 
 #database_table_filter form {
@@ -73,7 +73,7 @@
 
 /*  defines database table pages in database table contents top */
 #database_table_pages_top {
-    margin: 7px 0px 0px 0px;
+    margin: 4px 0px 0px 0px;
     float: right;
     }
 

@@ -845,15 +845,28 @@ class HtmlDatabaseTable
         $html_str .= "                    <table id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
         $html_str .= "                        <tbody>\n";
         $html_str .= "                            <tr>\n";
-        $html_str .= "                                <th><div id=\"button_upload\" class=\"icon_add\">".translate("BUTTON_SELECT_UPLOAD_FILE")."</a></th>\n";
+        $html_str .= "                                <th><div class=\"invisible_collapsed\" id=\"uploaded_file_name\">NO_FILE</div></th>\n";
+        $html_str .= "                                <td><div id=\"button_upload\" class=\"icon_add\">".translate("BUTTON_SELECT_UPLOAD_FILE")."</a></td>\n";
+        $html_str .= "                                <td class=\"super_width\">&nbsp;</td>\n";
+        $html_str .= "                            </tr>\n";
+        $html_str .= "                            <tr>\n";
+        $html_str .= "                                <th>".translate("LABEL_IMPORT_FILE_NAME")."</th>\n";
+        $html_str .= "                                <td id=\"file_to_upload_id\">-</td>\n";
+        $html_str .= "                                <td class=\"super_width\">&nbsp;</td>\n";
+        $html_str .= "                            </tr>\n";
+        $html_str .= "                            <tr>\n";
+        $html_str .= "                                <th>".translate("LABEL_IMPORT_FIELD_SEPERATOR")."</th>\n";
+        $html_str .= "                                <td><select id=\"seperator_select_id\" name=\"seperator_select\"><option value=\",\">";
+        $html_str .= translate("LABEL_IMPORT_FIELD_SEPERATOR_COMMA")."</option><option value=\";\">";
+        $html_str .= translate("LABEL_IMPORT_FIELD_SEPERATOR_SEMI_COLON")."</option></select></td>\n";
         $html_str .= "                                <td class=\"super_width\">&nbsp;</td>\n";
         $html_str .= "                            </tr>\n";
         $html_str .= "                        </tbody>\n";
         $html_str .= "                    </table> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents -->\n";
         $html_str .= "                    <span id=\"record_contents_buttons\">\n";
         $html_str .= "                        ";
-        $html_str .= "<a id=\"button_import\" href=\"javascript:void(0);\" class=\"icon_unarchive\" onclick=\"action_import_list_records('".$list_title."')\">".translate("BUTTON_IMPORT_FROM_THIS_FILE")." - </a>";
-        $html_str .= "&nbsp;&nbsp;".get_href(get_onclick($js_button_cancel, HTML_NO_PERMISSION_CHECK, "", "", "('".$list_title."')"), translate("BUTTON_CANCEL"), "icon_cancel");
+        $html_str .= "<a id=\"button_import\" href=\"javascript:void(0);\" class=\"icon_unarchive\" ".get_onclick_confirm(ACTION_IMPORT_LIST_RECORDS, $list_title, "button_import", "above", "handleFunction(%22".ACTION_IMPORT_LIST_RECORDS."%22, %22$list_title%22, $(%22#uploaded_file_name%22).html(), $(%22#seperator_select_id%22).val())", translate("LABEL_IMPORT_CONFIRM")).">".translate("BUTTON_IMPORT_FILE")."&nbsp;&nbsp;</a>";
+        $html_str .= get_href(get_onclick($js_button_cancel, HTML_NO_PERMISSION_CHECK, "", "", "('$list_title')"), translate("BUTTON_CANCEL"), "icon_cancel");
         $html_str .= "\n                        ";
         $html_str .= "\n                    </span> <!-- record_contents_buttons -->\n";
         $html_str .= "                </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents_pane -->\n";
@@ -909,7 +922,7 @@ class HtmlDatabaseTable
             $html_str .= "</span>&nbsp;&nbsp;&nbsp;&nbsp;";
 
             $html_str .= "<span id=\"action_bar_button_import\">";
-            $html_str .= get_href(get_onclick(ACTION_IMPORT_LIST_RECORDS, $this->permissions_list_title, "action_bar_button_import", "above", "(%27".$list_title."%27)"), translate("BUTTON_IMPORT_RECORDS"), "icon_unarchive");
+            $html_str .= get_href(get_onclick(ACTION_GET_LIST_IMPORT, $this->permissions_list_title, "action_bar_button_import", "above", "(%27".$list_title."%27)"), translate("BUTTON_IMPORT_RECORDS"), "icon_unarchive");
             $html_str .= "</span>";
         }
         else

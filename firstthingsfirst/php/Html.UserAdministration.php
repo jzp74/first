@@ -39,15 +39,16 @@ $xajax->register(XAJAX_FUNCTION, ACTION_CANCEL_USER_ADMIN_ACTION);
  *  - user has to have admin permission to be able to execute action
  *  - user has to have permission to view this list to execute list action for this list
  *  - user has to have permission to edit this list to execute action for this list
+ *  - user has to have permission to add to this list to execute action for this list
  *  - user has to have admin permission for this list to exectute action for this list
  */
-$firstthingsfirst_action_description[ACTION_GET_USER_ADMIN_PAGE] = "-P---";
-$firstthingsfirst_action_description[ACTION_GET_USER_ADMIN_CONTENT] = "-P---";
-$firstthingsfirst_action_description[ACTION_GET_USER_ADMIN_RECORD] = "-P---";
-$firstthingsfirst_action_description[ACTION_INSERT_USER_ADMIN_RECORD] = "-P---";
-$firstthingsfirst_action_description[ACTION_UPDATE_USER_ADMIN_RECORD] = "-P---";
-$firstthingsfirst_action_description[ACTION_DELETE_USER_ADMIN_RECORD] = "-P---";
-$firstthingsfirst_action_description[ACTION_CANCEL_USER_ADMIN_ACTION] = "-P---";
+$firstthingsfirst_action_description[ACTION_GET_USER_ADMIN_PAGE]        = "-P----";
+$firstthingsfirst_action_description[ACTION_GET_USER_ADMIN_CONTENT]     = "-P----";
+$firstthingsfirst_action_description[ACTION_GET_USER_ADMIN_RECORD]      = "-P----";
+$firstthingsfirst_action_description[ACTION_INSERT_USER_ADMIN_RECORD]   = "-P----";
+$firstthingsfirst_action_description[ACTION_UPDATE_USER_ADMIN_RECORD]   = "-P----";
+$firstthingsfirst_action_description[ACTION_DELETE_USER_ADMIN_RECORD]   = "-P----";
+$firstthingsfirst_action_description[ACTION_CANCEL_USER_ADMIN_ACTION]   = "-P----";
 
 /**
  * definition of css name prefix

@@ -51,6 +51,11 @@ function fatal ($str)
     exit("&nbsp;&nbsp;&nbsp;-> ".$str."</strong><br>");
 }
 
+function ok ($str)
+{
+    echo "<strong>ACTION OK</strong>&nbsp;-&nbsp;$str<br>";
+}
+
 # opening message
 echo "<strong>starting ".$update_string."</strong><br><br>\n";
 
@@ -78,7 +83,7 @@ foreach ($all_foreign_keys as $one_foreign_key)
     if ($query_result == FALSE)
         fatal("could not remove foreign key: ".$one_foreign_key[0].".".$one_foreign_key[1]);
 }
-echo "removed ".count($all_foreign_keys)." foreign keys<br>";
+ok("removed ".count($all_foreign_keys)." foreign keys");
 
 echo "converting all database tables to MyISAM<br>";
 $query = "SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_NAME LIKE '".$firstthingsfirst_db_table_prefix."_%'";
@@ -101,7 +106,26 @@ foreach ($all_tables as $one_table)
     if ($query_result == FALSE)
         fatal("could not convert database table: ".$one_table);
 }
-echo "converted ".count($all_tables)." database tables<br>";
+ok("converted ".count($all_tables)." database tables");
+
+echo "updating user list permissions table<br>";
+$query = "ALTER TABLE ".USERLISTTABLEPERMISSIONS_TABLE_NAME." ADD COLUMN ".USERLISTTABLEPERMISSIONS_CAN_CREATE_LIST_FIELD_NAME." ".DB_DATATYPE_BOOL." AFTER ".USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME;
+$query_result = $database->query($query);
+if ($query_result == FALSE)
+    fatal("could not update user list permissions table");
+ok("updated user list permissions table");
+
+echo "updating all user list permissions<br>";
+$query = "UPDATE ".USERLISTTABLEPERMISSIONS_TABLE_NAME." SET ".USERLISTTABLEPERMISSIONS_CAN_CREATE_LIST_FIELD_NAME."=1 WHERE ".USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME."=1";
+$query_result = $database->query($query);
+if ($query_result == FALSE)
+    fatal("could not update user list permissions");
+$query = "UPDATE ".USERLISTTABLEPERMISSIONS_TABLE_NAME." SET ".USERLISTTABLEPERMISSIONS_CAN_CREATE_LIST_FIELD_NAME."=0 WHERE ".USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME."=0";
+$query_result = $database->query($query);
+if ($query_result == FALSE)
+    fatal("could not update user list permissions");
+
+ok("updated all users user list permissions");
 
 # succes
 echo "<br><strong>update complete!</strong><br>";

@@ -53,22 +53,23 @@ $xajax->register(XAJAX_FUNCTION, ACTION_SET_LIST_FILTER);
  *  - user has to have admin permission to be able to execute action
  *  - user has to have permission to view this list to execute list action for this list
  *  - user has to have permission to edit this list to execute action for this list
+ *  - user has to have permission to add to this list to execute action for this list
  *  - user has to have admin permission for this list to exectute action for this list
  */
-$firstthingsfirst_action_description[ACTION_GET_LIST_PAGE] = "--P--";
-$firstthingsfirst_action_description[ACTION_GET_LIST_PRINT_PAGE] = "--P--";
-$firstthingsfirst_action_description[ACTION_GET_LIST_CONTENT] = "--P--";
-$firstthingsfirst_action_description[ACTION_GET_LIST_RECORD] = "---P-";
-$firstthingsfirst_action_description[ACTION_GET_LIST_IMPORT] = "---P-";
-$firstthingsfirst_action_description[ACTION_INSERT_LIST_RECORD] = "---P-";
-$firstthingsfirst_action_description[ACTION_UPDATE_LIST_RECORD] = "---P-";
-$firstthingsfirst_action_description[ACTION_ARCHIVE_LIST_RECORD] = "---P-";
-$firstthingsfirst_action_description[ACTION_ACTIVATE_LIST_RECORD] = "---P-";
-$firstthingsfirst_action_description[ACTION_IMPORT_LIST_RECORDS] = "---P-";
-$firstthingsfirst_action_description[ACTION_DELETE_LIST_RECORD] = "---P-";
-$firstthingsfirst_action_description[ACTION_CANCEL_LIST_ACTION] = "-----";
-$firstthingsfirst_action_description[ACTION_SET_LIST_ARCHIVE] = "-----";
-$firstthingsfirst_action_description[ACTION_SET_LIST_FILTER] = "-----";
+$firstthingsfirst_action_description[ACTION_GET_LIST_PAGE]          = "--P---";
+$firstthingsfirst_action_description[ACTION_GET_LIST_PRINT_PAGE]    = "--P---";
+$firstthingsfirst_action_description[ACTION_GET_LIST_CONTENT]       = "--P---";
+$firstthingsfirst_action_description[ACTION_GET_LIST_RECORD]        = "---P--";
+$firstthingsfirst_action_description[ACTION_GET_LIST_IMPORT]        = "----P-";
+$firstthingsfirst_action_description[ACTION_INSERT_LIST_RECORD]     = "----P-";
+$firstthingsfirst_action_description[ACTION_UPDATE_LIST_RECORD]     = "---P--";
+$firstthingsfirst_action_description[ACTION_ARCHIVE_LIST_RECORD]    = "---P--";
+$firstthingsfirst_action_description[ACTION_ACTIVATE_LIST_RECORD]   = "---P--";
+$firstthingsfirst_action_description[ACTION_IMPORT_LIST_RECORDS]    = "----P-";
+$firstthingsfirst_action_description[ACTION_DELETE_LIST_RECORD]     = "----P-";
+$firstthingsfirst_action_description[ACTION_CANCEL_LIST_ACTION]     = "------";
+$firstthingsfirst_action_description[ACTION_SET_LIST_ARCHIVE]       = "------";
+$firstthingsfirst_action_description[ACTION_SET_LIST_FILTER]        = "------";
 
 /**
  * definition of css name prefix

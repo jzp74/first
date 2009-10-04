@@ -34,6 +34,12 @@ define("USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME", "_can_view_list");
  * definition of times_login field name
  */
 define("USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME", "_can_edit_list");
+
+/**
+ * definition of times_login field name
+ */
+define("USERLISTTABLEPERMISSIONS_CAN_CREATE_LIST_FIELD_NAME", "_can_create_list");
+
 /**
  * definition of times_login field name
  */
@@ -48,6 +54,7 @@ $class_userlisttablepermissions_fields = array(
     USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME => array("LABEL_USERLISTTABLEPERMISSIONS_USER_NAME", FIELD_TYPE_DEFINITION_NON_EDIT_TEXT_LINE, ""),
     USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME => array("LABEL_USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST", FIELD_TYPE_DEFINITION_BOOL, ""),
     USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME => array("LABEL_USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST", FIELD_TYPE_DEFINITION_BOOL, ""),
+    USERLISTTABLEPERMISSIONS_CAN_CREATE_LIST_FIELD_NAME => array("LABEL_USERLISTTABLEPERMISSIONS_CAN_CREATE_LIST", FIELD_TYPE_DEFINITION_BOOL, ""),
     USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME => array("LABEL_USERLISTTABLEPERMISSIONS_IS_AMDIN", FIELD_TYPE_DEFINITION_BOOL, ""),
 );
 
@@ -91,8 +98,8 @@ class UserListTablePermissions extends UserDatabaseTable
         $this->_log->trace("select user list permissions (list_title=".$list_title.", user_name=".$user_name.")");
 
         # select only the permissions from database
-        $query = "SELECT ".USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME.", ";
-        $query .= USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME.", ".USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME;
+        $query = "SELECT ".USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME.", ".USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME.", ";
+        $query .= USERLISTTABLEPERMISSIONS_CAN_CREATE_LIST_FIELD_NAME.", ".USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME;
         $query .= " FROM ".USERLISTTABLEPERMISSIONS_TABLE_NAME." WHERE ";
         $query .= USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE_FIELD_NAME."=\"".$list_title."\" AND ";
         $query .= USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME."=\"".$user_name."\"";
@@ -107,9 +114,13 @@ class UserListTablePermissions extends UserDatabaseTable
                 $new_row = array();
                 $new_row[PERMISSION_CAN_VIEW_SPECIFIC_LIST] = $row[USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME];
                 $new_row[PERMISSION_CAN_EDIT_SPECIFIC_LIST] = $row[USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME];
+                $new_row[PERMISSION_CAN_CREATE_SPECIFIC_LIST] = $row[USERLISTTABLEPERMISSIONS_CAN_CREATE_LIST_FIELD_NAME];
                 $new_row[PERMISSION_IS_ADMIN_SPECIFIC_LIST] = $row[USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME];
 
-                $this->_log->trace("selected user list permissions (permissions=[".$new_row[PERMISSION_CAN_VIEW_SPECIFIC_LIST]."".$new_row[PERMISSION_CAN_EDIT_SPECIFIC_LIST]."".$new_row[PERMISSION_IS_ADMIN_SPECIFIC_LIST]."]");
+                $log_str = "selected user list permissions (permissions=[";
+                $log_str = $new_row[PERMISSION_CAN_VIEW_SPECIFIC_LIST].$new_row[PERMISSION_CAN_EDIT_SPECIFIC_LIST];
+                $log_str = $new_row[PERMISSION_CAN_CREATE_SPECIFIC_LIST].$new_row[PERMISSION_IS_ADMIN_SPECIFIC_LIST]."]";
+                $this->_log->trace($log_str);
 
                 return $new_row;
             }
@@ -138,9 +149,14 @@ class UserListTablePermissions extends UserDatabaseTable
     {
         $this->_log->trace("update user list permission (encoded_key_string=".$encoded_key_string.")");
 
-        # if user is list admin then user must also be able to edit list
+        # if user is list admin then user must also be able to create list
         if (array_key_exists(USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME, $name_values_array) == TRUE)
             if ($name_values_array[USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME] == 1)
+                $name_values_array[USERLISTTABLEPERMISSIONS_CAN_CREATE_LIST_FIELD_NAME] = 1;
+
+        # if user can create list than user must also be able to edit list
+        if (array_key_exists(USERLISTTABLEPERMISSIONS_CAN_CREATE_LIST_FIELD_NAME, $name_values_array) == TRUE)
+            if ($name_values_array[USERLISTTABLEPERMISSIONS_CAN_CREATE_LIST_FIELD_NAME] == 1)
                 $name_values_array[USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME] = 1;
 
         # if user can edit list than user must also be able to view list
@@ -185,11 +201,13 @@ class UserListTablePermissions extends UserDatabaseTable
             $name_values_array = array();
             $name_values_array[USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE_FIELD_NAME] = $list_title;
             $name_values_array[USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME] = $user_name;
+
             # give current user (creator of the list) and user admin all permissions
             if (($user_name == $current_user) || ($user_name == "admin") || ($user_is_admin == 1))
             {
                 $name_values_array[USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME] = 1;
                 $name_values_array[USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME] = 1;
+                $name_values_array[USERLISTTABLEPERMISSIONS_CAN_CREATE_LIST_FIELD_NAME] = 1;
                 $name_values_array[USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME] = 1;
             }
             # other users get no permissions
@@ -197,6 +215,7 @@ class UserListTablePermissions extends UserDatabaseTable
             {
                 $name_values_array[USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME] = 0;
                 $name_values_array[USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME] = 0;
+                $name_values_array[USERLISTTABLEPERMISSIONS_CAN_CREATE_LIST_FIELD_NAME] = 0;
                 $name_values_array[USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME] = 0;
             }
 
@@ -237,12 +256,14 @@ class UserListTablePermissions extends UserDatabaseTable
                 $name_values_array = array();
                 $name_values_array[USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE_FIELD_NAME] = $list_title;
                 $name_values_array[USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME] = $user_name;
+
                 # check if new user has admin permission
                 if ($this->_user->get_is_admin() == 0)
                 {
                     # user has no admin permission and therefore gets no list permissions
                     $name_values_array[USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME] = 0;
                     $name_values_array[USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME] = 0;
+                    $name_values_array[USERLISTTABLEPERMISSIONS_CAN_CREATE_LIST_FIELD_NAME] = 0;
                     $name_values_array[USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME] = 0;
                 }
                 else
@@ -250,6 +271,7 @@ class UserListTablePermissions extends UserDatabaseTable
                     # user has admin permissions and get all permissions for all lists
                     $name_values_array[USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME] = 1;
                     $name_values_array[USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST_FIELD_NAME] = 1;
+                    $name_values_array[USERLISTTABLEPERMISSIONS_CAN_CREATE_LIST_FIELD_NAME] = 1;
                     $name_values_array[USERLISTTABLEPERMISSIONS_IS_AMDIN_FIELD_NAME] = 1;
                 }
 

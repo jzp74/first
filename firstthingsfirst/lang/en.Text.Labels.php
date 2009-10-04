@@ -60,8 +60,9 @@ $text_translations["LABEL_USER_ADMIN_RECORD"] = "user";
 $text_translations["LABEL_USERLISTTABLEPERMISSIONS_TITLE"] = "User List Permissions";
 $text_translations["LABEL_USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE"] = "list name";
 $text_translations["LABEL_USERLISTTABLEPERMISSIONS_USER_NAME"] = "user name";
-$text_translations["LABEL_USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST"] = "is allowed to view this list";
-$text_translations["LABEL_USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST"] = "is allowed to edit this list";
+$text_translations["LABEL_USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST"] = "can view this list";
+$text_translations["LABEL_USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST"] = "can edit this list";
+$text_translations["LABEL_USERLISTTABLEPERMISSIONS_CAN_CREATE_LIST"] = "can add to this list";
 $text_translations["LABEL_USERLISTTABLEPERMISSIONS_IS_AMDIN"] = "is administrator of this list";
 $text_translations["LABEL_USERLISTTABLEPERMISSIONS_RECORD"] = "user list permissions";
 

@@ -426,7 +426,7 @@ class HtmlDatabaseTable
                             $html_str .= "                            <p><span class=\"note_creator\">";
                             $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_NORMAL, $note_array[DB_TS_CREATED_FIELD_NAME]));
                             $html_str .= "&nbsp;(".$note_array[DB_CREATOR_FIELD_NAME].")</span> ";
-                            $html_str .= $note_array["_note"]."</p>\n";
+                            $html_str .= nl2br($note_array["_note"])."</p>\n";
                         }
                     }
                     else
@@ -474,11 +474,11 @@ class HtmlDatabaseTable
                         $html_str .= get_href(get_onclick($js_button_delete, $this->permissions_list_title, $key_values_string, "below", "(%27".$list_title."%27, %27".$encoded_key_string."%27)"), translate("BUTTON_DELETE"), "icon_delete");
                         $html_str .= "</td>\n";
                     }
-                    # or add the delete link when record is archived
+                    # or add the delete and activate links when record is archived
                     else if (($this->configuration[HTML_TABLE_DELETE_MODE] == HTML_TABLE_DELETE_MODE_ARCHIVED) && (strlen($record[DB_ARCHIVER_FIELD_NAME]) > 0))
                     {
                         $html_str .= "                        <td width=\"1%\">";
-                        $html_str .= get_href(get_onclick($js_button_archive, $this->permissions_list_title, $key_values_string, "below", "(%27".$list_title."%27, %27".$encoded_key_string."%27)"), translate("BUTTON_ACTIVATE"), "icon_unarchive");
+                        $html_str .= get_href(get_onclick($js_button_activate, $this->permissions_list_title, $key_values_string, "below", "(%27".$list_title."%27, %27".$encoded_key_string."%27)"), translate("BUTTON_ACTIVATE"), "icon_unarchive");
                         $html_str .= "</td>\n";
                         $html_str .= "                        <td width=\"1%\">";
                         $html_str .= get_href(get_onclick($js_button_delete, $this->permissions_list_title, $key_values_string, "below", "(%27".$list_title."%27, %27".$encoded_key_string."%27)"), translate("BUTTON_DELETE"), "icon_delete");

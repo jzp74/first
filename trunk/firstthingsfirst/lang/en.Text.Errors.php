@@ -15,8 +15,9 @@
  */
 $text_translations["ERROR_PERMISSION_CREATE_LIST"] = "You do not have permission to create lists";
 $text_translations["ERROR_PERMISSION_ADMIN"] = "You do not have administrator permission";
-$text_translations["ERROR_PERMISSION_LIST_VIEW"] = "You do not have view permission for this list";
-$text_translations["ERROR_PERMISSION_LIST_EDIT"] = "You do not have edit permission for this list";
+$text_translations["ERROR_PERMISSION_LIST_VIEW"] = "You do not have permission to view this list";
+$text_translations["ERROR_PERMISSION_LIST_EDIT"] = "You do not have permission to edit records of this list";
+$text_translations["ERROR_PERMISSION_LIST_CREATE"] = "You do not have permission to create or delete records of this list";
 $text_translations["ERROR_PERMISSION_LIST_ADMIN"] = "You do not have administrator permissions for this list";
 
 /**

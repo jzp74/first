@@ -31,11 +31,12 @@ $xajax->register(XAJAX_FUNCTION, ACTION_LOGOUT);
  *  - user has to have admin permission to be able to execute action
  *  - user has to have permission to view this list to execute list action for this list
  *  - user has to have permission to edit this list to execute action for this list
+ *  - user has to have permission to add to this list to execute action for this list
  *  - user has to have admin permission for this list to exectute action for this list
  */
-$firstthingsfirst_action_description[ACTION_GET_LOGIN_PAGE] = "-----";
-$firstthingsfirst_action_description[ACTION_LOGIN] = "-----";
-$firstthingsfirst_action_description[ACTION_LOGOUT] = "-----";
+$firstthingsfirst_action_description[ACTION_GET_LOGIN_PAGE] = "------";
+$firstthingsfirst_action_description[ACTION_LOGIN]          = "------";
+$firstthingsfirst_action_description[ACTION_LOGOUT]         = "------";
 
 
 /**

@@ -16,7 +16,8 @@
 $text_translations["ERROR_PERMISSION_CREATE_LIST"] = "Je hebt geen rechten om een nieuwe lijst te maken";
 $text_translations["ERROR_PERMISSION_ADMIN"] = "Je hebt geen administrator rechten";
 $text_translations["ERROR_PERMISSION_LIST_VIEW"] = "Je hebt geen rechten om deze lijst te bekijken";
-$text_translations["ERROR_PERMISSION_LIST_EDIT"] = "Je hebt geen rechten om deze lijst te wijzigen";
+$text_translations["ERROR_PERMISSION_LIST_EDIT"] = "Je hebt geen rechten om rijen van deze lijst te wijzigen";
+$text_translations["ERROR_PERMISSION_LIST_CREATE"] = "Je hebt geen rechten om rijen aan deze lijst toe te voegen of te verwijderen";
 $text_translations["ERROR_PERMISSION_LIST_ADMIN"] = "Je bent geen administrator van deze lijst";
 
 /**

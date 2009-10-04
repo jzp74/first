@@ -31,11 +31,12 @@ $xajax->register(XAJAX_FUNCTION, ACTION_DELETE_PORTAL_RECORD);
  *  - user has to have admin permission to be able to execute action
  *  - user has to have permission to view this list to execute list action for this list
  *  - user has to have permission to edit this list to execute action for this list
+ *  - user has to have permission to add to this list to execute action for this list
  *  - user has to have admin permission for this list to exectute action for this list
  */
-$firstthingsfirst_action_description[ACTION_GET_PORTAL_PAGE] = "-----";
-$firstthingsfirst_action_description[ACTION_GET_PORTAL_CONTENT] = "-----";
-$firstthingsfirst_action_description[ACTION_DELETE_PORTAL_RECORD] = "----P";
+$firstthingsfirst_action_description[ACTION_GET_PORTAL_PAGE]        = "------";
+$firstthingsfirst_action_description[ACTION_GET_PORTAL_CONTENT]     = "------";
+$firstthingsfirst_action_description[ACTION_DELETE_PORTAL_RECORD]   = "-----P";
 
 /**
  * definition of css name prefix

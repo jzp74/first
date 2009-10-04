@@ -111,12 +111,15 @@ function check_list_permissions ($action, $list_title, $error_element, $error_po
     # set permissions
     $can_view_specific_list = FALSE;
     $can_edit_specific_list = FALSE;
+    $can_create_specific_list = FALSE;
     $is_admin_specific_list = FALSE;
     $action_permissions_str = $firstthingsfirst_action_description[$action];
     if ($action_permissions_str[PERMISSION_CAN_VIEW_SPECIFIC_LIST] == "P")
         $can_view_specific_list = TRUE;
     if ($action_permissions_str[PERMISSION_CAN_EDIT_SPECIFIC_LIST] == "P")
         $can_edit_specific_list = TRUE;
+    if ($action_permissions_str[PERMISSION_CAN_CREATE_SPECIFIC_LIST] == "P")
+        $can_create_specific_list = TRUE;
     if ($action_permissions_str[PERMISSION_IS_ADMIN_SPECIFIC_LIST] == "P")
         $is_admin_specific_list = TRUE;
 
@@ -150,6 +153,15 @@ function check_list_permissions ($action, $list_title, $error_element, $error_po
     {
         # display error message
         set_error_message($error_element, $error_position, "ERROR_PERMISSION_LIST_EDIT", "", "", $response);
+
+        return $response;
+    }
+
+    # check if create list permission is required
+    if ($can_create_specific_list && !$permission_array[PERMISSION_CAN_CREATE_SPECIFIC_LIST])
+    {
+        # display error message
+        set_error_message($error_element, $error_position, "ERROR_PERMISSION_LIST_CREATE", "", "", $response);
 
         return $response;
     }

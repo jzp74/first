@@ -62,6 +62,7 @@ $text_translations["LABEL_USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE"] = "lijstnaa
 $text_translations["LABEL_USERLISTTABLEPERMISSIONS_USER_NAME"] = "gebruikersnaam";
 $text_translations["LABEL_USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST"] = "mag deze lijst bekijken";
 $text_translations["LABEL_USERLISTTABLEPERMISSIONS_CAN_EDIT_LIST"] = "mag deze lijst wijzigen";
+$text_translations["LABEL_USERLISTTABLEPERMISSIONS_CAN_CREATE_LIST"] = "mag toevoegen aan deze lijst";
 $text_translations["LABEL_USERLISTTABLEPERMISSIONS_IS_AMDIN"] = "is administrator van deze lijst";
 $text_translations["LABEL_USERLISTTABLEPERMISSIONS_RECORD"] = "lijsttoegang";
 

@@ -78,6 +78,7 @@ require_once("php/Html.UserSettings.php");
  */
 $xajax->register(XAJAX_FUNCTION, "set_translations");
 $xajax->register(XAJAX_FUNCTION, "process_url");
+$xajax->register(XAJAX_FUNCTION, "set_browser_compatibility_message");
 
 /**
  * start ajax interactions
@@ -103,7 +104,7 @@ function get_xajax_javascript ()
 
 /**
  * set translation vars in javascript
- * @return void
+ * @return xajaxResponse every xajax registered function needs to return this object
  */
 function set_translations ()
 {
@@ -123,7 +124,7 @@ function set_translations ()
 
 /**
  * parse the url and return html code accordingly
- * @return html code
+ * @return xajaxResponse every xajax registered function needs to return this object
  */
 function process_url ()
 {
@@ -204,6 +205,40 @@ function process_url ()
     }
 }
 
+/**
+ * show a compatibility message to the user on the login screen
+ * @param $browser_name_str string string containing browser name
+ * @param $browser_version float browser version number
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
+function set_browser_compatibility_message ($browser_name_str, $browser_version)
+{
+    $response = new xajaxResponse();
+    $unsupported_browser_message = translate("ERROR_BROWSER_UNSUPPORTED")."$browser_name_str $browser_version";
+
+    if (($browser_name_str == 'Firefox') && (($browser_version < 2) || ($browser_version > 3.5)))
+    {
+        $response->script("showTooltip('#login_contents_inner_border', '$unsupported_browser_message', 'info', 'below')");
+
+        return $response;
+    }
+    if (($browser_name_str == 'Internet Explorer') && (($browser_version < 7) || ($browser_version > 9)))
+    {
+        $response->script("showTooltip('#login_contents_inner_border', '$unsupported_browser_message', 'info', 'below')");
+
+        return $response;
+    }
+    if (($browser_name_str != 'Firefox') && ($browser_name_str != 'Internet Explorer'))
+    {
+        $response->script("showTooltip('#login_contents_inner_border', '$unsupported_browser_message', 'info', 'below')");
+
+        return $response;
+    }
+
+    // do not show any message when browser is compatible
+}
+
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 
@@ -274,6 +309,13 @@ else
 <script language="javascript">
 handleFunction('set_translations');
 handleFunction('process_url');
+<?php
+# TEMPORARY SOLUTION
+# set variable in javascript
+if (isset($_GET['action']) && $_GET['action'] == ACTION_GET_LOGIN_PAGE)
+    echo "browserDetect.init();\n";
+    echo "handleFunction('set_browser_compatibility_message', browserDetect.browser, browserDetect.version);\n";
+?>
 </script>
 
 </body>

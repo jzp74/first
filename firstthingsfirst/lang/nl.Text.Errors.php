@@ -70,4 +70,9 @@ $text_translations["ERROR_IMPORT_SELECT_FILE_UPLOAD"] = "Je hebt nog geen bestan
 $text_translations["ERROR_IMPORT_COULD_NOT_OPEN"] = "Kan het tijdelijke upload bestand niet openen";
 $text_translations["ERROR_IMPORT_WRONG_COLUMN_COUNT"] = "Het aantal kolommen komt niet overeen met het aantal kolommen van deze lijst";
 
+/**
+ * browser errors
+ */
+$text_translations["ERROR_BROWSER_UNSUPPORTED"] = "WAARSCHUWING: Het is mogelijk dat First Things First niet werkt zoals verwacht met je huidige browser omdat deze versie van First Things First niet getest is met jouw browser.<br>We raden je daarom aan om Firefox (versies 2, 3 of 3.5) of Internet Explorer (versies 7 of 8) te gebruiken.<br>Op dit moment gebruik je de volgende browser: ";
+
 ?>

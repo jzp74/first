@@ -11,6 +11,26 @@
 
 
 /**
+ * return the necessary javascript code to configure xajax
+ * @return string javascript code
+ */
+function get_xajax_javascript ()
+{
+    $html_str = "<script language=\"javascript\">\n";
+    $html_str .= "    try { if (undefined == xajax.config) xajax.config = {}; } catch (e) { xajax = {}; xajax.config = {}; }\n";
+    $html_str .= "    xajax.config.requestURI = \"".$_SERVER["REQUEST_URI"]."\"\n";
+    $html_str .= "    xajax.config.statusMessages = false;\n";
+    $html_str .= "    xajax.config.waitCursor = true;\n";
+    $html_str .= "    xajax.config.version = \"xajax 0.5\";\n";
+    $html_str .= "    xajax.config.legacy = false;\n";
+    $html_str .= "    xajax.config.defaultMode = \"asynchronous\";\n";
+    $html_str .= "    xajax.config.defaultMethod = \"POST\";\n";
+    $html_str .= "</script>\n";
+
+    return $html_str;
+}
+
+/**
  * return translation of given string
  * @param string $str string to translate
  * @return string translated string

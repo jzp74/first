@@ -39,7 +39,6 @@ require_once("php/Class.UserListTablePermissions.php");
  * Initialize global objects and language settings
  */
 $xajax = new xajax();
-$xajax->configure("javascript URI", "../xajax");
 
 $logging = new Logging($firstthingsfirst_loglevel, "logs/".$firstthingsfirst_logfile);
 $database = new Database();
@@ -85,22 +84,6 @@ $xajax->register(XAJAX_FUNCTION, "set_browser_compatibility_message");
  */
 $xajax->processRequest();
 
-
-function get_xajax_javascript ()
-{
-    $html_str = "<script language=\"javascript\">\n";
-    $html_str .= "    try { if (undefined == xajax.config) xajax.config = {}; } catch (e) { xajax = {}; xajax.config = {}; }\n";
-    $html_str .= "    xajax.config.requestURI = \"".$_SERVER["REQUEST_URI"]."\"\n";
-    $html_str .= "    xajax.config.statusMessages = false;\n";
-    $html_str .= "    xajax.config.waitCursor = true;\n";
-    $html_str .= "    xajax.config.version = \"xajax 0.5\";\n";
-    $html_str .= "    xajax.config.legacy = false;\n";
-    $html_str .= "    xajax.config.defaultMode = \"asynchronous\";\n";
-    $html_str .= "    xajax.config.defaultMethod = \"POST\";\n";
-    $html_str .= "</script>\n";
-
-    return $html_str;
-}
 
 /**
  * set translation vars in javascript

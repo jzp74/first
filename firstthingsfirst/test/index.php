@@ -15,7 +15,7 @@ require_once("../globals.php");
 require_once("../localsettings.php");
 
 require_once("../php/external/JSON.php");
-require_once("../xajax/xajax_core/xajaxAIO.inc.php");
+require_once("../php/external/xajaxAIO.inc.php");
 
 require_once("../php/Class.Result.php");
 require_once("../php/Class.Database.php");
@@ -33,8 +33,8 @@ require_once("../php/Class.UserListTablePermissions.php");
  * Initialize global objects and language settings
  */
 $xajax = new xajax();
-$xajax->configure("javascript URI", "../xajax");
-$logging = new Logging($firstthingsfirst_loglevel, $firstthingsfirst_logfile);
+
+$logging = new Logging($firstthingsfirst_loglevel, "../logs/".$firstthingsfirst_logfile);
 $database = new Database();
 $list_state = new ListState();
 $user = new User();
@@ -51,6 +51,7 @@ require_once("../lang/".$firstthingsfirst_lang_prefix_array[$firstthingsfirst_la
 /**
  * Import HTML related files
  */
+require_once("../php/Html.Utilities.php");
 require_once("Html.RegressionTest.php");
 require_once("testfunctions.php");
 require_once("testdata.php");
@@ -70,17 +71,6 @@ $xajax->register(XAJAX_FUNCTION, "end_regression_test");
 $xajax->processRequest();
 
 
-function test_1 ()
-{
-    return TRUE;
-}
-
-function test_2 ()
-{
-    return FALSE;
-}
-
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -88,39 +78,33 @@ function test_2 ()
 
 <head>
 <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
-    
-<title>First Things First</title>
+
+<title>Regression test</title>
 <link rel="shortcut icon" href="images/favicon.ico">
 <link rel="stylesheet" href="../css/standard.css">
 
-<?php $xajax->printJavascript("../xajax"); ?>
 </head>
 
 <body>
 <div id="upper_margin"></div>
 
 <div id="header">
-    <div id="header_left_margin">&nbsp</div>
-    <div id="header_right_margin">&nbsp</div>
+    <div id="header_left_margin"></div>
+    <div id="header_right_margin"></div>
     <div id="header_contents">
-<?php 
-echo "        <div id=\"software_version\">&nbsp;&nbsp;".file_get_contents("../VERSION")."</div>\n";
-?>
-        <div id="page_title">Regression test</div>
-        <div id="page_explanation">&nbsp;</div>
-        <div id="navigation_container">&nbsp;</div>
+        <div id="header_contents_status">
+            <div id="header_contents_status_software_version"><?php print(file_get_contents("../VERSION")); ?></div>
+            <div id="header_contents_status_login_status">&nbsp</div>
+        </div> <!-- header_contents_status -->
+        <div id="portal_title"><?php print($firstthingsfirst_portal_title); ?></div>
+        <div id="page_title">&nbsp;</div>
+        <div id="navigation_container">&nbsp;</div> <!-- navigation_container -->
     </div> <!-- header_contents -->
 </div> <!-- header -->
 
-</div> <!-- header -->
-    
 <div id="outer_body">
 
-    <div id="main_body">
-
-        <script language="javascript">xajax_start_regression_test()</script>
-            
-    </div> <!-- main_body -->
+    <div id="main_body">&nbsp;</div>
 
 </div> <!-- outer_body -->
 
@@ -131,8 +115,13 @@ echo "        <div id=\"software_version\">&nbsp;&nbsp;".file_get_contents("../V
 </div> <!-- footer -->
 <div id="lower_margin"><input id="focus_on_this_input" size="1" readonly></div>
 
-<div id="lower_margin"></div>
-        
+<script language="javascript" src="../js/external/external.min.js"></script>
+<?php print(get_xajax_javascript()); ?>
+<script language="javascript" src="../js/handlers.min.js"></script>
+<script language="javascript">
+handleFunction('start_regression_test');
+</script>
+
 </body>
 
 <html>

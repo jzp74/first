@@ -8,7 +8,7 @@ function login_user_admin ()
     global $user;
     global $firstthingsfirst_admin_passwd;
 
-    # logout current user    
+    # logout current user
     $user->logout();
     # login as admin
     return $user->login("admin", $firstthingsfirst_admin_passwd);
@@ -21,11 +21,11 @@ function create_test_user ()
 {
     global $user;
     global $regression_tester_user_array;
-    
+
     # check if user already exists
     if ($user->exists(REGRESSION_TEST_USER_NAME))
         $user->delete(USER_NAME_FIELD_NAME."='".REGRESSION_TEST_USER_NAME."'");
-    
+
     # create new user
     return $user->insert($regression_tester_user_array);
 }
@@ -37,7 +37,7 @@ function login_test_user ()
 {
     global $user;
 
-    # logout current user    
+    # logout current user
     $user->logout();
     # login as test user
     return $user->login(REGRESSION_TEST_USER_NAME, REGRESSION_TEST_USER_PW);
@@ -49,10 +49,10 @@ function login_test_user ()
 function update_test_user ()
 {
     global $user;
-    
+
     # set new password
     $update_array = array(USER_PW_FIELD_NAME => REGRESSION_TEST_USER_NEW_PW);
-    
+
     # update test user
     return $user->update(USER_NAME_FIELD_NAME."='".REGRESSION_TEST_USER_NAME."'", $update_array);
 }
@@ -64,7 +64,7 @@ function login_test_user_new_pw ()
 {
     global $user;
 
-    # logout current user    
+    # logout current user
     $user->logout();
     # login as test user
     return $user->login(REGRESSION_TEST_USER_NAME, REGRESSION_TEST_USER_NEW_PW);
@@ -76,12 +76,12 @@ function login_test_user_new_pw ()
 function delete_test_user ()
 {
     global $user;
-    
+
     # check if we have to cleanup
     if (REGRESSION_TEST_CLEANUP == FALSE)
         return TRUE;
 
-    # logout current user    
+    # logout current user
     $user->logout();
     # delete test user
     return $user->delete(USER_NAME_FIELD_NAME."='".REGRESSION_TEST_USER_NAME."'");
@@ -94,7 +94,7 @@ function create_test_list ()
 {
     global $list_table_description;
     global $regression_test_list_description_definition;
-    
+
     # check if list already exists
     if ($list_table_description->select_record(REGRESSION_TEST_LIST_TITLE))
     {
@@ -105,7 +105,7 @@ function create_test_list ()
 
     if ($list_table_description->insert($regression_test_list_description_definition) == FALSE)
         return FALSE;
-    
+
     $list_table = new ListTable(REGRESSION_TEST_LIST_TITLE);
     return $list_table->create();
 }
@@ -116,7 +116,7 @@ function create_test_list ()
 function open_test_list ()
 {
     global $list_table_description;
-    
+
     # open list
     $results = $list_table_description->select_record(REGRESSION_TEST_LIST_TITLE);
     if (count($results) > 0)
@@ -131,27 +131,28 @@ function open_test_list ()
 function update_test_list ()
 {
     global $list_table_description;
+    global $regression_test_new_list_definition;
 
-    $description_array = array(LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME => REGRESSION_TEST_LIST_NEW_DESCRIPTION);
-    if ($list_table_description->update(REGRESSION_TEST_LIST_TITLE, $description_array) == FALSE)
+    $list_table = new ListTable(REGRESSION_TEST_LIST_TITLE);
+    if ($list_table->transform(REGRESSION_TEST_LIST_TITLE, REGRESSION_TEST_LIST_TITLE, REGRESSION_TEST_LIST_NEW_DESCRIPTION, $regression_test_new_list_definition) == FALSE)
         return FALSE;
-    
+
     return TRUE;
 }
 
 /**
- * add list items 
+ * add list items
  */
 function add_list_items ()
 {
     global $regression_test_list_items;
-    
+
     $list_table = new ListTable(REGRESSION_TEST_LIST_TITLE);
 
     foreach ($regression_test_list_items as $regression_test_list_item)
         if (!$list_table->insert($regression_test_list_item))
             return FALSE;
-   
+
     return TRUE;
 }
 
@@ -165,7 +166,7 @@ function read_list_item ()
     $results = $list_table->select_record("_id=9");
     if (count($results) > 0)
         return TRUE;
-    
+
     return FALSE;
 }
 
@@ -180,10 +181,10 @@ function update_list_item ()
     $results = $list_table->select_record("_id=10");
     # get second note of first notes column
     $note_field = $results[REGRESSION_TEST_LIST_NOTES1_FIELD][1];
-    $note_array = array($note_field["_id"], $note_field["_note"]);    
+    $note_array = array($note_field["_id"], $note_field["_note"]);
     if ($list_table_note->update($note_field["_id"], $note_field["_note"]." [UPDATED BY REGRESSION TEST]") == TRUE)
         return TRUE;
-    
+
     return FALSE;
 }
 
@@ -196,7 +197,7 @@ function delete_list_item ()
 
     if ($list_table->delete("_id=3") == TRUE)
         return TRUE;
-    
+
     return FALSE;
 }
 
@@ -210,11 +211,11 @@ function delete_test_list ()
     # check if we have to cleanup
     if (REGRESSION_TEST_CLEANUP == FALSE)
         return TRUE;
-    
+
     if ($list_table->drop() == TRUE)
         return TRUE;
-    
+
     return FALSE;
-}   
+}
 
 ?>

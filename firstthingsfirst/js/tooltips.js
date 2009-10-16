@@ -226,6 +226,7 @@ function showModalDialog (domElementId, messageStr, functionStr)
 // @return string string with resulting HTML
 function getTooltipContent (domElementId, messageStr, imageUrl, functionStr)
 {
+    messStr = messageStr.replace(/%22/g, "'");
     htmlStr = "\n";
     htmlStr += "    <table id=\"qtip_message_table\">\n";
     htmlStr += "        <thead>\n";
@@ -236,7 +237,7 @@ function getTooltipContent (domElementId, messageStr, imageUrl, functionStr)
     htmlStr += "        <tbody>\n";
     htmlStr += "            <tr>\n";
     htmlStr += "                <td><img src=\"" + imageUrl + "\"></td>\n";
-    htmlStr += "                <td>" + messageStr + "</td>\n";
+    htmlStr += "                <td>" + messStr + "</td>\n";
     htmlStr += "            </tr>\n";
 
     // add an extra row for ok and cancel buttons when this is a modal dialog
@@ -245,8 +246,9 @@ function getTooltipContent (domElementId, messageStr, imageUrl, functionStr)
         funcStr = functionStr.replace(/%22/g, "'");
         htmlStr += "            <tr>\n";
         htmlStr += "                <td colspan=2 class=\"buttons\">";
-        htmlStr += "<a href=\"javascript:void(0);\" class=\"icon_accept\" onclick=\"$('" + domElementId + "').qtip('destroy'); " + funcStr + "\">" + acceptStr + "</a>";
-        htmlStr += "<a href=\"javascript:void(0);\" class=\"icon_cancel\" onclick=\"$('" + domElementId + "').qtip('destroy');\">" + cancelStr + "</a></td>\n";
+        // TODO for some reason it is not possible in IE7 to first destroy the Qtip
+        htmlStr += "<a href=\"javascript:void(0);\" class=\"icon_accept\" onclick=\"" + funcStr + "; \">" + acceptStr + "</a>";
+        htmlStr += "<a href=\"javascript:void(0);\" class=\"icon_cancel\" onclick=\"$('" + domElementId + "').qtip('destroy'); \">" + cancelStr + "</a></td>\n";
         htmlStr += "            </tr>\n";
     }
 

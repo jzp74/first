@@ -426,7 +426,7 @@ class HtmlDatabaseTable
                             $html_str .= "                            <p><span class=\"note_creator\">";
                             $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_NORMAL, $note_array[DB_TS_CREATED_FIELD_NAME]));
                             $html_str .= "&nbsp;(".$note_array[DB_CREATOR_FIELD_NAME].")</span> ";
-                            $html_str .= nl2br($note_array["_note"])."</p>\n";
+                            $html_str .= transform_str($note_array["_note"])."</p>\n";
                         }
                     }
                     else
@@ -435,7 +435,7 @@ class HtmlDatabaseTable
                 }
                 else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_TEXT_FIELD)
                 {
-                    $html_str .= "                        <td ".$onclick_str.">".nl2br($value)."</td>\n";
+                    $html_str .= "                        <td ".$onclick_str.">".transform_str($value)."</td>\n";
                 }
                 # translate language options in user admin page
                 else if (($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_USER_ADMIN) && ($db_field_name == USER_LANG_FIELD_NAME))

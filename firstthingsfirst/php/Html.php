@@ -49,7 +49,7 @@ function check_permissions ($action, $error_element, $error_position, $mixed_str
     if ($action_permissions_str[PERMISSION_IS_ADMIN] == "P")
         $is_admin = TRUE;
 
-    $logging->info("check permissions for action: ".$action." (permissions=".$action_permissions_str.")");
+    $logging->debug("check permissions for action: ".$action." (permissions=".$action_permissions_str.")");
 
     # check if user is logged in
     if (!$user->is_login())
@@ -123,7 +123,7 @@ function check_list_permissions ($action, $list_title, $error_element, $error_po
     if ($action_permissions_str[PERMISSION_IS_ADMIN_SPECIFIC_LIST] == "P")
         $is_admin_specific_list = TRUE;
 
-    $logging->info("check list permissions for list: $list_title and action: $action (permissions=$action_permissions_str)");
+    $logging->debug("check list permissions for list: $list_title and action: $action (permissions=$action_permissions_str)");
 
     # check if user is logged in
     if (!$user->is_login())
@@ -307,10 +307,16 @@ function set_info_message ($info_element, $info_position, $info_str, $response)
 
     $logging->info("set info (element=$info_element, position=$info_position)");
 
-    # now create the HTML for the info message
-    $html_str = "<strong>".translate($info_str)."</strong>";
+    # translate the string
+    $translated_str = translate($info_str);
+    # replace several keywords by links
+    $portal_link = "<a href=\"javascript:void(0);\" onclick=\"window.location.assign(%22index.php?action=action_get_portal_page%22)\">";
+    $portal_link .= translate("BUTTON_PORTAL")."</a>";
+    # replace [[portal]] keyword by a link to the portal page
+    $translated_str = str_replace("[[portal]]", $portal_link, $translated_str);
+
     # create info tooltip with the error message
-    $response->script("showTooltip('#$info_element', '$html_str', 'info', '$info_position')");
+    $response->script("showTooltip('#$info_element', '$translated_str', 'info', '$info_position')");
 
     $logging->trace("set info (element=$info_element)");
 }

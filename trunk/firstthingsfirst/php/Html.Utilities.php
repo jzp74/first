@@ -286,7 +286,7 @@ function get_date_str ($format, $value)
 
 /**
  * calculate the time (in ms) for complete function call and return a log message
- * @param string name of function
+ * @param string $function_name name of function
  * @return string log message
  */
 function get_function_time_str ($function_name)
@@ -300,5 +300,33 @@ function get_function_time_str ($function_name)
 
     return "USER_ACTION $function_name TIME $total_rounded_time_msec ms";
 }
+
+/**
+ * prepare string for display on screen
+ * @param string $str string to transform
+ * @return string transformed string
+ */
+function transform_str ($str)
+{
+    # replace /n by <br>
+    $str = nl2br($str);
+
+    # replace url by href
+    $pattern = array(
+        '`((?:https?|ftp)://\S+[[:alnum:]]/?)`si',
+        '`((?<!//)(www\.\S+[[:alnum:]]/?))`si'
+    );
+    $replacement = array(
+    '<a href="$1">$1</a>',
+    '<a href="http://$1">$1</a>'
+    );
+    $str = preg_replace($pattern, $replacement, $str);
+
+    return $str;
+}
+
+
+
+
 
 ?>

@@ -631,6 +631,7 @@ html, body {
     padding: 0px 12px 0px 0px;
     padding: 2px 4px 2px 24px;
     color: rgb(95, 148, 206);
+    font-weight: bold;
     }
 
 #action_bar a:hover {
@@ -794,6 +795,15 @@ html, body {
 
 #qtip_message_table td {
     padding: 4px 4px 8px 4px;
+    }
+
+#qtip_message_table td a, #qtip_message_table td a:link, #qtip_message_table td a:visited {
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    }
+
+#qtip_message_table td a:hover {
+    color: rgb(100, 100, 100);
     }
 
 #qtip_message_table .buttons {

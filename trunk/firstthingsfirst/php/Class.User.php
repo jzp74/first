@@ -16,11 +16,6 @@
 define("USER_TABLE_NAME", $firstthingsfirst_db_table_prefix."user");
 
 /**
- * definition of the session life time in seconds (set to 30 minutes)
- */
-define("USER_SESSION_LIFE_TIME", 1800);
-
-/**
  * definition of the session name
  */
 define("USER_SESSION_NAME", "FIRSTTHINGSFIRST_SESSION");
@@ -100,6 +95,7 @@ class User extends UserDatabaseTable
     {
         # these variables are assumed to be globally available
         global $class_user_fields;
+        global $firstthingsfirst_session_time;
 
         # call parent __construct()
         parent::__construct(USER_TABLE_NAME, $class_user_fields, USER_METADATA);
@@ -121,7 +117,7 @@ class User extends UserDatabaseTable
             for ($position = 0; $position < ($array_length - 1); $position += 1)
                 $cookie_path_str .= $request_uri_array[$position]."/";
         }
-        session_set_cookie_params(USER_SESSION_LIFE_TIME, $cookie_path_str);
+        session_set_cookie_params(($firstthingsfirst_session_time * 60), $cookie_path_str);
 
         # start a session
 #        session_cache_limiter('private, must-revalidate');
@@ -133,7 +129,7 @@ class User extends UserDatabaseTable
             $this->_log->debug("user session is still active (name=".$this->get_name().")");
 
             # adjust cookie life time
-            setcookie(USER_SESSION_NAME, $_COOKIE[USER_SESSION_NAME], time() + USER_SESSION_LIFE_TIME);
+            setcookie(USER_SESSION_NAME, $_COOKIE[USER_SESSION_NAME], time() + ($firstthingsfirst_session_time * 60));
         }
         else
             $this->reset();

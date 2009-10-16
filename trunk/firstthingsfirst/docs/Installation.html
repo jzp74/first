@@ -20,8 +20,7 @@
 <ul>
     <li><a href="http://www.php.net">PHP</a> (You have to use PHP version 5.0 or newer). This application has been tested on the following versions:
     <ul>
-        <li>v5.2.0</li>
-        <li>v5.2.5</li>
+        <li>v5.2.x</li>
     </ul>
     </li>
     <li><a href="http://www.mysql.org">MySQL </a>(You have to use MySQL version 5.0 or newer). This application has been tested on the following versions:
@@ -30,11 +29,13 @@
     </ul>
     <ul>
         <li>v5.0.19</li>
+        <li>v5.1.37</li>
     </ul>
     </li>
 </ul>
 <h1>Installation procedure</h1>
 <ul>
+    <li>Install PHP and MySQL (you hosting provider usually has this software installed for you)</li>
     <li><a href="http://www.jaspershome.org/firstthingsfirst/index.php?option=com_content&amp;task=view&amp;id=6&amp;Itemid=5">Download</a> the latest release of FirstThingsFirst (zip format)</li>
     <li>Upload the '<em>firstthingsfirst</em>' directory from the zipfile to your hosting provider.</li>
     <li>Edit the file '<em>localsettings.php</em>' and change at least the following settings:
@@ -43,9 +44,10 @@
         <li>table prefix (firstthingsfirst_db_table_prefix). I recommend using a table prefix at all times. The table prefix has to be a unique prefix (not used by a CMS or some other application).</li>
         <li>admin password (firstthingsfirst_admin_passwd). Choose a new admin password. This will be the password for user '<em>admin</em>'.</li>
         <li>database host name (firstthingsfirst_db_host). This is usually '<em>localhome</em>'.</li>
-        <li>database user name (firstthingsfirst_db_user).</li>
-        <li>database password (firstthingsfirst_db_passwd).</li>
-        <li>database schema name (firstthingsfirst_db_schema). Hosting providers usually don't give you privileges to create a new schema. This means your stuck with only one schema which you have to share with your CMS, blog and other applications.</li>
+        <li>database user name (firstthingsfirst_db_user). Make sure this is an existing (or new) database user (your hosting provider usually creates a database user for you)</li>
+        <li>database password (firstthingsfirst_db_passwd). Make sure this is the correct user password of firstthingsfirst_db_user. Your hosting provider has to give you this password.</li>
+        <li>database schema name (firstthingsfirst_db_schema). Make sure this is an existing (or new) database schema. Hosting providers usually don't give you privileges to create a new schema. This means your stuck with only one schema which you have to share with your CMS, blog and other applications.</li>
+        <li>full path name (firstthingsfirst_full_pathname). Set the full path name to your installation. This is usually something like '/home/USER_NAME/firstthingsfirst'.</li>
     </ul>
     </li>
     <li>Open a browser and go the webadress of the location to which you copied the application. You will get a login screen. Login as user '<em>admin</em>' with your admin password.</li>
@@ -61,8 +63,8 @@
 <h1>Supported browsers</h1>
 <p>This application has been tested on the following browsers:</p>
 <ul>
-    <li>Internet Explorer 7 (Internet Explorer 6 is now functionally supported but the graphical design is not completely supported)</li>
-    <li>Firefox 2.0.x and 3.0.x</li>
+    <li>Internet Explorer 7 and 8</li>
+    <li>Firefox 2.0.x, 3.0.x and 3.5.x</li>
 </ul>
 
 </body>

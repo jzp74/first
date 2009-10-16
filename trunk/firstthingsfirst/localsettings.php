@@ -20,6 +20,9 @@ $firstthingsfirst_list_page_entries = 14;
 # LANG_NL - Dutch language
 $firstthingsfirst_lang = LANG_EN;
 
+# session time in minutes
+$firstthingsfirst_session_time = 30;
+
 # database table prefix
 # define a prefix that is unique for this firstthingsfirst instance
 # this setting allows you have multiple firstthingsfirst instances to share the same db schema
@@ -32,7 +35,7 @@ $firstthingsfirst_admin_passwd = "adminpassword";
 $firstthingsfirst_db_host = "localhost";
 $firstthingsfirst_db_user = "some_user";
 $firstthingsfirst_db_passwd = "password";
-$firstthingsfirst_db_schema = "some_schema";
+$firstthingsfirst_db_schema = "firstthingsfirst";
 
 # loglevel (make sure you have write privileges on your hosting provider if you want to turn on logging)
 # choose between the following log levels:

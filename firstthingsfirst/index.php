@@ -287,7 +287,7 @@ else
 
 <script language="javascript" src="js/external/external.min.js"></script>
 <?php print(get_xajax_javascript()); ?>
-<script language="javascript" src="js/tooltips.js"></script>
+<script language="javascript" src="js/tooltips.min.js"></script>
 <script language="javascript" src="js/handlers.min.js"></script>
 <script language="javascript">
 handleFunction('set_translations');

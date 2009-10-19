@@ -235,9 +235,9 @@ function action_get_listbuilder_page ($list_title)
     # display the create button when no title has been given
     else
     {
-        $args_str = "(document.getElementById(%22listbuilder_list_title_id%22).value, ";
-        $args_str .= "document.getElementById(%22listbuilder_list_description_id%22).value, ";
-        $args_str .= "xajax.getFormValues(%22database_definition_form%22))";
+        $args_str = "(document.getElementById(%27listbuilder_list_title_id%27).value, ";
+        $args_str .= "document.getElementById(%27listbuilder_list_description_id%27).value, ";
+        $args_str .= "xajax.getFormValues(%27database_definition_form%27))";
         $html_str .= "                &nbsp;&nbsp;&nbsp;<span id=\"action_bar_button_create\">";
         $html_str .= get_href(get_onclick(ACTION_CREATE_LIST, HTML_NO_LIST_PERMISSION_CHECK, "action_bar_button_create", "above", $args_str), translate("BUTTON_CREATE_LIST"), "icon_accept");
         $html_str .= "</span>\n";
@@ -852,7 +852,7 @@ function get_field_definition_table ($definition)
         if ($row > 1)
         {
             $html_str .= "                                                <td width=\"1%\">";
-            $html_str .= get_href(get_onclick(ACTION_MOVE_LISTBUILDER_ROW, HTML_NO_LIST_PERMISSION_CHECK, "", "", "($row, %22up%22, xajax.getFormValues(%22database_definition_form%22))"), "&nbsp;", "icon_up");
+            $html_str .= get_href(get_onclick(ACTION_MOVE_LISTBUILDER_ROW, HTML_NO_LIST_PERMISSION_CHECK, "", "", "($row, %27up%27, xajax.getFormValues(%27database_definition_form%27))"), "&nbsp;", "icon_up");
             $html_str .= "</td>\n";
         }
         else
@@ -866,7 +866,7 @@ function get_field_definition_table ($definition)
         if ($row > 0 && $row < ((count($definition) / 4) - 1))
         {
             $html_str .= "                                                <td width=\"1%\">";
-            $html_str .= get_href(get_onclick(ACTION_MOVE_LISTBUILDER_ROW, HTML_NO_LIST_PERMISSION_CHECK, "", "", "($row, %22down%22, xajax.getFormValues(%22database_definition_form%22))"), "&nbsp;", "icon_down");
+            $html_str .= get_href(get_onclick(ACTION_MOVE_LISTBUILDER_ROW, HTML_NO_LIST_PERMISSION_CHECK, "", "", "($row, %27down%27, xajax.getFormValues(%27database_definition_form%27))"), "&nbsp;", "icon_down");
             $html_str .= "</td>\n";
         }
         else
@@ -880,7 +880,7 @@ function get_field_definition_table ($definition)
         if ($row > 0)
         {
             $html_str .= "                                                <td width=\"1%\">";
-            $html_str .= get_href(get_onclick(ACTION_DELETE_LISTBUILDER_ROW, HTML_NO_LIST_PERMISSION_CHECK, "", "", "($row, xajax.getFormValues(%22database_definition_form%22))"), translate("BUTTON_DELETE"), "icon_delete");
+            $html_str .= get_href(get_onclick(ACTION_DELETE_LISTBUILDER_ROW, HTML_NO_LIST_PERMISSION_CHECK, "", "", "($row, xajax.getFormValues(%27database_definition_form%27))"), translate("BUTTON_DELETE"), "icon_delete");
             $html_str .= "</td>\n";
         }
         else

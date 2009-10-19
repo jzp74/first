@@ -238,7 +238,7 @@ class HtmlDatabaseTable
         # add contents top
         $html_str .= "\n\n            <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top_left\">\n";
         $html_str .= "                <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top_right\">\n";
-        $html_str .= "                    <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top\">&nbsp;\n";
+        $html_str .= "                    <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top\">\n";
         if ($page != DATABASETABLE_ALL_PAGES)
         {
             $archive_select = FALSE;
@@ -359,6 +359,9 @@ class HtmlDatabaseTable
                 if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_PORTAL)
                 {
                     $action_str = "action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record";
+                    # use different function name when page type is list because we use more types of permissions with lists
+                    if ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_LIST)
+                        $action_str = "action_get_update_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record";
                     $onclick_str = get_onclick($action_str, $list_title, $key_values_string, "below", "(%27".$list_title."%27, %27".$encoded_key_string."%27)");
                 }
                 else
@@ -910,7 +913,11 @@ class HtmlDatabaseTable
             else if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_USERLISTTABLEPERMISSIONS)
             {
                 $html_str .= "<span id=\"action_bar_button_insert\">";
-                $html_str .= get_href(get_onclick("action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record", $this->permissions_list_title, "action_bar_button_insert", "above", "(%27".$list_title."%27, %27%27)"), translate("BUTTON_ADD_RECORD").$this->configuration[HTML_TABLE_RECORD_NAME], "icon_add");
+                # use different function name when page type is list because we use more types of permissions with lists
+                if ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_LIST)
+                    $html_str .= get_href(get_onclick("action_get_insert_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record", $this->permissions_list_title, "action_bar_button_insert", "above", "(%27".$list_title."%27, %27%27)"), translate("BUTTON_ADD_RECORD").$this->configuration[HTML_TABLE_RECORD_NAME], "icon_add");
+                else
+                    $html_str .= get_href(get_onclick("action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record", $this->permissions_list_title, "action_bar_button_insert", "above", "(%27".$list_title."%27, %27%27)"), translate("BUTTON_ADD_RECORD").$this->configuration[HTML_TABLE_RECORD_NAME], "icon_add");
                 $html_str .= "</span>&nbsp;&nbsp;&nbsp;&nbsp;";
             }
         }
@@ -991,7 +998,7 @@ class HtmlDatabaseTable
 
         $html_str .= "                        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."filter\">\n";
         $html_str .= "                            <form name=\"filter_form_name\" id=\"filter_form\" ";
-        $html_str .= "onsubmit=\"javascript:xajax_action_set_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."filter('".$list_title."', document.getElementById('filter_str').value); return false;\">\n";
+        $html_str .= "onsubmit=\"javascript:handleFunction('action_set_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."filter', '".$list_title."', document.getElementById('filter_str').value); return false;\">\n";
         $html_str .= "                                <input size=\"34\" maxlength=\"100\" value=\"".$filter_str."\" id=\"filter_str\">\n";
         $html_str .= "                                ".get_href(get_onclick(ACTION_SET_LIST_FILTER, $list_title, "filter_str", "below", "(%27".$list_title."%27, document.getElementById(%27filter_str%27).value)"), "&nbsp;", "icon_none")."\n";
         $html_str .= "                            </form>\n";

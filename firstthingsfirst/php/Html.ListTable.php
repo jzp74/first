@@ -16,7 +16,8 @@
 define("ACTION_GET_LIST_PAGE", "action_get_list_page");
 define("ACTION_GET_LIST_PRINT_PAGE", "action_get_list_print_page");
 define("ACTION_GET_LIST_CONTENT", "action_get_list_content");
-define("ACTION_GET_LIST_RECORD", "action_get_list_record");
+define("ACTION_GET_INSERT_LIST_RECORD", "action_get_insert_list_record");
+define("ACTION_GET_UPDATE_LIST_RECORD", "action_get_update_list_record");
 define("ACTION_GET_LIST_IMPORT", "action_get_list_import");
 define("ACTION_INSERT_LIST_RECORD", "action_insert_list_record");
 define("ACTION_UPDATE_LIST_RECORD", "action_update_list_record");
@@ -34,7 +35,8 @@ define("ACTION_SET_LIST_FILTER", "action_set_list_filter");
 $xajax->register(XAJAX_FUNCTION, ACTION_GET_LIST_PAGE);
 $xajax->register(XAJAX_FUNCTION, ACTION_GET_LIST_PRINT_PAGE);
 $xajax->register(XAJAX_FUNCTION, ACTION_GET_LIST_CONTENT);
-$xajax->register(XAJAX_FUNCTION, ACTION_GET_LIST_RECORD);
+$xajax->register(XAJAX_FUNCTION, ACTION_GET_INSERT_LIST_RECORD);
+$xajax->register(XAJAX_FUNCTION, ACTION_GET_UPDATE_LIST_RECORD);
 $xajax->register(XAJAX_FUNCTION, ACTION_GET_LIST_IMPORT);
 $xajax->register(XAJAX_FUNCTION, ACTION_INSERT_LIST_RECORD);
 $xajax->register(XAJAX_FUNCTION, ACTION_UPDATE_LIST_RECORD);
@@ -59,7 +61,8 @@ $xajax->register(XAJAX_FUNCTION, ACTION_SET_LIST_FILTER);
 $firstthingsfirst_action_description[ACTION_GET_LIST_PAGE]          = "--P---";
 $firstthingsfirst_action_description[ACTION_GET_LIST_PRINT_PAGE]    = "--P---";
 $firstthingsfirst_action_description[ACTION_GET_LIST_CONTENT]       = "--P---";
-$firstthingsfirst_action_description[ACTION_GET_LIST_RECORD]        = "---P--";
+$firstthingsfirst_action_description[ACTION_GET_INSERT_LIST_RECORD] = "----P-";
+$firstthingsfirst_action_description[ACTION_GET_UPDATE_LIST_RECORD] = "---P--";
 $firstthingsfirst_action_description[ACTION_GET_LIST_IMPORT]        = "----P-";
 $firstthingsfirst_action_description[ACTION_INSERT_LIST_RECORD]     = "----P-";
 $firstthingsfirst_action_description[ACTION_UPDATE_LIST_RECORD]     = "---P--";
@@ -274,23 +277,76 @@ function action_get_list_content ($list_title, $order_by_field, $page)
 }
 
 /**
- * get html of one specified record (called when user edits or inserts a record)
+ * get html of one specified record to insert a new list record
+ * this function is wrapper function for function get_list_record (see further below)
  * this function is registered in xajax
  * @param string $list_title title of list
  * @param string $key_string comma separated name value pairs
  * @return xajaxResponse every xajax registered function needs to return this object
  */
-function action_get_list_record ($list_title, $key_string)
+function action_get_insert_list_record ($list_title, $key_string)
 {
     global $logging;
     global $user;
-    global $list_table_configuration;
     global $user_start_time_array;
 
     $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title, key_string=$key_string)");
 
     # store start time
     $user_start_time_array[__METHOD__] = microtime(TRUE);
+
+    # call function get_list_record
+    $response = get_list_record($list_title, $key_string);
+
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
+
+    return $response;
+}
+
+/**
+ * get html of one specified record to update a list record
+ * this function is wrapper function for function get_list_record (see further below)
+ * this function is registered in xajax
+ * @param string $list_title title of list
+ * @param string $key_string comma separated name value pairs
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
+function action_get_update_list_record ($list_title, $key_string)
+{
+    global $logging;
+    global $user;
+    global $user_start_time_array;
+
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title, key_string=$key_string)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
+
+    # call function get_list_record
+    $response = get_list_record($list_title, $key_string);
+
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
+
+    return $response;
+}
+
+/**
+ * get html of one specified record (called when user edits or inserts a record)
+ * this function is called by functions: action_get_insert_list_record or action_get_update_list_record
+ * @param string $list_title title of list
+ * @param string $key_string comma separated name value pairs
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
+function get_list_record ($list_title, $key_string)
+{
+    global $logging;
+    global $user;
+    global $list_table_configuration;
+    global $user_start_time_array;
+
+    $logging->trace("get list record (list_title=$list_title, key_string=$key_string)");
 
     # create necessary objects
     $result = new Result();
@@ -322,8 +378,7 @@ function action_get_list_record ($list_title, $key_string)
     $response->script("document.getElementById('focus_on_this_input').focus()");
     $response->script("document.getElementById('".$focus_element_name."').focus()");
 
-    # log total time for this function
-    $logging->info(get_function_time_str(__METHOD__));
+    $logging->trace("got list record");
 
     return $response;
 }

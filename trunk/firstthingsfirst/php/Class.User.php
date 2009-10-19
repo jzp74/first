@@ -569,28 +569,33 @@ class User extends UserDatabaseTable
         # update user name in user_list_permissions
         if (array_key_exists(USER_NAME_FIELD_NAME, $name_values_array) == TRUE)
         {
-            # first get the current user name
-            $user_array = $this->select_record($encoded_key_string);
-            if (count($user_array) == 0)
-                return FALSE;
-
-            $current_user_name = $user_array[USER_NAME_FIELD_NAME];
-
-            # create key string for user_list_permissions
-            $permission_key_string = USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME."='".$current_user_name."'";
-
-            # create array with new title
-            $new_title_array = array();
-            $new_title_array[USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME] = $name_values_array[USER_NAME_FIELD_NAME];
-
-            if ($this->_user_list_permissions->update($permission_key_string, $new_title_array) == FALSE)
+            # select something from user_list_permissions to check if database table exists
+            if ($this->_user_list_permissions->select(USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME, 1) == TRUE)
             {
-                # copy error strings from user_list_permissions
-                $this->error_message_str = $this->_user_list_permissions->get_error_message_str();
-                $this->error_log_str = $this->_user_list_permissions->get_error_log_str();
-                $this->error_str = $this->_user_list_permissions->get_error_str();
+                # database table user_list_permissions exists
+                # first get the current user name
+                $user_array = $this->select_record($encoded_key_string);
+                if (count($user_array) == 0)
+                    return FALSE;
 
-                return FALSE;
+                $current_user_name = $user_array[USER_NAME_FIELD_NAME];
+
+                # create key string for user_list_permissions
+                $permission_key_string = USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME."='".$current_user_name."'";
+
+                # create array with new title
+                $new_title_array = array();
+                $new_title_array[USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME] = $name_values_array[USER_NAME_FIELD_NAME];
+
+                if ($this->_user_list_permissions->update($permission_key_string, $new_title_array) == FALSE)
+                {
+                    # copy error strings from user_list_permissions
+                    $this->error_message_str = $this->_user_list_permissions->get_error_message_str();
+                    $this->error_log_str = $this->_user_list_permissions->get_error_log_str();
+                    $this->error_str = $this->_user_list_permissions->get_error_str();
+
+                    return FALSE;
+                }
             }
         }
 

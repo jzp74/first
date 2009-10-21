@@ -238,13 +238,14 @@ class UserListTablePermissions extends UserDatabaseTable
      * insert list permissions for a new user for all lists
      * this new user gets no permissions for existing listst
      * @param $user_name string name of new user
+     * @param $is_admin int indicates if new user is administrator
      * @return bool indicates if all permissions have been inserted
      */
-    function insert_list_permissions_new_user ($user_name)
+    function insert_list_permissions_new_user ($user_name, $is_admin)
     {
         global $list_table_description;
 
-        $this->_log->trace("insert list permissions (user_name=".$user_name.")");
+        $this->_log->trace("insert list permissions (user_name=$user_name, is_admin=$is_admin)");
 
         # get list of all users
         $results = $list_table_description->select("", DATABASETABLE_ALL_PAGES, array(0 => LISTTABLEDESCRIPTION_TITLE_FIELD_NAME));
@@ -257,8 +258,8 @@ class UserListTablePermissions extends UserDatabaseTable
                 $name_values_array[USERLISTTABLEPERMISSIONS_LISTTABLE_TITLE_FIELD_NAME] = $list_title;
                 $name_values_array[USERLISTTABLEPERMISSIONS_USER_NAME_FIELD_NAME] = $user_name;
 
-                # check if new user has admin permission
-                if ($this->_user->get_is_admin() == 0)
+                # check if new user is administrator
+                if ($is_admin == 0)
                 {
                     # user has no admin permission and therefore gets no list permissions
                     $name_values_array[USERLISTTABLEPERMISSIONS_CAN_VIEW_LIST_FIELD_NAME] = 0;

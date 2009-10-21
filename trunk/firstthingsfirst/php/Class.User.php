@@ -489,6 +489,7 @@ class User extends UserDatabaseTable
         global $user_list_permissions;
 
         $user_name = $name_values_array[USER_NAME_FIELD_NAME];
+        $is_admin = $name_values_array[USER_IS_ADMIN_FIELD_NAME];
 
         $this->_log->trace("insert user (name=".$user_name.")");
 
@@ -507,7 +508,7 @@ class User extends UserDatabaseTable
         # if user is admin then user must also be able to create lists
         if (array_key_exists(USER_IS_ADMIN_FIELD_NAME, $name_values_array) == TRUE)
         {
-            if ($name_values_array[USER_IS_ADMIN_FIELD_NAME] == 1)
+            if ($is_admin == 1)
                 $name_values_array[USER_CAN_CREATE_LIST_FIELD_NAME] = 1;
         }
 
@@ -521,7 +522,7 @@ class User extends UserDatabaseTable
         if (parent::insert($name_values_array) == FALSE)
             return FALSE;
 
-        if ($user_list_permissions->insert_list_permissions_new_user($user_name) == FALSE)
+        if ($user_list_permissions->insert_list_permissions_new_user($user_name, $is_admin) == FALSE)
         {
             # copy error strings from user_list_permissions
             $this->error_message_str = $user_list_permissions->get_error_message_str();

@@ -196,6 +196,26 @@ class ListTableNote extends DatabaseTable
     }
 
     /**
+     * delete all existing notes from database for given record id
+     * @param $record_id int unique identifier of a ListTable object
+     * @return bool indicates if ListTableNote has been deleted
+     */
+    function delete_record_notes ($record_id)
+    {
+        $this->_log->trace("deleting ListTableNotes (record_id=$record_id)");
+
+        # create encoded_key_string
+        $encoded_key_string = parent::_encode_key_string(LISTTABLENOTE_RECORD_ID_FIELD_NAME."='$record_id'");
+
+        if (parent::delete($encoded_key_string) == FALSE)
+            return FALSE;
+
+        $this->_log->trace("deleted ListTableNotes");
+
+        return TRUE;
+    }
+
+    /**
     * delete all existing notes from database for given field name
     * @param $field_name string field name
     * @return bool indicates if ListTableNote has been deleted

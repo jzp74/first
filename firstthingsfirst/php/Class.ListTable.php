@@ -944,7 +944,24 @@ class ListTable extends UserDatabaseTable
             return FALSE;
         $record_id = $record[DB_ID_FIELD_NAME];
 
-        # delete of record automatically deletes all notes
+        # delete all notes for all fields
+        foreach($this->db_field_names as $db_field_name)
+        {
+            if ($this->fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
+            {
+                if ($this->_list_table_note->delete_record_notes($record_id) == FALSE)
+                {
+                    # copy error strings from list_table_note
+                    $this->error_message_str = $this->_list_table_note->get_error_message_str();
+                    $this->error_log_str = $this->_list_table_note->get_error_log_str();
+                    $this->error_str = $this->_list_table_note->get_error_str();
+
+                    return FALSE;
+                }
+            }
+        }
+
+        # delete record
         if (parent::delete($encoded_key_string) == FALSE)
             return FALSE;
 

@@ -45,6 +45,11 @@ $class_listtablenote_fields = array(
  */
 define("LISTTABLENOTE_METADATA", "-11");
 
+/**
+ * definition of an empty note
+ */
+define("LISTTABLENOTE_EMPTY_NOTE", "-!EMPTY!-");
+
 
 /**
  * This class represents all notes for a specific ListTable
@@ -124,8 +129,8 @@ class ListTableNote extends DatabaseTable
     * @param $record_id int unique identifier of a ListTable object
     * @param $field_name string field name
     * @param $note string the new note
-    * @return bool indicates if new ListTableNote has been added
-    */
+    * @return int number indicates the id of the new note or 0 when no record was added
+     */
     function insert ($record_id, $field_name, $note)
     {
         $this->_log->trace("inserting ListTableNote (record_id=".$record_id.", field_name=".$field_name.")");
@@ -136,26 +141,27 @@ class ListTableNote extends DatabaseTable
         $name_values_array[LISTTABLENOTE_NOTE_FIELD_NAME] = $note;
 
         # call parent insert()
-        if (parent::insert($name_values_array, $this->_user->get_name()) == FALSE)
-            return FALSE;
+        $new_note_id = parent::insert($name_values_array, $this->_user->get_name());
+        if ($new_note_id == 0)
+            return 0;
 
         $this->_log->trace("inserted ListTableNote");
 
-        return TRUE;
+        return $new_note_id;
     }
 
     /**
     * update an existing note in database
     * @param $note_id int unique identifier of a specific ListTableItemNote object
-    * @param $note string the new note
+    * @param $note string the updated note
     * @return bool indicates if ListTableNote has been updated
     */
     function update ($note_id, $note)
     {
-        $this->_log->trace("updating ListTableNote (note_id=".$note_id.")");
+        $this->_log->trace("updating ListTableNote (note_id=$note_id)");
 
         # create encoded_key_string
-        $encoded_key_string = parent::_encode_key_string(DB_ID_FIELD_NAME."='".$note_id."'");
+        $encoded_key_string = parent::_encode_key_string(DB_ID_FIELD_NAME."='$note_id'");
 
         # create name_value_array
         $name_values_array = array();
@@ -170,16 +176,36 @@ class ListTableNote extends DatabaseTable
     }
 
     /**
+     * delete an existing notes from database with given id
+     * @param $note_id int unique identifier of a specific ListTableItemNote object
+     * @return bool indicates if ListTableNote has been deleted
+     */
+    function delete ($note_id)
+    {
+        $this->_log->trace("deleting ListTableNote (note_id=$note_id)");
+
+        # create encoded_key_string
+        $encoded_key_string = parent::_encode_key_string(DB_ID_FIELD_NAME."='$note_id'");
+
+        if (parent::delete($encoded_key_string) == FALSE)
+            return FALSE;
+
+        $this->_log->trace("deleted ListTableNote");
+
+        return TRUE;
+    }
+
+    /**
     * delete all existing notes from database for given field name
     * @param $field_name string field name
     * @return bool indicates if ListTableNote has been deleted
     */
-    function delete ($field_name)
+    function delete_field_notes ($field_name)
     {
-        $this->_log->trace("deleting ListTableNotes (field_name=".$field_name.")");
+        $this->_log->trace("deleting ListTableNotes (field_name=$field_name)");
 
         # create encoded_key_string
-        $encoded_key_string = parent::_encode_key_string(LISTTABLENOTE_FIELD_NAME_FIELD_NAME."='".$field_name."'");
+        $encoded_key_string = parent::_encode_key_string(LISTTABLENOTE_FIELD_NAME_FIELD_NAME."='$field_name'");
 
         if (parent::delete($encoded_key_string) == FALSE)
             return FALSE;

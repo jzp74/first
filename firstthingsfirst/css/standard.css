@@ -177,6 +177,10 @@ input, textarea {
     padding: 1px 5px 3px 5px;
     }
 
+textarea {
+    overflow: auto
+    }
+
 select {
     padding: 1px 1px 3px 0px;
     }

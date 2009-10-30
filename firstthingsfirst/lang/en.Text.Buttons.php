@@ -40,6 +40,7 @@ $text_translations["BUTTON_ADD_RECORD"] = "insert&nbsp;new&nbsp;";
 $text_translations["BUTTON_PREVIOUS_NOTE"] = "previous&nbsp;note";
 $text_translations["BUTTON_NEXT_NOTE"] = "next&nbsp;note";
 $text_translations["BUTTON_ADD_NOTE"] = "add&nbsp;note";
+$text_translations["BUTTON_DELETE_NOTE"] = "delete&nbsp;note";
 $text_translations["BUTTON_PRINT_LIST"] = "print&nbsp;this&nbsp;list";
 $text_translations["BUTTON_IMPORT_RECORDS"] = "import&nbsp;from&nbsp;file";
 $text_translations["BUTTON_SELECT_UPLOAD_FILE"] = "select&nbsp;file&nbsp;to&nbsp;upload";

@@ -427,7 +427,7 @@ class ListTable extends UserDatabaseTable
         # remove notes from changed or removed notes fields
         foreach ($notes_to_delete as $db_field_name)
         {
-            if ($this->_list_table_note->delete($db_field_name) == FALSE)
+            if ($this->_list_table_note->delete_field_notes($db_field_name) == FALSE)
             {
                 # copy error strings from list_table_note
                 $this->error_message_str = $this->_list_table_note->get_error_message_str();
@@ -646,7 +646,7 @@ class ListTable extends UserDatabaseTable
                         $result = $this->_list_table_note->select($record[DB_ID_FIELD_NAME], $note_field);
                         if (count($result) == 0 || count($result) != $record[$note_field])
                         {
-                            $this->_log->warn("unexpected number of notes found (expected=".$record[$note_field].", found=".count($result)."");
+                            $this->_log->warn("unexpected number of notes found (id=".$record[DB_ID_FIELD_NAME].", expected=".$record[$note_field].", found=".count($result).")");
                             $record[$note_field] = $result;
                         }
                         else
@@ -690,7 +690,7 @@ class ListTable extends UserDatabaseTable
                         $result = $this->_list_table_note->select($record[DB_ID_FIELD_NAME], $db_field_name);
                         if (count($result) == 0 || count($result) != $record[$db_field_name])
                         {
-                            $this->_log->warn("unexpected number of notes found");
+                            $this->_log->warn("unexpected number of notes found (expected=".$record[$db_field_name].", found=".count($result).")");
                             $record[$db_field_name] = $result;
                         }
                         else
@@ -743,32 +743,46 @@ class ListTable extends UserDatabaseTable
             }
         }
 
-        $result = parent::insert($name_values);
-        if ($result == 0)
-            return $result;
+        $new_record_id = parent::insert($name_values);
+        if ($new_record_id == 0)
+            return 0;
 
         # insert notes
         foreach ($all_notes_array as $notes_array)
+        {
             foreach ($notes_array as $note_array)
-                $this->_list_table_note->insert($result, $note_array[0], $note_array[1]);
+            {
+                if ($this->_list_table_note->insert($new_record_id, $note_array[0], $note_array[1]) == 0)
+                {
+                    # copy error strings from _list_table_note
+                    $this->error_message_str = $this->_list_table_note->get_error_message_str();
+                    $this->error_log_str = $this->_list_table_note->get_error_log_str();
+                    $this->error_str = $this->_list_table_note->get_error_str();
+
+                    return 0;
+                }
+            }
+        }
 
         # update list table description (date modified)
-        if ($list_table_description->update($this->list_title) == FALSE);
+        if ($list_table_description->update($this->list_title) == FALSE)
         {
             # copy error strings from _list_table_description
             $this->error_message_str = $list_table_description->get_error_message_str();
             $this->error_log_str = $list_table_description->get_error_log_str();
             $this->error_str = $list_table_description->get_error_str();
+
+            return 0;
         }
 
         # also update creator modifier array
         $record = $this->_get_list_table_description_record($this->list_title);
         if (count($record) == 0)
-            return FALSE;
+            return 0;
 
         $this->_log->trace("inserted record into ListTable");
 
-        return TRUE;
+        return $new_record_id;
     }
 
     /**
@@ -827,26 +841,65 @@ class ListTable extends UserDatabaseTable
         {
             foreach ($notes_array as $note_array)
             {
+                # a new note
                 if ($note_array[1] == 0)
                 {
                     $this->_log->debug("found a new note");
-                    $this->_list_table_note->insert($record_id[0], $note_array[0], $note_array[2]);
+                    # insert the new note
+                    if ($this->_list_table_note->insert($record_id[0], $note_array[0], $note_array[2]) == 0)
+                    {
+                        # copy error strings from _list_table_note
+                        $this->error_message_str = $this->_list_table_note->get_error_message_str();
+                        $this->error_log_str = $this->_list_table_note->get_error_log_str();
+                        $this->error_str = $this->_list_table_note->get_error_str();
+
+                        return FALSE;
+                    }
                 }
+                # an existing note
                 else
                 {
                     $this->_log->debug("update existing note");
-                    $this->_list_table_note->update($note_array[1], $note_array[2]);
+
+                    # delete the note when it is an existing note that contains the message to delete it
+                    if ($note_array[2] == LISTTABLENOTE_EMPTY_NOTE)
+                    {
+                        if ($this->_list_table_note->delete($note_array[1]) == FALSE)
+                        {
+                            # copy error strings from _list_table_note
+                            $this->error_message_str = $this->_list_table_note->get_error_message_str();
+                            $this->error_log_str = $this->_list_table_note->get_error_log_str();
+                            $this->error_str = $this->_list_table_note->get_error_str();
+
+                            return FALSE;
+                        }
+                    }
+                    # update existing note in all other cases
+                    else
+                    {
+                        if ($this->_list_table_note->update($note_array[1], $note_array[2]) == FALSE)
+                        {
+                            # copy error strings from _list_table_note
+                            $this->error_message_str = $this->_list_table_note->get_error_message_str();
+                            $this->error_log_str = $this->_list_table_note->get_error_log_str();
+                            $this->error_str = $this->_list_table_note->get_error_str();
+
+                            return FALSE;
+                        }
+                    }
                 }
             }
         }
 
         # update list table description (date modified)
-        if ($list_table_description->update($this->list_title) == FALSE);
+        if ($list_table_description->update($this->list_title) == FALSE)
         {
             # copy error strings from _list_table_description
             $this->error_message_str = $list_table_description->get_error_message_str();
             $this->error_log_str = $list_table_description->get_error_log_str();
             $this->error_str = $list_table_description->get_error_str();
+
+            return FALSE;
         }
 
         # also update creator modifier array
@@ -896,12 +949,14 @@ class ListTable extends UserDatabaseTable
             return FALSE;
 
         # update list table description (date modified)
-        if ($list_table_description->update($this->list_title) == FALSE);
+        if ($list_table_description->update($this->list_title) == FALSE)
         {
             # copy error strings from _list_table_description
             $this->error_message_str = $list_table_description->get_error_message_str();
             $this->error_log_str = $list_table_description->get_error_log_str();
             $this->error_str = $list_table_description->get_error_str();
+
+            return FALSE;
         }
 
         $this->_log->trace("deleted record from ListTable");

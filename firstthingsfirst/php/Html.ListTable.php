@@ -536,7 +536,7 @@ function action_insert_list_record ($list_title, $form_values)
     }
 
     # display error when insertion returns false
-    if ($list_table->insert($new_form_values) == FALSE)
+    if ($list_table->insert($new_form_values) == 0)
     {
         $logging->warn("insert list record returns false");
         $error_message_str = $list_table->get_error_message_str();

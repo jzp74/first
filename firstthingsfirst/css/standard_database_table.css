@@ -220,8 +220,76 @@
     width: 100%;
     }
 
+#database_table_record_contents .note_box {
+    }
+
+#database_table_record_contents .note_box_header {
+    padding: 4px 0px 4px 2px;
+    margin: 0px 0px -1px 0px;
+    height: 16px;
+    background-color: rgb(255, 255, 255);
+    border-top: 1px solid rgb(190, 190, 190);
+    border-bottom: none;
+    border-left: 1px solid rgb(190, 190, 190);
+    border-right: 1px solid rgb(190, 190, 190);
+    font-weight: bold;
+    }
+
 #database_table_record_contents .note_text {
-    margin: 4px 0px 4px 0px;
+    margin: 0px 0px 0px 0px;
+    background-color: rgb(255, 255, 255);
+    border-top: none;
+    border-bottom: 1px solid rgb(190, 190, 190);
+    border-left: 1px solid rgb(190, 190, 190);
+    border-right: 1px solid rgb(190, 190, 190);
+    }
+
+#database_table_record_contents .note_box_top_buttons {
+    height: 23px;
+    width: 100%;
+    }
+
+#database_table_record_contents .note_box_top_buttons_right {
+    padding: 3px 4px 3px 0px;
+    height: 17px;
+    float: right;
+    }
+
+#database_table_record_contents .note_box_bottom_buttons {
+    height: 23px;
+    width: 100%;
+    }
+
+#database_table_record_contents .note_box_bottom_buttons_left {
+    padding: 3px 0px 3px 4px;
+    height: 17px;
+    float: left;
+    }
+
+#database_table_record_contents .note_box_bottom_buttons_right {
+    padding: 3px 4px 3px 0px;
+    height: 17px;
+    float: right;
+    }
+
+#database_table_record_contents .icon_add {
+    padding: 3px 0px 3px 24px;
+    margin: -3px 0px -3px 0px;
+    }
+
+#database_table_record_contents .icon_back {
+    padding: 3px 0px 3px 24px;
+    margin: -3px 0px -3px 0px;
+    }
+
+#database_table_record_contents .icon_next {
+    padding: 3px 0px 3px 24px;
+    margin: -3px 0px -3px 0px;
+    }
+
+#database_table_record_contents .icon_delete {
+    padding: 3px 0px 3px 24px;
+    margin: -3px 0px -3px 0px;
     }
 
 #database_table_record_contents #button_upload {

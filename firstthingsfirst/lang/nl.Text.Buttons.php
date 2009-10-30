@@ -40,6 +40,7 @@ $text_translations["BUTTON_ADD_RECORD"] = "nieuwe&nbsp;";
 $text_translations["BUTTON_PREVIOUS_NOTE"] = "vorige&nbsp;opmerking";
 $text_translations["BUTTON_NEXT_NOTE"] = "volgende&nbsp;opmerking";
 $text_translations["BUTTON_ADD_NOTE"] = "nieuwe&nbsp;opmerking";
+$text_translations["BUTTON_DELETE_NOTE"] = "verwijder&nbsp;opmerking";
 $text_translations["BUTTON_PRINT_LIST"] = "deze&nbsp;lijst&nbsp;afdrukken";
 $text_translations["BUTTON_IMPORT_RECORDS"] = "importeer&nbsp;uit&nbsp;bestand";
 $text_translations["BUTTON_SELECT_UPLOAD_FILE"] = "selecteer&nbsp;een&nbsp;bestand&nbsp;om&nbsp;te&nbsp;uploaden";

@@ -24,6 +24,7 @@ define("ACTION_UPDATE_LIST_RECORD", "action_update_list_record");
 define("ACTION_ARCHIVE_LIST_RECORD", "action_archive_list_record");
 define("ACTION_ACTIVATE_LIST_RECORD", "action_activate_list_record");
 define("ACTION_IMPORT_LIST_RECORDS", "action_import_list_records");
+define("ACTION_EXPORT_LIST_RECORDS", "action_export_list_records");
 define("ACTION_DELETE_LIST_RECORD", "action_delete_list_record");
 define("ACTION_CANCEL_LIST_ACTION", "action_cancel_list_action");
 define("ACTION_SET_LIST_ARCHIVE", "action_set_list_archive");
@@ -43,6 +44,7 @@ $xajax->register(XAJAX_FUNCTION, ACTION_UPDATE_LIST_RECORD);
 $xajax->register(XAJAX_FUNCTION, ACTION_ARCHIVE_LIST_RECORD);
 $xajax->register(XAJAX_FUNCTION, ACTION_ACTIVATE_LIST_RECORD);
 $xajax->register(XAJAX_FUNCTION, ACTION_IMPORT_LIST_RECORDS);
+$xajax->register(XAJAX_FUNCTION, ACTION_EXPORT_LIST_RECORDS);
 $xajax->register(XAJAX_FUNCTION, ACTION_DELETE_LIST_RECORD);
 $xajax->register(XAJAX_FUNCTION, ACTION_CANCEL_LIST_ACTION);
 $xajax->register(XAJAX_FUNCTION, ACTION_SET_LIST_ARCHIVE);
@@ -69,6 +71,7 @@ $firstthingsfirst_action_description[ACTION_UPDATE_LIST_RECORD]     = "---P--";
 $firstthingsfirst_action_description[ACTION_ARCHIVE_LIST_RECORD]    = "---P--";
 $firstthingsfirst_action_description[ACTION_ACTIVATE_LIST_RECORD]   = "---P--";
 $firstthingsfirst_action_description[ACTION_IMPORT_LIST_RECORDS]    = "----P-";
+$firstthingsfirst_action_description[ACTION_EXPORT_LIST_RECORDS]    = "--P---";
 $firstthingsfirst_action_description[ACTION_DELETE_LIST_RECORD]     = "----P-";
 $firstthingsfirst_action_description[ACTION_CANCEL_LIST_ACTION]     = "------";
 $firstthingsfirst_action_description[ACTION_SET_LIST_ARCHIVE]       = "------";
@@ -530,7 +533,7 @@ function action_insert_list_record ($list_title, $form_values)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("record_contents_buttons", "right", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message("record_contents_buttons", "above", $error_message_str, $error_log_str, $error_str, $response);
 
         return $response;
     }
@@ -542,7 +545,7 @@ function action_insert_list_record ($list_title, $form_values)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("record_contents_buttons", "right", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message("record_contents_buttons", "above", $error_message_str, $error_log_str, $error_str, $response);
 
         return $response;
     }
@@ -646,7 +649,7 @@ function action_update_list_record ($list_title, $key_string, $form_values)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("record_contents_buttons", "right", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message("record_contents_buttons", "above", $error_message_str, $error_log_str, $error_str, $response);
 
         return $response;
     }
@@ -658,7 +661,7 @@ function action_update_list_record ($list_title, $key_string, $form_values)
         $error_message_str = $list_table->get_error_message_str();
         $error_log_str = $list_table->get_error_log_str();
         $error_str = $list_table->get_error_str();
-        set_error_message("record_contents_buttons", "right", $error_message_str, $error_log_str, $error_str, $response);
+        set_error_message("record_contents_buttons", "above", $error_message_str, $error_log_str, $error_str, $response);
 
         return $response;
     }
@@ -981,6 +984,145 @@ function action_import_list_records ($list_title, $file_name, $field_seperator)
         return $response;
 
     set_info_message("action_bar_button_import", "above", "LABEL_IMPORT_SUCCESS", $response);
+
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
+
+    return $response;
+}
+
+/**
+ * import uploaded list records to current list
+ * this function is registered in xajax
+ * @param string $list_title title of list
+ * @param string $file_name name of uploaded file to be precessed
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
+function action_export_list_records ($list_title)
+{
+    global $logging;
+    global $user;
+    global $list_table_configuration;
+    global $user_start_time_array;
+    global $firstthingsfirst_field_descriptions;
+
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
+
+    # create necessary objects
+    $result = new Result();
+    $response = new xajaxResponse();
+
+    # create tmp file name and file name of export file
+    $tmp_file = "export_".$user->get_name()."_".strftime("%d%m%Y_%H%M%S.csv");
+    $logging->debug("creating tmp file: $tmp_file");
+    $export_file_name = strtolower(str_replace(" ", "_", $list_title)).".csv";
+
+    # create list table object
+    $list_table = new ListTable($list_title);
+    if ($list_table->get_is_valid() == FALSE)
+    {
+        $logging->warn("create list object returns false");
+        $error_message_str = $list_table->get_error_message_str();
+        $error_log_str = $list_table->get_error_log_str();
+        $error_str = $list_table->get_error_str();
+        set_error_message("action_bar_button_export", "above", $error_message_str, $error_log_str, $error_str, $response);
+
+        return $response;
+    }
+
+    # load the complete list into memory
+    $all_records = $list_table->select("", DATABASETABLE_ALL_PAGES);
+    if (strlen($list_table->get_error_message_str()) > 0)
+    {
+        $logging->warn("reading list generated an error");
+        $error_message_str = $list_table->get_error_message_str();
+        $error_log_str = $list_table->get_error_log_str();
+        $error_str = $list_table->get_error_str();
+        set_error_message("action_bar_button_export", "above", $error_message_str, $error_log_str, $error_str, $response);
+
+        return $response;
+    }
+
+    # get the note fields
+    $db_field_names = $list_table->get_db_field_names();
+    $fields = $list_table->get_fields();
+
+    # open tmp file for writing
+    $handler = fopen("uploads/".$tmp_file, "w");
+
+    # cycle through the records
+    foreach ($all_records as $one_record)
+    {
+        $new_record = array();
+
+        # cycle through all fields and transform several fields
+        foreach($db_field_names as $db_field_name)
+        {
+            $value = $one_record[$db_field_name];
+
+            # only show columns that need to be shown
+            if ($fields[$db_field_name][2] != ID_COLUMN_NO_SHOW)
+            {
+                if (stristr($fields[$db_field_name][1], "DATE"))
+                    $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $value);
+                else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_AUTO_CREATED)
+                {
+                    if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME)
+                        $new_record[$db_field_name] = $one_record[DB_CREATOR_FIELD_NAME];
+                    else
+                    {
+                        if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
+                            $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $one_record[DB_TS_CREATED_FIELD_NAME]);
+                        else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
+                            $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $one_record[DB_TS_CREATED_FIELD_NAME])." ".$one_record[DB_CREATOR_FIELD_NAME];
+                    }
+                }
+                else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_AUTO_MODIFIED)
+                {
+                    if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME)
+                        $new_record[$db_field_name] = $one_record[DB_MODIFIER_FIELD_NAME];
+                    else
+                    {
+                        if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
+                            $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $one_record[DB_TS_MODIFIED_FIELD_NAME]);
+                        else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
+                            $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $one_record[DB_TS_MODIFIED_FIELD_NAME])." ".$one_record[DB_MODIFIER_FIELD_NAME];
+                    }
+                }
+                else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
+                {
+                    $notes_str = "";
+                    if (count($value) > 0)
+                    {
+                        foreach ($value as $note_array)
+                        {
+                            $notes_str .= get_date_str(DATE_FORMAT_NORMAL, $note_array[DB_TS_CREATED_FIELD_NAME]);
+                            $notes_str .= "(".$note_array[DB_CREATOR_FIELD_NAME]."): ".str_replace("\n", "", $note_array["_note"]).", ";
+                        }
+                    }
+                    else
+                        $notes_str .= "-";
+                    $new_record[$db_field_name] = $notes_str;
+                }
+                else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_TEXT_FIELD)
+                    $new_record[$db_field_name] = str_replace("\n", "", $value);
+                else
+                    $new_record[$db_field_name] = $value;
+            }
+        }
+
+        # dump this record to file
+        fputcsv($handler, $new_record, ",");
+    }
+
+    # close file
+    fclose($handler);
+
+    # call the export handler
+    $response->script("document.location.href = 'php/Html.Export.php?tmp_file=$tmp_file&file_name=$export_file_name'");
 
     # log total time for this function
     $logging->info(get_function_time_str(__METHOD__));

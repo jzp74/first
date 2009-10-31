@@ -651,7 +651,7 @@ class HtmlDatabaseTable
                 $record[$db_field_name] = "";
 
             # replace all " chars with &quot
-            $record[$db_field_name] = str_replace('"', '&quot', $record[$db_field_name]);
+            $record[$db_field_name] = str_replace('"', "&#34", $record[$db_field_name]);
 
             # replace all space chars with &nbsp
             $field_name_replaced = str_replace(' ', '&nbsp;', $field_name);
@@ -924,12 +924,17 @@ class HtmlDatabaseTable
         # only display the import and print buttons when no action is active and only when this is a list page
         if (($action == "") && ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_LIST))
         {
+            # show the print button
             $html_str .= "<span id=\"action_bar_button_print\">";
             $html_str .= get_href(get_onclick(ACTION_GET_LIST_PRINT_PAGE, $this->permissions_list_title, "", "", "window.open(%27index.php?action=".ACTION_GET_LIST_PRINT_PAGE."&list=".$list_title."%27)"), translate("BUTTON_PRINT_LIST"), "icon_print");
             $html_str .= "</span>&nbsp;&nbsp;&nbsp;&nbsp;";
-
+            # show the import button
             $html_str .= "<span id=\"action_bar_button_import\">";
             $html_str .= get_href(get_onclick(ACTION_GET_LIST_IMPORT, $this->permissions_list_title, "action_bar_button_import", "above", "(%27".$list_title."%27)"), translate("BUTTON_IMPORT_RECORDS"), "icon_unarchive");
+            $html_str .= "</span>&nbsp;&nbsp;&nbsp;&nbsp;";
+            # show the export button
+            $html_str .= "<span id=\"action_bar_button_export\">";
+            $html_str .= get_href(get_onclick(ACTION_EXPORT_LIST_RECORDS, $this->permissions_list_title, "action_bar_button_export", "above", "(%27".$list_title."%27)"), translate("BUTTON_EXPORT_RECORDS"), "icon_archive");
             $html_str .= "</span>";
         }
         else

@@ -1067,7 +1067,7 @@ function action_export_list_records ($list_title)
             if ($fields[$db_field_name][2] != ID_COLUMN_NO_SHOW)
             {
                 if (stristr($fields[$db_field_name][1], "DATE"))
-                    $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $value);
+                    $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $value, $user->get_date_format());
                 else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_AUTO_CREATED)
                 {
                     if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME)
@@ -1075,9 +1075,9 @@ function action_export_list_records ($list_title)
                     else
                     {
                         if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
-                            $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $one_record[DB_TS_CREATED_FIELD_NAME]);
+                            $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $one_record[DB_TS_CREATED_FIELD_NAME], $user->get_date_format());
                         else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
-                            $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $one_record[DB_TS_CREATED_FIELD_NAME])." ".$one_record[DB_CREATOR_FIELD_NAME];
+                            $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $one_record[DB_TS_CREATED_FIELD_NAME], $user->get_date_format())." ".$one_record[DB_CREATOR_FIELD_NAME];
                     }
                 }
                 else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_AUTO_MODIFIED)
@@ -1087,9 +1087,9 @@ function action_export_list_records ($list_title)
                     else
                     {
                         if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
-                            $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $one_record[DB_TS_MODIFIED_FIELD_NAME]);
+                            $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $one_record[DB_TS_MODIFIED_FIELD_NAME], $user->get_date_format());
                         else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
-                            $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $one_record[DB_TS_MODIFIED_FIELD_NAME])." ".$one_record[DB_MODIFIER_FIELD_NAME];
+                            $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $one_record[DB_TS_MODIFIED_FIELD_NAME], $user->get_date_format())." ".$one_record[DB_MODIFIER_FIELD_NAME];
                     }
                 }
                 else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
@@ -1099,7 +1099,7 @@ function action_export_list_records ($list_title)
                     {
                         foreach ($value as $note_array)
                         {
-                            $notes_str .= get_date_str(DATE_FORMAT_NORMAL, $note_array[DB_TS_CREATED_FIELD_NAME]);
+                            $notes_str .= get_date_str(DATE_FORMAT_NORMAL, $note_array[DB_TS_CREATED_FIELD_NAME], $user->get_date_format());
                             $notes_str .= "(".$note_array[DB_CREATOR_FIELD_NAME]."): ".str_replace("\n", "", $note_array["_note"]).", ";
                         }
                     }
@@ -1357,12 +1357,13 @@ function action_set_list_filter($list_title, $filter_str)
  */
 function get_footer ($creator_modifier_array)
 {
+    global $user;
     global $logging;
 
     $logging->trace("getting footer");
 
-    $ts_created = get_date_str(DATE_FORMAT_DATETIME, $creator_modifier_array[DB_TS_CREATED_FIELD_NAME]);
-    $ts_modified = get_date_str(DATE_FORMAT_DATETIME, $creator_modifier_array[DB_TS_MODIFIED_FIELD_NAME]);
+    $ts_created = get_date_str(DATE_FORMAT_DATETIME, $creator_modifier_array[DB_TS_CREATED_FIELD_NAME], $user->get_date_format());
+    $ts_modified = get_date_str(DATE_FORMAT_DATETIME, $creator_modifier_array[DB_TS_MODIFIED_FIELD_NAME], $user->get_date_format());
 
     $html_str = "";
 

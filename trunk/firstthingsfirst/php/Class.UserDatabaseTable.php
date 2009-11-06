@@ -93,6 +93,9 @@ class UserDatabaseTable extends DatabaseTable
     {
         $this->_log->trace("selecting UserDatabaseTable (order_by_field=".$order_by_field.", page=".$page.", db_field_names=".count($db_field_names).")");
 
+        # get lines per page from session
+        $lines_per_page = $this->_user->get_lines_per_page();
+
         # get list_state from session
         $this->_user->get_list_state($this->table_name);
 
@@ -156,7 +159,7 @@ class UserDatabaseTable extends DatabaseTable
             $page = $this->_list_state->get_current_page();
 
         # call parent select()
-        $rows = parent::select($order_by_field, $order_ascending, $archived, $filter_str_sql, $page, $db_field_names);
+        $rows = parent::select($order_by_field, $order_ascending, $archived, $filter_str_sql, $page, $lines_per_page, $db_field_names);
 
         if ($page != DATABASETABLE_ALL_PAGES)
             $this->_list_state->set_current_page($page);

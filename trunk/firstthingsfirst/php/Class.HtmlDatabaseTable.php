@@ -196,15 +196,17 @@ class HtmlDatabaseTable
      */
     function get_content ($database_table, $list_title, $order_by_field, $page, $result)
     {
-        global $firstthingsfirst_list_page_entries;
-
         $html_str = "";
         $field_names = $database_table->get_user_field_names();
         $fields = $database_table->get_fields();
         $user_fields = $database_table->get_user_fields();
         $metadata_str = $database_table->get_metadata_str();
 
-        $this->_log->trace("get content (list_title=".$list_title.", page=".$page.")");
+        # get lines per page from session
+        $lines_per_page = $this->_user->get_lines_per_page();
+        $this->_log->info("get content (list_title=$list_title, lines_per_page=$lines_per_page)");
+
+        $this->_log->trace("get content (list_title=$list_title, page=$page)");
 
         # select entries
         $records = $database_table->select($order_by_field, $page);
@@ -217,7 +219,6 @@ class HtmlDatabaseTable
             # no return statement here because we want the complete page to be displayed
         }
 
-        $this->_log->trace("we're now here");
         # get list_state properties
         $this->_user->get_list_state($database_table->get_table_name());
         $total_pages = $this->_list_state->get_total_pages();
@@ -234,7 +235,6 @@ class HtmlDatabaseTable
             $current_page = $this->_list_state->get_current_page();
         }
 
-        $this->_log->trace("we're now here");
         # add contents top
         $html_str .= "\n\n            <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top_left\">\n";
         $html_str .= "                <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top_right\">\n";
@@ -268,7 +268,7 @@ class HtmlDatabaseTable
             }
             else
             {
-                $first_record = ((((int)$current_page - 1) * $firstthingsfirst_list_page_entries) + 1);
+                $first_record = ((((int)$current_page - 1) * $lines_per_page) + 1);
                 $last_record = (($first_record + count($records)) - 1);
             }
             $html_str .= "                        <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."pages_top\">";
@@ -278,7 +278,6 @@ class HtmlDatabaseTable
         else
             $html_str .= "                        &nbsp;\n";
 
-        $this->_log->trace("we're now here");
         $html_str .= "                    </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top -->\n";
         $html_str .= "                </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top_right -->\n";
         $html_str .= "            </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_top_left -->\n\n";
@@ -376,7 +375,7 @@ class HtmlDatabaseTable
                 }
                 else if (stristr($fields[$db_field_name][1], "DATE"))
                 {
-                    $date_string = str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_WEEKDAY, $value));
+                    $date_string = str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_WEEKDAY, $value, $this->_user->get_date_format()));
                     $html_str .= "                        <td ".$onclick_str.">".$date_string."</td>\n";
                 }
                 else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_AUTO_CREATED)
@@ -389,12 +388,12 @@ class HtmlDatabaseTable
                         if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
                         {
                             $html_str .= "                        <td ".$onclick_str.">";
-                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_CREATED_FIELD_NAME]))."</td>\n";
+                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format()))."</td>\n";
                         }
                         else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
                         {
                             $html_str .= "                        <td ".$onclick_str.">";
-                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_CREATED_FIELD_NAME]));
+                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format()));
                             $html_str .= "&nbsp;(".$record[DB_CREATOR_FIELD_NAME].")</td>\n";
                         }
                     }
@@ -408,12 +407,12 @@ class HtmlDatabaseTable
                         if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
                         {
                             $html_str .= "                        <td ".$onclick_str.">";
-                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_MODIFIED_FIELD_NAME]))."</td>\n";
+                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_MODIFIED_FIELD_NAME], $this->_user->get_date_format()))."</td>\n";
                         }
                         else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
                         {
                             $html_str .= "                        <td ".$onclick_str.">";
-                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_MODIFIED_FIELD_NAME]));
+                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_MODIFIED_FIELD_NAME], $this->_user->get_date_format()));
                             $html_str .= "&nbsp;(".$record[DB_MODIFIER_FIELD_NAME].")</td>\n";
                         }
                     }
@@ -427,7 +426,7 @@ class HtmlDatabaseTable
                         foreach ($value as $note_array)
                         {
                             $html_str .= "                            <p><span class=\"note_creator\">";
-                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_NORMAL, $note_array[DB_TS_CREATED_FIELD_NAME]));
+                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_NORMAL, $note_array[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format()));
                             $html_str .= "&nbsp;(".$note_array[DB_CREATOR_FIELD_NAME].")</span> ";
                             $html_str .= transform_str($note_array["_note"])."</p>\n";
                         }
@@ -440,8 +439,12 @@ class HtmlDatabaseTable
                 {
                     $html_str .= "                        <td ".$onclick_str.">".transform_str($value)."</td>\n";
                 }
-                # translate language options in user admin page
-                else if (($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_USER_ADMIN) && ($db_field_name == USER_LANG_FIELD_NAME))
+                else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_PASSWORD)
+                {
+                    $html_str .= "                        <td ".$onclick_str.">********</td>\n";
+                }
+                # translate options in user admin page
+                else if (($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_LIST) && ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_SELECTION))
                 {
                     $html_str .= "                        <td ".$onclick_str.">".translate($value)."</td>\n";
                 }
@@ -452,7 +455,6 @@ class HtmlDatabaseTable
                 $col_number += 1;
             }
 
-            $this->_log->trace("we're now here");
             # only add buttons when all pages do not need to be displayed at once
             if ($page != DATABASETABLE_ALL_PAGES)
             {
@@ -510,7 +512,6 @@ class HtmlDatabaseTable
             $record_number += 1;
         }
 
-        $this->_log->trace("we're now here");
         if ($total_pages == 0)
         {
             $html_str .= "                    <tr>\n";
@@ -601,7 +602,6 @@ class HtmlDatabaseTable
     function get_record ($database_table, $list_title, $encoded_key_string, $db_field_names, $result)
     {
         global $firstthingsfirst_field_descriptions;
-        global $firstthingsfirst_date_string;
 
         $this->_log->trace("getting record (list_title=".$list_title.", encoded_key_string=".$encoded_key_string.")");
 
@@ -691,7 +691,7 @@ class HtmlDatabaseTable
                     }
                     else if (stristr($field_type, "DATE"))
                     {
-                        $date_string = get_date_str(DATE_FORMAT_NORMAL, $record[$db_field_name]);
+                        $date_string = get_date_str(DATE_FORMAT_NORMAL, $record[$db_field_name], $this->_user->get_date_format());
                         $html_str .= " value=\"".$date_string."\"";
                     }
                     else if ($field_type == FIELD_TYPE_DEFINITION_AUTO_CREATED)
@@ -700,12 +700,12 @@ class HtmlDatabaseTable
                             $html_str .= " value=\"".$record[DB_CREATOR_FIELD_NAME]."\"";
                         else
                         {
-                            $ts_created = get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_CREATED_FIELD_NAME]);
+                            $ts_created = get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format());
                             if ($field_options == NAME_DATE_OPTION_DATE)
-                                $html_str .= " value=\"".get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_CREATED_FIELD_NAME])."\"";
+                                $html_str .= " value=\"".get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format())."\"";
                             else if ($field_options == NAME_DATE_OPTION_DATE_NAME)
                             {
-                                $html_str .= " value=\"".get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_CREATED_FIELD_NAME]);
+                                $html_str .= " value=\"".get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format());
                                 $html_str .= "&nbsp;(".$record[DB_CREATOR_FIELD_NAME].")\"";
                             }
                         }
@@ -717,10 +717,10 @@ class HtmlDatabaseTable
                         else
                         {
                             if ($field_options == NAME_DATE_OPTION_DATE)
-                                $html_str .= " value=\"".get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_MODIFIED_FIELD_NAME])."\"";
+                                $html_str .= " value=\"".get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_MODIFIED_FIELD_NAME], $this->_user->get_date_format())."\"";
                             else if ($field_options == NAME_DATE_OPTION_DATE_NAME)
                             {
-                                $html_str .= " value=\"".get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_MODIFIED_FIELD_NAME]);
+                                $html_str .= " value=\"".get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_MODIFIED_FIELD_NAME], $this->_user->get_date_format());
                                 $html_str .= "&nbsp;(".$record[DB_MODIFIER_FIELD_NAME].")\"";
                             }
                         }
@@ -738,8 +738,8 @@ class HtmlDatabaseTable
                             $html_str .= "\n                                        <option value=\"".$option."\"";
                             if ($option == $record[$db_field_name])
                                 $html_str .= " selected";
-                            # translate language options in user admin page
-                            if ((($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_USER_ADMIN) || ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_USER_SETTINGS)) && ($db_field_name == USER_LANG_FIELD_NAME))
+                            # translate selections in user admin page
+                            if (($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_LIST) && ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_SELECTION))
                                 $html_str .= ">".translate($option)."&nbsp;&nbsp;"."</option>";
                             else
                                 $html_str .= ">".$option."&nbsp;&nbsp;"."</option>";
@@ -770,7 +770,8 @@ class HtmlDatabaseTable
                         $option_list = explode("|", $field_options);
                         foreach ($option_list as $option)
                         {
-                            if (($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_USER_ADMIN) && ($db_field_name == USER_LANG_FIELD_NAME))
+                            # translate selections in user admin page
+                            if (($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_LIST) && ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_SELECTION))
                                 $html_str .= "\n                                        <option value=\"".$option."\">".translate($option)."&nbsp;&nbsp;"."</option>\n";
                             else
                                 $html_str .= "\n                                        <option value=\"".$option."\">".$option."&nbsp;&nbsp;"."</option>\n";
@@ -934,7 +935,7 @@ class HtmlDatabaseTable
             $html_str .= "</span>&nbsp;&nbsp;&nbsp;&nbsp;";
             # show the export button
             $html_str .= "<span id=\"action_bar_button_export\">";
-            $html_str .= get_href(get_onclick(ACTION_EXPORT_LIST_RECORDS, $this->permissions_list_title, "action_bar_button_export", "above", "(%27".$list_title."%27)"), translate("BUTTON_EXPORT_RECORDS"), "icon_archive");
+            $html_str .= get_href(get_onclick_confirm(ACTION_EXPORT_LIST_RECORDS, $this->permissions_list_title, "action_bar_button_export", "above", "(%22".$list_title."%22)", translate("LABEL_EXPORT_CONFIRM")), translate("BUTTON_EXPORT_RECORDS"), "icon_archive");
             $html_str .= "</span>";
         }
         else

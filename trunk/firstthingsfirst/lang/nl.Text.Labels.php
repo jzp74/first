@@ -48,6 +48,10 @@ $text_translations["LABEL_USER_PW"] = "wachtwoord";
 $text_translations["LABEL_USER_LANG"] = "voorkeurs taal";
 $text_translations["LABEL_USER_LANG_EN"] = "Engels";
 $text_translations["LABEL_USER_LANG_NL"] = "Nederlands";
+$text_translations["LABEL_USER_DATE_FORMAT"] = "datum formaat";
+$text_translations["LABEL_USER_DATE_FORMAT_US"] = "Amerikaans";
+$text_translations["LABEL_USER_DATE_FORMAT_EU"] = "Europees";
+$text_translations["LABEL_USER_LINES_PER_PAGE"] = "rijen per pagina";
 $text_translations["LABEL_USER_CAN_EDIT_LIST"] = "mag lijsten wijzigen";
 $text_translations["LABEL_USER_CAN_CREATE_LIST"] = "mag lijsten maken";
 $text_translations["LABEL_USER_IS_ADMIN"] = "is administrator";
@@ -88,6 +92,7 @@ $text_translations["LABEL_IMPORT_CONFIRM"] = "Het is belangrijk dat het bestand 
 $text_translations["LABEL_IMPORT_LINE_NUMBER"] = "Regelnummer:";
 $text_translations["LABEL_IMPORT_FIELDNAME"] = "Kolomnaam:";
 $text_translations["LABEL_IMPORT_SUCCESS"] = "Alle regels uit het bestaand zijn geimporteerd";
+$text_translations["LABEL_EXPORT_CONFIRM"] = "Dit exporteert de huidige selectie van rijen van deze lijst naar een bestand. Wijzig the huidige selectie (normale of gearchiveerde rijden en de filter instellingen) om meer of andere rijen te exporteren. Weet je zeker dat je deze export wilt doorzetten?";
 
 /**
  * listtableitemnote labels

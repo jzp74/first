@@ -25,7 +25,7 @@ $text_translations["ERROR_PERMISSION_LIST_ADMIN"] = "You do not have administrat
  */
 $text_translations["ERROR_DATE_WRONG_FORMAT_US"] = "You have given an incorrect date format. Date should be in format MM/DD/YYYY";
 $text_translations["ERROR_DATE_WRONG_FORMAT_EU"] = "You have given an incorrect date format. Date should be in format DD-MM-YYYY or DD-MM";
-$text_translations["ERROR_NO_NUMBER_GIVEN"] = "You have to have not entered a number in this field";
+$text_translations["ERROR_NO_NUMBER_GIVEN"] = "You have not entered a number in this field. A number cannot be zero";
 $text_translations["ERROR_NO_FIELD_VALUE_GIVEN"] = "You have not entered a value in this field";
 $text_translations["ERROR_NO_FIELD_NAME_GIVEN"] = "You have not given a name for this field";
 $text_translations["ERROR_NO_FIELD_OPTIONS_GIVEN"] = "You have not given any options";

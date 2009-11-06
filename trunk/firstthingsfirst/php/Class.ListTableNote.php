@@ -112,10 +112,13 @@ class ListTableNote extends DatabaseTable
     {
         $this->_log->trace("selecting ListTableNote (record_id=".$record_id.", field_name=".$field_name.")");
 
+        # get lines per page from session
+        $lines_per_page = $this->_user->get_lines_per_page();
+
         # set filter string SQL
         $filter_str_sql = LISTTABLENOTE_RECORD_ID_FIELD_NAME."='".$record_id."' AND ".LISTTABLENOTE_FIELD_NAME_FIELD_NAME."='".$field_name."'";
 
-        $records = parent::select("", 0, LISTSTATE_SELECT_BOTH_ARCHIVED, $filter_str_sql, DATABASETABLE_ALL_PAGES);
+        $records = parent::select("", 0, LISTSTATE_SELECT_BOTH_ARCHIVED, $filter_str_sql, DATABASETABLE_ALL_PAGES, $lines_per_page);
         if (count($records) == 0)
             return array();
 

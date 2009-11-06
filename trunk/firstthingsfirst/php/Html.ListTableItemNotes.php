@@ -331,7 +331,7 @@ function get_list_record_note ($db_field_name, $count, $is_last, $id, $note_arra
     $html_str .= "                                            <div class=\"note_box_header\">";
     if ($id != 0)
     {
-        $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_WEEKDAY, $note_array[DB_TS_CREATED_FIELD_NAME]));
+        $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_WEEKDAY, $note_array[DB_TS_CREATED_FIELD_NAME], $user->get_date_format()));
         $html_str .= "&nbsp;(".$note_array[DB_CREATOR_FIELD_NAME].")";
     }
     else

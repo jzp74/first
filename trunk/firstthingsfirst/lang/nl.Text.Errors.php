@@ -25,7 +25,7 @@ $text_translations["ERROR_PERMISSION_LIST_ADMIN"] = "Je bent geen administrator 
  */
 $text_translations["ERROR_DATE_WRONG_FORMAT_US"] = "Je hebt een datum in onjuist formaat gegeven. Een datum moet volgens dit formaat zijn: MM/DD/JJJJ";
 $text_translations["ERROR_DATE_WRONG_FORMAT_EU"] = "Je hebt een datum in onjuist formaat gegeven. Een datum moet volgens dit formaat zijn: DD-MM-JJJJ of DD-MM";
-$text_translations["ERROR_NO_NUMBER_GIVEN"] = "Je moet een nummer in dit veld invoeren maar je hebt geen nummer ingevoerd";
+$text_translations["ERROR_NO_NUMBER_GIVEN"] = "Je moet een nummer in dit veld invoeren maar je hebt geen nummer ingevoerd. Een nummer kan niet nul zijn";
 $text_translations["ERROR_NO_FIELD_VALUE_GIVEN"] = "Je moet een waarde in dit veld invoeren maar je hebt geen waarde ingevoerd";
 $text_translations["ERROR_NO_FIELD_NAME_GIVEN"] = "Je hebt geen kolomnaam ingevoerd";
 $text_translations["ERROR_NO_FIELD_OPTIONS_GIVEN"] = "Je hebt geen opties ingevoerd";

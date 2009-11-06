@@ -48,6 +48,10 @@ $text_translations["LABEL_USER_PW"] = "password";
 $text_translations["LABEL_USER_LANG"] = "preferred language";
 $text_translations["LABEL_USER_LANG_EN"] = "English";
 $text_translations["LABEL_USER_LANG_NL"] = "Dutch";
+$text_translations["LABEL_USER_DATE_FORMAT"] = "date format";
+$text_translations["LABEL_USER_DATE_FORMAT_US"] = "American";
+$text_translations["LABEL_USER_DATE_FORMAT_EU"] = "European";
+$text_translations["LABEL_USER_LINES_PER_PAGE"] = "records per page";
 $text_translations["LABEL_USER_CAN_EDIT_LIST"] = "is allowed to edit lists";
 $text_translations["LABEL_USER_CAN_CREATE_LIST"] = "is allowed to create lists";
 $text_translations["LABEL_USER_IS_ADMIN"] = "is administrator";
@@ -88,6 +92,7 @@ $text_translations["LABEL_IMPORT_CONFIRM"] = "It is important that the file you 
 $text_translations["LABEL_IMPORT_LINE_NUMBER"] = "Line number:";
 $text_translations["LABEL_IMPORT_FIELDNAME"] = "Field name:";
 $text_translations["LABEL_IMPORT_SUCCESS"] = "All lines from the file have been imported";
+$text_translations["LABEL_EXPORT_CONFIRM"] = "This will export the current selection of records from this list to file. Change the current selection (normal or active records and filter settings) to export additional of other records. Are you sure you want to continue this export?";
 
 /**
  * listtableitemnote labels

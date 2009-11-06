@@ -7,13 +7,6 @@
 $firstthingsfirst_portal_title = "My Portal";
 $firstthingsfirst_portal_intro_text = "Welcome to My Portal. Please select a list or create a new one";
 
-# date setting for all lists
-# choose between DATE_FORMAT_EU and DATE_FORMAT_US
-$firstthingsfirst_date_string = DATE_FORMAT_EU;
-
-# maximum numbers of entries per page
-$firstthingsfirst_list_page_entries = 14;
-
 # system language
 # choose between the following languages:
 # LANG_EN - English language

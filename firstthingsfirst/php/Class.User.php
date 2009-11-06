@@ -46,6 +46,16 @@ define("USER_PW_FIELD_NAME", "_pw");
 define("USER_LANG_FIELD_NAME", "_lang");
 
 /**
+ * definition of lang field name
+ */
+define("USER_DATE_FORMAT_FIELD_NAME", "_date_format");
+
+/**
+ * definition of lang field name
+ */
+define("USER_LINES_PER_PAGE_FIELD_NAME", "_lines_per_page");
+
+/**
  * definition of create_list field name
  */
 define("USER_CAN_CREATE_LIST_FIELD_NAME", "_create_list");
@@ -68,6 +78,8 @@ $class_user_fields = array(
     USER_NAME_FIELD_NAME => array("LABEL_USER_NAME", FIELD_TYPE_DEFINITION_USERNAME, DATABASETABLE_UNIQUE_FIELD),
     USER_PW_FIELD_NAME => array("LABEL_USER_PW", FIELD_TYPE_DEFINITION_PASSWORD, ""),
     USER_LANG_FIELD_NAME => array("LABEL_USER_LANG", FIELD_TYPE_DEFINITION_SELECTION, implode(array_keys($firstthingsfirst_lang_prefix_array), '|')),
+    USER_DATE_FORMAT_FIELD_NAME => array("LABEL_USER_DATE_FORMAT", FIELD_TYPE_DEFINITION_SELECTION, implode(array_keys($firstthingsfirst_date_format_prefix_array), '|')),
+    USER_LINES_PER_PAGE_FIELD_NAME => array("LABEL_USER_LINES_PER_PAGE", FIELD_TYPE_DEFINITION_NUMBER, ""),
     USER_CAN_CREATE_LIST_FIELD_NAME => array("LABEL_USER_CAN_CREATE_LIST", FIELD_TYPE_DEFINITION_BOOL, ""),
     USER_IS_ADMIN_FIELD_NAME => array("LABEL_USER_IS_ADMIN", FIELD_TYPE_DEFINITION_BOOL, ""),
     USER_TIMES_LOGIN_FIELD_NAME => array("LABEL_USER_TIMES_LOGIN", FIELD_TYPE_DEFINITION_NON_EDIT_NUMBER, ""),
@@ -174,6 +186,24 @@ class User extends UserDatabaseTable
     }
 
     /**
+     * get value of SESSION variable date_format.
+     * @return string value of SESSION variable lang.
+     */
+    function get_date_format ()
+    {
+        return $_SESSION["date_format"];
+    }
+
+    /**
+     * get value of SESSION variable lines_per_page.
+     * @return string value of SESSION variable lang.
+     */
+    function get_lines_per_page ()
+    {
+        return $_SESSION["lines_per_page"];
+    }
+
+    /**
     * get value of SESSION variable create_list.
     * @return bool value of SESSION variable can_create_list.
     */
@@ -265,6 +295,26 @@ class User extends UserDatabaseTable
     }
 
     /**
+     * set value of SESSION variable date_format
+     * @param string $date_format preferred date format
+     * @return void
+     */
+    function set_date_format ($date_format)
+    {
+        $_SESSION["date_format"] = $date_format;
+    }
+
+    /**
+     * set value of SESSION variable lines_per_page
+     * @param string $lines_per_page preferred maximum number of lines per page
+     * @return void
+     */
+    function set_lines_per_page ($lines_per_page)
+    {
+        $_SESSION["lines_per_page"] = $lines_per_page;
+    }
+
+    /**
     * set value of SESSION variable can_create_list
     * @param bool $permission indicates if current user is allowed to create a new list
     * @return void
@@ -332,6 +382,8 @@ class User extends UserDatabaseTable
         $this->set_name(USER_NAME_RESET_VALUE);
         $this->set_current_list_name("");
         $this->set_lang(LANG_EN);
+        $this->set_date_format(DATE_FORMAT_EU);
+        $this->set_lines_per_page(12);
         $this->set_can_create_list("0");
         $this->set_is_admin("0");
         $this->set_times_login("0");
@@ -374,6 +426,8 @@ class User extends UserDatabaseTable
             $name_value_array[USER_NAME_FIELD_NAME] = $name;
             $name_value_array[USER_PW_FIELD_NAME] = $firstthingsfirst_admin_passwd;
             $name_value_array[USER_LANG_FIELD_NAME] = $firstthingsfirst_lang;
+            $name_value_array[USER_DATE_FORMAT_FIELD_NAME] = DATE_FORMAT_EU;
+            $name_value_array[USER_LINES_PER_PAGE_FIELD_NAME] = 12;
             $name_value_array[USER_CAN_CREATE_LIST_FIELD_NAME] = 1;
             $name_value_array[USER_IS_ADMIN_FIELD_NAME] = 1;
             $name_value_array[USER_TIMES_LOGIN_FIELD_NAME] = 0;
@@ -408,6 +462,8 @@ class User extends UserDatabaseTable
             $this->set_name($record[USER_NAME_FIELD_NAME]);
             $this->set_current_list_name("");
             $this->set_lang($record[USER_LANG_FIELD_NAME]);
+            $this->set_date_format($record[USER_DATE_FORMAT_FIELD_NAME]);
+            $this->set_lines_per_page($record[USER_LINES_PER_PAGE_FIELD_NAME]);
             $this->set_can_create_list($record[USER_CAN_CREATE_LIST_FIELD_NAME]);
             $this->set_is_admin($record[USER_IS_ADMIN_FIELD_NAME]);
             $this->set_times_login($record[USER_TIMES_LOGIN_FIELD_NAME] + 1);

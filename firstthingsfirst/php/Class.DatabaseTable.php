@@ -486,13 +486,12 @@ class DatabaseTable
     * @param $archived int indicates if archived [1], non archived [0] or all records [-1] should be selected
     * @param $filter_str_sql array selection filter array
     * @param $page int the page number to select
+    * @param $lines_per_page int the maximum number of lines per page
     * @param $db_field_names array array containing db_field_names to select for each record
     * @return array array containing the records (each records is an array)
     */
-    function select ($order_by_field, $order_ascending, $archived, $filter_str_sql, $page, $db_field_names = array())
+    function select ($order_by_field, $order_ascending, $archived, $filter_str_sql, $page, $lines_per_page, $db_field_names = array())
     {
-        global $firstthingsfirst_list_page_entries;
-
         $this->_log->trace("selecting DatabaseTable (order_by_field=".$order_by_field.", order_ascending=".$order_ascending.", archived=".$archived.", page=".$page.")");
 
         # check if database connection is working
@@ -542,8 +541,8 @@ class DatabaseTable
                 $total_pages_array = $this->_database->fetch($result);
                 $total_records = $total_pages_array[0];
 #                $this->_log->debug("found (total_records=".$total_records.")");
-                $total_pages = floor((int)$total_records / $firstthingsfirst_list_page_entries);
-                if (($total_pages_array[0]%$firstthingsfirst_list_page_entries) != 0)
+                $total_pages = floor((int)$total_records / $lines_per_page);
+                if (($total_pages_array[0]%$lines_per_page) != 0)
                     $total_pages += 1;
 #                $this->_log->debug("found (total_pages=".$total_pages.")");
             }
@@ -625,8 +624,8 @@ class DatabaseTable
         # only limit the number of records when user does not want all pages
         if ($page != DATABASETABLE_ALL_PAGES)
         {
-            $limit_from = ($page - 1) * $firstthingsfirst_list_page_entries;
-            $query .= " LIMIT ".$limit_from.", ".$firstthingsfirst_list_page_entries;
+            $limit_from = ($page - 1) * $lines_per_page;
+            $query .= " LIMIT ".$limit_from.", ".$lines_per_page;
         }
 
         $result = $this->_database->query($query);

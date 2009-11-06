@@ -57,10 +57,12 @@ function check_field ($check_functions, $field_name, $str, $result)
 {
     global $logging;
     global $firstthingsfirst_date_string;
+    global $$firstthingsfirst_date_format_prefix_array;
 
     $logging->trace("check_field (field_name=".$field_name.", str=".$str.")");
 
     $result_str = $str;
+    $date_format = $firstthingsfirst_date_format_prefix_array[$firstthingsfirst_date_string];
 
     foreach ($check_functions as $check_function)
     {
@@ -89,7 +91,7 @@ function check_field ($check_functions, $field_name, $str, $result)
             $result_str = str_is_date($field_name, $result_str);
             if ($result_str == FALSE_RETURN_STRING)
             {
-                if ($firstthingsfirst_date_string == DATE_FORMAT_US)
+                if ($date_format == DATE_FORMAT_US)
                     $result->set_error_message_str("ERROR_DATE_WRONG_FORMAT_US");
                 else
                     $result->set_error_message_str("ERROR_DATE_WRONG_FORMAT_EU");
@@ -145,6 +147,23 @@ function str_is_number ($field_name, $str)
 
     $logging->trace("is_number (field_name=".$field_name.", str=".$str.")");
 
+    if (preg_match("/^\d*$/", $str) == 0)
+    {
+        $logging->warn("$field_name is not an integer");
+
+        return FALSE_RETURN_STRING;
+    }
+
+    # create an integer
+    $the_number = (int)$str;
+    # check if number equals zero
+    if ($the_number == 0)
+    {
+        $logging->warn("$field_name is zero");
+
+        return FALSE_RETURN_STRING;
+    }
+
     $logging->trace("is_number");
 
     return $str;
@@ -168,7 +187,7 @@ function str_is_well_formed ($field_name, $str, $use_pipe_char=0)
         $logging->debug("checking (str=".$str.", pipe char NOT permitted)");
         if (ereg ("[".EREG_ALLOWED_CHARS."]", $str))
         {
-            $logging->warn($field_name." is not well formed (pipe char NOT permitted)");
+            $logging->warn("$field_name is not well formed (pipe char NOT permitted)");
 
             return FALSE_RETURN_STRING;
         }
@@ -199,10 +218,11 @@ function str_is_date ($field_name, $str)
 {
     global $logging;
     global $firstthingsfirst_date_string;
+    global $firstthingsfirst_date_format_prefix_array;
 
     $logging->trace("is_date (field_name=".$field_name.", str=".$str.")");
 
-    if ($firstthingsfirst_date_string == DATE_FORMAT_US)
+    if ($date_format == DATE_FORMAT_US)
     {
         # proces us date
         $date_parts = explode("/", $str);
@@ -249,34 +269,37 @@ function str_is_date ($field_name, $str)
 
 /**
  * convert one date string into another date string
- * @param int $format format of date string
+ * @param int $type type of date string
  * @param string $value string representation of date
+ * @param string $date_format preferred date format
  * @return string date string
  */
-function get_date_str ($format, $value)
+function get_date_str ($type, $value, $date_format)
 {
     global $logging;
-    global $firstthingsfirst_date_string;
+    global $firstthingsfirst_date_format_prefix_array;
     global $first_things_first_day_definitions;
 
-    $logging->trace("get_date_str (format=".$format.", value=".$value.")");
+    $logging->trace("get_date_str (type=$type, value=$value, date_format=$date_format)");
 
-    if ($format == DATE_FORMAT_NORMAL)
-        return strftime($firstthingsfirst_date_string, (strtotime($value)));
-    if ($format == DATE_FORMAT_DATETIME)
+    $date_format_str = $firstthingsfirst_date_format_prefix_array[$date_format];
+
+    if ($type == DATE_FORMAT_NORMAL)
+        return strftime($date_format_str, (strtotime($value)));
+    if ($type == DATE_FORMAT_DATETIME)
     {
-        if ($firstthingsfirst_date_string == DATE_FORMAT_EU)
+        if ($date_format_str == DATE_FORMAT_EU)
             return strftime(DATETIME_FORMAT_EU, (strtotime($value)));
         else
             return strftime(DATETIME_FORMAT_EU, (strtotime($value)));
     }
-    else if ($format == DATE_FORMAT_WEEKDAY)
+    else if ($type == DATE_FORMAT_WEEKDAY)
     {
         # get weekday
         $weekday = strftime("%w", (strtotime($value)));
         $logging->trace("found weekday (weekday=".$weekday.")");
         # get normal date format
-        $date_str = strftime($firstthingsfirst_date_string, (strtotime($value)));
+        $date_str = strftime($date_format_str, (strtotime($value)));
 
         return translate($first_things_first_day_definitions[$weekday])."&nbsp;".$date_str;
     }

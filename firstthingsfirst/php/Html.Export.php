@@ -53,7 +53,7 @@ if (readfile($full_tmp_file_name) == FALSE)
     print("ERROR could not read temporary file");
 
 # delete the tmp file
-#unlink($full_tmp_file_name);
+unlink($full_tmp_file_name);
 
 $logging->info("exported file")
 

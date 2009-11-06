@@ -12,13 +12,21 @@
 /**
  * date format defines
  */
-define("DATE_FORMAT_US", "%m/%d/%Y");
-define("DATE_FORMAT_EU", "%d-%m-%Y");
+define("DATE_FORMAT_US", "LABEL_USER_DATE_FORMAT_US");
+define("DATE_FORMAT_EU", "LABEL_USER_DATE_FORMAT_EU");
 define("DATETIME_FORMAT_US", "%m/%d/%Y %H:%M:%S");
 define("DATETIME_FORMAT_EU", "%d-%m-%Y %H:%M:%S");
 define("DATE_FORMAT_NORMAL", 0);
 define("DATE_FORMAT_DATETIME", 1);
 define("DATE_FORMAT_WEEKDAY", 2);
+
+/**
+ * set language prefix names
+ */
+$firstthingsfirst_date_format_prefix_array = array(
+    "LABEL_USER_DATE_FORMAT_US" => "%m/%d/%Y",
+    "LABEL_USER_DATE_FORMAT_EU" => "%d-%m-%Y"
+);
 
 /**
  * day definitions
@@ -94,7 +102,7 @@ define("PAGE_TYPE_USER_SETTINGS", 6);
 /**
  * general separator
  */
-define("GENERAL_SEPARATOR", "***");
+define("GENERAL_SEPARATOR", "----");
 
 /**
  * allowed characters regular expression
@@ -156,7 +164,7 @@ define("LANG_EN", "LABEL_USER_LANG_EN");
 define("LANG_NL", "LABEL_USER_LANG_NL");
 
 /**
- * set language file prefix names
+ * set language prefix names
  */
 $firstthingsfirst_lang_prefix_array = array(
     "LABEL_USER_LANG_EN" => "en",

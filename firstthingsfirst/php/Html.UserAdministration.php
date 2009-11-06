@@ -356,9 +356,9 @@ function action_update_user_admin_record ($title, $key_string, $form_values)
         if (($db_field_name != USER_PW_FIELD_NAME) || (($db_field_name == USER_PW_FIELD_NAME) && (strlen($form_values[$name_key]) > 0)))
         {
             check_field($check_functions, $db_field_name, $form_values[$name_key], $result);
-            if (strlen($result->get_error_str()) > 0)
+            if (strlen($result->get_error_message_str()) > 0)
             {
-                set_error_message($name_key, "right", $result->get_error_str(), "", "", $response);
+                set_error_message($name_key, "right", $result->get_error_message_str(), "", "", $response);
 
                 return $response;
             }

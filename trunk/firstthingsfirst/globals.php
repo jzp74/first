@@ -219,14 +219,14 @@ $firstthingsfirst_field_descriptions = array(
     FIELD_TYPE_DEFINITION_AUTO_NUMBER => array(
         DB_DATATYPE_ID,
         "input class=\"inactive_input\" type=text size=\"10\" maxlength=\"10\" readonly",
-        "str_is_number",
+        "",
         DB_INITIAL_DATA_NUMBER,
         FIELD_DESCRIPTION_NON_SELECTABLE_DATATYPE
     ),
     FIELD_TYPE_DEFINITION_NON_EDIT_NUMBER => array(
         DB_DATATYPE_INT,
         "input class=\"inactive_input\" type=text size=\"10\" maxlength=\"10\" readonly",
-        "str_is_number",
+        "",
         DB_INITIAL_DATA_NUMBER,
         FIELD_DESCRIPTION_NON_SELECTABLE_DATATYPE
     ),

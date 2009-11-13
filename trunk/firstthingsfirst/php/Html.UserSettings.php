@@ -152,7 +152,7 @@ function action_update_user_settings_record ($title, $key_string, $form_values)
         # check field values (check password field only when new password has been set)
         if (($db_field_name != USER_PW_FIELD_NAME) || (($db_field_name == USER_PW_FIELD_NAME) && (strlen($form_values[$name_key]) > 0)))
         {
-            check_field($check_functions, $db_field_name, $form_values[$name_key], $result);
+            check_field($check_functions, $db_field_name, $form_values[$name_key], $user->get_date_format(), $result);
             if (strlen($result->get_error_message_str()) > 0)
             {
                 set_error_message($name_key, "right", $result->get_error_message_str(), "", "", $response);

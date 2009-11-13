@@ -121,6 +121,57 @@ class ListTable extends UserDatabaseTable
     }
 
     /**
+     * update active records, archived records and date modified of list table description
+     * @return bool indicates if update was succesful
+     */
+    function _update_list_table_description_statistics ()
+    {
+        global $list_table_description;
+
+        # first we count the number of active records
+        $query = "SELECT COUNT(".DB_ID_FIELD_NAME.") FROM ".$this->table_name." WHERE ".DB_TS_ARCHIVED_FIELD_NAME."='".DB_NULL_DATETIME."'";
+        $result = $this->_database->query($query);
+        if ($result == FALSE)
+        {
+            $this->_handle_error("could not count active records from database", "ERROR_DATABASE_PROBLEM");
+
+            return FALSE;
+        }
+        $row = $this->_database->fetch($result);
+        $active_records = $row[0];
+
+        # now count the number of archived records
+        $query = "SELECT COUNT(".DB_ID_FIELD_NAME.") FROM ".$this->table_name." WHERE ".DB_TS_ARCHIVED_FIELD_NAME.">'".DB_NULL_DATETIME."'";
+        $result = $this->_database->query($query);
+        if ($result == FALSE)
+        {
+            $this->_handle_error("could not count archived records from database", "ERROR_DATABASE_PROBLEM");
+
+            return FALSE;
+        }
+        $row = $this->_database->fetch($result);
+        $archived_records = $row[0];
+
+        # create an array of values
+        $name_values_array = array();
+        $name_values_array[LISTTABLEDESCRIPTION_ACTIVE_RECORDS_FIELD_NAME] = $active_records;
+        $name_values_array[LISTTABLEDESCRIPTION_ARCHIVED_RECORDS_FIELD_NAME] = $archived_records;
+
+        # update list table description
+        if ($list_table_description->update($this->list_title, $name_values_array) == FALSE)
+        {
+            # copy error strings from _list_table_description
+            $this->error_message_str = $list_table_description->get_error_message_str();
+            $this->error_log_str = $list_table_description->get_error_log_str();
+            $this->error_str = $list_table_description->get_error_str();
+
+            return FALSE;
+        }
+
+        return TRUE;
+    }
+
+    /**
     * convert db_field_name to field_name
     * @param $db_field_name string db_field_name to be converted
     * @return string field_name
@@ -764,16 +815,9 @@ class ListTable extends UserDatabaseTable
             }
         }
 
-        # update list table description (date modified)
-        if ($list_table_description->update($this->list_title) == FALSE)
-        {
-            # copy error strings from _list_table_description
-            $this->error_message_str = $list_table_description->get_error_message_str();
-            $this->error_log_str = $list_table_description->get_error_log_str();
-            $this->error_str = $list_table_description->get_error_str();
-
+        # update list table description
+        if ($this->_update_list_table_description_statistics() == FALSE)
             return 0;
-        }
 
         # also update creator modifier array
         $record = $this->_get_list_table_description_record($this->list_title);
@@ -807,16 +851,27 @@ class ListTable extends UserDatabaseTable
 
             if ($this->fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
             {
+                $note_count = 0;
                 foreach ($value as $note)
                 {
+                    # do nothing with an empty node
                     if ($note[1] == "")
                         $this->_log->debug("found an empty note (field=".$db_field_name.")");
                     else
                     {
                         array_push($notes_array, array($db_field_name, $note[0], $note[1]));
+                        if ($note[0] == 0)
+                            # count new notes
+                            $note_count++;
+                        else
+                        {
+                            # count existing notes that will not be deleted
+                            if ($note[1] != LISTTABLENOTE_EMPTY_NOTE)
+                                $note_count++;
+                        }
                     }
                 }
-                $name_values_array[$db_field_name] = count($notes_array);
+                $name_values_array[$db_field_name] = $note_count;
                 array_push($all_notes_array, $notes_array);
             }
         }
@@ -891,16 +946,9 @@ class ListTable extends UserDatabaseTable
             }
         }
 
-        # update list table description (date modified)
-        if ($list_table_description->update($this->list_title) == FALSE)
-        {
-            # copy error strings from _list_table_description
-            $this->error_message_str = $list_table_description->get_error_message_str();
-            $this->error_log_str = $list_table_description->get_error_log_str();
-            $this->error_str = $list_table_description->get_error_str();
-
+        # update list table description
+        if ($this->_update_list_table_description_statistics() == FALSE)
             return FALSE;
-        }
 
         # also update creator modifier array
         $record = $this->_get_list_table_description_record($this->list_title);
@@ -908,20 +956,6 @@ class ListTable extends UserDatabaseTable
             return FALSE;
 
         $this->_log->trace("updated record of ListTable");
-
-        return TRUE;
-    }
-
-    /**
-     * import ListTableItems from file to database
-     * @param $tmp_file_name string the temporary name of the uploaded file
-     * @return bool indicates if complete file has been imported
-     */
-    function import ($tmp_file_name)
-    {
-        $this->_log->trace("importing records to ListTable (full_file_name=".$full_file_name.")");
-
-        $this->_log->trace("imported records to ListTable (full_file_name=".$full_file_name.")");
 
         return TRUE;
     }
@@ -965,16 +999,9 @@ class ListTable extends UserDatabaseTable
         if (parent::delete($encoded_key_string) == FALSE)
             return FALSE;
 
-        # update list table description (date modified)
-        if ($list_table_description->update($this->list_title) == FALSE)
-        {
-            # copy error strings from _list_table_description
-            $this->error_message_str = $list_table_description->get_error_message_str();
-            $this->error_log_str = $list_table_description->get_error_log_str();
-            $this->error_str = $list_table_description->get_error_str();
-
+        # update list table description
+        if ($this->_update_list_table_description_statistics() == FALSE)
             return FALSE;
-        }
 
         $this->_log->trace("deleted record from ListTable");
 
@@ -1028,7 +1055,7 @@ class ListTable extends UserDatabaseTable
         if (parent::drop() == FALSE)
             return FALSE;
 
-        $this->_log->info("dropped ListTable (table_name=".$this->table_name.")");
+        $this->_log->trace("dropped ListTable (table_name=".$this->table_name.")");
 
         return TRUE;
     }

@@ -45,7 +45,7 @@ $text_translations["LABEL_DEFINITION_SELECTION"] = "selection box&nbsp;&nbsp;";
  */
 $text_translations["LABEL_USER_ADMIN_TITLE"] = "User Administration";
 $text_translations["LABEL_USER_PW"] = "password";
-$text_translations["LABEL_USER_LANG"] = "preferred language";
+$text_translations["LABEL_USER_LANG"] = "language";
 $text_translations["LABEL_USER_LANG_EN"] = "English";
 $text_translations["LABEL_USER_LANG_NL"] = "Dutch";
 $text_translations["LABEL_USER_DATE_FORMAT"] = "date format";
@@ -88,11 +88,11 @@ $text_translations["LABEL_IMPORT_FILE_NAME"] = "file&nbsp;name";
 $text_translations["LABEL_IMPORT_FIELD_SEPERATOR"] = "field&nbsp;seperator";
 $text_translations["LABEL_IMPORT_FIELD_SEPERATOR_COMMA"] = "comma (,)";
 $text_translations["LABEL_IMPORT_FIELD_SEPERATOR_SEMI_COLON"] = "semi colon (;)";
-$text_translations["LABEL_IMPORT_CONFIRM"] = "It is important that the file you are about to import meets a number of requirements:<br>The file cannot contain a header line and the file has to have exactly the same number of fields as this list (minus the id field which cannot be part of the file). Use a zero (0) in automatic date fields.<br>All lines from the file will be added to the list as active records.<br>Are you sure you want to import the uploaded file?";
+$text_translations["LABEL_IMPORT_CONFIRM"] = "It is important that the file you are about to import meets a number of requirements:<br>The file cannot contain a header line and the file has to have exactly the same number of fields as this list (minus the id field which cannot be part of the file).<br>All lines from the file will be added to the list as active records.<br>Are you sure you want to import the uploaded file?";
 $text_translations["LABEL_IMPORT_LINE_NUMBER"] = "Line number:";
 $text_translations["LABEL_IMPORT_FIELDNAME"] = "Field name:";
 $text_translations["LABEL_IMPORT_SUCCESS"] = "All lines from the file have been imported";
-$text_translations["LABEL_EXPORT_CONFIRM"] = "This will export the current selection of records from this list to file. Change the current selection (normal or active records and filter settings) to export additional of other records. Are you sure you want to continue this export?";
+$text_translations["LABEL_EXPORT_CONFIRM"] = "This will export the current selection of records from this list to file. Change the current selection (normal or active records and/or filter settings) to export additional of other records. Are you sure you want to continue this export?";
 
 /**
  * listtableitemnote labels

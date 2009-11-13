@@ -555,6 +555,8 @@ function action_create_list ($title, $description, $definition)
     $name_values_array[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME] = $title;
     $name_values_array[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME] = $description;
     $name_values_array[LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME] = $correct_definition;
+    $name_values_array[LISTTABLEDESCRIPTION_ACTIVE_RECORDS_FIELD_NAME] = 0;
+    $name_values_array[LISTTABLEDESCRIPTION_ARCHIVED_RECORDS_FIELD_NAME] = 0;
     $name_values_array[LISTTABLEDESCRIPTION_CREATOR_FIELD_NAME] = 0;
     $name_values_array[LISTTABLEDESCRIPTION_MODIFIER_FIELD_NAME] = 0;
 

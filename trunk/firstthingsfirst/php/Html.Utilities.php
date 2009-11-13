@@ -50,19 +50,19 @@ function translate ($string)
  * @param array $check_functions array containing names of zero or more test functions
  * @param string $field_name name of field that contains this string
  * @param string $str string on which to perform tests
+ * @param string $date_format preferred date format of active user
  * @param Result $result rusult of this function
  * @return void
  */
-function check_field ($check_functions, $field_name, $str, $result)
+function check_field ($check_functions, $field_name, $str, $date_format, $result)
 {
     global $logging;
     global $firstthingsfirst_date_string;
     global $$firstthingsfirst_date_format_prefix_array;
 
-    $logging->trace("check_field (field_name=".$field_name.", str=".$str.")");
+    $logging->trace("check_field (field_name=$field_name, str=$str, date_format=$date_format)");
 
     $result_str = $str;
-    $date_format = $firstthingsfirst_date_format_prefix_array[$firstthingsfirst_date_string];
 
     foreach ($check_functions as $check_function)
     {
@@ -88,7 +88,7 @@ function check_field ($check_functions, $field_name, $str, $result)
         }
         else if ($check_function == "str_is_date")
         {
-            $result_str = str_is_date($field_name, $result_str);
+            $result_str = str_is_date($field_name, $result_str, $date_format);
             if ($result_str == FALSE_RETURN_STRING)
             {
                 if ($date_format == DATE_FORMAT_US)
@@ -100,7 +100,7 @@ function check_field ($check_functions, $field_name, $str, $result)
             }
         }
         else if (strlen($check_function))
-            $logging->warn("unknown check function (function=".$check_function.", $field_name=".$field_name.")");
+            $logging->warn("unknown check function (function=$check_function, $field_name=$field_name)");
     }
 
     $result->set_result_str($result_str);
@@ -212,15 +212,15 @@ function str_is_well_formed ($field_name, $str, $use_pipe_char=0)
  * test if string complies with predefined date format
  * @param string $field_name name of field that contains this string
  * @param string $str string to test
+ * @param string $date_format preferred date format of active user
  * @return bool indicates if string is empty
  */
-function str_is_date ($field_name, $str)
+function str_is_date ($field_name, $str, $date_format)
 {
     global $logging;
-    global $firstthingsfirst_date_string;
     global $firstthingsfirst_date_format_prefix_array;
 
-    $logging->trace("is_date (field_name=".$field_name.", str=".$str.")");
+    $logging->trace("is_date (field_name=$field_name, str=$str, date_format=$date_format)");
 
     if ($date_format == DATE_FORMAT_US)
     {
@@ -232,7 +232,7 @@ function str_is_date ($field_name, $str)
         $month = intval($date_parts[0]);
         $day = intval($date_parts[1]);
         $year = intval($date_parts[2]);
-        $logging->trace("found us date (MM/DD/YYYY): ".$month."/".$day."/".$year);
+        $logging->trace("found us date (MM/DD/YYYY): $month/$day/$year");
     }
     else
     {
@@ -247,7 +247,7 @@ function str_is_date ($field_name, $str)
 
         $day = intval($date_parts[0]);
         $month = intval($date_parts[1]);
-        $logging->trace("found eu date (DD-MM-YYYY): ".$day."-".$month."-".$year);
+        $logging->trace("found eu date (DD-MM-YYYY): $day-$month-$year");
     }
 
     # rewrite 2 digit year
@@ -258,7 +258,7 @@ function str_is_date ($field_name, $str)
         $year = ($century * 100) + $year;
     }
 
-    $logging->trace("checking date (DD-MM-YYYY): ".$day."-".$month."-".$year);
+    $logging->trace("checking date (DD-MM-YYYY): $day-$month-$year");
     if (!checkdate($month, $day, $year))
         return FALSE_RETURN_STRING;
 
@@ -271,7 +271,7 @@ function str_is_date ($field_name, $str)
  * convert one date string into another date string
  * @param int $type type of date string
  * @param string $value string representation of date
- * @param string $date_format preferred date format
+ * @param string $date_format preferred date format of active user
  * @return string date string
  */
 function get_date_str ($type, $value, $date_format)

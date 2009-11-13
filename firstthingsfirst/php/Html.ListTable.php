@@ -498,7 +498,7 @@ function action_insert_list_record ($list_title, $form_values)
         $logging->debug("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
 
         # check field values
-        check_field($check_functions, $db_field_name, $form_values[$name_key], $result);
+        check_field($check_functions, $db_field_name, $form_values[$name_key], $user->get_date_format(), $result);
         if (strlen($result->get_error_message_str()) > 0)
         {
             set_error_message($db_field_name, "right", $result->get_error_message_str(), "", "", $response);
@@ -614,7 +614,7 @@ function action_update_list_record ($list_title, $key_string, $form_values)
         $logging->debug("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
 
         # check field values
-        check_field($check_functions, $db_field_name, $form_values[$name_key], $result);
+        check_field($check_functions, $db_field_name, $form_values[$name_key], $user->get_date_format(), $result);
         if (strlen($result->get_error_message_str()) > 0)
         {
             set_error_message($db_field_name, "right", $result->get_error_message_str(), "", "", $response);
@@ -926,7 +926,7 @@ function action_import_list_records ($list_title, $file_name, $field_seperator)
             $logging->debug("field (name=$db_field_name, type=$field_type)");
 
             # check field values and store new field value in result
-            check_field($check_functions, $db_field_name, $line_str[$counter], $result);
+            check_field($check_functions, $db_field_name, $line_str[$counter], $user->get_date_format(), $result);
             if (strlen($result->get_error_message_str()) > 0)
             {
                 $error_message_str = LABEL_IMPORT_LINE_NUMBER." $line_number <br> ".LABEL_IMPORT_FIELDNAME." $field_name <br> ".$result->get_error_message_str();
@@ -935,6 +935,10 @@ function action_import_list_records ($list_title, $file_name, $field_seperator)
 
                 return $response;
             }
+
+            # convert auto created and auto modified fields
+            if (($field_type == FIELD_TYPE_DEFINITION_AUTO_CREATED) || ($field_type == FIELD_TYPE_DEFINITION_AUTO_MODIFIED))
+                $insert_array[$db_field_name] = 0;
 
             # store the new field value (either as note or as normal value)
             if ($field_type == FIELD_TYPE_DEFINITION_NOTES_FIELD)

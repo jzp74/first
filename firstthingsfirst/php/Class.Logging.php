@@ -74,9 +74,10 @@ class Logging
     */
     function __construct ($level = LOGGING_INFO, $file_name = LOGGING_NAME)
     {
-        # set log level and file name
+        # set log level
         $this->level = $level;
-        $this->file_name = $file_name;
+        # get the full name of the file (file may contain strftime format parameters)
+        $this->file_name = strftime($file_name);
     }
 
     /**
@@ -97,20 +98,12 @@ class Logging
         else
             $func_name = "no_func";
 
-        # get the file name (with full path)
-        $file_name = $trace[1]['file'];
-        # check if the file name contains a path
-        if (strrchr($trace[1]['file'], "\\") != FALSE)
-            # extract the file name
-            $file_name = substr(strrchr($trace[1]['file'], "\\"), 1);
-
+        # get the file name (without full path)
+        $file_name = basename($trace[1]['file']);
         $line_number = $trace[1]['line'];
 
-        # get the full name of the file (file may contain strftime format parameters)
-        $full_file_name = strftime($this->file_name);
-
         # open log file
-        $handler = fopen($full_file_name, 'a');
+        $handler = fopen($this->file_name, 'a');
         if ($handler == TRUE)
         {
             # get the date and time

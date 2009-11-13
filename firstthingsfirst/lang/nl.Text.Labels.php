@@ -45,7 +45,7 @@ $text_translations["LABEL_DEFINITION_SELECTION"] = "selectie veld&nbsp;&nbsp;";
  */
 $text_translations["LABEL_USER_ADMIN_TITLE"] = "Gebruikersadministratie";
 $text_translations["LABEL_USER_PW"] = "wachtwoord";
-$text_translations["LABEL_USER_LANG"] = "voorkeurs taal";
+$text_translations["LABEL_USER_LANG"] = "taal";
 $text_translations["LABEL_USER_LANG_EN"] = "Engels";
 $text_translations["LABEL_USER_LANG_NL"] = "Nederlands";
 $text_translations["LABEL_USER_DATE_FORMAT"] = "datum formaat";
@@ -88,11 +88,11 @@ $text_translations["LABEL_IMPORT_FILE_NAME"] = "bestandsnaam";
 $text_translations["LABEL_IMPORT_FIELD_SEPERATOR"] = "kolomscheidingsteken";
 $text_translations["LABEL_IMPORT_FIELD_SEPERATOR_COMMA"] = "komma (,)";
 $text_translations["LABEL_IMPORT_FIELD_SEPERATOR_SEMI_COLON"] = "puntkomma (;)";
-$text_translations["LABEL_IMPORT_CONFIRM"] = "Het is belangrijk dat het bestand dat je wilt importeren aan een aantal eisen voldoet.<br>Het bestand mag geen kop regel bevatten en het bestand moet precies evenveel kolommen bevatten als deze lijst (minus de id-kolom). Gebruik een nul (0) in automatische datum kolommen.<br>Alle regels worden als nieuwe actieve rijen ann de lijst toegevoegd.<br>Weet je zeker dat je het gekozen bestand wilt importeren?";
+$text_translations["LABEL_IMPORT_CONFIRM"] = "Het is belangrijk dat het bestand dat je wilt importeren aan een aantal eisen voldoet.<br>Het bestand mag geen kop regel bevatten en het bestand moet precies evenveel kolommen bevatten als deze lijst (minus de id-kolom).<br>Alle regels worden als nieuwe actieve rijen ann de lijst toegevoegd.<br>Weet je zeker dat je het gekozen bestand wilt importeren?";
 $text_translations["LABEL_IMPORT_LINE_NUMBER"] = "Regelnummer:";
 $text_translations["LABEL_IMPORT_FIELDNAME"] = "Kolomnaam:";
 $text_translations["LABEL_IMPORT_SUCCESS"] = "Alle regels uit het bestaand zijn geimporteerd";
-$text_translations["LABEL_EXPORT_CONFIRM"] = "Dit exporteert de huidige selectie van rijen van deze lijst naar een bestand. Wijzig the huidige selectie (normale of gearchiveerde rijden en de filter instellingen) om meer of andere rijen te exporteren. Weet je zeker dat je deze export wilt doorzetten?";
+$text_translations["LABEL_EXPORT_CONFIRM"] = "Deze functie exporteert de huidige selectie van rijen van deze lijst naar een bestand. Wijzig the huidige selectie (normale of gearchiveerde rijden en/of de filter instellingen) om meer of andere rijen te exporteren. Weet je zeker dat je deze export wilt doorzetten?";
 
 /**
  * listtableitemnote labels

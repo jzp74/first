@@ -305,7 +305,7 @@ function set_info_message ($info_element, $info_position, $info_str, $response)
 {
     global $logging;
 
-    $logging->info("set info (element=$info_element, position=$info_position)");
+    $logging->trace("set info (element=$info_element, position=$info_position)");
 
     # translate the string
     $translated_str = translate($info_str);

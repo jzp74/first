@@ -204,9 +204,7 @@ class HtmlDatabaseTable
 
         # get lines per page from session
         $lines_per_page = $this->_user->get_lines_per_page();
-        $this->_log->info("get content (list_title=$list_title, lines_per_page=$lines_per_page)");
-
-        $this->_log->trace("get content (list_title=$list_title, page=$page)");
+        $this->_log->trace("get content (list_title=$list_title, lines_per_page=$lines_per_page)");
 
         # select entries
         $records = $database_table->select($order_by_field, $page);
@@ -935,7 +933,7 @@ class HtmlDatabaseTable
             $html_str .= "</span>&nbsp;&nbsp;&nbsp;&nbsp;";
             # show the export button
             $html_str .= "<span id=\"action_bar_button_export\">";
-            $html_str .= get_href(get_onclick_confirm(ACTION_EXPORT_LIST_RECORDS, $this->permissions_list_title, "action_bar_button_export", "above", "(%22".$list_title."%22)", translate("LABEL_EXPORT_CONFIRM")), translate("BUTTON_EXPORT_RECORDS"), "icon_archive");
+            $html_str .= get_href(get_onclick_confirm(ACTION_EXPORT_LIST_RECORDS, $this->permissions_list_title, "action_bar_button_export", "above", "handleFunction(%22".ACTION_EXPORT_LIST_RECORDS."%22, %22".$list_title."%22)", translate("LABEL_EXPORT_CONFIRM")), translate("BUTTON_EXPORT_RECORDS"), "icon_archive");
             $html_str .= "</span>";
         }
         else

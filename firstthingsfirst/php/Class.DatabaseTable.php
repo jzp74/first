@@ -1078,7 +1078,7 @@ class DatabaseTable
             return FALSE;
         }
 
-        $this->_log->info("dropped DatabaseTable (table_name=".$this->table_name.")");
+        $this->_log->trace("dropped DatabaseTable (table_name=".$this->table_name.")");
 
         return TRUE;
     }

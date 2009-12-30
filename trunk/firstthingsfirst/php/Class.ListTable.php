@@ -1060,6 +1060,49 @@ class ListTable extends UserDatabaseTable
         return TRUE;
     }
 
+    /**
+     * archive an existing ListTableItem in database
+     * @param $encoded_key_string string unique identifier of ListTableItem to be archived
+     * @return bool indicates if ListTableItem has been archived
+     */
+    function archive ($encoded_key_string)
+    {
+        $this->_log->trace("archiving record from ListTable (encoded_key_string=".$encoded_key_string.")");
+
+        # call parent archive()
+        if (parent::archive($encoded_key_string) == FALSE)
+            return FALSE;
+
+        # update list table description
+        if ($this->_update_list_table_description_statistics() == FALSE)
+            return FALSE;
+
+        $this->_log->trace("archived record from ListTable");
+
+        return TRUE;
+    }
+
+    /**
+     * activate an existing ListTableItem in database
+     * @param $encoded_key_string string unique identifier of ListTableItem to be archived
+     * @return bool indicates if ListTableItem has been archived
+     */
+    function activate ($encoded_key_string)
+    {
+        $this->_log->trace("activating record from ListTable (encoded_key_string=".$encoded_key_string.")");
+
+        # call parent archive()
+        if (parent::activate($encoded_key_string) == FALSE)
+            return FALSE;
+
+        # update list table description
+        if ($this->_update_list_table_description_statistics() == FALSE)
+            return FALSE;
+
+        $this->_log->trace("activated record from ListTable");
+
+        return TRUE;
+    }
 }
 
 ?>

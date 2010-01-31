@@ -229,7 +229,6 @@ function set_browser_compatibility_message ($browser_name_str, $browser_version)
 
 <head>
 <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
-
 <title>First Things First</title>
 <link rel="shortcut icon" href="images/favicon.ico">
 <link rel="stylesheet" href="css/standard.css">
@@ -239,29 +238,27 @@ function set_browser_compatibility_message ($browser_name_str, $browser_version)
 </head>
 
 <body>
-<div id="upper_margin"></div>
+<div id="outer_body">
 
-<div id="header">
-    <div id="header_left_margin"></div>
-    <div id="header_right_margin"></div>
-    <div id="header_contents">
-        <div id="header_contents_status">
-            <div id="header_contents_status_software_version"><?php print(file_get_contents("VERSION")); ?></div>
-            <div id="header_contents_status_login_status"><?php print(get_login_status()); ?></div>
-        </div> <!-- header_contents_status -->
-        <div id="portal_title"><?php print($firstthingsfirst_portal_title); ?></div>
+    <div id="header_container">
+        <div id="header">
+            <div class="corner top_left_normal"></div>
+            <div class="corner top_right_normal"></div>
+            <div id="header_contents_status">
+                <div id="header_contents_status_software_version"><?php print(file_get_contents("VERSION")); ?></div>
+                <div id="header_contents_status_login_status"><?php print(get_login_status()); ?></div>
+            </div> <!-- header_contents_status -->
+            <div id="portal_title"><?php print($firstthingsfirst_portal_title); ?></div>
 <?php
 # TEMPORARY SOLUTION
 if (isset($_GET['action']) && $_GET['action'] == ACTION_GET_LOGIN_PAGE)
-    echo "        <div id=\"page_title\">".translate("LABEL_PLEASE_LOGIN")."</div>\n";
+    echo "            <div id=\"page_title\">".translate("LABEL_PLEASE_LOGIN")."</div>\n";
 else
-    echo "        <div id=\"page_title\">&nbsp;</div>\n";
+    echo "            <div id=\"page_title\">&nbsp;</div>\n";
 ?>
-        <div id="navigation_container">&nbsp;</div> <!-- navigation_container -->
-    </div> <!-- header_contents -->
-</div> <!-- header -->
-
-<div id="outer_body">
+            <div id="navigation_container">&nbsp;</div> <!-- navigation_container -->
+        </div> <!-- header -->
+    </div> <!-- header_container -->
 
     <div id="main_body">
 <?php
@@ -276,14 +273,13 @@ else
 ?>
     </div> <!-- main_body -->
 
-</div> <!-- outer_body -->
+    <div id="footer">
+        <div id="footer_text">Some text</div>
+        <div class="corner bottom_left_normal"></div>
+        <div class="corner bottom_right_normal"></div>
+    </div> <!-- footer -->
 
-<div id="footer">
-    <div id="footer_left_margin">&nbsp</div>
-    <div id="footer_right_margin">&nbsp</div>
-    <div id="footer_text"></div>
-</div> <!-- footer -->
-<div id="lower_margin"><input id="focus_on_this_input" size="1" readonly></div>
+</div> <!-- outer_body -->
 
 <script language="javascript" src="js/external/external.min.js"></script>
 <?php print(get_xajax_javascript()); ?>

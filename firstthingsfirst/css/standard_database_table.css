@@ -3,23 +3,15 @@
 
 /*  defines the pane that contains database table contents */
 #database_table_content_pane {
-    margin: 0px 10px 0px 10px;
+    margin: 0px 0px 16px 0px;
     background-color: rgb(197, 214, 232);
     color: rgb(95, 148, 206);
     }
 
-#database_table_contents_top_left {
-    background: url(../images/standard_contents_top_left.gif) left top no-repeat;
-    z-index: 100;
-    }
-
-#database_table_contents_top_right {
-    background: url(../images/standard_contents_top_right.gif) right top no-repeat;
-    z-index: 100;
-    }
-
 /*  defines area above database table contents */
 #database_table_contents_top {
+    display: block;
+    position: relative;
     padding: 0px 14px 0px 14px;
     height: 58px;
     }
@@ -29,11 +21,11 @@
     float: left;
     margin: 17px 24px 0px 0px;
     padding: 0px 0px 0px 28px;
-    background: url(../images/icons/boomy_icon_folder_bw.png) left top no-repeat;
+    background: url(../images/boomy_icons.png) left -900px no-repeat;
     }
 
 #database_table_archive_select:hover {
-    background: url(../images/icons/boomy_icon_folder_highlight.png) left top no-repeat;
+    background-position: 0px -960px;
     }
 
 #database_table_archive_select select {
@@ -52,11 +44,11 @@
     display: inline;
     float: left;
     margin: 0px 8px 0px 0px;
-    background: url(../images/icons/boomy_icon_search_bw.png) right top no-repeat;
+    background: url(../images/boomy_icons.png) right -1170px no-repeat;
     }
 
 #database_table_filter form:hover {
-    background: url(../images/icons/boomy_icon_search_highlight.png) right top no-repeat;
+    background-position: right -1230px;
     }
 
 #database_table_filter input {
@@ -80,9 +72,8 @@
 /*  defines table that contains database table contents */
 #database_table_contents {
     display: block;
-    width: 100%;
     float: none;
-    margin: 0px 0px 14px 0px;
+    width: 100%;
     border-collapse: collapse;
     border-top: 1px solid rgb(255, 255, 255);
     border-bottom: 1px solid rgb(255, 255, 255);
@@ -98,22 +89,26 @@
     background-color: rgb(232, 232, 232);
     }
 
-.database_table_contents_header_sort, .database_table_contents_header_sort_up, .database_table_contents_header_sort_down {
-    float: left;
+#database_table_contents th {
     padding: 6px 5px 6px 5px;
     color: rgb(0, 0, 0);
-    background: url(../images/standard_arrow_sort.gif) right center no-repeat;
     }
 
-.database_table_contents_header_sort_up {
-    background: url(../images/standard_arrow_sort_up.gif) right center no-repeat;
+#database_table_contents .sort, #database_table_contents .sort_up, #database_table_contents .sort_down {
+    float: left;
+    padding: 0px 16px 0px 0px;
+    background: url(../images/standard_sort_arrows.png) right 0px no-repeat;
     }
 
-.database_table_contents_header_sort_down {
-    background: url(../images/standard_arrow_sort_down.gif) right center no-repeat;
+#database_table_contents .sort_up {
+    background: url(../images/standard_sort_arrows.png) right -14px no-repeat;
     }
 
-#database_table_contents tr th:hover {
+#database_table_contents .sort_down {
+    background: url(../images/standard_sort_arrows.png) right -28px no-repeat;
+    }
+
+#database_table_contents th:hover {
     background-color: rgb(197, 214, 232);
     }
 
@@ -121,26 +116,6 @@
     padding: 4px 5px 4px 5px;
     border-top: 1px solid rgb(255, 255, 255);
     vertical-align: top;
-    }
-
-#database_table_contents .icon_delete {
-    padding: 3px 0px 3px 24px;
-    margin: -2px 0px -2px 0px;
-    }
-
-#database_table_contents .icon_edit {
-    padding: 3px 0px 3px 24px;
-    margin: -2px 0px -2px 0px;
-    }
-
-#database_table_contents .icon_archive {
-    padding: 3px 0px 3px 24px;
-    margin: -2px 0px -2px 0px;
-    }
-
-#database_table_contents .icon_unarchive {
-    padding: 3px 0px 3px 24px;
-    margin: -2px 0px -2px 0px;
     }
 
 #database_table_contents tbody tr:hover {
@@ -157,20 +132,9 @@
 
 /*  defines area below database table contents */
 #database_table_contents_bottom {
+    position: relative;
     display: block;
-    padding: 0px 0px 14px 0px;
-    }
-
-#database_table_contents_bottom_left {
-    padding: 0px 0px 0px 0px;
-    background: url(../images/standard_contents_bottom_left.gif) left bottom no-repeat;
-    z-index: 100;
-    }
-
-#database_table_contents_bottom_right {
-    padding: 0px 0px 0px 0px;
-    background: url(../images/standard_contents_bottom_right.gif) right bottom no-repeat;
-    z-index: 100;
+    height: 38px;
     }
 
 #database_table_contents_bottom a, #database_table_contents_bottom a:link, #database_table_contents_bottom a:visited {
@@ -183,6 +147,7 @@
 
 /*  defines database table pages in database table contents bottom */
 #database_table_pages_bottom {
+    padding: 12px 0px 0px 0px;
     color: rgb(120, 120, 120);
     text-align: center;
     }
@@ -191,6 +156,7 @@
 #database_table_record_contents_pane {
     display: block;
     float: none;
+    position: relative;
     background-color: rgb(232, 232, 232);
     padding: 10px 0px 12px 16px;
     border-left: 2px solid rgb(197, 214, 232);
@@ -272,35 +238,13 @@
     float: right;
     }
 
-#database_table_record_contents .icon_add {
-    padding: 3px 0px 3px 24px;
-    margin: -3px 0px -3px 0px;
-    }
-
-#database_table_record_contents .icon_back {
-    padding: 3px 0px 3px 24px;
-    margin: -3px 0px -3px 0px;
-    }
-
-#database_table_record_contents .icon_next {
-    padding: 3px 0px 3px 24px;
-    margin: -3px 0px -3px 0px;
-    }
-
-#database_table_record_contents .icon_delete {
-    padding: 3px 0px 3px 24px;
-    margin: -3px 0px -3px 0px;
-    }
-
 #database_table_record_contents #button_upload {
-    color: rgb(95, 148, 206);
-    font-weight: bold;
     }
 
 /*  This id_name is needed for ajax uploader */
 #database_table_record_contents #button_upload.hover {
-    background: url(../images/icons/boomy_icon_add_highlight.png) left bottom no-repeat;
-    color: rgb(50, 50, 50);
+    background-position: 0px -330px;
+    color: rgb(255, 255, 255);
     }
 
 #database_table_record_contents select, #database_table_record_contents input, #database_table_record_contents textarea {

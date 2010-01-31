@@ -21,6 +21,12 @@ define("HTML_NO_LIST_PERMISSION_CHECK", "-!!@#$$#@!!-");
 define("HTML_NO_PERMISSION_CHECK", "-!@#$$#@!-");
 define("HTML_NO_ACTION", "-@#$$#@-");
 
+/**
+ * definition of tab types
+ */
+define("HTML_TAB_TYPE_NORMAL", "tab_normal");
+define("HTML_TAB_TYPE_HIGHLIGHT", "tab_highlight");
+
 
 /**
  * test if user is logged in and has permissions for given action
@@ -333,7 +339,12 @@ function get_href ($onclick_str, $name_str, $icon_name)
     if (strlen($icon_name) == 0)
         return "<a href=\"javascript:void(0);\" $onclick_str>$name_str</a>";
     else
-        return "<a href=\"javascript:void(0);\" class=\"$icon_name\" $onclick_str>$name_str</a>";
+    {
+        $class_str = "class=\"icon $icon_name\"";
+        if ($icon_name == "icon_none")
+            $class_str = "class=\"$icon_name\"";
+        return "<a href=\"javascript:void(0);\" $class_str $onclick_str>$name_str</a>";
+    }
 }
 
 /**
@@ -414,6 +425,32 @@ function get_inactive_button ($name_str)
 }
 
 /**
+ * get html for a navigation tab
+ * @param string $tab_type type of tab
+ * @param string $id id of tab
+ * @param string $content content can be either a href or a text
+ * return string html containing page navigation
+ */
+function get_tab_navigation ($tab_type, $id, $content)
+{
+    global $logging;
+
+    $html_str = "";
+
+    $logging->trace("getting tab_navigation (tab_type=$tab_type, id=$id, content=$content)");
+
+    $html_str .= "                    <div class=\"$tab_type\" id=\"$id\">\n";
+    $html_str .= "                        <div class=\"$tab_type tab_left\"></div>\n";
+    $html_str .= "                        $content\n";
+    $html_str .= "                        <div class=\"$tab_type tab_right\"></div>\n";
+    $html_str .= "                    </div>\n";
+
+    $logging->trace("got tab_navigation");
+
+    return $html_str;
+}
+
+/**
  * get html for the page navigation
  * @param string $page_type type of page
  * return string html containing page navigation
@@ -423,11 +460,12 @@ function get_page_navigation ($page_type)
     global $logging;
     global $user;
 
+    $highlight_class = "class=\"".HTML_TAB_TYPE_HIGHLIGHT." tab_content\"";
     $html_str = "";
 
-    $logging->trace("setting page_navigation (page_type=$page_type)");
+    $logging->trace("getting page_navigation (page_type=$page_type)");
 
-    $html_str .= "\n            <div id=\"navigation_left\">\n";
+    $html_str .= "\n                <div id=\"navigation_left\">\n";
 
     # set only navigation links when page is not a login page
     if ($page_type != PAGE_TYPE_LOGIN)
@@ -435,66 +473,38 @@ function get_page_navigation ($page_type)
         # show portal page link clickable when this is not the portal page
         if ($page_type != PAGE_TYPE_PORTAL)
         {
-            $html_str .= "                <div class=\"tab\" id=\"tab_portal_id\">\n";
-            $html_str .= "                    ".get_href(get_query_onclick(ACTION_GET_PORTAL_PAGE, HTML_NO_LIST_PERMISSION_CHECK, "tab_portal_id", "below", "action=".ACTION_GET_PORTAL_PAGE), translate("BUTTON_PORTAL"), "")."\n";
-            $html_str .= "                    <div class=\"tab_right\"></div>\n";
-            $html_str .= "                </div>\n";
+            $content = get_href(get_query_onclick(ACTION_GET_PORTAL_PAGE, HTML_NO_LIST_PERMISSION_CHECK, "tab_portal_id", "below", "action=".ACTION_GET_PORTAL_PAGE), translate("BUTTON_PORTAL"), "");
+            $html_str .= get_tab_navigation(HTML_TAB_TYPE_NORMAL, "tab_portal_id", $content);
         }
         else
-        {
-            $html_str .= "                <div class=\"tab_highlight\" id=\"tab_portal_id\">\n";
-            $html_str .= "                    <div class=\"tab_content_highlight\">".translate("BUTTON_PORTAL")."</div>\n";
-            $html_str .= "                    <div class=\"tab_right_highlight\"></div>\n";
-            $html_str .= "                </div>\n";
-        }
+            $html_str .= get_tab_navigation(HTML_TAB_TYPE_HIGHLIGHT, "tab_portal_id", "<div $highlight_class>".translate("BUTTON_PORTAL")."</div>");
 
         # show create new list link clickable when this not the list builder page
         if ($page_type != PAGE_TYPE_LISTBUILDER)
         {
-            $html_str .= "                <div class=\"tab\" id=\"tab_listbuilder_id\">\n";
-            $html_str .= "                    ".get_href(get_query_onclick(ACTION_GET_LISTBUILDER_PAGE, HTML_NO_LIST_PERMISSION_CHECK, "tab_listbuilder_id", "below", "action=".ACTION_GET_LISTBUILDER_PAGE), translate("BUTTON_CREATE_NEW_LIST"), "")."\n";
-            $html_str .= "                    <div class=\"tab_right\"></div>\n";
-            $html_str .= "                </div>\n";
+            $content = get_href(get_query_onclick(ACTION_GET_LISTBUILDER_PAGE, HTML_NO_LIST_PERMISSION_CHECK, "tab_listbuilder_id", "below", "action=".ACTION_GET_LISTBUILDER_PAGE), translate("BUTTON_CREATE_NEW_LIST"), "");
+            $html_str .= get_tab_navigation(HTML_TAB_TYPE_NORMAL, "tab_listbuilder_id", $content);
         }
         else
-        {
-            $html_str .= "                <div class=\"tab_highlight\" id=\"tab_listbuilder_id\">\n";
-            $html_str .= "                    <div class=\"tab_content_highlight\">".translate("BUTTON_CREATE_NEW_LIST")."</div>\n";
-            $html_str .= "                    <div class=\"tab_right_highlight\"></div>\n";
-            $html_str .= "                </div>\n";
-        }
+            $html_str .= get_tab_navigation(HTML_TAB_TYPE_HIGHLIGHT, "tab_listbuilder_id", "<div $highlight_class>".translate("BUTTON_CREATE_NEW_LIST")."</div>");
 
         # show list link non clickable but highlighted when this is list page
         if ($page_type == PAGE_TYPE_LIST)
-        {
-            $html_str .= "                <div class=\"tab_highlight\" id=\"tab_list_id\">\n";
-            $html_str .= "                    <div class=\"tab_content_highlight\">".translate("BUTTON_LIST")."</div>\n";
-            $html_str .= "                    <div class=\"tab_right_highlight\"></div>\n";
-            $html_str .= "                </div>\n";
-        }
+            $html_str .= get_tab_navigation(HTML_TAB_TYPE_HIGHLIGHT, "tab_list_id", "<div $highlight_class>".translate("BUTTON_LIST")."</div>");
         else if (strlen($user->get_current_list_name()) > 0)
         {
-            $html_str .= "                <div class=\"tab\" id=\"tab_list_id\">\n";
-            $html_str .= "                    ".get_href(get_query_onclick(ACTION_GET_LIST_PAGE, $user->get_current_list_name(), "tab_list_id", "below", "action=".ACTION_GET_LIST_PAGE."&list=".$user->get_current_list_name()), translate("BUTTON_LIST"), "")."\n";
-            $html_str .= "                    <div class=\"tab_right\"></div>\n";
-            $html_str .= "                </div>\n";
+            $content = get_href(get_query_onclick(ACTION_GET_LIST_PAGE, $user->get_current_list_name(), "tab_list_id", "below", "action=".ACTION_GET_LIST_PAGE."&list=".$user->get_current_list_name()), translate("BUTTON_LIST"), "");
+            $html_str .= get_tab_navigation(HTML_TAB_TYPE_NORMAL, "tab_list_id", $content);
         }
 
         # show the user list permissions only when this is a list page
         if ($page_type == PAGE_TYPE_LIST)
         {
-            $html_str .= "                <div class=\"tab\" id=\"tab_list_table_permissions_id\">\n";
-            $html_str .= "                    ".get_href(get_query_onclick(ACTION_GET_USERLISTTABLEPERMISSIONS_PAGE, $user->get_current_list_name(), "tab_list_table_permissions_id", "below", "action=".ACTION_GET_USERLISTTABLEPERMISSIONS_PAGE), translate("BUTTON_USERLISTTABLEPERMISSIONS"), "")."\n";
-            $html_str .= "                    <div class=\"tab_right\"></div>\n";
-            $html_str .= "                </div>\n";
+            $content = get_href(get_query_onclick(ACTION_GET_USERLISTTABLEPERMISSIONS_PAGE, $user->get_current_list_name(), "tab_list_table_permissions_id", "below", "action=".ACTION_GET_USERLISTTABLEPERMISSIONS_PAGE), translate("BUTTON_USERLISTTABLEPERMISSIONS"), "");
+            $html_str .= get_tab_navigation(HTML_TAB_TYPE_NORMAL, "tab_list_table_permissions_id", $content);
         }
         else if ($page_type == PAGE_TYPE_USERLISTTABLEPERMISSIONS)
-        {
-            $html_str .= "                <div class=\"tab_highlight\" id=\"tab_list_table_permissions_id\">\n";
-            $html_str .= "                    <div class=\"tab_content_highlight\">".translate("BUTTON_USERLISTTABLEPERMISSIONS")."</div>\n";
-            $html_str .= "                    <div class=\"tab_right_highlight\"></div>\n";
-            $html_str .= "                </div>\n";
-        }
+            $html_str .= get_tab_navigation(HTML_TAB_TYPE_HIGHLIGHT, "tab_list_table_permissions_id", "<div $highlight_class>".translate("BUTTON_USERLISTTABLEPERMISSIONS")."</div>");
 
         # show user admin link only when user has admin permissions
         if ($user->is_login() && $user->get_is_admin())
@@ -502,47 +512,31 @@ function get_page_navigation ($page_type)
             # show user admin link clickable when this is not the user admin page
             if ($page_type != PAGE_TYPE_USER_ADMIN)
             {
-                $html_str .= "                <div class=\"tab\" id=\"tab_user_admin_id\">\n";
-                $html_str .= "                    ".get_href(get_query_onclick(ACTION_GET_USER_ADMIN_PAGE, HTML_NO_LIST_PERMISSION_CHECK, "tab_user_admin_id", "below", "action=".ACTION_GET_USER_ADMIN_PAGE), translate("BUTTON_USER_ADMINISTRATION"), "")."\n";
-                $html_str .= "                    <div class=\"tab_right\"></div>\n";
-                $html_str .= "                </div>\n";
+                $content = get_href(get_query_onclick(ACTION_GET_USER_ADMIN_PAGE, HTML_NO_LIST_PERMISSION_CHECK, "tab_user_admin_id", "below", "action=".ACTION_GET_USER_ADMIN_PAGE), translate("BUTTON_USER_ADMINISTRATION"), "");
+                $html_str .= get_tab_navigation(HTML_TAB_TYPE_NORMAL, "tab_user_admin_id", $content);
             }
             else
-            {
-                $html_str .= "                <div class=\"tab_highlight\" id=\"tab_user_admin_id\">\n";
-                $html_str .= "                    <div class=\"tab_content_highlight\">".translate("BUTTON_USER_ADMINISTRATION")."</div>\n";
-                $html_str .= "                    <div class=\"tab_right_highlight\"></div>\n";
-                $html_str .= "                </div>\n";
-            }
+                $html_str .= get_tab_navigation(HTML_TAB_TYPE_HIGHLIGHT, "tab_user_admin_id", "<div $highlight_class>".translate("BUTTON_USER_ADMINISTRATION")."</div>");
         }
 
-        $html_str .= "            </div> <!-- navigation_left -->\n";
-
-        $html_str .= "            <div id=\"navigation_right\">\n";
+        $html_str .= "                </div> <!-- navigation_left -->\n";
+        $html_str .= "                <div id=\"navigation_right\">\n";
 
         # show user settings link non clickable but highlighted when this is the user settings page
         if ($page_type == PAGE_TYPE_USER_SETTINGS)
-        {
-            $html_str .= "                <div class=\"tab_highlight\" id=\"tab_user_settings_id\">\n";
-            $html_str .= "                    <div class=\"tab_content_highlight\">".translate("BUTTON_USER_SETTINGS")."</div>\n";
-            $html_str .= "                    <div class=\"tab_right_highlight\"></div>\n";
-            $html_str .= "                </div>\n";
-        }
+            $html_str .= get_tab_navigation(HTML_TAB_TYPE_HIGHLIGHT, "tab_user_settings_id", "<div $highlight_class>".translate("BUTTON_USER_SETTINGS")."</div>");
         else
         {
-            $html_str .= "                <div class=\"tab\" id=\"tab_user_settings_id\">\n";
-            $html_str .= "                    <div class=\"tab_content\">";
-            $html_str .= get_href(get_query_onclick(ACTION_GET_USER_SETTINGS_PAGE, HTML_NO_LIST_PERMISSION_CHECK, "tab_user_settings_id", "left", "action=".ACTION_GET_USER_SETTINGS_PAGE), translate("BUTTON_USER_SETTINGS"), "")."</div>\n";
-            $html_str .= "                    <div class=\"tab_right\"></div>\n";
-            $html_str .= "                </div>\n";
+            $content = get_href(get_query_onclick(ACTION_GET_USER_SETTINGS_PAGE, HTML_NO_LIST_PERMISSION_CHECK, "tab_user_settings_id", "left", "action=".ACTION_GET_USER_SETTINGS_PAGE), translate("BUTTON_USER_SETTINGS"), "");
+            $html_str .= get_tab_navigation(HTML_TAB_TYPE_NORMAL, "tab_user_settings_id", $content);
         }
 
-        $html_str .= "            </div> <!-- navigation_right -->\n";
+        $html_str .= "                </div> <!-- navigation_right -->\n";
     }
 
-    $html_str .= "\n        ";
+    $html_str .= "            ";
 
-    $logging->trace("set page_navigation");
+    $logging->trace("got page_navigation");
 
     return $html_str;
 }
@@ -561,6 +555,7 @@ function get_login_status ()
 
     $logging->trace("getting login_status");
 
+    $html_str .= "<div id=\"header_contents_status_login_status_left\"></div>";
     $html_str .= "<div id=\"header_contents_status_login_status_body\">";
     if ($user->is_login())
         $html_str .= get_href(get_onclick(ACTION_LOGOUT, HTML_NO_PERMISSION_CHECK, "", "", ""), translate("BUTTON_LOGOUT")." ".$user->get_name(), "icon_cancel")."</div>";
@@ -571,25 +566,6 @@ function get_login_status ()
     $logging->trace("got login_status");
 
     return $html_str;
-}
-
-/**
- * set html in the footer
- * @param string $html_str html for the footer
- * @param $response xajaxResponse response object
- * return void
- */
-function set_footer ($html_str, $response)
-{
-    global $logging;
-
-    $logging->trace("setting footer");
-
-    $response->assign("footer_text", "innerHTML", $html_str);
-
-    $logging->trace("set footer");
-
-    return;
 }
 
 ?>

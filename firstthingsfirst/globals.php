@@ -153,11 +153,6 @@ define("NAME_DATE_OPTION_DATE", "date");
 define("NAME_DATE_OPTION_DATE_NAME", "namedate");
 
 /**
- * id of message pane div
- */
-define("MESSAGE_PANE_DIV", "message_pane");
-
-/**
  * language names
  */
 define("LANG_EN", "LABEL_USER_LANG_EN");
@@ -288,7 +283,7 @@ $firstthingsfirst_field_descriptions = array(
     ),
     FIELD_TYPE_DEFINITION_TEXT_FIELD => array(
         DB_DATATYPE_TEXTMESSAGE,
-        "textarea cols=48 rows=3",
+        "textarea cols=60 rows=4",
         "",
         DB_INITIAL_DATA_STRING,
         FIELD_DESCRIPTION_SELECTABLE_DATATYPE

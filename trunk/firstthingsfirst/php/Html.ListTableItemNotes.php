@@ -338,7 +338,7 @@ function get_list_record_note ($db_field_name, $count, $is_last, $id, $note_arra
         $html_str .= translate("LABEL_NEW_NOTE")."&nbsp;(".$user->get_name().")";
     $html_str .= "</div>\n";
 
-    $html_str .= "                                            <textarea cols=48 rows=3 name=\"$textarea_name\" id=\"".$td_id."_note\" class=\"note_text\">$note_str</textarea>\n";
+    $html_str .= "                                            <textarea cols=60 rows=4 name=\"$textarea_name\" id=\"".$td_id."_note\" class=\"note_text\">$note_str</textarea>\n";
     $html_str .= "                                            <div class=\"note_box_bottom_buttons\">\n";
     $html_str .= "                                                <div id=\"".$td_id."_previous"."\" class=\"note_box_bottom_buttons_left\">";
 

@@ -51,39 +51,20 @@ function get_login_page_html ()
 
     $html_str = "";
 
-    $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
-    $html_str .= "        <div id=\"login_white_space\">&nbsp;</div>\n\n";
+    $html_str .= "\n        <div id=\"login_white_space\">&nbsp;</div>\n";
     $html_str .= "        <div id=\"login_pane\">\n";
-    $html_str .= "            <div id=\"login_contents_outer_border\">\n";
-    $html_str .= "               <div id=\"login_contents_inner_border\">\n";
-    $html_str .= "                    <div id=\"login_overview_top_left\">\n";
-    $html_str .= "                        <div id=\"login_overview_top_right\">\n";
-    $html_str .= "                            <div id=\"login_overview_bottom_left\">\n";
-    $html_str .= "                                <div id=\"login_overview_bottom_right\">\n";
-    $html_str .= "                                    <div id=\"login_contents\">\n";
-    $html_str .= "                                        <form name=\"login_form\" id=\"login_form\" action=\"\" method=\"POST\">\n";
-    $html_str .= "                                            <div class=\"login_line\">\n";
-    $html_str .= "                                                <div class=\"login_line_left\">".translate("LABEL_USER_NAME")."</div>\n";
-    $html_str .= "                                                <div class=\"login_line_right\"><input name=\"user_name\" id=\"user_name_id\" size=\"16\" maxlength=\"16\" value= \"\" type=\"text\"></div>\n";
-    $html_str .= "                                            </div> <!-- login_line -->\n";
-    $html_str .= "                                            <div class=\"login_line\">\n";
-    $html_str .= "                                                <div class=\"login_line_left\">".translate("LABEL_PASSWORD")."</div>\n";
-    $html_str .= "                                                <div class=\"login_line_right\"><input name=\"password\" id=\"password_id\" size=\"16\" maxlength=\"16\" type=\"password\"></div>\n";
-    $html_str .= "                                            </div> <!-- login_line -->\n";
-    $html_str .= "                                            <div class=\"login_line\">\n";
-    $html_str .= "                                                <div class=\"login_line_left\">&nbsp;</div>\n";
-    $html_str .= "                                                <div class=\"login_line_right\"><input type=submit class=\"icon_accept\" value=\"".translate("BUTTON_LOGIN")."\" onclick=\"javascript:handleFunction('".ACTION_LOGIN."', document.getElementById('user_name_id').value, document.getElementById('password_id').value); return false;\"></div>\n";
-    $html_str .= "                                            </div> <!-- login_line -->\n";
-    $html_str .= "                                        </form> <!-- login_form -->\n";
-    $html_str .= "                                    </div> <!-- login_contents -->\n";
-    $html_str .= "                                </div> <!-- login_overview_bottom_right -->\n";
-    $html_str .= "                            </div> <!-- login_overview_bottom_left -->\n";
-    $html_str .= "                        </div> <!-- login_overview_top_right -->\n";
-    $html_str .= "                    </div> <!-- login_overview_top_left -->\n";
-    $html_str .= "                </div> <!-- login_contents_inner_border -->\n";
-    $html_str .= "            </div> <!-- login_contents_outer_border -->\n";
+    $html_str .= "            <div class=\"corner top_left_border\"></div>\n";
+    $html_str .= "            <div class=\"corner top_right_border\"></div>\n";
+    $html_str .= "            <div id=\"login_contents\">\n";
+    $html_str .= "                <form name=\"login_form\" id=\"login_form\" action=\"\" method=\"POST\">\n";
+    $html_str .= "                    <div class=\"login_line\">".translate("LABEL_USER_NAME")."<input name=\"user_name\" id=\"user_name_id\" size=\"16\" maxlength=\"16\" value= \"\" type=\"text\"></div>\n";
+    $html_str .= "                    <div class=\"login_line\">".translate("LABEL_PASSWORD")."<input name=\"password\" id=\"password_id\" size=\"16\" maxlength=\"16\" type=\"password\"></div>\n";
+    $html_str .= "                    <div class=\"login_line\">&nbsp;<input type=submit class=\"icon icon_accept\" value=\"".translate("BUTTON_LOGIN")."\" onclick=\"javascript:handleFunction('".ACTION_LOGIN."', document.getElementById('user_name_id').value, document.getElementById('password_id').value); return false;\"></div>\n";
+    $html_str .= "                </form> <!-- login_form -->\n";
+    $html_str .= "            </div> <!-- login_contents -->\n";
+    $html_str .= "            <div class=\"corner bottom_left_border\"></div>\n";
+    $html_str .= "            <div class=\"corner bottom_right_border\"></div>\n";
     $html_str .= "        </div> <!-- login_pane -->\n\n";
-    $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
 
     $logging->trace("got login page html");
 

@@ -3,105 +3,56 @@
 
 /*  defines the listbuilder pane */
 #listbuilder_pane {
-    margin: 0px 16px 0px 12px;
     }
 
 /*  defines the listbuilder title pane */
-.listbuilder_title_pane {
-    float: left;
-    width: 100%;
-    padding: 0px 2px 0px 2px;
+.listbuilder_title {
+    position: relative;
+    padding: 3px 6px 3px 6px;
     margin: 0px 0px 0px 0px;
     color: rgb(50, 50, 50);
     background-color: rgb(197, 214, 232);
-    }
-
-/*  defines the rounded corners of the listbuilder title pane */
-.listbuilder_title_pane_top_left {
-    float: left;
-    width: 100%;
-    margin: 0px 0px 0px -2px; 
-    background: url(../images/standard_contents_top_left.gif) left top no-repeat;
-    }
-
-.listbuilder_title_pane_top_right {
-    float: right;
-    width: 100%;
-    margin: 0px -4px 0px 0px; 
-    background: url(../images/standard_contents_top_right.gif) right top no-repeat;
-    }
-
-/*  defines the actual title */
-.listbuilder_title_pane_contents {
-    float: left;
-    width: 100%;
-    padding: 3px 5px 3px 5px;
-    color: rgb(0, 0, 0);
     font-family: Arial;
     font-size: 16px;
     font-weight: bold;
     }
 
-/*  defines the bottom layer of the login screen */
-.listbuilder_contents_pane_outer_border {
-    float: left;
-    padding: 0px 2px 2px 2px;
-    width: 100%;
-    color: rgb(50, 50, 50);
+/*  defines the pane that contains the contents */
+.listbuilder_contents_pane {
+    position: relative;
+    padding: 2px 2px 2px 2px;
+    margin: 0px 0px 16px 0px;
     background-color: rgb(197, 214, 232);
     }
 
-/*  defines the login contents which contains the divs with all the rounded corners */
-.listbuilder_contents_pane_inner_border {
-    float: left;
-    width: 100%;
+/*  defines the actual contents */
+.listbuilder_contents {
+    overflow: hidden;
+    padding: 8px 0px 10px 0px;
     background-color: rgb(232, 232, 232);
     }
 
-/*  defines the rounded corners of the listbuilder title pane */
-.listbuilder_contents_pane_bottom_left {
-    float: left;
-    width: 100%;
-    margin: 0px 0px -2px -2px; 
-    background: url(../images/standard_login_bottom_left.gif) left bottom no-repeat;
-    }
-
-.listbuilder_contents_pane_bottom_right {
-    float: right;
-    width: 100%;
-    margin: 0px -4px 0px 0px;
-    background: url(../images/standard_login_bottom_right.gif) right bottom no-repeat;
-    }
-
-/*  defines the actual contents */
-.listbuilder_contents_pane_contents {
-    float: left;
-    width: 100%;
-    margin: 0px 0px 0px -2px;
-    padding: 8px 0px 10px 0px;
-    }
-
 /*  defines a line */
-.listbuilder_contents_pane_line {
-    float: left;
+.listbuilder_contents_line {
+    overflow: hidden;
     width: 100%;
     padding: 6px 4px 6px 4px;
     }
 
-.listbuilder_contents_pane_line_left {
+.listbuilder_contents_line_left {
     float: left;
-    width: 26%;
+    width: 130px;
     padding: 0px 6px 0px 0px;
     text-align: left;
     }
 
-.listbuilder_contents_pane_line_right {
+.listbuilder_contents_line_right {
     float: left;
-    width: 40%;
+    width: 300px;
     text-align: left;
     }
 
-.listbuilder_contents_pane_line input, .listbuilder_contents_pane_line textarea { 
+.listbuilder_contents_line input, .listbuilder_contents_line textarea {
     border: 1px solid rgb(197, 214, 232);
     }
 
@@ -109,17 +60,16 @@
 #listbuilder_definition {
     width: 100%;
     border-collapse: collapse;
-    margin: -8px 0px -5px 0px;
     }
 
 #listbuilder_definition tr {
     background-color: rgb(232, 232, 232);
     }
-    
+
 #listbuilder_definition tbody tr:hover {
     background-color: rgb(197, 214, 232);
     }
-    
+
 #listbuilder_definition th {
     padding: 5px 4px 5px 6px;
     color: rgb(0, 0, 0);
@@ -131,19 +81,7 @@
     border-top: 1px solid rgb(197, 214, 232);
     }
 
-#listbuilder_definition .icon_up {
-    padding: 3px 0px 3px 16px;
-    }
-
-#listbuilder_definition .icon_down {
-    padding: 3px 0px 3px 16px;
-    }
-
-#listbuilder_definition .icon_delete {
-    padding: 3px 0px 3px 24px;
-    }
-
-#listbuilder_definition select, #listbuilder_definition input { 
+#listbuilder_definition select, #listbuilder_definition input {
     border: 1px solid rgb(197, 214, 232);
     }
 

@@ -2,7 +2,7 @@
  * This file contains js code for tooltips using qtip
  *
  * @author Jasper de Jong
- * @copyright 2007-2009 Jasper de Jong
+ * @copyright 2007-2010 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -41,7 +41,7 @@ function showTooltip(domElementId, messageStr, type, position)
         backgroundColor = "rgb(244, 203, 203)";
         textColor = "rgb(50, 50, 50)";
         borderColor = "rgb(185, 10, 10)";
-        imageUrl = "images/icons/nuove_error.png";
+        imageUrl = "images/nuove_error.png";
     }
     else
     {
@@ -49,7 +49,7 @@ function showTooltip(domElementId, messageStr, type, position)
         backgroundColor = "rgb(255, 245, 189)";
         textColor = "rgb(50, 50, 50)";
         borderColor = "rgb(255, 173, 37)";
-        imageUrl = "images/icons/nuove_info.png";
+        imageUrl = "images/nuove_info.png";
     }
 
     // set left, above, below of right position
@@ -153,7 +153,7 @@ function showTooltip(domElementId, messageStr, type, position)
 function showModalDialog (domElementId, messageStr, functionStr)
 {
     // get the image URL and the dialog HTML
-    imageUrl = "images/icons/nuove_info.png";
+    imageUrl = "images/nuove_info.png";
     htmlStr = getTooltipContent (domElementId, messageStr, imageUrl, functionStr);
 
     // create the tooltip
@@ -231,7 +231,7 @@ function getTooltipContent (domElementId, messageStr, imageUrl, functionStr)
     htmlStr += "    <table id=\"qtip_message_table\">\n";
     htmlStr += "        <thead>\n";
     htmlStr += "            <tr>\n";
-    htmlStr += "                <th colspan=2><a href=\"javascript:void(0);\" id=\"qtip_close_button\" class=\"icon_delete\" onclick=\"$('" + domElementId + "').qtip('destroy');\">" + closeStr + "</a></th>\n";
+    htmlStr += "                <th colspan=2><a href=\"javascript:void(0);\" id=\"qtip_close_button\" class=\"icon icon_delete\" onclick=\"$('" + domElementId + "').qtip('destroy');\">" + closeStr + "</a></th>\n";
     htmlStr += "            </tr>\n";
     htmlStr += "        </thead>\n";
     htmlStr += "        <tbody>\n";
@@ -247,8 +247,8 @@ function getTooltipContent (domElementId, messageStr, imageUrl, functionStr)
         htmlStr += "            <tr>\n";
         htmlStr += "                <td colspan=2 class=\"buttons\">";
         // TODO for some reason it is not possible in IE7 to first destroy the Qtip
-        htmlStr += "<a href=\"javascript:void(0);\" class=\"icon_accept\" onclick=\"" + funcStr + "; \">" + acceptStr + "</a>";
-        htmlStr += "<a href=\"javascript:void(0);\" class=\"icon_cancel\" onclick=\"$('" + domElementId + "').qtip('destroy'); \">" + cancelStr + "</a></td>\n";
+        htmlStr += "<a href=\"javascript:void(0);\" class=\"icon icon_accept\" onclick=\"" + funcStr + "; \">" + acceptStr + "</a>";
+        htmlStr += "<a href=\"javascript:void(0);\" class=\"icon icon_cancel\" onclick=\"$('" + domElementId + "').qtip('destroy'); \">" + cancelStr + "</a></td>\n";
         htmlStr += "            </tr>\n";
     }
 

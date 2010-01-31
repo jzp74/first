@@ -1,5 +1,17 @@
-/* This stylesheet contains all shared styles */
-
+/* This stylesheet contains all shared styles
+ *
+ * The general setup of all pages is as follows:
+ *  - body
+ *  -- outer_body
+ *  --- header_container
+ *  ---- header
+ *  ------ header_contents_status
+ *  ------ portal_title
+ *  ------ page_title
+ *  ------ navigation_container
+ *  --- main_body
+ *  --- footer
+ */
 
 /*  defines shared settings for all styles */
 * {
@@ -24,139 +36,121 @@ a, a:link, a:visited {
     }
 
 /*  define all possible icons */
-
 .icon_none {
     padding: 2px 0px 2px 18px;
     }
 
+.icon {
+    padding: 2px 0px 4px 24px;
+    background: url(../images/boomy_icons.png) left 0px no-repeat;
+    }
+
+.icon:hover {
+    color: rgb(255, 255, 255);
+    }
+
 .icon_up {
-    padding: 2px 0px 2px 24px;
-    background: url(../images/icons/boomy_icon_up_bw.png) left bottom no-repeat;
+    background-position: 0px -450px;
     }
 
 .icon_up:hover {
-    background: url(../images/icons/boomy_icon_up_highlight.png) left bottom no-repeat;
-    color: rgb(255, 255, 255);
+    background-position: 0px -510px;
     }
 
 .icon_down {
-    padding: 2px 0px 2px 24px;
-    background: url(../images/icons/boomy_icon_down_bw.png) left bottom no-repeat;
+    background-position: 0px -630px;
     }
 
 .icon_down:hover {
-    background: url(../images/icons/boomy_icon_down_highlight.png) left bottom no-repeat;
-    color: rgb(255, 255, 255);
+    background-position: 0px -690px;
     }
 
 .icon_next {
-    padding: 2px 0px 2px 24px;
-    background: url(../images/icons/boomy_icon_next_bw.png) left bottom no-repeat;
+    background-position: 0px -540px;
     }
 
 .icon_next:hover {
-    background: url(../images/icons/boomy_icon_next_highlight.png) left bottom no-repeat;
-    color: rgb(255, 255, 255);
+    background-position: 0px -600px;
     }
 
 .icon_back {
-    padding: 2px 0px 2px 24px;
-    background: url(../images/icons/boomy_icon_back_bw.png) left bottom no-repeat;
+    background-position: 0px -360px;
     }
 
 .icon_back:hover {
-    background: url(../images/icons/boomy_icon_back_highlight.png) left bottom no-repeat;
-    color: rgb(255, 255, 255);
+    background-position: 0px -420px;
     }
 
 .icon_add {
-    padding: 2px 0px 2px 24px;
-    background: url(../images/icons/boomy_icon_add_bw.png) left bottom no-repeat;
+    background-position: 0px -270px;
     }
 
 .icon_add:hover {
-    background: url(../images/icons/boomy_icon_add_highlight.png) left bottom no-repeat;
-    color: rgb(255, 255, 255);
+    background-position: 0px -330px;
     }
 
 .icon_delete {
-    padding: 2px 0px 2px 24px;
-    background: url(../images/icons/boomy_icon_delete_bw.png) left bottom no-repeat;
+    background-position: 0px -180px;
     }
 
 .icon_delete:hover {
-    background: url(../images/icons/boomy_icon_delete_highlight.png) left bottom no-repeat;
-    color: rgb(255, 255, 255);
+    background-position: 0px -240px;
     }
 
 .icon_edit {
-    padding: 2px 0px 2px 24px;
-    background: url(../images/icons/boomy_icon_edit_bw.png) left bottom no-repeat;
+    background-position: 0px -990px;
     }
 
 .icon_edit:hover {
-    background: url(../images/icons/boomy_icon_edit_highlight.png) left bottom no-repeat;
-    color: rgb(255, 255, 255);
+    background-position: 0px -1050px;
     }
 
 .icon_archive {
-    padding: 2px 0px 2px 24px;
-    background: url(../images/icons/boomy_icon_archive_bw.png) left bottom no-repeat;
+    background-position: 0px -810px;
     }
 
 .icon_archive:hover {
-    background: url(../images/icons/boomy_icon_archive_highlight.png) left bottom no-repeat;
-    color: rgb(255, 255, 255);
+    background-position: 0px -870px;
     }
 
 .icon_unarchive {
-    padding: 2px 0px 2px 24px;
-    background: url(../images/icons/boomy_icon_unarchive_bw.png) left bottom no-repeat;
+    background-position: 0px -720px;
     }
 
 .icon_unarchive:hover {
-    background: url(../images/icons/boomy_icon_unarchive_highlight.png) left bottom no-repeat;
-    color: rgb(255, 255, 255);
+    background-position: 0px -780px;
     }
 
 .icon_accept {
-    padding: 2px 0px 2px 24px;
-    background: url(../images/icons/boomy_icon_accept_bw.png) left bottom no-repeat;
+    background-position: 0px 0px;
     }
 
 .icon_accept:hover {
-    background: url(../images/icons/boomy_icon_accept_highlight.png) left bottom no-repeat;
-    color: rgb(255, 255, 255);
+    background-position: 0px -60px;
     }
 
 .icon_cancel {
-    padding: 2px 0px 2px 24px;
-    background: url(../images/icons/boomy_icon_cancel_bw.png) left bottom no-repeat;
+    background-position: 0px -90px;
     }
 
 .icon_cancel:hover {
-    background: url(../images/icons/boomy_icon_cancel_highlight.png) left bottom no-repeat;
-    color: rgb(255, 255, 255);
+    background-position: 0px -150px;
     }
 
 .icon_print {
-    padding: 2px 0px 2px 24px;
-    background: url(../images/icons/boomy_icon_print_bw.png) left bottom no-repeat;
+    background-position: 0px -1080px;
     }
 
 .icon_print:hover {
-    background: url(../images/icons/boomy_icon_print_highlight.png) left bottom no-repeat;
-    color: rgb(255, 255, 255);
+    background-position: 0px -1140px;
     }
 
 .icon_user {
-    padding: 2px 0px 2px 24px;
-    background: url(../images/icons/boomy_icon_user_bw.png) left bottom no-repeat;
+    background-position: 0px 1350px;
     }
 
 .icon_user:hover {
-    background: url(../images/icons/boomy_icon_user_highlight.png) left bottom no-repeat;
-    color: rgb(255, 255, 255);
+    background-position: 0px -1410px;
     }
 
 /*  defines standard tags */
@@ -210,56 +204,93 @@ select {
     display: none;
     }
 
+/*  defines corners */
+.corner {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    background: url(../images/standard_backgrounds.png);
+    z-index: 20;
+    }
+
+.top_left_normal {
+    top: 0;
+    left: 0;
+    background-position: 0px 0px;
+    }
+
+.top_right_normal {
+    top: 0;
+    right: 0;
+    background-position: -7px 0px;
+    }
+
+.bottom_left_normal {
+    bottom: 0;
+    left: 0;
+    background-position: 0px -7px;
+    }
+
+.bottom_right_normal {
+    bottom: 0;
+    right: 0;
+    background-position: -7px -7px;
+    }
+
+.top_left_border {
+    top: 0;
+    left: 0;
+    background-position: -15px 0px;
+    }
+
+.top_right_border {
+    top: 0;
+    right: 0;
+    background-position: -22px 0px;
+    }
+
+.bottom_left_border {
+    bottom: 0;
+    left: 0;
+    background-position: -15px -7px;
+    }
+
+.bottom_right_border {
+    bottom: 0;
+    right: 0;
+    background-position: -22px -7px;
+    }
+
 /*  defines the html overall style of a page */
 html, body {
     height: 100%;
     background-color: rgb(255, 255, 255);
     }
 
-/*  defines the white margin at the top of the page, above the header */
-#upper_margin {
-    width: 100%;
-    position: absolute;
-    height: 18px;
-    top: 0px;
-    left: 0px;
+/*  defines the body that stretches to the bottom of the page */
+#outer_body {
+    position: relative;
+    height: auto !important;
+    height: 100%;
+    min-height: 100%;
+    margin: 0px 16px 0px 16px;
     background-color: rgb(255, 255, 255);
-    z-index: 20;
     }
 
-/*  defines the header of all pages which only contains the software name and version */
-#header {
+/*  defines the container of the header */
+#header_container {
     height: 119px;
     width: 100%;
-    position: absolute;
-    top: 18px;
-    left: 0px;
-    background: url(../images/twirl-II-light.gif) left top repeat;
-    color: rgb(255, 255, 255);
-    z-index: 20;
-    }
-
-/* defines the white margins on both side of the header */
-#header_left_margin, #header_right_margin {
-    width: 23px;
-    height: 119px;
-    background-color: rgb(255, 255, 255);
-    z-index: 30;
-    }
-
-#header_left_margin {
-    float: left;
-    background: url(../images/standard_header_left.gif) right top no-repeat;
-    }
-
-#header_right_margin {
-    float: right;
-    background: url(../images/standard_header_right.gif) right top no-repeat;
+    padding: 20px 0px 0px 0px;
     }
 
 /*  defines the contents of the header of every page */
-#header_contents {
+#header {
+    position: relative;
     height: 119px;
+    background: url(../images/twirl-II-light.gif) left top repeat;
+    color: rgb(255, 255, 255);
+    padding: 0px 6px 0px 6px;
     }
 
 /*  defines the top line of the header which contains the software version and login status */
@@ -282,18 +313,25 @@ html, body {
 #header_contents_status_login_status {
     float: right;
     padding: 3px 0px 3px 4px;
-    background: url(../images/standard_login_status_left.png) left top no-repeat;
     color: rgb(50, 50, 50);
     font-family: Arial;
     font-size: 12px;
     font-weight: bold;
     }
 
+#header_contents_status_login_status_left {
+    float: left;
+    width: 4px;
+    height: 21px;
+    margin: -3px 0px -3px 0px;
+    background: url(../images/standard_backgrounds.png) -32px -16px no-repeat;
+    }
+
 #header_contents_status_login_status_body {
     float: left;
     padding: 3px 2px 3px 2px;
     margin: -3px 0px -3px 0px;
-    background: url(../images/standard_login_status.png) left top repeat;
+    background: url(../images/standard_backgrounds.png) 0px -45px repeat;
     }
 
 #header_contents_status_login_status_body a, #header_contents_status_login_status_body a:link, #header_contents_status_login_status_body a:visited {
@@ -309,7 +347,7 @@ html, body {
     width: 4px;
     height: 21px;
     margin: -3px 0px -3px 0px;
-    background: url(../images/standard_login_status_right.png) right top no-repeat;
+    background: url(../images/standard_backgrounds.png) -38px -16px no-repeat;
     }
 
 /*  defines the title of the portal */
@@ -352,56 +390,66 @@ html, body {
     font-weight: bold;
     }
 
-#navigation_left .tab {
+#navigation_container .tab_normal {
     float: left;
-    margin: -2px 0px -4px 2px;
+    margin: -2px 2px -4px 2px;
     padding: 2px 0px 4px 0px;
-    background: url(../images/standard_tab_left.png) left top no-repeat;
     }
 
-#navigation_left .tab_right {
-    float: left;
+#navigation_container .tab_normal .tab_left, #navigation_container .tab_normal .tab_right {
     width: 6px;
     height: 14px;
     margin: -2px 0px -6px 0px;
     padding: 4px 0px 5px 0px;
-    background: url(../images/standard_tab_right.png) right top no-repeat;
     }
 
-#navigation_left .tab_highlight {
+#navigation_container .tab_normal .tab_left {
+    background: url(../images/standard_backgrounds.png) 0px -15px no-repeat;
+    }
+
+#navigation_container .tab_normal .tab_right {
+    background: url(../images/standard_backgrounds.png) -8px -15px no-repeat;
+    }
+
+#navigation_container .tab_normal a, #navigation_container .tab_normal a:link, #navigation_container .tab_normal a:visited {
     float: left;
-    margin: -6px 0px -6px 2px;
+    margin: -2px 0px -4px 0px;
+    padding: 4px 0px 4px 0px;
+    color: rgb(50, 50, 50);
+    background: url(../images/standard_backgrounds.png) 0px -45px repeat;
+    font-weight: bold;
+    }
+
+#navigation_container .tab_normal a:hover {
+    color: rgb(255, 255, 255);
+    }
+
+#navigation_container .tab_highlight {
+    float: left;
+    margin: -6px 2px -6px 2px;
     padding: 6px 0px 6px 0px;
     background: url(../images/standard_tab_left_highlight.png) left top no-repeat;
     }
 
-#navigation_left .tab_content_highlight {
-    float: left;
-    margin: -6px 0px -6px 6px;
-    padding: 6px 0px 6px 0px;
-    background-color: rgb(255, 255, 255);
-    }
-
-#navigation_left .tab_right_highlight {
-    float: left;
+#navigation_container .tab_highlight .tab_left, #navigation_container .tab_highlight .tab_right {
     width: 6px;
     height: 14px;
     margin: -6px 0px -6px 0px;
     padding: 6px 0px 7px 0px;
-    background: url(../images/standard_tab_right_highlight.png) right top no-repeat;
     }
 
-#navigation_left a, #navigation_left a:link, #navigation_left a:visited {
-    float: left;
-    margin: -2px 0px -4px 6px;
-    padding: 4px 0px 4px 0px;
-    color: rgb(50, 50, 50);
-    background: url(../images/standard_tab.png) left top repeat;
-    font-weight: bold;
+#navigation_container .tab_highlight .tab_left {
+    background: url(../images/standard_backgrounds.png) -16px -15px no-repeat;
     }
 
-#navigation_left a:hover {
-    color: rgb(255, 255, 255);
+#navigation_container .tab_highlight .tab_right {
+    background: url(../images/standard_backgrounds.png) -24px -15px no-repeat;
+    }
+
+#navigation_container .tab_highlight .tab_content {
+    margin: -6px 0px -6px 0px;
+    padding: 6px 0px 6px 0px;
+    background-color: rgb(255, 255, 255);
     }
 
 /*  defines navigation links on right side of screen */
@@ -414,129 +462,27 @@ html, body {
     font-weight: bold;
     }
 
-#navigation_right .tab {
-    float: left;
-    margin: -2px 2px -4px 0px;
-    padding: 2px 0px 4px 0px;
-    background: url(../images/standard_tab_left.png) left top no-repeat;
-    }
-
-#navigation_right .tab_content {
-    float: left;
-    margin: -2px 0px -4px 6px;
-    padding: 4px 0px 4px 0px;
-    background: url(../images/standard_tab.png) left top repeat;
-    font-weight: bold;
-    }
-
-#navigation_right .tab_right {
-    float: left;
-    width: 6px;
-    height: 14px;
-    margin: -2px 0px -6px 0px;
-    padding: 4px 0px 5px 0px;
-    background: url(../images/standard_tab_right.png) right top no-repeat;
-    }
-
-#navigation_right .tab_highlight {
-    float: left;
-    margin: -6px 0px -6px 2px;
-    padding: 6px 0px 6px 0px;
-    background: url(../images/standard_tab_left_highlight.png) left top no-repeat;
-    }
-
-#navigation_right .tab_content_highlight {
-    float: left;
-    margin: -6px 0px -6px 6px;
-    padding: 6px 0px 6px 0px;
-    background-color: rgb(255, 255, 255);
-    }
-
-#navigation_right .tab_right_highlight {
-    float: left;
-    width: 6px;
-    height: 14px;
-    margin: -6px 0px -6px 0px;
-    padding: 6px 0px 7px 0px;
-    background: url(../images/standard_tab_right_highlight.png) right top no-repeat;
-    }
-
-#navigation_right a, #navigation_right a:link, #navigation_right a:visited {
-    color: rgb(50, 50, 50);
-    }
-
-#navigation_right a:hover {
-    color: rgb(255, 255, 255);
-    }
-
 #navigation_right_invisible {
     margin: -4px 0px -4px 0px;
     padding: 4px 6px 4px 10px;
     float: right;
     }
 
-/*  defines the body which has borders on both sides and stretches to the bottom of the page */
-#outer_body {
-    min-height: 100%;
-    height: auto !important;
-    height: 100%;
-    margin: 0px 16px -44px 16px;
-    background-color: rgb(255, 255, 255);
-    border-left: 4px solid rgb(95, 148, 206);
-    border-right: 4px solid rgb(95, 148, 206);
-    }
-
-/*  this style is used only to prevent content to disappear under the header
-    the height of this style is the combined height of #header and #upper_margin */
-#hidden_upper_margin {
-    width: 100%;
-    padding: 118px 0px 4px 0px;
-    visibility: hidden;
-    }
-
 /*  container for all page contents */
 #main_body {
-    }
-
-/*  container for most header contents */
-#page_header {
-    color: rgb(255, 255, 255);
-    }
-
-/*  this style is used only to prevent content to disappear under the footer
-    the height of this style is the combined height of #footer and #lower_margin */
-#hidden_lower_margin {
-    width: 100%;
-    height: 44px;
-    visibility: hidden;
+    padding: 16px 6px 62px 6px;
+    zoom: 1;
     }
 
 /*  defines the footer of all pages */
 #footer {
+    position: absolute;
+    bottom: 20px;
+    left: 0px;
     height: 26px;
+    width: 100%;
     background: url(../images/twirl-II-light.gif) left top repeat;
     color: rgb(255, 255, 255);
-    text-align: center;
-    font-size: 12px;
-    }
-
-/* defines the white margins on both side of the footer */
-#footer_left_margin, #footer_right_margin {
-    width: 23px;
-    height: 26px;
-    z-index: 30;
-    }
-
-#footer_left_margin {
-    float: left;
-    margin: 0px -7px 0px 0px;
-    background: url(../images/standard_footer_left.gif) right bottom no-repeat;
-    }
-
-#footer_right_margin {
-    float: right;
-    margin: 0px 0px 0px -7px;
-    background: url(../images/standard_footer_right.gif) left bottom no-repeat;
     }
 
 #footer_text {
@@ -554,97 +500,34 @@ html, body {
     margin: 0px 0px 0px 0px;
 }
 
-/*  defines the white margin at the bottom of the page */
-#lower_margin {
-    height: 18px;
-    background-color: rgb(255, 255, 255);
-    }
-
 /*  defines the pane that contains the action bar */
 #action_pane {
-    display: block;
-    float: none;
-    clear: both;
-    padding: 0px 10px 0px 10px;
+    position: relative;
     color: rgb(255, 255, 255);
-    }
-
-#action_pane_bottom_left {
-    float: left;
-    height: 7px;
-    width: 7px;
-    margin: -7px 0px 0px 0px;
-    background: url(../images/standard_pane_bottom_left.gif) left bottom no-repeat;
-    }
-
-#action_pane_bottom_right {
-    float: right;
-    height: 7px;
-    width: 7px;
-    margin: -7px 0px 0px 0px;
-    background: url(../images/standard_pane_bottom_right.gif) right bottom no-repeat;
     }
 
 /*  defines the action bar that contains a number of actions (hrefs) */
 #action_bar {
-    display: block;
-    float: none;
-    padding: 8px 8px 8px 8px;
+    position: relative;
+    height: 20px;
+    padding: 8px 8px 4px 8px;
     background-color: rgb(197, 214, 232);
     color: rgb(95, 148, 206);
     }
 
-#action_bar_top_left {
-    float: left;
-    height: 7px;
-    width: 7px;
-    background: url(../images/standard_action_bar_top_left.gif) left top no-repeat;
-    }
-
-#action_bar_top_right {
-    float: right;
-    height: 7px;
-    width: 7px;
-    background: url(../images/standard_action_bar_top_right.gif) right top no-repeat;
-    }
-
-#action_bar_bottom_left {
-    float: left;
-    height: 7px;
-    width: 7px;
-    margin: -7px 0px 0px 0px;
-    background: url(../images/standard_action_bar_bottom_left.gif) left bottom no-repeat;
-    }
-
-#action_bar_bottom_right {
-    float: right;
-    height: 7px;
-    width: 7px;
-    margin: -7px 0px 0px 0px;
-    background: url(../images/standard_action_bar_bottom_right.gif) right bottom no-repeat;
-    }
-
 #action_bar select {
-    padding: 1px 1px 3px 0px;
-    margin: -4px 4px -4px 4px;
+    margin: -4px 8px 0px 0px;
     background-color: rgb(255, 255, 255);
     border: 1px solid rgb(95, 148, 206);
     }
 
 #action_bar a, #action_bar a:link, #action_bar a:visited {
-    padding: 0px 12px 0px 0px;
-    padding: 2px 4px 2px 24px;
     color: rgb(95, 148, 206);
     font-weight: bold;
     }
 
 #action_bar a:hover {
     color: rgb(255, 255, 255);
-    }
-
-#clear_margin {
-    clear: both;
-    visibility: hidden;
     }
 
 /*  defines some white space between the the top of the screen and the login pane */
@@ -655,63 +538,28 @@ html, body {
 
 /*  defines the pane that contains the login screen */
 #login_pane {
-    text-align: center;
-    }
-
-/*  defines the bottom layer of the login screen */
-#login_contents_outer_border {
-    float: left;
+    position: relative;
     padding: 2px 2px 2px 2px;
-    margin: 0% 36% 0% 36%;
-    width: 28%;
+    margin: 0% auto 0% auto;
+    width: 260px;
     color: rgb(50, 50, 50);
     background-color: rgb(197, 214, 232);
     }
 
 /*  defines the login contents which contains the divs with all the rounded corners */
-#login_contents_inner_border {
-    float: left;
-    width: 100%;
-    background-color: rgb(232, 232, 232);
-    }
-
-/*  defines the rounded corners of the login screen */
-#login_overview_top_left {
-    float: left;
-    width: 100%;
-    margin: -2px 0px 0px -2px;
-    background: url(../images/standard_login_top_left.gif) left top no-repeat;
-    }
-
-#login_overview_top_right {
-    float: right;
-    width: 100%;
-    margin: 0px -4px 0px 0px;
-    background: url(../images/standard_login_top_right.gif) right top no-repeat;
-    }
-
-#login_overview_bottom_left {
-    float: left;
-    width: 100%;
-    margin: 0px 0px -2px -4px;
-    background: url(../images/standard_login_bottom_left.gif) left bottom no-repeat;
-    }
-
-#login_overview_bottom_right {
-    float: right;
-    width: 100%;
-    margin: 0px -4px 0px 0px;
-    background: url(../images/standard_login_bottom_right.gif) right bottom no-repeat;
-    }
-
-/*  defines the login contents which contains the divs with all the rounded corners */
 #login_contents {
-    float: left;
-    width: 100%;
+    position: relative;
     padding: 14px 0px 14px 0px;
+    background-color: rgb(232, 232, 232);
+    text-align: right;
+    }
+
+#login_form {
+    text-align: right;
     }
 
 #login_contents input {
+    margin: 0px 0px 0px 14px;
     padding: 1px 5px 3px 5px;
     border: 1px solid rgb(197, 214, 232);
     }
@@ -729,29 +577,8 @@ html, body {
 
 /*  defines a line in the login screen */
 .login_line {
-    float: left;
-    width: 100%;
-    padding: 4px 0px 4px 0px;
-    }
-
-.login_line_left {
-    width: 30%;
-    float: left;
+    padding: 4px 30px 4px 30px;
     text-align: right;
-    }
-
-.login_line_right {
-    margin: -2px 0px -2px 0px;
-    padding: 2px 0px 2px 0px;
-    float: right;
-    width: 60%;
-    text-align: left;
-    }
-
-/*  defines message pane */
-#message_pane {
-    margin: 4px 10px 4px 10px;
-    width: 20%;
     }
 
 /*  defines qtips */

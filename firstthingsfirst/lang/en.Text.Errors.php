@@ -73,6 +73,6 @@ $text_translations["ERROR_IMPORT_WRONG_COLUMN_COUNT"] = "The number of fields do
 /**
  * browser errors
  */
-$text_translations["ERROR_BROWSER_UNSUPPORTED"] = "WARNING: You may experience unexpected behaviour when you use First Things First with your current browser because we have not tested this version of First Things First with your browser.<br>We recommend you to use Firefox (versions 2, 3 or 3.5) or Internet Explorer (versions 7 or 8).<br>You are now using the following browser: ";
+$text_translations["ERROR_BROWSER_UNSUPPORTED"] = "WARNING: You may experience unexpected behaviour when you use First Things First with your current browser because we have not tested this version of First Things First with your browser.<br>We recommend you to use Firefox (versions 2, 3 or 3.5), Chrome (version 4) or Internet Explorer (versions 7 or 8).<br>You are now using the following browser: ";
 
 ?>

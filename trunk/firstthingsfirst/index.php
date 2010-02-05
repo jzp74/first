@@ -201,19 +201,25 @@ function set_browser_compatibility_message ($browser_name_str, $browser_version)
 
     if (($browser_name_str == 'Firefox') && (($browser_version < 2) || ($browser_version > 3.5)))
     {
-        $response->script("showTooltip('#login_contents_inner_border', '$unsupported_browser_message', 'info', 'below')");
+        $response->script("showTooltip('#login_contents', '$unsupported_browser_message', 'info', 'below')");
+
+        return $response;
+    }
+    if (($browser_name_str == 'Chrome') && (($browser_version < 4) || ($browser_version > 4)))
+    {
+        $response->script("showTooltip('#login_contents', '$unsupported_browser_message', 'info', 'below')");
 
         return $response;
     }
     if (($browser_name_str == 'Internet Explorer') && (($browser_version < 7) || ($browser_version > 9)))
     {
-        $response->script("showTooltip('#login_contents_inner_border', '$unsupported_browser_message', 'info', 'below')");
+        $response->script("showTooltip('#login_contents', '$unsupported_browser_message', 'info', 'below')");
 
         return $response;
     }
-    if (($browser_name_str != 'Firefox') && ($browser_name_str != 'Internet Explorer'))
+    if (($browser_name_str != 'Firefox') && ($browser_name_str != 'Chrome') && ($browser_name_str != 'Internet Explorer'))
     {
-        $response->script("showTooltip('#login_contents_inner_border', '$unsupported_browser_message', 'info', 'below')");
+        $response->script("showTooltip('#login_contents', '$unsupported_browser_message', 'info', 'below')");
 
         return $response;
     }
@@ -274,7 +280,7 @@ else
     </div> <!-- main_body -->
 
     <div id="footer">
-        <div id="footer_text">Some text</div>
+        <div id="footer_text"></div>
         <div class="corner bottom_left_normal"></div>
         <div class="corner bottom_right_normal"></div>
     </div> <!-- footer -->

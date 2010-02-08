@@ -18,7 +18,10 @@ define("DATETIME_FORMAT_US", "%m/%d/%Y %H:%M:%S");
 define("DATETIME_FORMAT_EU", "%d-%m-%Y %H:%M:%S");
 define("DATE_FORMAT_NORMAL", 0);
 define("DATE_FORMAT_DATETIME", 1);
-define("DATE_FORMAT_WEEKDAY", 2);
+define("DATE_FORMAT_FANCY", 2);
+define("DATE_FORMAT_USER_DMY", "00:00:00");
+define("DATE_FORMAT_USER_MY", "04:00:00");
+define("DATE_FORMAT_USER_Y", "08:00:00");
 
 /**
  * set language prefix names
@@ -32,13 +35,31 @@ $firstthingsfirst_date_format_prefix_array = array(
  * day definitions
  */
 $first_things_first_day_definitions = array(
-    "LABEL_SUNDAY",
-    "LABEL_MONDAY",
-    "LABEL_TUESDAY",
-    "LABEL_WEDNESDAY",
-    "LABEL_THURSDAY",
-    "LABEL_FRIDAY",
-    "LABEL_SATERDAY"
+    "LABEL_DAY_SUNDAY",
+    "LABEL_DAY_MONDAY",
+    "LABEL_DAY_TUESDAY",
+    "LABEL_DAY_WEDNESDAY",
+    "LABEL_DAY_THURSDAY",
+    "LABEL_DAY_FRIDAY",
+    "LABEL_DAY_SATERDAY"
+);
+
+/**
+ * month definitions
+ */
+$first_things_first_month_definitions = array (
+    "LABEL_MONTH_JANUARY",
+    "LABEL_MONTH_FEBRUARY",
+    "LABEL_MONTH_MARCH",
+    "LABEL_MONTH_APRIL",
+    "LABEL_MONTH_MAY",
+    "LABEL_MONTH_JUNE",
+    "LABEL_MONTH_JULY",
+    "LABEL_MONTH_AUGUST",
+    "LABEL_MONTH_SEPTEMBER",
+    "LABEL_MONTH_OCTOBER",
+    "LABEL_MONTH_NOVEMBER",
+    "LABEL_MONTH_DECEMBER"
 );
 
 /**
@@ -107,7 +128,12 @@ define("GENERAL_SEPARATOR", "----");
 /**
  * allowed characters regular expression
  */
-define("EREG_ALLOWED_CHARS", "^A-Za-z0-9 ");
+define("PREG_ALLOWED_DATE_US", "/^[0-9\/]+$/");
+define("PREG_ALLOWED_DATE_EU", "/^[0-9-]+$/");
+define("PREG_ALLOWED_CHARS", "/^[A-Za-z0-9\s]+$/");
+define("PREG_ALLOWED_CHARS_EXTRA", "/^[A-Za-z0-9|]+$/");
+
+
 
 /**
  * a false return string
@@ -226,10 +252,10 @@ $firstthingsfirst_field_descriptions = array(
         FIELD_DESCRIPTION_NON_SELECTABLE_DATATYPE
     ),
     FIELD_TYPE_DEFINITION_DATE => array(
-        DB_DATATYPE_DATE,
-        "input type=text size=\"10\" maxlength=\"10\"",
+        DB_DATATYPE_DATETIME,
+        "input type=text size=\"20\" maxlength=\"20\"",
         "str_is_not_empty str_is_date",
-        DB_INITIAL_DATA_DATE,
+        DB_INITIAL_DATA_DATETIME,
         FIELD_DESCRIPTION_SELECTABLE_DATATYPE
     ),
     FIELD_TYPE_DEFINITION_DATETIME => array(

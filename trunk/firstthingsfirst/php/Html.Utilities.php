@@ -182,24 +182,28 @@ function str_is_well_formed ($field_name, $str, $use_pipe_char=0)
 
     $logging->trace("str_is_well_formed (field_name=".$field_name.", str=".$str.", use_pipe_char=".$use_pipe_char.")");
 
-    if ($use_pipe_char == 0)
+    # only check when string contains characters
+    if (strlen($str) > 0)
     {
-        $logging->debug("checking (str=".$str.", pipe char NOT permitted)");
-        if (ereg ("[".EREG_ALLOWED_CHARS."]", $str))
+        if ($use_pipe_char == 0)
         {
-            $logging->warn("$field_name is not well formed (pipe char NOT permitted)");
+            $logging->debug("checking (str=".$str.", pipe char NOT permitted)");
+            if (preg_match(PREG_ALLOWED_CHARS, $str) == 0)
+            {
+                $logging->warn("$field_name is not well formed (pipe char NOT permitted)");
 
-            return FALSE_RETURN_STRING;
+                return FALSE_RETURN_STRING;
+            }
         }
-    }
-    else
-    {
-        $logging->debug("checking (str=".$str.", pipe char permitted)");
-        if (ereg ("[".EREG_ALLOWED_CHARS."|]", $str))
+        else
         {
-            $logging->warn($field_name." is not well formed (pipe char permitted)");
+            $logging->debug("checking (str=".$str.", pipe char permitted)");
+            if (preg_match(PREG_ALLOWED_CHARS_EXTRA, $str) == 0)
+            {
+                $logging->warn($field_name." is not well formed (pipe char permitted)");
 
-            return FALSE_RETURN_STRING;
+                return FALSE_RETURN_STRING;
+            }
         }
     }
 
@@ -222,35 +226,115 @@ function str_is_date ($field_name, $str, $date_format)
 
     $logging->trace("is_date (field_name=$field_name, str=$str, date_format=$date_format)");
 
+    $date_format_user = DATE_FORMAT_USER_DMY;
+
+    # proces different dates (us and eu) and check characters
     if ($date_format == DATE_FORMAT_US)
     {
-        # proces us date
-        $date_parts = explode("/", $str);
-        if (!count($date_parts) == 3)
+        if (preg_match(PREG_ALLOWED_DATE_US, $str) == 0)
             return FALSE_RETURN_STRING;
-
-        $month = intval($date_parts[0]);
-        $day = intval($date_parts[1]);
-        $year = intval($date_parts[2]);
-        $logging->trace("found us date (MM/DD/YYYY): $month/$day/$year");
+        $date_parts = explode("/", $str);
+    }
+    else if ($date_format == DATE_FORMAT_EU)
+    {
+        if (preg_match(PREG_ALLOWED_DATE_EU, $str) == 0)
+            return FALSE_RETURN_STRING;
+        $date_parts = explode("-", $str);
     }
     else
+        return FALSE_RETURN_STRING;
+
+    # only one number given, it should be a year
+    if (count($date_parts) == 1)
     {
-        # proces european date
-        $date_parts = explode("-", $str);
-        if (count($date_parts) == 2)
-            $year = idate("Y");
-        else if (count($date_parts) == 3)
-            $year = intval($date_parts[2]);
-        else
-            return FALSE_RETURN_STRING;
-
-        $day = intval($date_parts[0]);
-        $month = intval($date_parts[1]);
-        $logging->trace("found eu date (DD-MM-YYYY): $day-$month-$year");
+        # make it the last year of the year
+        $day = 31;
+        $month = 12;
+        $year = intval($date_parts[0]);
+        $date_format_user = DATE_FORMAT_USER_Y;
     }
+    # when two numbers have been given it can be a day and a month or a month and a year
+    else if (count($date_parts) == 2)
+    {
+        # check if the second part is a year
+        $dmy = intval($date_parts[1]);
+        if ($dmy > 1000)
+        {
+            # dmy is a year
+            $year = $dmy;
+            $month = intval($date_parts[0]);
+            $day = 31;
 
-    # rewrite 2 digit year
+            # check if month is valid
+            if (($month < 1) || ($month > 12))
+                return FALSE_RETURN_STRING;
+
+            # calculate the last day of the month
+            if ($month != 12)
+                $day = intval(strftime("%d", mktime(0, 0, 0, ($month + 1), 0, $dmy)));
+            $date_format_user = DATE_FORMAT_USER_MY;
+        }
+        else
+        {
+            if ($date_format == DATE_FORMAT_US)
+            {
+                # dmy is a day
+                $day = $dmy;
+                $month = intval($date_parts[0]);
+            }
+            else
+            {
+                # dmy is a month
+                $month = $dmy;
+                $day = intval($date_parts[0]);
+            }
+
+            # check if month is valid
+            if (($month < 1) || ($month > 12))
+                return FALSE_RETURN_STRING;
+
+            $year = idate("Y");
+            # get the current month and compare it to given month
+            $current_month = idate("m");
+            if ($month < $current_month)
+            {
+                # given month is before current month, add 1 to year
+                $year += 1;
+            }
+            else if ($month == $current_month)
+            {
+                $current_day = idate("d");
+                if ($day < $current_day)
+                {
+                    # given day and month are before current day and month, add 1 to year
+                    $year += 1;
+                }
+            }
+        }
+    }
+    else if (count($date_parts) == 3)
+    {
+        if ($date_format == DATE_FORMAT_US)
+        {
+            $day = intval($date_parts[1]);
+            $month = intval($date_parts[0]);
+        }
+        else
+        {
+            $day = intval($date_parts[0]);
+            $month = intval($date_parts[1]);
+        }
+        $year = intval($date_parts[2]);
+    }
+    else
+        return FALSE_RETURN_STRING;
+
+    if ($date_format == DATE_FORMAT_US)
+        $logging->trace("found eu date (MM/DD/YYYY): $month/$day/$year");
+    else
+        $logging->trace("found eu date (DD-MM-YYYY): $day-$month-$year");
+
+    # rewrite 1 or 2 digit year
     if ($year < 100)
     {
         $century = (int)(idate("Y") / 100);
@@ -264,7 +348,7 @@ function str_is_date ($field_name, $str, $date_format)
 
     $logging->trace("is_date");
 
-    return sprintf("%04d-%02d-%02d", $year, $month, $day);
+    return sprintf("%04d-%02d-%02d $date_format_user", $year, $month, $day);
 }
 
 /**
@@ -279,29 +363,57 @@ function get_date_str ($type, $value, $date_format)
     global $logging;
     global $firstthingsfirst_date_format_prefix_array;
     global $first_things_first_day_definitions;
+    global $first_things_first_month_definitions;
 
-    $logging->trace("get_date_str (type=$type, value=$value, date_format=$date_format)");
+    $logging->info("get_date_str (type=$type, value=$value, date_format=$date_format)");
 
     $date_format_str = $firstthingsfirst_date_format_prefix_array[$date_format];
 
-    if ($type == DATE_FORMAT_NORMAL)
-        return strftime($date_format_str, (strtotime($value)));
     if ($type == DATE_FORMAT_DATETIME)
     {
-        if ($date_format_str == DATE_FORMAT_EU)
+        if ($date_format == DATE_FORMAT_EU)
             return strftime(DATETIME_FORMAT_EU, (strtotime($value)));
         else
-            return strftime(DATETIME_FORMAT_EU, (strtotime($value)));
+            return strftime(DATETIME_FORMAT_US, (strtotime($value)));
     }
-    else if ($type == DATE_FORMAT_WEEKDAY)
+    else if ($type == DATE_FORMAT_NORMAL)
     {
-        # get weekday
-        $weekday = strftime("%w", (strtotime($value)));
-        $logging->trace("found weekday (weekday=".$weekday.")");
-        # get normal date format
-        $date_str = strftime($date_format_str, (strtotime($value)));
+        # get time to determine user date format
+        $time_str = strftime("%H:%M:%S", (strtotime($value)));
 
-        return translate($first_things_first_day_definitions[$weekday])."&nbsp;".$date_str;
+        # determine in which format to display the date
+        if ($time_str == DATE_FORMAT_USER_Y)
+            return strftime("%Y", (strtotime($value)));
+        else if ($time_str == DATE_FORMAT_USER_MY)
+        {
+            if ($date_format == DATE_FORMAT_US)
+                return strftime("%m/%Y", (strtotime($value)));
+            else
+                return strftime("%m-%Y", (strtotime($value)));
+        }
+        else
+            return strftime($date_format_str, (strtotime($value)));
+    }
+    else if ($type == DATE_FORMAT_FANCY)
+    {
+        # get time to determine user date format
+        $time_str = strftime("%H:%M:%S", (strtotime($value)));
+
+        # determine in which format to display the date
+        if ($time_str == DATE_FORMAT_USER_Y)
+            return strftime("%Y", (strtotime($value)));
+        else if ($time_str == DATE_FORMAT_USER_MY)
+        {
+            # get month
+            $month = strftime("%m", (strtotime($value)));
+            return translate($first_things_first_month_definitions[($month - 1)]).strftime("&nbsp;%Y", (strtotime($value)));
+        }
+        else
+        {
+            # get weekday
+            $weekday = strftime("%w", (strtotime($value)));
+            return translate($first_things_first_day_definitions[$weekday]).strftime("&nbsp;$date_format_str", (strtotime($value)));
+        }
     }
     else
         return $value;

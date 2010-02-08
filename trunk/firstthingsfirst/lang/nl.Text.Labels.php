@@ -13,18 +13,32 @@
 /**
  * shared labels
  */
+$text_translations["LABEL_DAY_SUNDAY"] = "zo";
+$text_translations["LABEL_DAY_MONDAY"] = "ma";
+$text_translations["LABEL_DAY_TUESDAY"] = "di";
+$text_translations["LABEL_DAY_WEDNESDAY"] = "wo";
+$text_translations["LABEL_DAY_THURSDAY"] = "do";
+$text_translations["LABEL_DAY_FRIDAY"] = "vr";
+$text_translations["LABEL_DAY_SATERDAY"] = "za";
+
+$text_translations["LABEL_MONTH_JANUARY"] = "jan";
+$text_translations["LABEL_MONTH_FEBRUARY"] = "feb";
+$text_translations["LABEL_MONTH_MARCH"] = "mar";
+$text_translations["LABEL_MONTH_APRIL"] = "apr";
+$text_translations["LABEL_MONTH_MAY"] = "mei";
+$text_translations["LABEL_MONTH_JUNE"] = "jun";
+$text_translations["LABEL_MONTH_JULY"] = "jul";
+$text_translations["LABEL_MONTH_AUGUST"] = "aug";
+$text_translations["LABEL_MONTH_SEPTEMBER"] = "sep";
+$text_translations["LABEL_MONTH_OCTOBER"] = "okt";
+$text_translations["LABEL_MONTH_NOVEMBER"] = "nov";
+$text_translations["LABEL_MONTH_DECEMBER"] = "dec";
+
 $text_translations["LABEL_YES"] = "ja";
 $text_translations["LABEL_NO"] = "nee";
 $text_translations["LABEL_NAVIGATION_LIST"] = "lijst";
 $text_translations["LABEL_ADDED_TO_LOG_FILE"] = "toegevoegd aan de log";
 $text_translations["LABEL_DATABASE_MESSAGE"] = "bericht van database";
-$text_translations["LABEL_SUNDAY"] = "zo";
-$text_translations["LABEL_MONDAY"] = "ma";
-$text_translations["LABEL_TUESDAY"] = "di";
-$text_translations["LABEL_WEDNESDAY"] = "wo";
-$text_translations["LABEL_THURSDAY"] = "do";
-$text_translations["LABEL_FRIDAY"] = "vr";
-$text_translations["LABEL_SATERDAY"] = "za";
 $text_translations["LABEL_MINUS"] = "-";
 $text_translations["LABEL_RECORDS"] = "records";
 $text_translations["LABEL_CREATED_BY"] = "aangemaakt door";

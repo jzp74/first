@@ -357,7 +357,7 @@ class HtmlDatabaseTable
                 }
                 else if (stristr($fields[$db_field_name][1], "DATE"))
                 {
-                    $date_string = str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_WEEKDAY, $value, $this->_user->get_date_format()));
+                    $date_string = str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_FANCY, $value, $this->_user->get_date_format()));
                     $html_str .= "                        <td ".$onclick_str.">".$date_string."</td>\n";
                 }
                 else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_AUTO_CREATED)
@@ -370,7 +370,7 @@ class HtmlDatabaseTable
                         if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
                         {
                             $html_str .= "                        <td ".$onclick_str.">";
-                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format()))."</td>\n";
+                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_FANCY, $record[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format()))."</td>\n";
                         }
                         else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
                         {
@@ -389,7 +389,7 @@ class HtmlDatabaseTable
                         if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
                         {
                             $html_str .= "                        <td ".$onclick_str.">";
-                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_MODIFIED_FIELD_NAME], $this->_user->get_date_format()))."</td>\n";
+                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_FANCY, $record[DB_TS_MODIFIED_FIELD_NAME], $this->_user->get_date_format()))."</td>\n";
                         }
                         else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
                         {
@@ -680,9 +680,9 @@ class HtmlDatabaseTable
                             $html_str .= " value=\"".$record[DB_CREATOR_FIELD_NAME]."\"";
                         else
                         {
-                            $ts_created = get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format());
+                            $ts_created = get_date_str(DATE_FORMAT_FANCY, $record[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format());
                             if ($field_options == NAME_DATE_OPTION_DATE)
-                                $html_str .= " value=\"".get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format())."\"";
+                                $html_str .= " value=\"".get_date_str(DATE_FORMAT_FANCY, $record[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format())."\"";
                             else if ($field_options == NAME_DATE_OPTION_DATE_NAME)
                             {
                                 $html_str .= " value=\"".get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format());
@@ -697,7 +697,7 @@ class HtmlDatabaseTable
                         else
                         {
                             if ($field_options == NAME_DATE_OPTION_DATE)
-                                $html_str .= " value=\"".get_date_str(DATE_FORMAT_WEEKDAY, $record[DB_TS_MODIFIED_FIELD_NAME], $this->_user->get_date_format())."\"";
+                                $html_str .= " value=\"".get_date_str(DATE_FORMAT_FANCY, $record[DB_TS_MODIFIED_FIELD_NAME], $this->_user->get_date_format())."\"";
                             else if ($field_options == NAME_DATE_OPTION_DATE_NAME)
                             {
                                 $html_str .= " value=\"".get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_MODIFIED_FIELD_NAME], $this->_user->get_date_format());

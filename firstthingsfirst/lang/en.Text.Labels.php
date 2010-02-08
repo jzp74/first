@@ -13,18 +13,32 @@
 /**
  * shared labels
  */
+$text_translations["LABEL_DAY_SUNDAY"] = "Sun";
+$text_translations["LABEL_DAY_MONDAY"] = "Mon";
+$text_translations["LABEL_DAY_TUESDAY"] = "Tue";
+$text_translations["LABEL_DAY_WEDNESDAY"] = "Wed";
+$text_translations["LABEL_DAY_THURSDAY"] = "Thu";
+$text_translations["LABEL_DAY_FRIDAY"] = "Fri";
+$text_translations["LABEL_DAY_SATERDAY"] = "Sat";
+
+$text_translations["LABEL_MONTH_JANUARY"] = "Jan";
+$text_translations["LABEL_MONTH_FEBRUARY"] = "Feb";
+$text_translations["LABEL_MONTH_MARCH"] = "Mar";
+$text_translations["LABEL_MONTH_APRIL"] = "Apr";
+$text_translations["LABEL_MONTH_MAY"] = "May";
+$text_translations["LABEL_MONTH_JUNE"] = "Jun";
+$text_translations["LABEL_MONTH_JULY"] = "Jul";
+$text_translations["LABEL_MONTH_AUGUST"] = "Aug";
+$text_translations["LABEL_MONTH_SEPTEMBER"] = "Sep";
+$text_translations["LABEL_MONTH_OCTOBER"] = "Oct";
+$text_translations["LABEL_MONTH_NOVEMBER"] = "Nov";
+$text_translations["LABEL_MONTH_DECEMBER"] = "Dec";
+
 $text_translations["LABEL_YES"] = "yes";
 $text_translations["LABEL_NO"] = "no";
 $text_translations["LABEL_NAVIGATION_LIST"] = "list";
 $text_translations["LABEL_ADDED_TO_LOG_FILE"] = "added to logfile";
 $text_translations["LABEL_DATABASE_MESSAGE"] = "database message";
-$text_translations["LABEL_SUNDAY"] = "Sun";
-$text_translations["LABEL_MONDAY"] = "Mon";
-$text_translations["LABEL_TUESDAY"] = "Tue";
-$text_translations["LABEL_WEDNESDAY"] = "Wed";
-$text_translations["LABEL_THURSDAY"] = "Thu";
-$text_translations["LABEL_FRIDAY"] = "Fri";
-$text_translations["LABEL_SATERDAY"] = "Sat";
 $text_translations["LABEL_MINUS"] = "-";
 $text_translations["LABEL_RECORDS"] = "records";
 $text_translations["LABEL_CREATED_BY"] = "created by";

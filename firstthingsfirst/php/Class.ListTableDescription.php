@@ -50,7 +50,7 @@ define("LISTTABLEDESCRIPTION_MODIFIER_FIELD_NAME", "_name_date_modifier");
  * definition of definition field name
  * this is an array containing the definition of a ListTable
  * this array is of the following structure:
- *   field_name => (field_type, is_key_field, field_options)
+ *   field_name => (field_type, field_options)
  * a definition is stored as a json string
  */
 define("LISTTABLEDESCRIPTION_DEFINITION_FIELD_NAME", "_definition");

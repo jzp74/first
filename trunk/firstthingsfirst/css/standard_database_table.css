@@ -137,19 +137,51 @@
     height: 38px;
     }
 
-#database_table_contents_bottom a, #database_table_contents_bottom a:link, #database_table_contents_bottom a:visited {
-    color: rgb(95, 148, 206);
-    }
-
-#database_table_contents_bottom a:hover {
-    border-bottom: 2px solid rgb(95, 148, 206);
+#database_table_contents_bottom {
+    position: relative;
+    display: block;
+    height: 38px;
     }
 
 /*  defines database table pages in database table contents bottom */
 #database_table_pages_bottom {
-    padding: 12px 0px 0px 0px;
-    color: rgb(120, 120, 120);
+    padding: 12px 0px 6px 0px;
     text-align: center;
+    font-weight: bold;
+    }
+
+/*  defines the current page */
+#database_table_pages_bottom .current_page {
+    margin: 0px 2px 0px 2px;
+    padding: 4px 6px 4px 6px;
+    border: 1px solid rgb(95, 148, 206);
+    color: rgb(255, 255, 255);
+    background-color: rgb(95, 148, 206);
+    font-weight: bold;
+    }
+
+/*  defines other pages */
+#database_table_pages_bottom .navigation_button a, #database_table_pages_bottom .navigation_button a:link, #database_table_pages_bottom .navigation_button a:visited {
+    margin: 0px 2px 0px 2px;
+    padding: 4px 6px 4px 6px;
+    color: rgb(95, 148, 206);
+    }
+
+#database_table_pages_bottom .navigation_button a:hover {
+    color: rgb(255, 255, 255);
+    }
+
+/*  defines the next and previous navigation buttons */
+#database_table_pages_bottom .navigation_page a, #database_table_pages_bottom .navigation_page a:link, #database_table_pages_bottom .navigation_page a:visited {
+    margin: 0px 2px 0px 2px;
+    padding: 4px 6px 4px 6px;
+    color: rgb(95, 148, 206);
+    border: 1px solid rgb(95, 148, 206);
+    }
+
+#database_table_pages_bottom .navigation_page a:hover {
+    color: rgb(255, 255, 255);
+    background-color: rgb(95, 148, 206);
     }
 
 /*  defines pane that contains database table record contents */

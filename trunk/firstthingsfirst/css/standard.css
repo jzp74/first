@@ -428,7 +428,6 @@ html, body {
     float: left;
     margin: -6px 2px -6px 2px;
     padding: 6px 0px 6px 0px;
-    background: url(../images/standard_tab_left_highlight.png) left top no-repeat;
     }
 
 #navigation_container .tab_highlight .tab_left, #navigation_container .tab_highlight .tab_right {

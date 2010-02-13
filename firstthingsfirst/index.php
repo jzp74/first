@@ -237,10 +237,10 @@ function set_browser_compatibility_message ($browser_name_str, $browser_version)
 <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
 <title>First Things First</title>
 <link rel="shortcut icon" href="images/favicon.ico">
-<link rel="stylesheet" href="css/standard.css">
-<link rel="stylesheet" href="css/standard_listbuilder.css">
-<link rel="stylesheet" href="css/standard_database_table.css">
-<link rel="stylesheet" href="css/standard_print.css" media="print">
+<link rel="stylesheet" href="css/standard.min.css">
+<link rel="stylesheet" href="css/standard_listbuilder.min.css">
+<link rel="stylesheet" href="css/standard_database_table.min.css">
+<link rel="stylesheet" href="css/standard_print.min.css" media="print">
 </head>
 
 <body>

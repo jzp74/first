@@ -528,36 +528,36 @@ class HtmlDatabaseTable
 
                 # display previous page link
                 if ($current_page > 1)
-                    $html_str .= get_href(get_onclick($js_href_get, $list_title, "", "", "(%27".$list_title."%27, %27%27, ".($current_page - 1).")"), "&laquo;&nbsp;".translate("BUTTON_PREVIOUS_PAGE"), "")."&nbsp;&nbsp;";
+                    $html_str .= "<span class=\"navigation_button\">".get_href(get_onclick($js_href_get, $list_title, "", "", "(%27".$list_title."%27, %27%27, ".($current_page - 1).")"), "&laquo;&nbsp;".translate("BUTTON_PREVIOUS_PAGE"), "")."</span>";
 
                 # display first pagenumber
                 if ($current_page == 1)
-                    $html_str .= " <strong>1</strong>";
+                    $html_str .= "<span class=\"current_page\">1</span>";
                 else
-                    $html_str .= " ".get_href(get_onclick($js_href_get, $list_title, "", "", "(%27".$list_title."%27, %27%27, 1)"), 1, "");
+                    $html_str .= "<span class=\"navigation_page\">".get_href(get_onclick($js_href_get, $list_title, "", "", "(%27".$list_title."%27, %27%27, 1)"), 1, "")."</span>";
                 # display middle pagenumbers
                 for ($cnt = 2; $cnt<$total_pages; $cnt += 1)
                 {
-                    if ($cnt == ($current_page - 2))
-                        $html_str .= " <strong>...</strong>";
-                    else if ($cnt == ($current_page - 1))
-                        $html_str .= " ".get_href(get_onclick($js_href_get, $list_title, "", "", "(%27".$list_title."%27, %27%27, ".$cnt.")"), $cnt, "");
+                    if ($cnt == ($current_page - 3))
+                        $html_str .= "&nbsp;....&nbsp;";
+                    else if (($cnt == ($current_page - 2)) || ($cnt == ($current_page - 1)))
+                        $html_str .= "<span class=\"navigation_page\">".get_href(get_onclick($js_href_get, $list_title, "", "", "(%27".$list_title."%27, %27%27, ".$cnt.")"), $cnt, "")."</span>";
                     else if ($cnt == $current_page)
-                        $html_str .= " <strong>".$cnt."</strong>";
-                    else if ($cnt == ($current_page + 1))
-                        $html_str .= " ".get_href(get_onclick($js_href_get, $list_title, "", "", "(%27".$list_title."%27, %27%27, ".$cnt.")"), $cnt, "");
-                    if ($cnt == ($current_page + 2))
-                        $html_str .= " <strong>...</strong>";
+                        $html_str .= "<span class=\"current_page\">".$cnt."</span>";
+                    else if (($cnt == ($current_page + 1)) || ($cnt == ($current_page + 2)))
+                        $html_str .= "<span class=\"navigation_page\">".get_href(get_onclick($js_href_get, $list_title, "", "", "(%27".$list_title."%27, %27%27, ".$cnt.")"), $cnt, "")."</span>";
+                    if ($cnt == ($current_page + 3))
+                        $html_str .= "&nbsp;....&nbsp;";
                 }
                 # display last pagenumber
                 if ($current_page == $total_pages)
-                    $html_str .= "  <strong>".$total_pages."</strong>";
+                    $html_str .= "<span class=\"current_page\">".$total_pages."</span>";
                 else
-                    $html_str .= "  ".get_href(get_onclick($js_href_get, $list_title, "", "", "(%27".$list_title."%27, %27%27, ".$total_pages.")"), $total_pages, "");
+                    $html_str .= "<span class=\"navigation_page\">".get_href(get_onclick($js_href_get, $list_title, "", "", "(%27".$list_title."%27, %27%27, ".$total_pages.")"), $total_pages, "")."</span>";
 
                 # display next page link
                 if ($current_page < $total_pages)
-                    $html_str .= "&nbsp;&nbsp;".get_href(get_onclick($js_href_get, $list_title, "", "", "(%27".$list_title."%27, %27%27, ".($current_page + 1).")"), translate("BUTTON_NEXT_PAGE")."&nbsp;&raquo;", "");
+                    $html_str .= "<span class=\"navigation_button\">".get_href(get_onclick($js_href_get, $list_title, "", "", "(%27".$list_title."%27, %27%27, ".($current_page + 1).")"), translate("BUTTON_NEXT_PAGE")."&nbsp;&raquo;", "")."</span>";
             }
             $html_str .= "</div>\n";
         }

@@ -1,0 +1,706 @@
+/* This stylesheet contains all shared styles
+ *
+ * The general setup of all pages is as follows:
+ *  - body
+ *  -- outer_body
+ *  --- header_container
+ *  ---- header
+ *  ------ header_contents_status
+ *  ------ portal_title
+ *  ------ page_title
+ *  ------ navigation_container
+ *  --- main_body
+ *  --- footer
+ */
+
+/*  defines shared settings for all styles */
+* {
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    border: none;
+    z-index: 10;
+    font-family: Arial;
+    font-size: 12px;
+    text-decoration: none;
+    text-align: left;
+    }
+
+/*  define style for ALL links (aka buttons) */
+a, a:link, a:visited {
+    font-weight: bold;
+    }
+
+/*  define style for all 12x12 images */
+.image {
+    padding: 4px 0px 4px 0px;
+    }
+
+/*  define all possible icons */
+.icon_none {
+    padding: 2px 0px 2px 18px;
+    }
+
+.icon {
+    padding: 2px 0px 4px 24px;
+    background: [ICONS_IMAGE] left 0px no-repeat;
+    }
+
+.icon:hover {
+    color: [LINK_TEXT_HOVER_COLOR];
+    }
+
+.icon_up {
+    background-position: 0px -450px;
+    }
+
+.icon_up:hover {
+    background-position: 0px -510px;
+    }
+
+.icon_down {
+    background-position: 0px -630px;
+    }
+
+.icon_down:hover {
+    background-position: 0px -690px;
+    }
+
+.icon_next {
+    background-position: 0px -540px;
+    }
+
+.icon_next:hover {
+    background-position: 0px -600px;
+    }
+
+.icon_back {
+    background-position: 0px -360px;
+    }
+
+.icon_back:hover {
+    background-position: 0px -420px;
+    }
+
+.icon_add {
+    background-position: 0px -270px;
+    }
+
+.icon_add:hover {
+    background-position: 0px -330px;
+    }
+
+.icon_delete {
+    background-position: 0px -180px;
+    }
+
+.icon_delete:hover {
+    background-position: 0px -240px;
+    }
+
+.icon_edit {
+    background-position: 0px -990px;
+    }
+
+.icon_edit:hover {
+    background-position: 0px -1050px;
+    }
+
+.icon_archive {
+    background-position: 0px -810px;
+    }
+
+.icon_archive:hover {
+    background-position: 0px -870px;
+    }
+
+.icon_unarchive {
+    background-position: 0px -720px;
+    }
+
+.icon_unarchive:hover {
+    background-position: 0px -780px;
+    }
+
+.icon_accept {
+    background-position: 0px 0px;
+    }
+
+.icon_accept:hover {
+    background-position: 0px -60px;
+    }
+
+.icon_cancel {
+    background-position: 0px -90px;
+    }
+
+.icon_cancel:hover {
+    background-position: 0px -150px;
+    }
+
+.icon_print {
+    background-position: 0px -1080px;
+    }
+
+.icon_print:hover {
+    background-position: 0px -1140px;
+    }
+
+.icon_user {
+    background-position: 0px 1350px;
+    }
+
+.icon_user:hover {
+    background-position: 0px -1410px;
+    }
+
+/*  defines standard tags */
+em, strong {
+    font-size: inherit;
+    font-family: inherit;
+    }
+
+/*  defines a standard input */
+input, select, textarea {
+    text-align: left;
+    font-family: Arial;
+    font-size: 12px;
+    font-weight: normal;
+    }
+
+input, textarea {
+    padding: 1px 5px 3px 5px;
+    }
+
+textarea {
+    overflow: auto
+    }
+
+select {
+    padding: 1px 1px 3px 0px;
+    }
+
+.inactive_input {
+    background-color: rgb(240, 240, 240);
+    color: rgb(120, 120, 120)
+    }
+
+/*  defines an inactive button */
+.inactive_button {
+    color: rgb(120, 120, 120);
+    text-decoration: none;
+    font-weight: bold;
+    }
+
+/*  defines an invisible and collapsed style */
+.invisible_collapsed {
+    display: none;
+    }
+
+/*  defines corners */
+.corner {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    background: [BACKGROUNDS_IMAGE];
+    z-index: 20;
+    }
+
+.top_left_normal {
+    top: 0px;
+    left: 0px;
+    background-position: 0px -144px;
+    }
+
+.top_right_normal {
+    top: 0px;
+    right: 0px;
+    background-position: -7px -144px;
+    }
+
+.bottom_left_normal {
+    bottom: 0px;
+    left: 0px;
+    background-position: 0px -151px;
+    }
+
+.bottom_right_normal {
+    bottom: 0px;
+    right: 0px;
+    background-position: -7px -151px;
+    }
+
+.top_left_border {
+    top: -2px;
+    left: -2px;
+    background-position: -15px -144px;
+    }
+
+.top_right_border {
+    top: -2px;
+    right: -2px;
+    background-position: -22px -144px;
+    }
+
+.bottom_left_border {
+    bottom: -2px;
+    left: -2px;
+    background-position: -15px -151px;
+    }
+
+.bottom_right_border {
+    bottom: -2px;
+    right: -2px;
+    background-position: -22px -151px;
+    }
+
+/*  defines the html overall style of a page */
+html, body {
+    height: 100%;
+    background: [MAIN_BACKGROUND_IMAGE] left top repeat;
+    }
+
+/*  defines the body that stretches to the bottom of the page */
+#outer_body {
+    position: relative;
+    height: auto !important;
+    height: 100%;
+    min-height: 100%;
+    margin: 0px 16px 0px 16px;
+    }
+
+/*  defines the container of the header */
+#header_container {
+    height: 119px;
+    width: 100%;
+    padding: 20px 0px 0px 0px;
+    }
+
+/*  defines the contents of the header of every page */
+#header {
+    position: relative;
+    height: 119px;
+    background: [BACKGROUNDS_IMAGE] 0px 0px repeat-x;
+    color: [MAIN_HEADER_TEXT_COLOR];
+    padding: 0px 6px 0px 6px;
+    }
+
+/*  defines the top line of the header which contains the software version and login status */
+#header_contents_status {
+    width: 100%;
+    height: 19px;
+    padding: 2px 0px 2px 0px;
+    }
+
+/*  defines the software version */
+#header_contents_status_software_version {
+    float: left;
+    padding: 4px 0px 4px 4px;
+    font-family: Arial;
+    font-size: 10px;
+    font-weight: normal;
+    }
+
+/*  defines the login status */
+#header_contents_status_login_status {
+    float: right;
+    padding: 3px 0px 3px 4px;
+    font-size: 12px;
+    font-weight: bold;
+    }
+
+#header_contents_status_login_status_left {
+    float: left;
+    width: 4px;
+    height: 21px;
+    margin: -3px 0px -3px 0px;
+    background: [BACKGROUNDS_IMAGE] -67px -145px no-repeat;
+    }
+
+#header_contents_status_login_status_body {
+    float: left;
+    padding: 3px 2px 3px 2px;
+    margin: -3px 0px -3px 0px;
+    background: [BACKGROUNDS_IMAGE] 0px -172px repeat;
+    }
+
+#header_contents_status_login_status_body a, #header_contents_status_login_status_body a:link, #header_contents_status_login_status_body a:visited {
+    color: [LOGIN_TEXT_COLOR];
+    }
+
+#header_contents_status_login_status_body a:hover {
+    color: [LINK_TEXT_HOVER_COLOR];
+    }
+
+#header_contents_status_login_status_right {
+    float: left;
+    width: 4px;
+    height: 21px;
+    margin: -3px 0px -3px 0px;
+    background: [BACKGROUNDS_IMAGE] -73px -145px no-repeat;
+    }
+
+/*  defines the title of the portal */
+#portal_title {
+    width: 100%;
+    height: 32px;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    font-family: Arial Black;
+    font-size: 32px;
+    font-weight: bold;
+    text-align: center;
+    }
+
+/*  defines the page title */
+#page_title {
+    width: 100%;
+    height: 16px;
+    padding: 14px 0px 7px 0px;
+    font-family: Arial;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    }
+
+/*  defines the navigation container */
+#navigation_container {
+    width: 100%;
+    height: 12px;
+    padding: 6px 0px 6px 0px;
+}
+
+/*  defines navigation links on left side of screen */
+#navigation_left {
+    float: left;
+    display: inline;
+    margin: -6px 0px -6px 0px;
+    padding: 6px 0px 6px 0px;
+    font-weight: bold;
+    }
+
+#navigation_container .tab_normal {
+    float: left;
+    margin: -2px 2px -4px 2px;
+    padding: 2px 0px 4px 0px;
+    }
+
+#navigation_container .tab_normal .tab_left, #navigation_container .tab_normal .tab_right {
+    width: 6px;
+    height: 14px;
+    margin: -2px 0px -6px 0px;
+    padding: 4px 0px 5px 0px;
+    }
+
+#navigation_container .tab_normal .tab_left {
+    background: [BACKGROUNDS_IMAGE] -31px -144px no-repeat;
+    }
+
+#navigation_container .tab_normal .tab_right {
+    background: [BACKGROUNDS_IMAGE] -39px -144px no-repeat;
+    }
+
+#navigation_container .tab_normal a, #navigation_container .tab_normal a:link, #navigation_container .tab_normal a:visited {
+    float: left;
+    margin: -2px 0px -4px 0px;
+    padding: 4px 0px 4px 0px;
+    color: [TAB_TEXT_COLOR];
+    background: [BACKGROUNDS_IMAGE] 0px -172px repeat-x;
+    font-weight: bold;
+    }
+
+#navigation_container .tab_normal a:hover {
+    color: [TAB_TEXT_HOVER_COLOR];
+    }
+
+#navigation_container .tab_highlight {
+    float: left;
+    margin: -6px 2px -6px 2px;
+    padding: 6px 0px 6px 0px;
+    }
+
+#navigation_container .tab_highlight .tab_left, #navigation_container .tab_highlight .tab_right {
+    width: 6px;
+    height: 14px;
+    margin: -6px 0px -6px 0px;
+    padding: 6px 0px 7px 0px;
+    }
+
+#navigation_container .tab_highlight .tab_left {
+    background: [BACKGROUNDS_IMAGE] -49px -144px no-repeat;
+    }
+
+#navigation_container .tab_highlight .tab_right {
+    background: [BACKGROUNDS_IMAGE] -57px -144px no-repeat;
+    }
+
+#navigation_container .tab_highlight .tab_content {
+    margin: -6px 0px -6px 0px;
+    padding: 6px 0px 6px 0px;
+    background: [BACKGROUNDS_IMAGE] 0px -205px repeat-x;
+    color: [TAB_TEXT_COLOR]
+    }
+
+/*  defines navigation links on right side of screen */
+#navigation_right {
+    float: right;
+    display: inline;
+    margin: -6px 0px -6px 0px;
+    padding: 6px 0px 6px 0px;
+    color: [TAB_TEXT_COLOR];
+    font-weight: bold;
+    }
+
+#navigation_right_invisible {
+    margin: -4px 0px -4px 0px;
+    padding: 4px 6px 4px 10px;
+    float: right;
+    }
+
+/*  container for all page contents */
+#main_body {
+    padding: 16px 6px 62px 6px;
+    zoom: 1;
+    }
+
+/*  defines the footer of all pages */
+#footer {
+    position: absolute;
+    bottom: 20px;
+    left: 0px;
+    height: 26px;
+    width: 100%;
+    background: [BACKGROUNDS_IMAGE] 0px 0px repeat-x;
+    color: [FOOTER_TEXT_COLOR];
+    }
+
+#footer_text {
+    padding: 6px 0px 0px 0px;
+    text-align: center;
+}
+
+/*  defines a very small input */
+#focus_on_this_input {
+    background-color: [FOOTER_TEXT_COLOR];
+    color: [FOOTER_TEXT_COLOR];
+    border: [FOOTER_TEXT_COLOR];
+    font-size: 2px;
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+}
+
+/*  defines the pane that contains the action bar */
+#action_pane {
+    position: relative;
+    }
+
+/*  defines the action bar that contains a number of actions (hrefs) */
+#action_bar {
+    position: relative;
+    height: 20px;
+    padding: 8px 8px 4px 8px;
+    background: [BACKGROUNDS_IMAGE] 0px -238px repeat-x;
+    }
+
+#action_bar select {
+    margin: -4px 8px 0px 0px;
+    background-color: [BOX_BACKGROUND_COLOR];
+    border: 1px solid [BOX_BORDER_COLOR];
+    }
+
+#action_bar a, #action_bar a:link, #action_bar a:visited {
+    color: [ACTION_BAR_TEXT_COLOR];
+    font-weight: bold;
+    }
+
+#action_bar a:hover {
+    color: [ACTION_BAR_TEXT_HOVER_COLOR];
+    }
+
+/*  defines some white space between the the top of the screen and the login pane */
+#login_white_space {
+    height: 40px;
+    clear: both;
+    }
+
+/*  defines the pane that contains the login screen */
+#login_pane {
+    position: relative;
+    padding: 14px 0px 14px 0px;
+    margin: 0% auto 0% auto;
+    width: 260px;
+    text-align: right;
+    color: [NORMAL_TEXT_COLOR];
+    background: [TRANSPARENT_IMAGE] left top repeat;
+    border: 2px solid [BOX_BORDER_COLOR];
+    }
+
+#login_form {
+    text-align: right;
+    }
+
+#login_pane input {
+    margin: 0px 0px 0px 14px;
+    padding: 1px 5px 3px 5px;
+    border: 1px solid [BOX_BORDER_COLOR];
+    }
+
+#login_pane .icon_accept {
+    padding: 2px 0px 2px 24px;
+    border: none;
+    color: [LINK_TEXT_COLOR];
+    font-weight: bold;
+    }
+
+#login_pane .icon_accept:hover {
+    color: [LINK_TEXT_HOVER_COLOR];
+    font-weight: bold;
+    }
+
+/*  defines a line in the login screen */
+.login_line {
+    padding: 4px 30px 4px 30px;
+    text-align: right;
+    }
+
+/*  defines qtips */
+.qtip {
+    opacity: 0.85;
+    filter: alpha(opacity=85);
+    }
+
+#qtip_message_table {
+    margin: 0px 0px 3px 0px;
+    padding: 0px 0px 0px 0px;
+    width: 100%;
+    text-align: left;
+    }
+
+#qtip_message_table .icon_delete {
+    color: rgb(0, 0, 0);
+    }
+
+#qtip_message_table .icon_delete:hover {
+    color: rgb(100, 100, 100);
+    }
+
+#qtip_message_table .icon_accept {
+    color: rgb(0, 0, 0);
+    }
+
+#qtip_message_table .icon_accept:hover {
+    color: rgb(100, 100, 100);
+    }
+
+#qtip_message_table .icon_cancel {
+    margin: 0px 0px 0px 10px;
+    color: rgb(0, 0, 0);
+    }
+
+#qtip_message_table .icon_cancel:hover {
+    color: rgb(100, 100, 100);
+    }
+
+#qtip_message_table th {
+    padding: 4px 2px 4px 0px;
+    text-align: right;
+    }
+
+#qtip_message_table td {
+    padding: 4px 4px 8px 4px;
+    }
+
+#qtip_message_table td a, #qtip_message_table td a:link, #qtip_message_table td a:visited {
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    }
+
+#qtip_message_table td a:hover {
+    color: rgb(100, 100, 100);
+    }
+
+#qtip_message_table .buttons {
+    text-align: center;
+    }
+
+/*  defines the main test body (only used in regression test) */
+#test_body {
+    margin: 12px 10px 12px 10px;
+    }
+
+/*  defines a test item (only used in regression test) */
+.test_item {
+    float: left;
+    width: 100%;
+    margin: 1px 0px 0px 0px;
+    background-color: rgb(240, 240, 240);
+    }
+
+.test_item_header {
+    float: left;
+    padding: 6px 4px 6px 4px;
+    font-weight: bold;
+    }
+
+.test_item_description {
+    float: left;
+    width: 58%;
+    padding: 6px 4px 6px 24px;
+    }
+
+.test_item_busy {
+    float: right;
+    width: 38%;
+    padding: 6px 4px 6px 4px;
+    background-color: rgb(255, 255, 210);
+    color: rgb(90, 90, 90);
+    border-left: 1px solid rgb(255, 255, 255);
+    font-weight: bold;
+    }
+
+.test_item_successful {
+    float: right;
+    width: 38%;
+    padding: 6px 4px 6px 4px;
+    background-color: rgb(227, 251, 227);
+    color: rgb(0, 151, 0);
+    border-left: 1px solid rgb(255, 255, 255);
+    font-weight: bold;
+    }
+
+.test_item_unsuccessful {
+    float: right;
+    width: 38%;
+    padding: 6px 4px 6px 4px;
+    background-color: rgb(251, 227, 227);
+    color: rgb(151, 48, 0);
+    border-left: 1px solid rgb(255, 255, 255);
+    font-weight: bold;
+    }
+
+/*  defines the white space above the end message */
+#test_end_white_space {
+    clear: both;
+    margin: 4px 0px 4px 0px;
+    }
+
+/*  defines the end message of a successful test */
+#test_end_successful {
+    clear: both;
+    padding: 20px 20px 20px 20px;
+    text-align: center;
+    font-size: 20px;
+    background-color: rgb(227, 251, 227);
+    color: rgb(0, 151, 0);
+    font-weight: bold;
+}
+
+/*  defines the end message of an unsuccessful test */
+#test_end_unsuccessful {
+    clear: both;
+    padding: 20px 20px 20px 20px;
+    text-align: center;
+    font-size: 20px;
+    background-color: rgb(251, 227, 227);
+    color: rgb(151, 48, 0);
+    font-weight: bold;
+}

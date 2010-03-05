@@ -1,0 +1,44 @@
+#! /usr/bin/env python
+#
+# print styled csst file to stdout as css file
+#
+
+import sys
+import string
+
+# read args
+csst_file_name = sys.argv[1]
+theme_file_name = sys.argv[2]
+
+# print usage message
+def usage():
+	print ("usage: csst2css <csst_file>.csst <theme_file>.theme")
+	exit()
+
+# check args
+if len(sys.argv) != 3:
+	usage()
+if csst_file_name.split(".")[-1] != "csst":
+	usage()
+if theme_file_name.split(".")[-1] != "theme":
+	usage()
+
+# read theme file in theme_dict
+theme_dict = dict()
+file = open(theme_file_name, 'r')
+theme_pairs = file.readlines()
+for l in theme_pairs:
+	line = l.strip()
+	if (len(line) > 0) and (line[0] != '#'):
+		split_line = line.split("=")
+		theme_dict["[" + split_line[0].strip() + "]"] = split_line[1].strip()
+file.close()
+
+# read csst file and output modified lines to stdout
+file = open(csst_file_name, 'r')
+entire_css_file = file.read()
+file.close()
+for search_string, replace_string in theme_dict.iteritems():
+	entire_css_file = entire_css_file.replace(search_string, replace_string)
+print entire_css_file
+

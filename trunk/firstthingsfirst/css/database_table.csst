@@ -1,0 +1,296 @@
+/* This stylesheet contains all database table styles */
+
+
+/*  defines the pane that contains database table contents */
+#database_table_content_pane {
+    margin: 0px 0px 16px 0px;
+    color: [NORMAL_TEXT_COLOR];
+    }
+
+/*  defines area above database table contents */
+#database_table_contents_top {
+    display: block;
+    position: relative;
+    padding: 0px 14px 0px 14px;
+    height: 58px;
+    background: [BACKGROUNDS_IMAGE] 0px -271px repeat-x;
+    }
+
+/*  defines archive selector in database table contents top */
+#database_table_archive_select {
+    float: left;
+    margin: 17px 24px 0px 0px;
+    padding: 0px 0px 0px 28px;
+    background: [ICONS_IMAGE] left -900px no-repeat;
+    }
+
+#database_table_archive_select:hover {
+    background-position: 0px -960px;
+    }
+
+#database_table_archive_select select {
+    margin: 0px 0px 0px 0px;
+    border: 1px solid [BOX_BORDER_COLOR];
+    color: [BOX_TEXT_COLOR];
+    }
+
+/*  defines filter in database table contents top */
+#database_table_filter {
+    float: left;
+    margin: 17px 20px 0px 0px;
+    }
+
+#database_table_filter form {
+    display: inline;
+    float: left;
+    margin: 0px 8px 0px 0px;
+    background: [ICONS_IMAGE] right -1170px no-repeat;
+    }
+
+#database_table_filter form:hover {
+    background-position: right -1230px;
+    }
+
+#database_table_filter input {
+    margin: 0px 0px 0px 0px;
+    padding: 2px 5px 3px 5px;
+    border: 1px solid [BOX_BORDER_COLOR];
+    color: [BOX_TEXT_COLOR];
+    }
+
+#database_table_filter .icon_delete {
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 5px 18px;
+    }
+
+/*  defines database table pages in database table contents top */
+#database_table_pages_top {
+    margin: 19px 0px 0px 0px;
+    float: right;
+    }
+
+/*  defines table that contains database table contents */
+#database_table_contents {
+    display: block;
+    float: none;
+    width: 100%;
+    background: [TRANSPARENT_IMAGE] left top repeat;
+    border-collapse: collapse;
+    border-top: 1px solid [LIST_LINE_COLOR];
+    border-bottom: 1px solid [LIST_LINE_COLOR];
+    }
+
+#database_table_contents .note_creator {
+    color: [LIGHT_TEXT_COLOR];
+    }
+
+#database_table_contents tr {
+    }
+
+#database_table_contents th {
+    padding: 6px 5px 6px 5px;
+    color: [HEADER_TEXT_COLOR];
+    }
+
+#database_table_contents .sort, #database_table_contents .sort_up, #database_table_contents .sort_down {
+    float: left;
+    padding: 0px 16px 0px 0px;
+    background: [SORT_ARROWS_IMAGE] right 0px no-repeat;
+    }
+
+#database_table_contents .sort_up {
+    background: [SORT_ARROWS_IMAGE] right -14px no-repeat;
+    }
+
+#database_table_contents .sort_down {
+    background: [SORT_ARROWS_IMAGE] right -28px no-repeat;
+    }
+
+#database_table_contents th:hover {
+    background: [TRANSPARENT_IMAGE] left top repeat;
+    }
+
+#database_table_contents td {
+    padding: 4px 5px 4px 5px;
+    border-top: 1px solid [LIST_LINE_COLOR];
+    vertical-align: top;
+    }
+
+#database_table_contents tbody tr:hover {
+    background: [TRANSPARENT_IMAGE] left top repeat;
+    }
+
+#database_table_contents a, #database_table_contents a:link, #database_table_contents a:visited {
+    color: [LINK_TEXT_COLOR];
+    }
+
+#database_table_contents a:hover {
+    color: [LINK_TEXT_HOVER_COLOR];
+    }
+
+/*  defines area below database table contents */
+#database_table_contents_bottom {
+    position: relative;
+    display: block;
+    height: 38px;
+    background: [BACKGROUNDS_IMAGE] 0px -271px repeat-x;
+    }
+
+/*  defines database table pages in database table contents bottom */
+#database_table_pages_bottom {
+    padding: 12px 0px 6px 0px;
+    text-align: center;
+    font-weight: bold;
+    }
+
+/*  defines the current page */
+#database_table_pages_bottom .current_page {
+    margin: 0px 2px 0px 2px;
+    padding: 4px 6px 4px 6px;
+    border: 1px solid [ACTION_BAR_TEXT_COLOR];
+    color: [ACTION_BAR_TEXT_HOVER_COLOR];
+    background-color: [ACTION_BAR_TEXT_COLOR];
+    font-weight: bold;
+    }
+
+/*  defines the next and previous navigation buttons */
+#database_table_pages_bottom .navigation_button a, #database_table_pages_bottom .navigation_button a:link, #database_table_pages_bottom .navigation_button a:visited {
+    margin: 0px 2px 0px 2px;
+    padding: 4px 6px 4px 6px;
+    color: [ACTION_BAR_TEXT_COLOR];
+    }
+
+#database_table_pages_bottom .navigation_button a:hover {
+    color: [ACTION_BAR_TEXT_HOVER_COLOR];
+    }
+
+/*  defines other pages */
+#database_table_pages_bottom .navigation_page a, #database_table_pages_bottom .navigation_page a:link, #database_table_pages_bottom .navigation_page a:visited {
+    margin: 0px 2px 0px 2px;
+    padding: 4px 6px 4px 6px;
+    color: [ACTION_BAR_TEXT_COLOR];
+    border: 1px solid [ACTION_BAR_TEXT_COLOR];
+    }
+
+#database_table_pages_bottom .navigation_page a:hover {
+    color: [ACTION_BAR_TEXT_HOVER_COLOR];
+    background-color: [ACTION_BAR_TEXT_COLOR];
+    }
+
+/*  defines pane that contains database table record contents */
+#database_table_record_contents_pane {
+    display: block;
+    float: none;
+    position: relative;
+    background: [TRANSPARENT_IMAGE] left top repeat;
+    padding: 10px 0px 12px 16px;
+    }
+
+/*  defines table that contains contents of one database table record */
+#database_table_record_contents {
+    margin: 0px 0px 10px 0px;
+    width: 100%;
+    float: none;
+    color: [NORMAL_TEXT_COLOR];
+    }
+
+#database_table_record_contents th {
+    padding: 4px 10px 4px 0px;
+    vertical-align: top;
+    }
+
+#database_table_record_contents td {
+    padding: 4px 0px 4px 10px;
+    vertical-align: top;
+    }
+
+#database_table_record_contents .super_width {
+    width: 100%;
+    }
+
+#database_table_record_contents .note_box {
+    }
+
+#database_table_record_contents .note_box_header {
+    padding: 4px 0px 4px 2px;
+    margin: 0px 0px -1px 0px;
+    height: 16px;
+    background-color: [BOX_BACKGROUND_COLOR];
+    color: [BOX_TEXT_COLOR];
+    border-top: 1px solid [BOX_BORDER_COLOR];
+    border-bottom: none;
+    border-left: 1px solid [BOX_BORDER_COLOR];
+    border-right: 1px solid [BOX_BORDER_COLOR];
+    font-weight: bold;
+    }
+
+#database_table_record_contents .note_text {
+    margin: 0px 0px 0px 0px;
+    background-color: [BOX_BACKGROUND_COLOR];
+    border-top: none;
+    border-bottom: 1px solid [BOX_BORDER_COLOR];
+    border-left: 1px solid [BOX_BORDER_COLOR];
+    border-right: 1px solid [BOX_BORDER_COLOR];
+    }
+
+#database_table_record_contents .note_box_top_buttons {
+    height: 23px;
+    width: 100%;
+    }
+
+#database_table_record_contents .note_box_top_buttons_right {
+    padding: 3px 4px 3px 0px;
+    height: 17px;
+    float: right;
+    }
+
+#database_table_record_contents .note_box_bottom_buttons {
+    height: 23px;
+    width: 100%;
+    }
+
+#database_table_record_contents .note_box_bottom_buttons_left {
+    padding: 3px 0px 3px 4px;
+    height: 17px;
+    float: left;
+    }
+
+#database_table_record_contents .note_box_bottom_buttons_right {
+    padding: 3px 4px 3px 0px;
+    height: 17px;
+    float: right;
+    }
+
+/*  This id_name is needed for ajax uploader */
+#database_table_record_contents #button_upload {
+    font-weight: bold;
+    }
+
+#database_table_record_contents #button_upload.hover {
+    background-position: 0px -330px;
+    color: [LINK_TEXT_HOVER_COLOR];
+    }
+
+#database_table_record_contents select, #database_table_record_contents input, #database_table_record_contents textarea {
+    border: 1px solid [BOX_BORDER_COLOR];
+    }
+
+#database_table_record_contents a, #database_table_record_contents a:link, #database_table_record_contents a:visited {
+    color: [LINK_TEXT_COLOR];
+    }
+
+#database_table_record_contents a:hover {
+    color: [LINK_TEXT_HOVER_COLOR];
+    }
+
+#database_table_record_contents_pane #record_contents_buttons {
+    float: none;
+    }
+
+#database_table_record_contents_pane #record_contents_buttons a, #database_table_record_contents_pane #record_contents_buttons a:link, #database_table_record_contents_pane #record_contents_buttons a:visited {
+    color: [LINK_TEXT_COLOR];
+    }
+
+#database_table_record_contents_pane #record_contents_buttons a:hover {
+    color: [LINK_TEXT_HOVER_COLOR];
+    }

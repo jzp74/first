@@ -1,0 +1,26 @@
+# Translations for brown theme
+
+# theme colors
+NORMAL_TEXT_COLOR               = rgb(255, 255, 255)
+LIGHT_TEXT_COLOR                = rgb(230, 190, 170)
+LINK_TEXT_COLOR                 = rgb(255, 164, 47)
+LINK_TEXT_HOVER_COLOR           = rgb(255, 255, 255)
+ACTION_BAR_TEXT_COLOR           = rgb(255, 164, 47)
+ACTION_BAR_TEXT_HOVER_COLOR     = rgb(255, 255, 255)
+MAIN_HEADER_TEXT_COLOR          = rgb(255, 255, 255)
+HEADER_TEXT_COLOR               = rgb(50, 50, 50)
+LOGIN_TEXT_COLOR                = rgb(50, 50, 50)
+FOOTER_TEXT_COLOR               = rgb(255, 255, 255)
+TAB_TEXT_COLOR                  = rgb(50, 50, 50)
+TAB_TEXT_HOVER_COLOR            = rgb(255, 255, 255)
+BOX_BORDER_COLOR                = rgb(106, 24, 0)
+BOX_BACKGROUND_COLOR            = rgb(255, 255, 255)
+BOX_TEXT_COLOR                  = rgb(106, 24, 0)
+LIST_LINE_COLOR                 = rgb(255, 255, 255)
+
+# theme images
+ICONS_IMAGE                     = url(../images/boomy_icons.png)
+SORT_ARROWS_IMAGE               = url(../images/theme_brown_sort_arrows.png)
+TRANSPARENT_IMAGE               = url(../images/theme_brown_transparent.png)
+BACKGROUNDS_IMAGE               = url(../images/theme_brown_backgrounds.png)
+MAIN_BACKGROUND_IMAGE           = url(../images/theme_brown_main_background.jpg)

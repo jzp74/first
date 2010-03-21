@@ -315,6 +315,9 @@ class HtmlDatabaseTable
             }
         }
 
+        # add extra table header to compensate for extra button table data's
+        $html_str .= "                        <th colspan=3></th>\n";
+
         $html_str .= "                    </tr>\n";
         $html_str .= "                </thead>\n";
         $html_str .= "                <tbody>\n";
@@ -796,8 +799,8 @@ class HtmlDatabaseTable
         #end form
         $html_str .= "                    </form> <!-- record_form -->\n";
         $html_str .= "                </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents_pane -->\n";
-        $html_str .= "                <div class=\"corner bottom_left_border\"></div>\n";
-        $html_str .= "                <div class=\"corner bottom_right_border\"></div>\n\n            ";
+        $html_str .= "                <div class=\"corner bottom_left_normal\"></div>\n";
+        $html_str .= "                <div class=\"corner bottom_right_normal\"></div>\n\n            ";
 
         $result->set_result_str($html_str);
 
@@ -854,8 +857,8 @@ class HtmlDatabaseTable
         $html_str .= "\n                        ";
         $html_str .= "\n                    </span> <!-- record_contents_buttons -->\n";
         $html_str .= "                </div> <!-- ".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents_pane -->\n";
-        $html_str .= "                <div class=\"corner bottom_left_border\"></div>\n";
-        $html_str .= "                <div class=\"corner bottom_right_border\"></div>\n\n            ";
+        $html_str .= "                <div class=\"corner bottom_left_normal\"></div>\n";
+        $html_str .= "                <div class=\"corner bottom_right_normal\"></div>\n\n            ";
 
         $result->set_result_str($html_str);
 

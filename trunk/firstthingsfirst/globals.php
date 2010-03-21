@@ -133,8 +133,6 @@ define("PREG_ALLOWED_DATE_EU", "/^[0-9-]+$/");
 define("PREG_ALLOWED_CHARS", "/^[A-Za-z0-9\s]+$/");
 define("PREG_ALLOWED_CHARS_EXTRA", "/^[A-Za-z0-9|]+$/");
 
-
-
 /**
  * a false return string
  */
@@ -190,6 +188,20 @@ define("LANG_NL", "LABEL_USER_LANG_NL");
 $firstthingsfirst_lang_prefix_array = array(
     "LABEL_USER_LANG_EN" => "en",
     "LABEL_USER_LANG_NL" => "nl"
+);
+
+/**
+ * them names
+ */
+define("THEME_BLUE", "LABEL_USER_THEME_BLUE");
+define("THEME_BROWN", "LABEL_USER_THEME_BROWN");
+
+/**
+ * set language prefix names
+ */
+$firstthingsfirst_theme_prefix_array = array(
+    "LABEL_USER_THEME_BLUE" => "theme_blue",
+    "LABEL_USER_THEME_BROWN" => "theme_brown"
 );
 
 /**

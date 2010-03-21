@@ -60,10 +60,8 @@ function start_regression_test ()
     $html_str = "";
 
     # create html for page layout
-    $html_str .= "\n\n        <div id=\"hidden_upper_margin\">something to fill space</div>\n\n";
-    $html_str .= "            <div id=\"test_body\">\n\n";
+    $html_str .= "\n\n            <div id=\"test_body\">\n\n";
     $html_str .= "            </div> <!-- test_body -->\n\n";
-    $html_str .= "        <div id=\"hidden_lower_margin\">something to fill space</div>\n\n    ";
 
     $response->assign("main_body", "innerHTML", $html_str);
     $response->assign("page_title", "innerHTML", "Regression test");

@@ -284,6 +284,17 @@ html, body {
     padding: 0px 6px 0px 6px;
     }
 
+/*  defines the header logo */
+#header_logo {
+    position: absolute;
+    top: 0px;
+    left: -12px;
+    height: 114px;
+    width: 300px;
+    background: [BACKGROUNDS_IMAGE] 0px -332px no-repeat;
+    z-index: 100;
+    }
+
 /*  defines the top line of the header which contains the software version and login status */
 #header_contents_status {
     width: 100%;
@@ -294,7 +305,7 @@ html, body {
 /*  defines the software version */
 #header_contents_status_software_version {
     float: left;
-    padding: 4px 0px 4px 4px;
+    padding: 4px 0px 4px 230px;
     font-family: Arial;
     font-size: 10px;
     font-weight: normal;

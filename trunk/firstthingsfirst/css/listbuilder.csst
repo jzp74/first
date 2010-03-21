@@ -13,7 +13,7 @@
 .listbuilder_title {
     padding: 3px 6px 5px 6px;
     margin: 0px 0px 0px 0px;
-    color: [HEADER_TEXT_COLOR];
+    color: [BOX_HEADER_COLOR];
     background-color: [BOX_BORDER_COLOR];
     font-size: 16px;
     font-weight: bold;

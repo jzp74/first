@@ -34,6 +34,7 @@ require_once("../php/Class.UserListTablePermissions.php");
  */
 $xajax = new xajax();
 
+$firstthingsfirst_theme = THEME_BLUE;
 $logging = new Logging($firstthingsfirst_loglevel, "../logs/".$firstthingsfirst_logfile);
 $database = new Database();
 $list_state = new ListState();
@@ -80,40 +81,43 @@ $xajax->processRequest();
 <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
 
 <title>Regression test</title>
-<link rel="shortcut icon" href="images/favicon.ico">
-<link rel="stylesheet" href="../css/standard.css">
+<link rel="shortcut icon" href="../images/favicon.ico">
+<?php echo "<link rel=\"stylesheet\" href=\"../css/".$firstthingsfirst_theme_prefix_array[$firstthingsfirst_theme].".min.css\">\n"; ?>
 
 </head>
 
 <body>
 <div id="upper_margin"></div>
 
-<div id="header">
-    <div id="header_left_margin"></div>
-    <div id="header_right_margin"></div>
-    <div id="header_contents">
-        <div id="header_contents_status">
-            <div id="header_contents_status_software_version"><?php print(file_get_contents("../VERSION")); ?></div>
-            <div id="header_contents_status_login_status">&nbsp</div>
-        </div> <!-- header_contents_status -->
-        <div id="portal_title"><?php print($firstthingsfirst_portal_title); ?></div>
-        <div id="page_title">&nbsp;</div>
-        <div id="navigation_container">&nbsp;</div> <!-- navigation_container -->
-    </div> <!-- header_contents -->
-</div> <!-- header -->
-
+<body>
 <div id="outer_body">
+
+    <div id="header_container">
+        <div id="header_logo"></div>
+        <div id="header">
+            <div class="corner top_left_normal"></div>
+            <div class="corner top_right_normal"></div>
+            <div id="header_contents_status">
+                <div id="header_contents_status_software_version"><?php print(file_get_contents("VERSION")); ?></div>
+                <div id="header_contents_status_login_status">&nbsp;</div>
+            </div> <!-- header_contents_status -->
+            <div id="portal_title"><?php print($firstthingsfirst_portal_title); ?></div>
+            <div id="page_title">&nbsp;</div>
+            <div id="navigation_container">&nbsp;</div> <!-- navigation_container -->
+        </div> <!-- header -->
+    </div> <!-- header_container -->
 
     <div id="main_body">&nbsp;</div>
 
-</div> <!-- outer_body -->
+    <div id="footer">
+        <div id="footer_text"></div>
+        <div class="corner bottom_left_normal"></div>
+        <div class="corner bottom_right_normal"></div>
+    </div> <!-- footer -->
 
-<div id="footer">
-    <div id="footer_left_margin">&nbsp</div>
-    <div id="footer_right_margin">&nbsp</div>
-    <div id="footer_text"></div>
-</div> <!-- footer -->
-<div id="lower_margin"><input id="focus_on_this_input" size="1" readonly></div>
+    <div id="lower_margin"><input id="focus_on_this_input" size="1" readonly></div>
+
+</div> <!-- outer_body -->
 
 <script language="javascript" src="../js/external/external.min.js"></script>
 <?php print(get_xajax_javascript()); ?>

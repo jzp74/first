@@ -16,6 +16,12 @@ $firstthingsfirst_lang = LANG_EN;
 # session time in minutes
 $firstthingsfirst_session_time = 30;
 
+# themes
+# choose between the following themes:
+# THEME_BLUE - Original blues
+# THEME_BROWN - Ancient writing
+$firstthingsfirst_theme = THEME_BROWN;
+
 # database table prefix
 # define a prefix that is unique for this firstthingsfirst instance
 # this setting allows you have multiple firstthingsfirst instances to share the same db schema

@@ -428,7 +428,7 @@ function action_get_list_import ($list_title)
             onSubmit: function(file, ext)
             {
                 this.disable();
-                $('#file_to_upload_id').html('<img src=\"images/standard_wait_animation.gif\">');
+                $('#file_to_upload_id').html('<img src=\"images/wait_animation.gif\">');
             },
             onComplete: function(file, response)
             {

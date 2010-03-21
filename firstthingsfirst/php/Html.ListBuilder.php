@@ -127,16 +127,14 @@ function action_get_listbuilder_page ($list_title)
         $page_title = translate("LABEL_CONFIGURE_NEW_LIST");
 
     $html_str = "";
-    $html_str .= "\n\n        <div id=\"listbuilder_pane\">\n\n";
-    $html_str .= "            <div class=\"listbuilder_title\">\n";
-    $html_str .= "                <div class=\"corner top_left_border\"></div>\n";
-    $html_str .= "                <div class=\"corner top_right_border\"></div>\n";
-    $html_str .= "                ".translate("LABEL_GENERAL_SETTINGS")."</div>\n";
-    $html_str .= "            <div class=\"listbuilder_contents_pane\">\n";
-    $html_str .= "                <div class=\"listbuilder_contents\">\n";
-    $html_str .= "                    <div class=\"listbuilder_contents_line\">\n";
-    $html_str .= "                        <div class=\"listbuilder_contents_line_left\">".translate("LABEL_TITLE_OF_THIS_LIST")."</div>\n";
-    $html_str .= "                        <div class=\"listbuilder_contents_line_right\">";
+    $html_str .= "\n\n        <div class=\"listbuilder_pane\">\n";
+    $html_str .= "            <div class=\"corner top_left_normal\"></div>\n";
+    $html_str .= "            <div class=\"corner top_right_normal\"></div>\n";
+    $html_str .= "            <div class=\"listbuilder_title\">".translate("LABEL_GENERAL_SETTINGS")."</div>\n";
+    $html_str .= "            <div class=\"listbuilder_contents\">\n";
+    $html_str .= "                <div class=\"listbuilder_contents_line\">\n";
+    $html_str .= "                    <div class=\"listbuilder_contents_line_left\">".translate("LABEL_TITLE_OF_THIS_LIST")."</div>\n";
+    $html_str .= "                    <div class=\"listbuilder_contents_line_right\">";
 
     # set value for title when list title has been given
     if ($old_list_loaded == TRUE)
@@ -147,10 +145,10 @@ function action_get_listbuilder_page ($list_title)
     else
         $html_str .= "<input size=\"20\" maxlength=\"100\" id=\"listbuilder_list_title_id\" type=\"text\"></div>\n";
 
-    $html_str .= "                    </div> <!-- listbuilder_contents_line -->\n";
-    $html_str .= "                    <div class=\"listbuilder_contents_line\">\n";
-    $html_str .= "                        <div class=\"listbuilder_contents_line_left\">".translate("LABEL_SHORT_DESCRIPTION_OF_THIS_LIST")."</div>\n";
-    $html_str .= "                        <div class=\"listbuilder_contents_line_right\">";
+    $html_str .= "                </div> <!-- listbuilder_contents_line -->\n";
+    $html_str .= "                <div class=\"listbuilder_contents_line\">\n";
+    $html_str .= "                    <div class=\"listbuilder_contents_line_left\">".translate("LABEL_SHORT_DESCRIPTION_OF_THIS_LIST")."</div>\n";
+    $html_str .= "                    <div class=\"listbuilder_contents_line_right\">";
 
     # set value for description when list title has been given
     if ($old_list_loaded == TRUE)
@@ -161,42 +159,40 @@ function action_get_listbuilder_page ($list_title)
     else
         $html_str .= "<textarea cols=\"60\" rows=\"4\" id=\"listbuilder_list_description_id\"></textarea></div>\n";
 
-    $html_str .= "                    </div> <!-- listbuilder_contents_line -->\n";
-    $html_str .= "                </div> <!-- listbuilder_contents -->\n";
-    $html_str .= "                <div class=\"corner bottom_left_border\"></div>\n";
-    $html_str .= "                <div class=\"corner bottom_right_border\"></div>\n";
-    $html_str .= "            </div> <!-- listbuilder_contents_pane -->\n";
+    $html_str .= "                </div> <!-- listbuilder_contents_line -->\n";
+    $html_str .= "            </div> <!-- listbuilder_contents -->\n";
+    $html_str .= "            <div class=\"corner bottom_left_normal\"></div>\n";
+    $html_str .= "            <div class=\"corner bottom_right_normal\"></div>\n";
+    $html_str .= "        </div> <!-- listbuilder_pane -->\n";
 
     # display the actual listbuilder
-    $html_str .= "            <div class=\"listbuilder_title\">\n";
-    $html_str .= "                <div class=\"corner top_left_border\"></div>\n";
-    $html_str .= "                <div class=\"corner top_right_border\"></div>\n";
-    $html_str .= "                ".translate("LABEL_DEFINE_TABLE_FIELDS")."</div>\n";
-    $html_str .= "            <div class=\"listbuilder_contents_pane\">\n";
-    $html_str .= "                <div id=\"listbuilder_contents\" class=\"listbuilder_contents\">\n";
+    $html_str .= "        <div class=\"listbuilder_pane\">\n";
+    $html_str .= "            <div class=\"corner top_left_normal\"></div>\n";
+    $html_str .= "            <div class=\"corner top_right_normal\"></div>\n";
+    $html_str .= "            <div class=\"listbuilder_title\">".translate("LABEL_DEFINE_TABLE_FIELDS")."</div>\n";
+    $html_str .= "            <div id=\"listbuilder_contents\" class=\"listbuilder_contents\">\n";
 
     $html_str .= get_field_definition_table($definition);
 
-    $html_str .= "                </div> <!-- listbuilder_contents -->\n";
-    $html_str .= "                <div class=\"corner bottom_left_border\"></div>\n";
-    $html_str .= "                <div class=\"corner bottom_right_border\"></div>\n";
-    $html_str .= "            </div> <!-- listbuilder_contents_pane -->\n";
+    $html_str .= "            </div> <!-- listbuilder_contents -->\n";
+    $html_str .= "            <div class=\"corner bottom_left_normal\"></div>\n";
+    $html_str .= "            <div class=\"corner bottom_right_normal\"></div>\n";
 
     # add largest id and old definition
     $html_str .= "            <div class=\"invisible_collapsed\">\n";
     $html_str .= "                <div id=\"largest_id\">".$largest_id."</div>\n";
     $html_str .= "            </div>\n\n";
 
-    $html_str .= "        </div> <!-- listbuilder_pane -->\n\n";
-    $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
-    $html_str .= "                <div class=\"corner top_left_normal\"></div>\n";
-    $html_str .= "                <div class=\"corner top_right_normal\"></div>\n";
+    $html_str .= "        </div> <!-- listbuilder_pane -->\n";
+    $html_str .= "        <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
+    $html_str .= "             <div class=\"corner top_left_normal\"></div>\n";
+    $html_str .= "             <div class=\"corner top_right_normal\"></div>\n";
 
     # display the selection box to add a new column
-    $html_str .= "                ".get_select("add_select", "add_it", "")."\n";
+    $html_str .= "             ".get_select("add_select", "add_it", "")."\n";
     $args_str = "(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'), ";
     $args_str .= "document.getElementById('largest_id').innerHTML)";
-    $html_str .= "                <span id=\"action_bar_button_add\">";
+    $html_str .= "             <span id=\"action_bar_button_add\">";
     $html_str .= get_href(get_onclick(ACTION_INSERT_LISTBUILDER_ROW, HTML_NO_PERMISSION_CHECK, "", "", $args_str), translate("BUTTON_ADD_FIELD"), "icon_add");
     $html_str .= "</span>\n";
 
@@ -206,7 +202,7 @@ function action_get_listbuilder_page ($list_title)
         $args_str = "handleFunction(%22".ACTION_MODIFY_LIST."%22, %22".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."%22, document.getElementById(%22listbuilder_list_title_id%22).value, ";
         $args_str .= "document.getElementById(%22listbuilder_list_description_id%22).value, ";
         $args_str .= "xajax.getFormValues(%22database_definition_form%22))";
-        $html_str .= "                &nbsp;&nbsp;&nbsp;<span id=\"action_bar_button_modify\">";
+        $html_str .= "            &nbsp;&nbsp;&nbsp;<span id=\"action_bar_button_modify\">";
         $html_str .= get_href(get_onclick_confirm(ACTION_MODIFY_LIST, $list_title, "action_bar_button_modify", "above", $args_str, translate("LABEL_CONFIRM_MODIFY")), translate("BUTTON_MODIFY_LIST"), "icon_accept");
         $html_str .= "</span>\n";
     }
@@ -216,14 +212,14 @@ function action_get_listbuilder_page ($list_title)
         $args_str = "(document.getElementById(%27listbuilder_list_title_id%27).value, ";
         $args_str .= "document.getElementById(%27listbuilder_list_description_id%27).value, ";
         $args_str .= "xajax.getFormValues(%27database_definition_form%27))";
-        $html_str .= "                &nbsp;&nbsp;&nbsp;<span id=\"action_bar_button_create\">";
+        $html_str .= "            &nbsp;&nbsp;&nbsp;<span id=\"action_bar_button_create\">";
         $html_str .= get_href(get_onclick(ACTION_CREATE_LIST, HTML_NO_LIST_PERMISSION_CHECK, "action_bar_button_create", "above", $args_str), translate("BUTTON_CREATE_LIST"), "icon_accept");
         $html_str .= "</span>\n";
     }
 
-    $html_str .= "                <div class=\"corner bottom_left_normal\"></div>\n";
-    $html_str .= "                <div class=\"corner bottom_right_normal\"></div>\n";
-    $html_str .= "            </div> <!-- action_bar -->\n\n";
+    $html_str .= "            <div class=\"corner bottom_left_normal\"></div>\n";
+    $html_str .= "            <div class=\"corner bottom_right_normal\"></div>\n";
+    $html_str .= "        </div> <!-- action_bar -->\n";
 
     $response->assign("page_title", "innerHTML", $page_title);
     $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_LISTBUILDER));
@@ -741,22 +737,22 @@ function get_field_definition_table ($definition)
     $input_html_value_invisible = "<input style=\"visibility: hidden;\" type=text size=\"1\" maxlength=\"100\"";
     $html_str = "";
 
-    $html_str .= "\n                    <form id=\"database_definition_form\" action=\"javascript:void(0);\" method=\"javascript:void(0);\" onsubmit=\"javascript:void(0);\">\n";
-    $html_str .= "                        <table id=\"listbuilder_definition\" align=\"left\" border=\"0\" cellspacing=\"0\">\n";
-    $html_str .= "                            <thead>\n";
-    $html_str .= "                                <tr>\n";
-    $html_str .= "                                    <th>".translate("LABEL_FIELDTYPE")."</th>\n";
-    $html_str .= "                                    <th>".translate("LABEL_FIELDNAME")."</th>\n";
-    $html_str .= "                                    <th>".translate("LABEL_OPTIONS")."</th>\n";
-    $html_str .= "                                    <th>&nbsp;</th>\n";
-    $html_str .= "                                    <th colspan=\"3\">&nbsp;</th>\n";
-    $html_str .= "                                </tr>\n";
-    $html_str .= "                            </thead>\n";
-    $html_str .= "                            <tbody>\n";
+    $html_str .= "                <form id=\"database_definition_form\" action=\"javascript:void(0);\" method=\"javascript:void(0);\" onsubmit=\"javascript:void(0);\">\n";
+    $html_str .= "                    <table id=\"listbuilder_definition\" align=\"left\" border=\"0\" cellspacing=\"0\">\n";
+    $html_str .= "                        <thead>\n";
+    $html_str .= "                            <tr>\n";
+    $html_str .= "                                <th>".translate("LABEL_FIELDTYPE")."</th>\n";
+    $html_str .= "                                <th>".translate("LABEL_FIELDNAME")."</th>\n";
+    $html_str .= "                                <th>".translate("LABEL_OPTIONS")."</th>\n";
+    $html_str .= "                                <th>&nbsp;</th>\n";
+    $html_str .= "                                <th colspan=\"3\">&nbsp;</th>\n";
+    $html_str .= "                            </tr>\n";
+    $html_str .= "                        </thead>\n";
+    $html_str .= "                        <tbody>\n";
 
     for ($row = 0; $row < (count($definition) / 4); $row += 1)
     {
-        $html_str .= "                                <tr>\n";
+        $html_str .= "                            <tr>\n";
         $position_id = $row * 4;
         $position_type = ($row * 4) + 1;
         $position_name = ($row * 4) + 2;
@@ -765,21 +761,21 @@ function get_field_definition_table ($definition)
         $logging->debug("row ".$row." (id=".$definition[$position_id].", type=".$definition[$position_type].", name=".$definition[$position_name].", opt=".$definition[$position_options].")");
 
         # first an invisible column
-        $html_str .= "                                    <td class=\"invisible_collapsed\">".$input_html_id." readonly ";
+        $html_str .= "                                <td class=\"invisible_collapsed\">".$input_html_id." readonly ";
         $html_str .= "name=\"row_".$row."_0\" value=\"".$definition[$position_id]."\"</td>\n";
 
         # the first column - type
         if ($row == 0)
         {
-            $html_str .= "                                    <td id=\"row_".$row."_1\"><select class=\"inactive_input\" name=\"row_".$row."_1\">\n";
-            $html_str .= "                                        <option value=\"".$definition[$position_type]."\" selected>".translate($definition[$position_type])."</option>\n";
-            $html_str .= "                                    </select></td>\n";
+            $html_str .= "                                <td id=\"row_".$row."_1\"><select class=\"inactive_input\" name=\"row_".$row."_1\">\n";
+            $html_str .= "                                    <option value=\"".$definition[$position_type]."\" selected>".translate($definition[$position_type])."</option>\n";
+            $html_str .= "                                </select></td>\n";
         }
         else
-            $html_str .= "                                    <td id=\"row_".$row."_1\">".get_select("", "row_".$row."_1", $definition[$position_type])."</td>\n";
+            $html_str .= "                                <td id=\"row_".$row."_1\">".get_select("", "row_".$row."_1", $definition[$position_type])."</td>\n";
 
         # the second column - name
-        $html_str .= "                                    <td id=\"row_".$row."_2\">".$input_html_name." name=\"row_".$row."_2\" ";
+        $html_str .= "                                <td id=\"row_".$row."_2\">".$input_html_name." name=\"row_".$row."_2\" ";
         if ($row == 0)
             $html_str .= "readonly class=\"inactive_input\" ";
         else
@@ -788,53 +784,53 @@ function get_field_definition_table ($definition)
 
         # the third column - options
         if ($definition[$position_type] == FIELD_TYPE_DEFINITION_SELECTION)
-            $html_str .= "                                    <td id=\"row_".$row."_3\">".$input_html_name." name=\"row_".$row."_3\" value=\"".$definition[$position_options]."\"></td>\n";
+            $html_str .= "                                <td id=\"row_".$row."_3\">".$input_html_name." name=\"row_".$row."_3\" value=\"".$definition[$position_options]."\"></td>\n";
         else if (($definition[$position_type] == FIELD_TYPE_DEFINITION_AUTO_CREATED) || ($definition[$position_type] == FIELD_TYPE_DEFINITION_AUTO_MODIFIED))
         {
-            $html_str .= "                                    <td id=\"row_".$row."_3\"><select class=\"selection_box\" name=\"row_".$row."_3\">\n";
-            $html_str .= "                                        <option value=\"".NAME_DATE_OPTION_DATE_NAME."\"";
+            $html_str .= "                                <td id=\"row_".$row."_3\"><select class=\"selection_box\" name=\"row_".$row."_3\">\n";
+            $html_str .= "                                    <option value=\"".NAME_DATE_OPTION_DATE_NAME."\"";
             if ($definition[$position_options] == NAME_DATE_OPTION_DATE_NAME)
                 $html_str .= " selected";
             $html_str .= ">".translate("LABEL_DATE_NAME")."</option>\n";
-            $html_str .= "                                        <option value=\"".NAME_DATE_OPTION_DATE."\"";
+            $html_str .= "                                    <option value=\"".NAME_DATE_OPTION_DATE."\"";
             if ($definition[$position_options] == NAME_DATE_OPTION_DATE)
                 $html_str .= " selected";
             $html_str .= ">".translate("LABEL_DATE_ONLY")."</option>\n";
-            $html_str .= "                                        <option value=\"".NAME_DATE_OPTION_NAME."\"";
+            $html_str .= "                                    <option value=\"".NAME_DATE_OPTION_NAME."\"";
             if ($definition[$position_options] == NAME_DATE_OPTION_NAME)
                 $html_str .= " selected";
             $html_str .= ">".translate("LABEL_NAME_ONLY")."</option>\n";
-            $html_str .= "                                    </select></td>\n";
+            $html_str .= "                                </select></td>\n";
         }
         else if ($definition[$position_type] == FIELD_TYPE_DEFINITION_AUTO_NUMBER)
         {
-            $html_str .= "                                    <td id=\"row_".$row."_3\"><select class=\"selection_box\" name=\"row_".$row."_3\">\n";
-            $html_str .= "                                        <option value=\"".ID_COLUMN_SHOW."\"";
+            $html_str .= "                                <td id=\"row_".$row."_3\"><select class=\"selection_box\" name=\"row_".$row."_3\">\n";
+            $html_str .= "                                    <option value=\"".ID_COLUMN_SHOW."\"";
             if ($definition[$position_options] == ID_COLUMN_SHOW)
                 $html_str .= " selected";
             $html_str .= ">".translate("LABEL_ID_COLUMN_SHOW")."</option>\n";
-            $html_str .= "                                        <option value=\"".ID_COLUMN_NO_SHOW."\"";
+            $html_str .= "                                    <option value=\"".ID_COLUMN_NO_SHOW."\"";
             if ($definition[$position_options] == ID_COLUMN_NO_SHOW)
                 $html_str .= " selected";
             $html_str .= ">".translate("LABEL_ID_COLUMN_NO_SHOW")."</option>\n";
-            $html_str .= "                                    </select></td>\n";
+            $html_str .= "                                </select></td>\n";
         }
         else
-            $html_str .= "                                    <td>&nbsp;-&nbsp;".$input_html_value_invisible." name=\"row_".$row."_3\" value=\"\"></td>\n";
+            $html_str .= "                                <td>&nbsp;-&nbsp;".$input_html_value_invisible." name=\"row_".$row."_3\" value=\"\"></td>\n";
 
         # the fourth column - remarks
-        $html_str .= "                                    <td>".translate($definition[$position_type]."_EXPLANATION")."</td>\n";
+        $html_str .= "                                <td>".translate($definition[$position_type]."_EXPLANATION")."</td>\n";
 
         # the fifth column - up
         if ($row > 1)
         {
-            $html_str .= "                                    <td width=\"1%\">";
+            $html_str .= "                                <td width=\"1%\">";
             $html_str .= get_href(get_onclick(ACTION_MOVE_LISTBUILDER_ROW, HTML_NO_LIST_PERMISSION_CHECK, "", "", "($row, %27up%27, xajax.getFormValues(%27database_definition_form%27))"), "&nbsp;", "icon_up");
             $html_str .= "</td>\n";
         }
         else
         {
-            $html_str .= "                                    <td width=\"1%\">";
+            $html_str .= "                                <td width=\"1%\">";
             $html_str .= "<p style=\"visibility: hidden;\">up</p>";
             $html_str .= "</td>\n";
         }
@@ -842,13 +838,13 @@ function get_field_definition_table ($definition)
         # the sixth column - down
         if ($row > 0 && $row < ((count($definition) / 4) - 1))
         {
-            $html_str .= "                                    <td width=\"1%\">";
+            $html_str .= "                                <td width=\"1%\">";
             $html_str .= get_href(get_onclick(ACTION_MOVE_LISTBUILDER_ROW, HTML_NO_LIST_PERMISSION_CHECK, "", "", "($row, %27down%27, xajax.getFormValues(%27database_definition_form%27))"), "&nbsp;", "icon_down");
             $html_str .= "</td>\n";
         }
         else
         {
-            $html_str .= "                                    <td width=\"1%\">";
+            $html_str .= "                                <td width=\"1%\">";
             $html_str .= "<p style=\"visibility: hidden;\">dn</p>";
             $html_str .= "</td>\n";
         }
@@ -856,23 +852,23 @@ function get_field_definition_table ($definition)
         # the seventh column - delete
         if ($row > 0)
         {
-            $html_str .= "                                    <td width=\"1%\">";
+            $html_str .= "                                <td width=\"1%\">";
             $html_str .= get_href(get_onclick(ACTION_DELETE_LISTBUILDER_ROW, HTML_NO_LIST_PERMISSION_CHECK, "", "", "($row, xajax.getFormValues(%27database_definition_form%27))"), translate("BUTTON_DELETE"), "icon_delete");
             $html_str .= "</td>\n";
         }
         else
         {
-            $html_str .= "                                    <td width=\"1%\">";
+            $html_str .= "                                <td width=\"1%\">";
             $html_str .= "<p style=\"visibility: hidden;\">dl</p>";
             $html_str .= "</td>\n";
         }
 
-        $html_str .= "                                </tr>\n";
+        $html_str .= "                            </tr>\n";
     }
 
-    $html_str .= "                            </tbody>\n";
-    $html_str .= "                        </table> <!-- listbuilder_general_settings -->\n";
-    $html_str .= "                    </form> <!-- database_definition_form -->\n\n";
+    $html_str .= "                        </tbody>\n";
+    $html_str .= "                    </table> <!-- listbuilder_general_settings -->\n";
+    $html_str .= "                </form> <!-- database_definition_form -->\n\n";
 
     $logging->trace("got field definition table");
 

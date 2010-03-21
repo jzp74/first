@@ -99,11 +99,11 @@
     }
 
 #database_table_contents .sort_up {
-    background: [SORT_ARROWS_IMAGE] right -14px no-repeat;
+    background: [SORT_ARROWS_IMAGE] right -15px no-repeat;
     }
 
 #database_table_contents .sort_down {
-    background: [SORT_ARROWS_IMAGE] right -28px no-repeat;
+    background: [SORT_ARROWS_IMAGE] right -30px no-repeat;
     }
 
 #database_table_contents th:hover {

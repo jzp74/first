@@ -1,4 +1,4 @@
-# Translations for brown theme
+# Translations for blue theme
 
 # theme colors
 NORMAL_TEXT_COLOR               = rgb(50, 50, 50)
@@ -13,6 +13,7 @@ LOGIN_TEXT_COLOR                = rgb(50, 50, 50)
 FOOTER_TEXT_COLOR               = rgb(255, 255, 255)
 TAB_TEXT_COLOR                  = rgb(50, 50, 50)
 TAB_TEXT_HOVER_COLOR            = rgb(255, 255, 255)
+BOX_HEADER_COLOR                = rgb(255, 255, 255)
 BOX_BORDER_COLOR                = rgb(197, 214, 232)
 BOX_BACKGROUND_COLOR            = rgb(255, 255, 255)
 BOX_TEXT_COLOR                  = rgb(50, 50, 50)

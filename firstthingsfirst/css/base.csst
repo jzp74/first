@@ -308,30 +308,31 @@ html, body {
     padding: 4px 0px 4px 230px;
     font-family: Arial;
     font-size: 10px;
-    font-weight: normal;
+    font-weight: bold;
     }
 
 /*  defines the login status */
 #header_contents_status_login_status {
     float: right;
-    padding: 3px 0px 3px 4px;
+    margin: 0px 0px -5px 0px;
+    padding: 7px 0px 3px 4px;
     font-size: 12px;
     font-weight: bold;
     }
 
 #header_contents_status_login_status_left {
     float: left;
-    width: 4px;
-    height: 21px;
-    margin: -3px 0px -3px 0px;
-    background: [BACKGROUNDS_IMAGE] -67px -145px no-repeat;
+    width: 6px;
+    height: 25px;
+    margin: -5px 0px -5px 0px;
+    background: [BACKGROUNDS_IMAGE] -66px -145px no-repeat;
     }
 
 #header_contents_status_login_status_body {
     float: left;
-    padding: 3px 2px 3px 2px;
-    margin: -3px 0px -3px 0px;
-    background: [BACKGROUNDS_IMAGE] 0px -172px repeat;
+    padding: 5px 2px 5px 2px;
+    margin: -5px 0px -5px 0px;
+    background: [BACKGROUNDS_IMAGE] -72px -145px repeat;
     }
 
 #header_contents_status_login_status_body a, #header_contents_status_login_status_body a:link, #header_contents_status_login_status_body a:visited {
@@ -342,12 +343,16 @@ html, body {
     color: [LINK_TEXT_HOVER_COLOR];
     }
 
+#header_contents_status_login_status_body .icon_cancel {
+    padding: 3px 0px 4px 24px;
+    }
+
 #header_contents_status_login_status_right {
     float: left;
-    width: 4px;
-    height: 21px;
-    margin: -3px 0px -3px 0px;
-    background: [BACKGROUNDS_IMAGE] -73px -145px no-repeat;
+    width: 6px;
+    height: 25px;
+    margin: -5px 0px -5px 0px;
+    background: [BACKGROUNDS_IMAGE] -262px -145px no-repeat;
     }
 
 /*  defines the title of the portal */
@@ -509,6 +514,7 @@ html, body {
     position: relative;
     height: 20px;
     padding: 8px 8px 4px 8px;
+    color: [ACTION_BAR_TEXT_COLOR];
     background: [BACKGROUNDS_IMAGE] 0px -238px repeat-x;
     }
 

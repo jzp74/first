@@ -521,7 +521,7 @@ class HtmlDatabaseTable
             # display 1 pagenumber when there is only one page (or none)
             if ($total_pages == 0 || $total_pages == 1)
             {
-                $html_str .= translate("LABEL_PAGE").": <strong>".$total_pages."</strong>";
+                $html_str .= "<span class=\"current_page\">$total_pages</span>";
             }
             # pagenumber display algorithm for 2 or more pages
             else
@@ -546,7 +546,7 @@ class HtmlDatabaseTable
                     else if (($cnt == ($current_page - 2)) || ($cnt == ($current_page - 1)))
                         $html_str .= "<span class=\"navigation_page\">".get_href(get_onclick($js_href_get, $list_title, "", "", "(%27".$list_title."%27, %27%27, ".$cnt.")"), $cnt, "")."</span>";
                     else if ($cnt == $current_page)
-                        $html_str .= "<span class=\"current_page\">".$cnt."</span>";
+                        $html_str .= "<span class=\"current_page\">$cnt</span>";
                     else if (($cnt == ($current_page + 1)) || ($cnt == ($current_page + 2)))
                         $html_str .= "<span class=\"navigation_page\">".get_href(get_onclick($js_href_get, $list_title, "", "", "(%27".$list_title."%27, %27%27, ".$cnt.")"), $cnt, "")."</span>";
                     if ($cnt == ($current_page + 3))
@@ -554,7 +554,7 @@ class HtmlDatabaseTable
                 }
                 # display last pagenumber
                 if ($current_page == $total_pages)
-                    $html_str .= "<span class=\"current_page\">".$total_pages."</span>";
+                    $html_str .= "<span class=\"current_page\">$total_pages</span>";
                 else
                     $html_str .= "<span class=\"navigation_page\">".get_href(get_onclick($js_href_get, $list_title, "", "", "(%27".$list_title."%27, %27%27, ".$total_pages.")"), $total_pages, "")."</span>";
 

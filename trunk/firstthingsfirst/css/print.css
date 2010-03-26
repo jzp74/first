@@ -4,87 +4,58 @@
 a, a:link, a:visited {
     color: rgb(0, 0, 0);
     }
-   
-/* do not show upper margins */
-#upper_margin, .white_area, #database_table_contents_top, #database_table_contents_top_left, #database_table_contents_top_right {
-    display: none;
-    visibility: hidden;
-    }
 
-#hidden_upper_margin {
-    padding: 40px 0px 0px 0px;
-    }    
-    
-/* do not show lower margins */
-#lower_margin, #hidden_lower_margin, #database_table_contents_bottom, #database_table_contents_bottom_left, #database_table_contents_bottom_right {
-    display: none;
-    visibility: hidden;
-    }
-
-/* show header at top of page */
-#header, #header_contents {
-    top: 0px;
-    height: 40px;
-    }
-
-/* do not show these header divs */
-#header_left_margin, #header_right_margin, #software_version, #page_explanation, #navigation_container {
-    display: none;
-    visibility: hidden;
-    }
-
-/* do not use full heigth, use full width of screen/page */
-#outer_body {
-    height: auto;
-    border-left: 0px;
-    border-right: 0px;
-    margin: 0px 1px -44px 1px;
-    }
-    
-/* use only black and white for printing */
-#page_title, #footer, #login_overview, #list_content_pane, #database_table_content_pane {
-    background-color: rgb(255, 255, 255);
+/* all background colors should be white (show no images) */
+*, body, #header, #page_title, #database_table_contents, #footer, #footer_text {
     color: rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
     }
 
-/* use full width of screen/page */    
-#database_table_content_pane {
-    margin: 0px 1px 0px 1px;
+/* parts of header that need not to be shown or should be shown differently */
+#header_logo, #header_contents_status, #portal_title, #navigation_container {
+    display: none;
+    }
+
+/* no padding before and after header */
+#header_container, #header {
+    height: 37px;
+    padding: 0px 0px 0px 0px;
+    }
+
+/* use full width */
+#main_body {
+    padding: 0px 2px 0px 2px;
+    }
+
+/* no padding before and after footer */
+#footer {
+    bottom: 0px;
+    height: 21px;
+    }
+
+/* do not show top and bottom parts of list */
+#database_table_contents_top, #database_table_contents_bottom {
+    display: none;
+    }
+
+/* do not use full height and use full width*/
+html, #outer_body {
+    height: auto;
+    margin: 0px 0px 0px 0px;
     }
 
 /* use collapsed borders to be able to print nice borders */
 #database_table_contents {
-    border-collapse: collapse; 
+    border-collapse: collapse;
     color: rgb(0, 0, 0);
     background-color: rgb(255, 255, 255);
     border: 1px solid rgb(0, 0, 0);
+    width: 100%;
     }
 
-/* td and th need a border */    
+/* td and th need a border */
 #database_table_contents td, #database_table_contents th {
     color: rgb(0, 0, 0);
     background-color: rgb(255, 255, 255);
     border: 1px solid rgb(0, 0, 0);
-    }
-
-/* height of th should be lower */
-.database_table_contents_header_sort, .database_table_contents_header_sort_up, .database_table_contents_header_sort_down {
-    padding: 2px 4px 2px 4px;
-    }
-    
-/* height of th should be lower */
-#database_table_contents td {
-    padding: 2px 4px 2px 4px;
-    }    
-    
-/* do not show these divs */
-#software_version, #navigation_container, #navigation_container a, #navigation, #login_status, #focus_on_this_input, #footer_left_margin, #footer_right_margin {
-    display: none;
-    visibility: hidden;
-    }
-
-#footer, #footer_text {
-    height: 20px;
-    color: rgb(0, 0, 0);
-    background-color: rgb(255, 255, 255);
     }

@@ -365,7 +365,7 @@ function get_date_str ($type, $value, $date_format)
     global $first_things_first_day_definitions;
     global $first_things_first_month_definitions;
 
-    $logging->info("get_date_str (type=$type, value=$value, date_format=$date_format)");
+    $logging->trace("get_date_str (type=$type, value=$value, date_format=$date_format)");
 
     $date_format_str = $firstthingsfirst_date_format_prefix_array[$date_format];
 

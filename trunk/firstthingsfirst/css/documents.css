@@ -4,10 +4,11 @@
     padding: 0px 0px 0px 0px;
     border: none;
     z-index: 10;
-    font-family: Arial;
-    font-size: 12px;
     text-decoration: none;
     text-align: left;
+    font-family: Arial;
+  	font-size: 14px;
+  	color: #1A3337;
     }
 
 body {
@@ -15,26 +16,34 @@ body {
     }
 
 #title {
-    font-family: Arial;
-    font-size: 28px;
     font-weight: bold;
-    color: rgb(255, 153, 0);
+	margin: 8px 0px 6px 0px;
+	font-size: 28px;
+	color: #19799A;
     }
 
 h1 {
-    font-family: Arial;
-    font-size: 18px;
     font-weight: bold;
-    color: rgb(255, 153, 0);
-    margin: 20px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+	margin: 8px 0px 6px 0px;
+	font-size: 28px;
+	color: #19799A;
     }
-    
+
 h2 {
-    font-family: Arial;
-    font-size: 14px;
     font-weight: bold;
-    color: rgb(255, 153, 0);
-    margin: 14px 0px 0px 4px;
+    padding: 0px 0px 0px 0px;
+	margin: 18px 0px 6px 0px;
+	font-size: 18px;
+	color: #19799A;
+    }
+
+h3 {
+    font-weight: bold;
+    padding: 0px 0px 0px 0px;
+	margin: 14px 0px 6px 0px;
+	font-size: 14px;
+	color: #47BAE1;
     }
 
 p {
@@ -42,13 +51,14 @@ p {
     }
 
 a, a:link, a:visited {
-    color: rgb(95, 148, 206);
-    text-decoration: none;
+	text-decoration: none;
+	color: #19799A;
     font-weight: bold;
     }
-    
-a:hover { 
-    text-decoration: underline;
+
+a:hover {
+	text-decoration: none;
+	color: #2DA6BE;
     }
 
 table {

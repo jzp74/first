@@ -199,19 +199,19 @@ function set_browser_compatibility_message ($browser_name_str, $browser_version)
     $response = new xajaxResponse();
     $unsupported_browser_message = translate("ERROR_BROWSER_UNSUPPORTED")."$browser_name_str $browser_version";
 
-    if (($browser_name_str == 'Firefox') && (($browser_version < 2) || ($browser_version > 3.99)))
+    if (($browser_name_str == 'Firefox') && ($browser_version < 3))
     {
         $response->script("showTooltip('#login_pane', '$unsupported_browser_message', 'info', 'below')");
 
         return $response;
     }
-    if (($browser_name_str == 'Chrome') && (($browser_version < 4) || ($browser_version > 4)))
+    if (($browser_name_str == 'Chrome') && ($browser_version < 4))
     {
         $response->script("showTooltip('#login_pane', '$unsupported_browser_message', 'info', 'below')");
 
         return $response;
     }
-    if (($browser_name_str == 'Internet Explorer') && (($browser_version < 7) || ($browser_version > 9)))
+    if (($browser_name_str == 'Internet Explorer') && ($browser_version < 7))
     {
         $response->script("showTooltip('#login_pane', '$unsupported_browser_message', 'info', 'below')");
 

@@ -20,7 +20,7 @@ $firstthingsfirst_session_time = 30;
 # choose between the following themes:
 # THEME_BLUE - Original blues
 # THEME_BROWN - Ancient writing
-$firstthingsfirst_theme = THEME_BROWN;
+$firstthingsfirst_theme = THEME_BLUE;
 
 # database table prefix
 # define a prefix that is unique for this firstthingsfirst instance

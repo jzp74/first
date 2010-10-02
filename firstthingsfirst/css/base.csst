@@ -13,6 +13,15 @@
  *  --- footer
  */
 
+/*  defines several fonts */
+@font-face {
+	font-family: 'MEgapolisExtra';
+	src: url('../type/megalopolisextra-webfont.eot');
+	src: local('?'), url('../type/megalopolisextra-webfont.woff') format('woff'), url('../type/megalopolisextra-webfont.ttf') format('truetype'), url('../type/megalopolisextra-webfont.svg#webfontAifGM3Bf') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
 /*  defines shared settings for all styles */
 * {
     margin: 0px 0px 0px 0px;
@@ -361,9 +370,8 @@ html, body {
     height: 32px;
     margin: 0px 0px 0px 0px;
     padding: 0px 0px 0px 0px;
-    font-family: Arial Black;
+    font-family: 'MEgapolisExtra', Arial Black;
     font-size: 32px;
-    font-weight: bold;
     text-align: center;
     }
 
@@ -372,9 +380,8 @@ html, body {
     width: 100%;
     height: 16px;
     padding: 14px 0px 7px 0px;
-    font-family: Arial;
+    font-family: 'MEgapolisExtra', Arial Black;
     font-size: 16px;
-    font-weight: bold;
     text-align: center;
     }
 

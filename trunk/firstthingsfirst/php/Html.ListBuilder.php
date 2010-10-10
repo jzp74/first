@@ -127,7 +127,59 @@ function action_get_listbuilder_page ($list_title)
         $page_title = translate("LABEL_CONFIGURE_NEW_LIST");
 
     $html_str = "";
-    $html_str .= "\n\n        <div class=\"listbuilder_pane\">\n";
+    $html_str .= "\n\n        <div id=\"listbuilder_statics_pane\" class=\"listbuilder_pane\">\n";
+    $html_str .= "        </div> <!-- listbuilder_pane -->\n";
+
+    $html_str .= "        <div id=\"listbuilder_configuration_pane\" class=\"listbuilder_pane\">\n";
+    $html_str .= "        </div> <!-- listbuilder_pane -->\n";
+
+    #action bar
+    $html_str .= "        <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
+    $html_str .= "             <div class=\"corner top_left_normal\"></div>\n";
+    $html_str .= "             <div class=\"corner top_right_normal\"></div>\n";
+
+    # display the selection box to add a new column
+    $html_str .= "             ".get_select("add_select", "add_it", "")."\n";
+    $args_str = "(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'), ";
+    $args_str .= "document.getElementById('largest_id').innerHTML)";
+    $html_str .= "             <span id=\"action_bar_button_add\">";
+    $html_str .= get_href(get_onclick(ACTION_INSERT_LISTBUILDER_ROW, HTML_NO_PERMISSION_CHECK, "", "", $args_str), translate("BUTTON_ADD_FIELD"), "icon_add");
+    $html_str .= "</span>\n";
+
+    # display the modify button when a title has been given
+    if ($old_list_loaded == TRUE)
+    {
+        $args_str = "handleFunction(%22".ACTION_MODIFY_LIST."%22, %22".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."%22, document.getElementById(%22listbuilder_list_title_id%22).value, ";
+        $args_str .= "document.getElementById(%22listbuilder_list_description_id%22).value, ";
+        $args_str .= "xajax.getFormValues(%22database_definition_form%22))";
+        $html_str .= "            &nbsp;&nbsp;&nbsp;<span id=\"action_bar_button_modify\">";
+        $html_str .= get_href(get_onclick_confirm(ACTION_MODIFY_LIST, $list_title, "action_bar_button_modify", "above", $args_str, translate("LABEL_CONFIRM_MODIFY")), translate("BUTTON_MODIFY_LIST"), "icon_accept");
+        $html_str .= "</span>\n";
+    }
+    # display the create button when no title has been given
+    else
+   {
+        $args_str = "(document.getElementById(%27listbuilder_list_title_id%27).value, ";
+        $args_str .= "document.getElementById(%27listbuilder_list_description_id%27).value, ";
+        $args_str .= "xajax.getFormValues(%27database_definition_form%27))";
+        $html_str .= "            &nbsp;&nbsp;&nbsp;<span id=\"action_bar_button_create\">";
+        $html_str .= get_href(get_onclick(ACTION_CREATE_LIST, HTML_NO_LIST_PERMISSION_CHECK, "action_bar_button_create", "above", $args_str), translate("BUTTON_CREATE_LIST"), "icon_accept");
+        $html_str .= "</span>\n";
+    }
+
+    # add largest id
+    $html_str .= "            <span id=\"largest_id\" class=\"invisible_collapsed\">".$largest_id."</span>\n";
+
+    $html_str .= "            <div class=\"corner bottom_left_normal\"></div>\n";
+    $html_str .= "            <div class=\"corner bottom_right_normal\"></div>\n";
+    $html_str .= "        </div> <!-- action_bar -->\n";
+
+    $response->assign("page_title", "innerHTML", $page_title);
+    $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_LISTBUILDER));
+    $response->assign("main_body", "innerHTML", $html_str);
+
+    # set html for listbuilder statics pane
+    $html_str = "";
     $html_str .= "            <div class=\"corner top_left_normal\"></div>\n";
     $html_str .= "            <div class=\"corner top_right_normal\"></div>\n";
     $html_str .= "            <div class=\"listbuilder_title\">".translate("LABEL_GENERAL_SETTINGS")."</div>\n";
@@ -163,67 +215,13 @@ function action_get_listbuilder_page ($list_title)
     $html_str .= "            </div> <!-- listbuilder_contents -->\n";
     $html_str .= "            <div class=\"corner bottom_left_normal\"></div>\n";
     $html_str .= "            <div class=\"corner bottom_right_normal\"></div>\n";
-    $html_str .= "        </div> <!-- listbuilder_pane -->\n";
+    $response->custom_response->assign_with_effect("listbuilder_statics_pane", $html_str);
 
-    # display the actual listbuilder
-    $html_str .= "        <div class=\"listbuilder_pane\">\n";
-    $html_str .= "            <div class=\"corner top_left_normal\"></div>\n";
-    $html_str .= "            <div class=\"corner top_right_normal\"></div>\n";
-    $html_str .= "            <div class=\"listbuilder_title\">".translate("LABEL_DEFINE_TABLE_FIELDS")."</div>\n";
-    $html_str .= "            <div id=\"listbuilder_contents\" class=\"listbuilder_contents\">\n";
+    # set html for listbuilder configuration pane
+    $html_str = get_field_definition_table($definition);
+    $response->custom_response->assign_with_effect("listbuilder_configuration_pane", $html_str);
 
-    $html_str .= get_field_definition_table($definition);
-
-    $html_str .= "            </div> <!-- listbuilder_contents -->\n";
-    $html_str .= "            <div class=\"corner bottom_left_normal\"></div>\n";
-    $html_str .= "            <div class=\"corner bottom_right_normal\"></div>\n";
-
-    # add largest id and old definition
-    $html_str .= "            <div class=\"invisible_collapsed\">\n";
-    $html_str .= "                <div id=\"largest_id\">".$largest_id."</div>\n";
-    $html_str .= "            </div>\n\n";
-
-    $html_str .= "        </div> <!-- listbuilder_pane -->\n";
-    $html_str .= "        <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
-    $html_str .= "             <div class=\"corner top_left_normal\"></div>\n";
-    $html_str .= "             <div class=\"corner top_right_normal\"></div>\n";
-
-    # display the selection box to add a new column
-    $html_str .= "             ".get_select("add_select", "add_it", "")."\n";
-    $args_str = "(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'), ";
-    $args_str .= "document.getElementById('largest_id').innerHTML)";
-    $html_str .= "             <span id=\"action_bar_button_add\">";
-    $html_str .= get_href(get_onclick(ACTION_INSERT_LISTBUILDER_ROW, HTML_NO_PERMISSION_CHECK, "", "", $args_str), translate("BUTTON_ADD_FIELD"), "icon_add");
-    $html_str .= "</span>\n";
-
-    # display the modify button when a title has been given
-    if ($old_list_loaded == TRUE)
-    {
-        $args_str = "handleFunction(%22".ACTION_MODIFY_LIST."%22, %22".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."%22, document.getElementById(%22listbuilder_list_title_id%22).value, ";
-        $args_str .= "document.getElementById(%22listbuilder_list_description_id%22).value, ";
-        $args_str .= "xajax.getFormValues(%22database_definition_form%22))";
-        $html_str .= "            &nbsp;&nbsp;&nbsp;<span id=\"action_bar_button_modify\">";
-        $html_str .= get_href(get_onclick_confirm(ACTION_MODIFY_LIST, $list_title, "action_bar_button_modify", "above", $args_str, translate("LABEL_CONFIRM_MODIFY")), translate("BUTTON_MODIFY_LIST"), "icon_accept");
-        $html_str .= "</span>\n";
-    }
-    # display the create button when no title has been given
-    else
-   {
-        $args_str = "(document.getElementById(%27listbuilder_list_title_id%27).value, ";
-        $args_str .= "document.getElementById(%27listbuilder_list_description_id%27).value, ";
-        $args_str .= "xajax.getFormValues(%27database_definition_form%27))";
-        $html_str .= "            &nbsp;&nbsp;&nbsp;<span id=\"action_bar_button_create\">";
-        $html_str .= get_href(get_onclick(ACTION_CREATE_LIST, HTML_NO_LIST_PERMISSION_CHECK, "action_bar_button_create", "above", $args_str), translate("BUTTON_CREATE_LIST"), "icon_accept");
-        $html_str .= "</span>\n";
-    }
-
-    $html_str .= "            <div class=\"corner bottom_left_normal\"></div>\n";
-    $html_str .= "            <div class=\"corner bottom_right_normal\"></div>\n";
-    $html_str .= "        </div> <!-- action_bar -->\n";
-
-    $response->assign("page_title", "innerHTML", $page_title);
-    $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_LISTBUILDER));
-    $response->assign("main_body", "innerHTML", $html_str);
+    $response->assign("largest_id", "innerHTML", $largest_id);
     $response->assign("footer_text", "innerHTML", "&nbsp;");
 
     if ($old_list_loaded == FALSE && strlen($list_title) > 0)
@@ -267,7 +265,7 @@ function action_insert_listbuilder_row ($field_type, $definition, $largest_id)
     $response = new xajaxResponse();
 
     $html_str = get_field_definition_table($new_definition);
-    $response->assign("listbuilder_contents", "innerHTML", $html_str);
+    $response->custom_response->assign_with_effect("listbuilder_configuration_pane", $html_str);
     $response->assign("largest_id", "innerHTML", $largest_id + 1);
 
     # log total time for this function
@@ -329,7 +327,7 @@ function action_move_listbuilder_row ($row_number, $direction, $definition)
     }
 
     $html_str = get_field_definition_table($new_definition);
-    $response->assign("listbuilder_contents", "innerHTML", $html_str);
+    $response->custom_response->assign_with_effect("listbuilder_configuration_pane", $html_str);
 
     # log total time for this function
     $logging->info(get_function_time_str(__METHOD__));
@@ -373,7 +371,7 @@ function action_delete_listbuilder_row ($row_number, $definition)
     }
 
     $html_str = get_field_definition_table($new_definition);
-    $response->assign("listbuilder_contents", "innerHTML", $html_str);
+    $response->custom_response->assign_with_effect("listbuilder_configuration_pane", $html_str);
 
     # log total time for this function
     $logging->info(get_function_time_str(__METHOD__));
@@ -402,7 +400,7 @@ function action_refresh_listbuilder ($definition)
     $response = new xajaxResponse();
 
     $html_str = get_field_definition_table(array_values($definition));
-    $response->assign("listbuilder_contents", "innerHTML", $html_str);
+    $response->custom_response->assign_with_effect("listbuilder_configuration_pane", $html_str);
 
     # log total time for this function
     $logging->info(get_function_time_str(__METHOD__));
@@ -737,6 +735,10 @@ function get_field_definition_table ($definition)
     $input_html_value_invisible = "<input style=\"visibility: hidden;\" type=text size=\"1\" maxlength=\"100\"";
     $html_str = "";
 
+    $html_str .= "            <div class=\"corner top_left_normal\"></div>\n";
+    $html_str .= "            <div class=\"corner top_right_normal\"></div>\n";
+    $html_str .= "            <div class=\"listbuilder_title\">".translate("LABEL_DEFINE_TABLE_FIELDS")."</div>\n";
+    $html_str .= "            <div id=\"listbuilder_contents\" class=\"listbuilder_contents\">\n";
     $html_str .= "                <form id=\"database_definition_form\" action=\"javascript:void(0);\" method=\"javascript:void(0);\" onsubmit=\"javascript:void(0);\">\n";
     $html_str .= "                    <table id=\"listbuilder_definition\" align=\"left\" border=\"0\" cellspacing=\"0\">\n";
     $html_str .= "                        <thead>\n";
@@ -869,6 +871,9 @@ function get_field_definition_table ($definition)
     $html_str .= "                        </tbody>\n";
     $html_str .= "                    </table> <!-- listbuilder_general_settings -->\n";
     $html_str .= "                </form> <!-- database_definition_form -->\n\n";
+    $html_str .= "            </div> <!-- listbuilder_contents -->\n";
+    $html_str .= "            <div class=\"corner bottom_left_normal\"></div>\n";
+    $html_str .= "            <div class=\"corner bottom_right_normal\"></div>\n";
 
     $logging->trace("got field definition table");
 

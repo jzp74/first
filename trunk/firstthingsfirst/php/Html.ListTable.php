@@ -129,7 +129,7 @@ function action_get_list_page ($list_title)
 
     # set action pane
     $html_str = $html_database_table->get_action_bar($list_title, "");
-    $response->assign("action_pane", "innerHTML", $html_str);
+    $response->custom_response->assign_and_show('action_pane', $html_str);
 
     # create list table object
     $list_table = new ListTable($list_title);
@@ -146,7 +146,7 @@ function action_get_list_page ($list_title)
 
     # set content
     $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect(LIST_CSS_NAME_PREFIX."content_pane", $result->get_result_str());
 
     # set footer
     $response->assign("footer_text", "innerHTML", get_footer($list_table->get_creator_modifier_array()));
@@ -263,11 +263,11 @@ function action_get_list_content ($list_title, $order_by_field, $page)
 
     # set content
     $html_database_table->get_content($list_table, $list_title, $order_by_field, $page, $result);
-    $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect(LIST_CSS_NAME_PREFIX."content_pane", $result->get_result_str());
 
     # set action pane
     $html_str = $html_database_table->get_action_bar($list_title, "");
-    $response->assign("action_pane", "innerHTML", $html_str);
+    $response->custom_response->assign_with_effect('action_pane', $html_str);
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -371,15 +371,14 @@ function get_list_record ($list_title, $key_string)
 
     # set action pane
     $focus_element_name = $html_database_table->get_record($list_table, $list_title, $key_string, array(), $result);
-    $response->assign("action_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect('action_pane', $result->get_result_str());
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
-    # set focus on hidden input element and then on first editable input element
-    $response->script("document.getElementById('focus_on_this_input').focus()");
-    $response->script("document.getElementById('".$focus_element_name."').focus()");
+    # focus on lower part of page
+    $response->custom_response->focus("$focus_element_name");
 
     $logging->trace("got list record");
 
@@ -412,7 +411,7 @@ function action_get_list_import ($list_title)
 
     # set action pane
     $html_database_table->get_import($list_title, $result);
-    $response->assign("action_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect('action_pane', $result->get_result_str());
 
     # hide the submit button
     $response->script("$('#button_import').hide();");
@@ -448,8 +447,8 @@ function action_get_list_import ($list_title)
         });
     ");
 
-    # set focus on hidden input element
-    $response->script("document.getElementById('focus_on_this_input').focus()");
+    # focus on lower part of page
+    $response->custom_response->focus("");
 
     # log total time for this function
     $logging->info(get_function_time_str(__METHOD__));
@@ -553,11 +552,11 @@ function action_insert_list_record ($list_title, $form_values)
     # set content
     $result->reset();
     $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect(LIST_CSS_NAME_PREFIX."content_pane", $result->get_result_str());
 
     # set action pane
     $html_str = $html_database_table->get_action_bar($list_title, "");
-    $response->assign("action_pane", "innerHTML", $html_str);
+    $response->custom_response->assign_with_effect("action_pane", $html_str);
 
     # set footer
     $response->assign("footer_text", "innerHTML", get_footer($list_table->get_creator_modifier_array()));
@@ -669,11 +668,11 @@ function action_update_list_record ($list_title, $key_string, $form_values)
     # set content
     $result->reset();
     $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect(LIST_CSS_NAME_PREFIX."content_pane", $result->get_result_str());
 
     # set action pane
     $html_str = $html_database_table->get_action_bar($list_title, "");
-    $response->assign("action_pane", "innerHTML", $html_str);
+    $response->custom_response->assign_with_effect("action_pane", $html_str);
 
     # set footer
     $response->assign("footer_text", "innerHTML", get_footer($list_table->get_creator_modifier_array()));
@@ -739,7 +738,7 @@ function action_archive_list_record ($list_title, $key_string)
 
     # set content
     $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect(LIST_CSS_NAME_PREFIX."content_pane", $result->get_result_str());
 
     # set footer
     $response->assign("footer_text", "innerHTML", get_footer($list_table->get_creator_modifier_array()));
@@ -805,7 +804,7 @@ function action_activate_list_record ($list_title, $key_string)
 
     # set content
     $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect(LIST_CSS_NAME_PREFIX."content_pane", $result->get_result_str());
 
     # set footer
     $response->assign("footer_text", "innerHTML", get_footer($list_table->get_creator_modifier_array()));
@@ -974,11 +973,11 @@ function action_import_list_records ($list_title, $file_name, $field_seperator)
     # set content
     $result->reset();
     $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect(LIST_CSS_NAME_PREFIX."content_pane", $result->get_result_str());
 
     # set action pane
     $html_str = $html_database_table->get_action_bar($list_title, "");
-    $response->assign("action_pane", "innerHTML", $html_str);
+    $response->custom_response->assign_with_effect("action_pane", $html_str);
 
     # set footer
     $response->assign("footer_text", "innerHTML", get_footer($list_table->get_creator_modifier_array()));
@@ -1185,7 +1184,7 @@ function action_delete_list_record ($list_title, $key_string)
 
     # set content
     $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect(LIST_CSS_NAME_PREFIX."content_pane", $result->get_result_str());
 
     # set footer
     $response->assign("footer_text", "innerHTML", get_footer($list_table->get_creator_modifier_array()));
@@ -1224,7 +1223,7 @@ function action_cancel_list_action ($list_title)
 
     # set action pane
     $html_str = $html_database_table->get_action_bar($list_title, "");
-    $response->assign("action_pane", "innerHTML", $html_str);
+    $response->custom_response->assign_with_effect('action_pane', $html_str);
 
     # log total time for this function
     $logging->info(get_function_time_str(__METHOD__));
@@ -1277,7 +1276,7 @@ function action_set_list_archive($list_title, $archive_value)
 
     # set content
     $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect(LIST_CSS_NAME_PREFIX."content_pane", $result->get_result_str());
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -1343,7 +1342,7 @@ function action_set_list_filter($list_title, $filter_str)
 
     # set content
     $html_database_table->get_content($list_table, $list_title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->assign(LIST_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect(LIST_CSS_NAME_PREFIX."content_pane", $result->get_result_str());
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)

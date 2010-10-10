@@ -177,6 +177,11 @@ define("NAME_DATE_OPTION_DATE", "date");
 define("NAME_DATE_OPTION_DATE_NAME", "namedate");
 
 /**
+ * language name
+ */
+define("VISUAL_EFFECT_TIME", 300);
+
+/**
  * language names
  */
 define("LANG_EN", "LABEL_USER_LANG_EN");

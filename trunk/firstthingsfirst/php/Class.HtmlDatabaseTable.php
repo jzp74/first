@@ -511,11 +511,11 @@ class HtmlDatabaseTable
         $html_str .= "            </table>\n";
 
 
-        # add navigation links, except when all pages have to be shown
+        # add navigation links, except when all pages have to be shown or the number of records is exactly 0
         $html_str .= "            <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."contents_bottom\">\n";
         $html_str .= "                <div class=\"corner bottom_left_normal\"></div>\n";
         $html_str .= "                <div class=\"corner bottom_right_normal\"></div>\n";
-        if ($page != DATABASETABLE_ALL_PAGES)
+        if (($page != DATABASETABLE_ALL_PAGES) && ($total_pages > 0))
         {
             $html_str .= "                <div id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."pages_bottom\">";
             # display 1 pagenumber when there is only one page (or none)

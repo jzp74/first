@@ -89,7 +89,7 @@ function action_get_portal_page ()
 
     # set content
     $html_database_table->get_content($list_table_description, LISTTABLEDESCRIPTION_TABLE_NAME, "", DATABASETABLE_ALL_PAGES, $result);
-    $response->assign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect(PORTAL_CSS_NAME_PREFIX."content_pane", $result->get_result_str());
 
     # no action pane
 
@@ -134,7 +134,7 @@ function action_get_portal_content ($title, $order_by_field, $page)
 
     # set content
     $html_database_table->get_content($list_table_description, $title, $order_by_field, DATABASETABLE_ALL_PAGES, $result);
-    $response->assign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect(PORTAL_CSS_NAME_PREFIX."content_pane", $result->get_result_str());
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -196,7 +196,7 @@ function action_delete_portal_record ($list_title)
 
     # set content
     $html_database_table->get_content($list_table_description, $list_title, "", DATABASETABLE_ALL_PAGES, $result);
-    $response->assign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect(PORTAL_CSS_NAME_PREFIX."content_pane", $result->get_result_str());
 
     # reset current list name only when active list has been removed
     if ($list_title == $user->get_current_list_name())

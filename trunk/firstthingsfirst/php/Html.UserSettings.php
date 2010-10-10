@@ -88,7 +88,7 @@ function action_get_user_settings_page ()
 
     # get action pane for current user
     $html_database_table->get_record($user, USER_TABLE_NAME, $user_record_key_string, $db_fields_array, $result);
-    $response->assign("action_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect("action_pane", $result->get_result_str());
 
     # set footer
     $response->assign("footer_text", "innerHTML", "&nbsp;");

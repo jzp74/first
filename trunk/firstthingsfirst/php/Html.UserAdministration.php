@@ -98,11 +98,11 @@ function action_get_user_admin_page ()
 
     # set content
     $html_database_table->get_content($user, HTML_NO_LIST_PERMISSION_CHECK, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->assign(PORTAL_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect(PORTAL_CSS_NAME_PREFIX."content_pane", $result->get_result_str());
 
     # set action pane
     $html_str = $html_database_table->get_action_bar(USER_TABLE_NAME, "");
-    $response->assign("action_pane", "innerHTML", $html_str);
+    $response->custom_response->assign_and_show("action_pane", $html_str);
 
     # set footer
     $response->assign("footer_text", "innerHTML", "&nbsp;");
@@ -144,7 +144,7 @@ function action_get_user_admin_content ($title, $order_by_field, $page)
 
     # set content
     $html_database_table->get_content($user, $title, $order_by_field, $page, $result);
-    $response->assign(USER_ADMIN_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect(USER_ADMIN_CSS_NAME_PREFIX."content_pane", $result->get_result_str());
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -181,18 +181,17 @@ function action_get_user_admin_record ($title, $key_string)
     $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
 
     # get html for one user record
-    $html_database_table->get_record($user, $title, $key_string, array(), $result);
+    $focus_element_name = $html_database_table->get_record($user, $title, $key_string, array(), $result);
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
     # set action pane
-    $response->assign("action_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect("action_pane", $result->get_result_str());
 
-    # set focus on hidden input element and then on first editable input element
-    $response->script("document.getElementById('focus_on_this_input').focus()");
-    $response->script("document.record_form_name.elements[0].focus()");
+    # focus on lower part of page
+    $response->custom_response->focus("$focus_element_name");
 
     # log total time for this function
     $logging->info(get_function_time_str(__METHOD__));
@@ -288,11 +287,11 @@ function action_insert_user_admin_record ($title, $form_values)
     # set content
     $result->reset();
     $html_database_table->get_content($user, $title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->assign(USER_ADMIN_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect(USER_ADMIN_CSS_NAME_PREFIX."content_pane", $result->get_result_str());
 
     # set action pane
     $html_str = $html_database_table->get_action_bar($title, "");
-    $response->assign("action_pane", "innerHTML", $html_str);
+    $response->custom_response->assign_with_effect("action_pane", $html_str);
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -417,11 +416,11 @@ function action_update_user_admin_record ($title, $key_string, $form_values)
     # set content
     $result->reset();
     $html_database_table->get_content($user, $title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->assign(USER_ADMIN_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect(USER_ADMIN_CSS_NAME_PREFIX."content_pane", $result->get_result_str());
 
     # set action pane
     $html_str = $html_database_table->get_action_bar($title, "");
-    $response->assign("action_pane", "innerHTML", $html_str);
+    $response->custom_response->assign_with_effect("action_pane", $html_str);
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -502,7 +501,7 @@ function action_delete_user_admin_record ($title, $key_string)
 
     # set content
     $html_database_table->get_content($user, $title, "", DATABASETABLE_UNKWOWN_PAGE, $result);
-    $response->assign(USER_ADMIN_CSS_NAME_PREFIX."content_pane", "innerHTML", $result->get_result_str());
+    $response->custom_response->assign_with_effect(USER_ADMIN_CSS_NAME_PREFIX."content_pane", $result->get_result_str());
 
     # check post conditions
     if (check_postconditions($result, $response) == FALSE)
@@ -538,7 +537,7 @@ function action_cancel_user_admin_action ($title)
 
     # set action pane
     $html_str = $html_database_table->get_action_bar($title, "");
-    $response->assign("action_pane", "innerHTML", $html_str);
+    $response->custom_response->assign_with_effect("action_pane", $html_str);
 
     # log total time for this function
     $logging->info(get_function_time_str(__METHOD__));

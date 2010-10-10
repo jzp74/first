@@ -5,6 +5,7 @@
 #database_table_content_pane {
     margin: 0px 0px 16px 0px;
     color: [NORMAL_TEXT_COLOR];
+    display: none;
     }
 
 /*  defines area above database table contents */

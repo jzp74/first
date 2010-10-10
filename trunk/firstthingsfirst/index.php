@@ -40,6 +40,7 @@ require_once("php/Class.UserListTablePermissions.php");
  */
 $xajax = new xajax();
 
+
 $logging = new Logging($firstthingsfirst_loglevel, "logs/".$firstthingsfirst_logfile);
 $database = new Database();
 $list_state = new ListState();
@@ -57,7 +58,7 @@ require_once("lang/".$firstthingsfirst_lang_prefix_array[$firstthingsfirst_lang]
 
 
 /**
- * Import HTML related files
+ * import HTML related files
  */
 require_once("php/Class.HtmlDatabaseTable.php");
 
@@ -70,6 +71,61 @@ require_once("php/Html.ListTableItemNotes.php");
 require_once("php/Html.ListBuilder.php");
 require_once("php/Html.UserListTablePermissions.php");
 require_once("php/Html.UserSettings.php");
+
+
+/**
+ * custom response class for custom visible effects
+ */
+class custom_response extends xajaxResponsePlugin
+{
+    /**
+     * assign given html to given dom element
+     * @param $id string id of dom element
+     * @param $html_str string string containing html
+     * @return void
+     */
+    function assign_and_show ($id, $html_str)
+    {
+        $html_str = str_replace("\"", "\\\"", $html_str);
+        $html_str = str_replace("\n", "\\\n", $html_str);
+        $html_str = str_replace("'", "\'", $html_str);
+        $this->objResponse->script("$('#$id').html('$html_str'); $('#$id').show();");
+    }
+
+    /**
+     * assign given html to given dom element and apply visual slideUp/slideDown effect
+     * @param $id string id of dom element
+     * @param $html_str string string containing html
+     * @return void
+     */
+    function assign_with_effect ($id, $html_str)
+    {
+        $html_str = str_replace("\"", "\\\"", $html_str);
+        $html_str = str_replace("\n", "\\\n", $html_str);
+        $html_str = str_replace("'", "\'", $html_str);
+        $this->objResponse->script("$('#$id').slideUp(".VISUAL_EFFECT_TIME.", function() { $('#$id').html('$html_str'); $('#$id').slideDown(".VISUAL_EFFECT_TIME."); });");
+    }
+
+    /**
+     * set focus on given dom element
+     * @param $id string id of dom element
+     * @return void
+     */
+    function focus ($id)
+    {
+        if ($id == "")
+            $this->objResponse->script("setTimeout(\"$('#focus_on_this_input').focus(); \", ".(VISUAL_EFFECT_TIME * 2)."); ");
+        else
+            $this->objResponse->script("setTimeout(\"$('#focus_on_this_input').focus(); $('#$id').focus();\", ".(VISUAL_EFFECT_TIME * 2).");");
+    }
+}
+
+
+/**
+ * register plugin class
+ */
+$objPluginManager = &xajaxPluginManager::getInstance();
+$objPluginManager->registerPlugin(new custom_response());
 
 
 /**
@@ -306,4 +362,4 @@ if (isset($_GET['action']) && $_GET['action'] == ACTION_GET_LOGIN_PAGE)
 
 </body>
 
-<html>
+</html>

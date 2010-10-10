@@ -7,6 +7,11 @@
  */
 
 
+// set global vars
+
+// time for visuals
+var visualTime = 500;
+
 // call check_permissions php function via xajax
 // @param array variable array of arguments
 // @return void
@@ -39,6 +44,8 @@ function handleFunction (functionName)
     // remove the first argument from the arguments list
     var argArray = $.makeArray(arguments).slice(1);
 
-    // call specified xajax function
+    // do other stuff
+    // TODO?
+
     xajax.request({ xjxfun : functionName }, { parameters : argArray });
 }

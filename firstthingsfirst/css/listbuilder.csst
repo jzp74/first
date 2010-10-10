@@ -7,6 +7,7 @@
     margin: 0px 0px 16px 0px;
     color: [NORMAL_TEXT_COLOR];
     background: [TRANSPARENT_IMAGE] left top repeat;
+    display: none;
     }
 
 /*  defines a listbuilder title */

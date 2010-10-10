@@ -514,6 +514,7 @@ html, body {
 /*  defines the pane that contains the action bar */
 #action_pane {
     position: relative;
+    display: none;
     }
 
 /*  defines the action bar that contains a number of actions (hrefs) */

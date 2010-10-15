@@ -570,7 +570,7 @@ html, body {
     }
 
 #login_pane .icon_accept {
-    padding: 2px 0px 2px 24px;
+    padding: 3px 0px 3px 24px;
     border: none;
     color: [LINK_TEXT_COLOR];
     font-weight: bold;

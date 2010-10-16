@@ -3,6 +3,9 @@
 
 /*  defines the pane that contains database table contents */
 #database_table_content_pane {
+    min-width: 0; /* Fix for IE and slideUp/Down */
+    zoom: 1; /* Fix for IE and slideUp/Down */
+    position: relative; /* Fix for IE and slideUp/Down */
     margin: 0px 0px 16px 0px;
     color: [NORMAL_TEXT_COLOR];
     display: none;
@@ -10,6 +13,7 @@
 
 /*  defines area above database table contents */
 #database_table_contents_top {
+    min-width: 0; /* Fix for IE and slideUp/Down */
     display: block;
     position: relative;
     padding: 0px 14px 0px 14px;
@@ -131,8 +135,9 @@
 
 /*  defines area below database table contents */
 #database_table_contents_bottom {
-    position: relative;
+    min-width: 0; /* Fix for IE and slideUp/Down */
     display: block;
+    position: relative;
     height: 38px;
     background: [BACKGROUNDS_IMAGE] 0px -271px repeat-x;
     }

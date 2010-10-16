@@ -513,6 +513,7 @@ html, body {
 
 /*  defines the pane that contains the action bar */
 #action_pane {
+    min-width: 0; /* Fix for IE and slideUp/Down */
     position: relative;
     display: none;
     }

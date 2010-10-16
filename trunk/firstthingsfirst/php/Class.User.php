@@ -31,6 +31,11 @@ define("USER_ID_RESET_VALUE", -1);
 define("USER_NAME_RESET_VALUE", "-system-");
 
 /**
+ * definition of name of an empty (non initialized) User object
+ */
+define("USER_LINES_PER_PAGE_RESET_VALUE", "12");
+
+/**
  * definition of name field name
  */
 define("USER_NAME_FIELD_NAME", "_name");
@@ -79,7 +84,7 @@ $class_user_fields = array(
     USER_PW_FIELD_NAME => array("LABEL_USER_PW", FIELD_TYPE_DEFINITION_PASSWORD, ""),
     USER_LANG_FIELD_NAME => array("LABEL_USER_LANG", FIELD_TYPE_DEFINITION_SELECTION, implode(array_keys($firstthingsfirst_lang_prefix_array), '|')),
     USER_DATE_FORMAT_FIELD_NAME => array("LABEL_USER_DATE_FORMAT", FIELD_TYPE_DEFINITION_SELECTION, implode(array_keys($firstthingsfirst_date_format_prefix_array), '|')),
-    USER_LINES_PER_PAGE_FIELD_NAME => array("LABEL_USER_LINES_PER_PAGE", FIELD_TYPE_DEFINITION_NUMBER, ""),
+    USER_LINES_PER_PAGE_FIELD_NAME => array("LABEL_USER_LINES_PER_PAGE", FIELD_TYPE_DEFINITION_NUMBER, USER_LINES_PER_PAGE_RESET_VALUE),
     USER_CAN_CREATE_LIST_FIELD_NAME => array("LABEL_USER_CAN_CREATE_LIST", FIELD_TYPE_DEFINITION_BOOL, ""),
     USER_IS_ADMIN_FIELD_NAME => array("LABEL_USER_IS_ADMIN", FIELD_TYPE_DEFINITION_BOOL, ""),
     USER_TIMES_LOGIN_FIELD_NAME => array("LABEL_USER_TIMES_LOGIN", FIELD_TYPE_DEFINITION_NON_EDIT_NUMBER, ""),

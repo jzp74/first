@@ -739,6 +739,8 @@ class HtmlDatabaseTable
                 # set initial values
                 else
                 {
+                    if (($field_type == FIELD_TYPE_DEFINITION_NUMBER) && ($field_options != ""))
+                        $html_str .=  " value=\"".$field_options."\"";
                     if ($field_type == FIELD_TYPE_DEFINITION_NON_EDIT_NUMBER)
                         $html_str .=  " value=\"0\"";
                     else if (($field_type == FIELD_TYPE_DEFINITION_AUTO_CREATED) || ($field_type == FIELD_TYPE_DEFINITION_AUTO_MODIFIED))

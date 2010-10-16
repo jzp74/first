@@ -3,6 +3,7 @@
 
 /*  defines a listbuilder pane */
 .listbuilder_pane {
+    min-width: 0; /* Fix for IE and slideUp/Down */
     position: relative;
     margin: 0px 0px 16px 0px;
     color: [NORMAL_TEXT_COLOR];

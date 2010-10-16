@@ -1,0 +1,61 @@
+/* This stylesheet contains modifications on styles needed for printing*/
+
+/* all links should be black */
+a, a:link, a:visited {
+    color: rgb(0, 0, 0);
+    }
+
+/* all background colors should be white (show no images) */
+*, body, #header, #page_title, #database_table_contents, #footer, #footer_text {
+    color: rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+    }
+
+/* parts of header that need not to be shown or should be shown differently */
+#header_logo, #header_contents_status, #portal_title, #navigation_container {
+    display: none;
+    }
+
+/* no padding before and after header */
+#header_container, #header {
+    height: 37px;
+    padding: 0px 0px 0px 0px;
+    }
+
+/* use full width */
+#main_body {
+    padding: 0px 2px 0px 2px;
+    }
+
+/* no padding before and after footer */
+#footer {
+    bottom: 0px;
+    height: 21px;
+    }
+
+/* do not show top and bottom parts of list */
+#database_table_contents_top, #database_table_contents_bottom {
+    display: none;
+    }
+
+/* do not use full height and use full width*/
+html, #outer_body {
+    height: auto;
+    margin: 0px 0px 0px 0px;
+    }
+
+/* use collapsed borders to be able to print nice borders */
+#database_table_contents {
+    border-collapse: collapse;
+    color: rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(0, 0, 0);
+    width: 100%;
+    }
+
+/* td and th need a border */
+#database_table_contents td, #database_table_contents th {
+    color: rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(0, 0, 0);
+    }

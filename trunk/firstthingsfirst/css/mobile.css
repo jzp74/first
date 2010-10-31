@@ -1,0 +1,223 @@
+/* This stylesheet contains all shared styles
+ *
+ * The general setup of all pages is as follows:
+ *  - body
+ *  -- outer_body
+ *  --- header_container
+ *  ---- header
+ *  ------ header_contents_status
+ *  ------ portal_title
+ *  ------ page_title
+ *  ------ navigation_container
+ *  --- main_body
+ *  --- footer
+ */
+
+/*  defines shared settings for all styles */
+* {
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    border: none;
+    z-index: 10;
+    font-family: Arial;
+    font-size: 12px;
+    text-decoration: none;
+    text-align: left;
+    }
+
+/*  define style for ALL links (aka buttons) */
+a, a:link, a:visited {
+    font-weight: bold;
+    }
+
+/*  define style for all 12x12 images */
+.image {
+    padding: 4px 0px 4px 0px;
+    }
+
+/*  defines standard tags */
+em, strong {
+    font-size: inherit;
+    font-family: inherit;
+    }
+
+/*  defines a standard input */
+input, select, textarea {
+    text-align: left;
+    font-family: Arial;
+    font-size: 12px;
+    font-weight: normal;
+    }
+
+input, textarea {
+    padding: 1px 5px 3px 5px;
+    }
+
+textarea {
+    overflow: auto
+    }
+
+select {
+    padding: 1px 1px 3px 0px;
+    }
+
+.inactive_input {
+    background-color: rgb(240, 240, 240);
+    color: rgb(120, 120, 120)
+    }
+
+/*  defines an inactive button */
+.inactive_button {
+    color: rgb(120, 120, 120);
+    text-decoration: none;
+    font-weight: bold;
+    }
+
+/*  defines an invisible and collapsed style */
+.invisible_collapsed {
+    display: none;
+    }
+
+/*  defines corners */
+.corner {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    background: url(../images/mobile.png);
+    z-index: 20;
+    }
+
+.top_left_normal {
+    top: 0px;
+    left: 0px;
+    background-position: 0px 0px;
+    }
+
+.top_right_normal {
+    top: 0px;
+    right: 0px;
+    background-position: -7px 0px;
+    }
+
+.bottom_left_normal {
+    bottom: 0px;
+    left: 0px;
+    background-position: 0px -7px;
+    }
+
+.bottom_right_normal {
+    bottom: 0px;
+    right: 0px;
+    background-position: -7px -7px;
+    }
+
+/*  defines the html overall style of a page */
+html, body {
+    height: 100%;
+    }
+
+/*  defines the body that stretches to the bottom of the page */
+#outer_body {
+    position: relative;
+    height: auto !important;
+    height: 100%;
+    min-height: 100%;
+    padding: 3px 4px 3px 4px;
+    }
+
+/*  defines the header */
+#header {
+    position: relative;
+    height: 38px;
+    width: 100%;
+    background-color: rgb(95, 148, 206);
+    padding: 0px 0px 0px 0px;
+    }
+
+/*  defines the header logo */
+#header_logo {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    height: 36px;
+    width: 80px;
+    background: url(../images/mobile.png) 0px -16px no-repeat;
+    z-index: 100;
+    }
+
+/*  defines the title of the portal */
+#portal_title {
+    width: 100%;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    color: rgb(255, 255, 255);
+    font-family: Arial;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    }
+
+/*  defines the page title */
+#page_title {
+    width: 100%;
+    padding: 0px 0px 0px 0px;
+    color: rgb(255, 255, 255);
+    font-family: Arial;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    }
+
+/*  container for all page contents */
+#main_body {
+    padding: 1px 0px 1px 0px;
+    zoom: 1;
+    }
+
+/*  defines the footer of all pages */
+#footer {
+    position: relative;
+    height: 16px;
+    width: 100%;
+    background-color: rgb(95, 148, 206);
+    color: rgb(255, 255, 255);
+    }
+
+#footer_text {
+    padding: 2px 0px 0px 0px;
+    text-align: center;
+    font-family: Arial;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/*  defines the pane that contains the login screen */
+#login_pane {
+    position: relative;
+    padding: 6px 0px 6px 0px;
+    color: rgb(50, 50, 50);
+    }
+
+#login_form {
+    text-align: right;
+    }
+
+#login_pane input {
+    margin: 0px 0px 0px 14px;
+    padding: 1px 5px 3px 5px;
+    border: 1px solid rgb(197, 214, 232);
+    }
+
+#login_pane .icon_accept {
+    padding: 3px 0px 3px 0px;
+    border: none;
+    color: rgb(120, 120, 120);
+    font-weight: bold;
+    }
+
+/*  defines a line in the login screen */
+.login_line {
+    padding: 4px 30px 4px 30px;
+    text-align: right;
+    }

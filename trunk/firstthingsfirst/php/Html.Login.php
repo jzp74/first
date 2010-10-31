@@ -45,23 +45,31 @@ $firstthingsfirst_action_description[ACTION_LOGOUT]         = "------";
  */
 function get_login_page_html ()
 {
+    global $mobile;
     global $logging;
 
     $logging->trace("get login page html");
 
     $html_str = "";
 
-    $html_str .= "\n        <div id=\"login_white_space\">&nbsp;</div>\n";
+    if (!$mobile)
+        $html_str .= "\n        <div id=\"login_white_space\">&nbsp;</div>\n";
     $html_str .= "        <div id=\"login_pane\">\n";
-    $html_str .= "            <div class=\"corner top_left_border\"></div>\n";
-    $html_str .= "            <div class=\"corner top_right_border\"></div>\n";
+    if (!$mobile)
+    {
+        $html_str .= "            <div class=\"corner top_left_border\"></div>\n";
+        $html_str .= "            <div class=\"corner top_right_border\"></div>\n";
+    }
     $html_str .= "            <form name=\"login_form\" id=\"login_form\" action=\"\" method=\"POST\" onsubmit=\"javascript:handleFunction('".ACTION_LOGIN."', document.getElementById('user_name_id').value, document.getElementById('password_id').value); return false;\">\n";
     $html_str .= "                <div class=\"login_line\">".translate("LABEL_USER_NAME")."<input name=\"user_name\" id=\"user_name_id\" size=\"16\" maxlength=\"16\" value= \"\" type=\"text\"></div>\n";
     $html_str .= "                <div class=\"login_line\">".translate("LABEL_PASSWORD")."<input name=\"password\" id=\"password_id\" size=\"16\" maxlength=\"16\" type=\"password\"></div>\n";
     $html_str .= "                <div class=\"login_line\"><input type=submit class=\"icon icon_accept\" value=\"".translate("BUTTON_LOGIN")."\"></div>\n";
     $html_str .= "            </form> <!-- login_form -->\n";
-    $html_str .= "            <div class=\"corner bottom_left_border\"></div>\n";
-    $html_str .= "            <div class=\"corner bottom_right_border\"></div>\n";
+    if (!$mobile)
+    {
+        $html_str .= "            <div class=\"corner bottom_left_border\"></div>\n";
+        $html_str .= "            <div class=\"corner bottom_right_border\"></div>\n";
+    }
     $html_str .= "        </div> <!-- login_pane -->\n\n";
 
     $logging->trace("got login page html");

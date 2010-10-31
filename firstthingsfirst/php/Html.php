@@ -77,6 +77,7 @@ class custom_response extends xajaxResponsePlugin
     }
 }
 
+
 /**
  * test if user is logged in and has permissions for given action
  * @param string $action the user action

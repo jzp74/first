@@ -83,7 +83,7 @@ function action_get_portal_page ()
 
     # set page, title, explanation and navigation
     $response->assign("page_title", "innerHTML", $firstthingsfirst_portal_intro_text);
-    $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_PORTAL));
+//    $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_PORTAL));
     $html_database_table->get_page($firstthingsfirst_portal_title, $result);
     $response->assign("main_body", "innerHTML", $result->get_result_str());
 

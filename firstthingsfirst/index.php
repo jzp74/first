@@ -4,7 +4,7 @@
  * General index.php as used in this project
  *
  * @author Jasper de Jong
- * @copyright 2007-20010 Jasper de Jong
+ * @copyright 2007-2010 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  * @todo how much data can we transfer from php to js?
  */
@@ -48,6 +48,7 @@ $user = new User();
 $list_table_description = new ListTableDescription();
 $user_list_permissions = new UserListTablePermissions();
 $user_start_time_array = array();
+$mobile = FALSE;
 
 $text_translations = array();
 if ($user->is_login())
@@ -79,13 +80,10 @@ require_once("php/Html.UserSettings.php");
 $objPluginManager = &xajaxPluginManager::getInstance();
 $objPluginManager->registerPlugin(new custom_response());
 
-
 /**
  * register local functions
  */
-$xajax->register(XAJAX_FUNCTION, "set_translations");
 $xajax->register(XAJAX_FUNCTION, "process_url");
-$xajax->register(XAJAX_FUNCTION, "set_browser_compatibility_message");
 
 /**
  * start ajax interactions
@@ -99,11 +97,11 @@ $xajax->processRequest();
 <html>
 
 <head>
-<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
-<title>First Things First</title>
-<link rel="shortcut icon" href="images/favicon.ico">
-<?php echo "<link rel=\"stylesheet\" href=\"css/".$firstthingsfirst_theme_prefix_array[$firstthingsfirst_theme].".min.css\">\n"; ?>
-<link rel="stylesheet" href="css/print.min.css" media="print">
+    <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+    <title>First Things First</title>
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <?php echo "<link rel=\"stylesheet\" href=\"css/".$firstthingsfirst_theme_prefix_array[$firstthingsfirst_theme].".min.css\">\n"; ?>
+    <link rel="stylesheet" href="css/print.min.css" media="print">
 </head>
 
 <body>
@@ -158,8 +156,8 @@ else
 <script language="javascript" src="js/tooltips.min.js"></script>
 <script language="javascript" src="js/handlers.min.js"></script>
 <script language="javascript">
-handleFunction('set_translations');
-handleFunction('process_url');
+    handleFunction('set_translations');
+    handleFunction('process_url');
 <?php
 # TEMPORARY SOLUTION
 # set variable in javascript

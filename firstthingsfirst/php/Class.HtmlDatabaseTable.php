@@ -322,7 +322,6 @@ class HtmlDatabaseTable
         $html_str .= "                </thead>\n";
         $html_str .= "                <tbody>\n";
 
-        $this->_log->trace("we're now here");
         # now all the records
         $record_number = 0;
         foreach ($records as $record)
@@ -876,10 +875,12 @@ class HtmlDatabaseTable
      */
     function get_action_bar ($list_title, $action)
     {
+        global $mobile;
+
         $this->_log->trace("get action bar (list_title=".$list_title.", action=".$action.")");
 
         $html_str = "";
-
+        
         $html_str .= "\n            <div class=\"corner top_left_normal\"></div>\n";
         $html_str .= "            <div class=\"corner top_right_normal\"></div>\n";
         $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";

@@ -76,7 +76,6 @@
 
 /*  defines table that contains database table contents */
 #database_table_contents {
-    display: block;
     float: none;
     width: 100%;
     background: [TRANSPARENT_IMAGE] left top repeat;

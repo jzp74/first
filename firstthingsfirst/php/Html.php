@@ -29,6 +29,55 @@ define("HTML_TAB_TYPE_HIGHLIGHT", "tab_highlight");
 
 
 /**
+ * custom response class for custom visible effects
+ */
+class custom_response extends xajaxResponsePlugin
+{
+    /**
+     * assign given html to given dom element
+     * @param $id string id of dom element
+     * @param $html_str string string containing html
+     * @return void
+     */
+    function assign_and_show ($id, $html_str)
+    {
+        $html_str = str_replace("\"", "\\\"", $html_str);
+        $html_str = str_replace("\n", "\\\n", $html_str);
+        $html_str = str_replace("\r", "", $html_str);
+        $html_str = str_replace("'", "\'", $html_str);
+        $this->objResponse->script("$('#$id').html('$html_str'); $('#$id').show();");
+    }
+
+    /**
+     * assign given html to given dom element and apply visual slideUp/slideDown effect
+     * @param $id string id of dom element
+     * @param $html_str string string containing html
+     * @return void
+     */
+    function assign_with_effect ($id, $html_str)
+    {
+        $html_str = str_replace("\"", "\\\"", $html_str);
+        $html_str = str_replace("\n", "\\\n", $html_str);
+        $html_str = str_replace("\r", "", $html_str);
+        $html_str = str_replace("'", "\'", $html_str);
+        $this->objResponse->script("$('#$id').slideUp(".VISUAL_EFFECT_TIME.", function() { $('#$id').html('$html_str'); $('#$id').slideDown(".VISUAL_EFFECT_TIME."); });");
+    }
+
+    /**
+     * set focus on given dom element
+     * @param $id string id of dom element
+     * @return void
+     */
+    function focus ($id)
+    {
+        if ($id == "")
+            $this->objResponse->script("setTimeout(\"$('#focus_on_this_input').focus(); \", ".(VISUAL_EFFECT_TIME * 2)."); ");
+        else
+            $this->objResponse->script("setTimeout(\"$('#focus_on_this_input').focus(); $('#$id').focus();\", ".(VISUAL_EFFECT_TIME * 2).");");
+    }
+}
+
+/**
  * test if user is logged in and has permissions for given action
  * @param string $action the user action
  * @param string $error_element DOM element in which error has to be shown

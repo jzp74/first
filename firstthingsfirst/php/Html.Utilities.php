@@ -31,6 +31,148 @@ function get_xajax_javascript ()
 }
 
 /**
+ * parse the url and return html code accordingly
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
+function process_url ()
+{
+    global $logging;
+    global $user;
+
+    $logging->debug("PROCESS_URL (request_uri=".$_SERVER["REQUEST_URI"].")");
+
+    # show portal page if no action is set
+    $action = "";
+    if (isset($_GET['action']))
+        $action = $_GET['action'];
+
+    # do nothing for the login page
+    # TEMPORARY SOLUTION
+    # for some reason firefox needs the login page served as a whole
+    if ($action == ACTION_GET_LOGIN_PAGE)
+    {
+        $response = new xajaxResponse();
+
+        $response->script("document.getElementById('user_name_id').focus()");
+
+        return $response;
+    }
+    # redirect to login page when user is not logged in
+    else if (!$user->is_login())
+    {
+        $response = new xajaxResponse();
+
+        $response->script("window.location.assign('index.php?action=".ACTION_GET_LOGIN_PAGE."')");
+        $response->script("document.getElementById('user_name_id').focus()");
+
+        return $response;
+    }
+
+    # show portal page
+    if ($action == ACTION_GET_PORTAL_PAGE)
+        return action_get_portal_page();
+    # show list builder page
+    else if ($action == ACTION_GET_LISTBUILDER_PAGE)
+    {
+        if (isset($_GET['list']))
+            return action_get_listbuilder_page($_GET['list']);
+        else
+            return action_get_listbuilder_page("");
+    }
+    # show or print list page
+    else if ($action == ACTION_GET_LIST_PAGE)
+    {
+        if (isset($_GET['list']))
+            return action_get_list_page($_GET['list']);
+        else
+            return action_get_portal_page();
+    }
+    else if ($action == ACTION_GET_LIST_PRINT_PAGE)
+    {
+        if (isset($_GET['list']))
+            return action_get_list_print_page($_GET['list']);
+        else
+            return action_get_portal_page();
+    }
+    # show user list permissions page
+    else if ($action == ACTION_GET_USERLISTTABLEPERMISSIONS_PAGE)
+        return action_get_user_list_permissions_page();
+    # show user admin page
+    else if ($action == ACTION_GET_USER_ADMIN_PAGE)
+        return action_get_user_admin_page();
+    # show user admin page
+    else if ($action == ACTION_GET_USER_SETTINGS_PAGE)
+        return action_get_user_settings_page();
+    # redirect to portal page in all other instances
+    else
+    {
+        $response = new xajaxResponse();
+        $response->call("window.location.assign('index.php?action=".ACTION_GET_PORTAL_PAGE."')");
+
+        return $response;
+    }
+}
+
+/**
+ * show a compatibility message to the user on the login screen
+ * @param $browser_name_str string string containing browser name
+ * @param $browser_version float browser version number
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
+function set_browser_compatibility_message ($browser_name_str, $browser_version)
+{
+    $response = new xajaxResponse();
+    $unsupported_browser_message = translate("ERROR_BROWSER_UNSUPPORTED")."$browser_name_str $browser_version";
+
+    if (($browser_name_str == 'Firefox') && ($browser_version < 3))
+    {
+        $response->script("showTooltip('#login_pane', '$unsupported_browser_message', 'info', 'below')");
+
+        return $response;
+    }
+    if (($browser_name_str == 'Chrome') && ($browser_version < 4))
+    {
+        $response->script("showTooltip('#login_pane', '$unsupported_browser_message', 'info', 'below')");
+
+        return $response;
+    }
+    if (($browser_name_str == 'Internet Explorer') && ($browser_version < 7))
+    {
+        $response->script("showTooltip('#login_pane', '$unsupported_browser_message', 'info', 'below')");
+
+        return $response;
+    }
+    if (($browser_name_str != 'Firefox') && ($browser_name_str != 'Chrome') && ($browser_name_str != 'Internet Explorer'))
+    {
+        $response->script("showTooltip('#login_pane', '$unsupported_browser_message', 'info', 'below')");
+
+        return $response;
+    }
+
+    // do not show any message when browser is compatible
+}
+
+/**
+ * set translation vars in javascript
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
+function set_translations ()
+{
+    global $logging;
+
+    $logging->trace("set translations");
+
+    $response = new xajaxResponse();
+    $accept_str = translate("BUTTON_ACCEPT");
+    $cancel_str = translate("BUTTON_CANCEL");
+    $close_str = translate("BUTTON_CLOSE");
+
+    $response->script("setTranslations('".$accept_str."', '".$cancel_str."', '".$close_str."')");
+
+    return $response;
+}
+
+/**
  * return translation of given string
  * @param string $str string to translate
  * @return string translated string

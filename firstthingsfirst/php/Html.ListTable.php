@@ -213,9 +213,11 @@ function action_get_list_print_page ($list_title)
     if (check_postconditions($result, $response) == FALSE)
         return $response;
 
+    # show the content pane
+    $response->script("$('#".LIST_CSS_NAME_PREFIX."content_pane').show()");
+
     # print this page
-    $response->call("window.print()");
-    $response->call("window.close()");
+    $response->script("window.print()");
 
     # log total time for this function
     $logging->info(get_function_time_str(__METHOD__));

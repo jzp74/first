@@ -414,11 +414,11 @@ function action_get_list_import ($list_title)
     $response->custom_response->assign_with_effect('action_pane', $result->get_result_str());
 
     # hide the submit button
-    $response->script("$('#button_import').hide();");
+    $response->custom_response->script("$('#button_import').hide();");
 
     # create ajax upload button for the import button
     $file_name = "upload_".$user->get_name()."_".strftime("%d%m%Y_%H%M%S.csv");
-    $response->script("
+    $response->custom_response->script("
         var button = $('#button_upload'), interval;
         new AjaxUpload(button,
         {
@@ -448,7 +448,7 @@ function action_get_list_import ($list_title)
     ");
 
     # focus on lower part of page
-    $response->custom_response->focus("");
+    $response->custom_response->focus("$focus_on_this_input");
 
     # log total time for this function
     $logging->info(get_function_time_str(__METHOD__));

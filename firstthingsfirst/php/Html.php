@@ -64,6 +64,20 @@ class custom_response extends xajaxResponsePlugin
     }
 
     /**
+     * script given javascript string
+     * @param $script_str string javascript string
+     * @return void
+     */
+    function script ($script_str)
+    {
+        $script_str = str_replace("\"", "\\\"", $script_str);
+        $script_str = str_replace("\n", "\\\n", $script_str);
+        $script_str = str_replace("\r", "", $script_str);
+        $script_str = str_replace("'", "\'", $script_str);
+        $this->objResponse->script("setTimeout(\"$script_str\", ".(VISUAL_EFFECT_TIME * 2)."); ");
+    }
+
+    /**
      * set focus on given dom element
      * @param $id string id of dom element
      * @return void

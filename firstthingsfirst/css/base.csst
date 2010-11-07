@@ -584,7 +584,7 @@ html, body {
 
 /*  defines a line in the login screen */
 .login_line {
-    padding: 4px 30px 4px 30px;
+    padding: 4px 30px 4px 26px;
     text-align: right;
     }
 

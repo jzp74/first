@@ -63,6 +63,7 @@ $portal_table_configuration = array(
  */
 function action_get_portal_page ()
 {
+    global $mobile;
     global $logging;
     global $user;
     global $portal_table_configuration;
@@ -82,8 +83,9 @@ function action_get_portal_page ()
     $html_database_table = new HtmlDatabaseTable ($portal_table_configuration);
 
     # set page, title, explanation and navigation
-    $response->assign("page_title", "innerHTML", $firstthingsfirst_portal_intro_text);
-//    $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_PORTAL));
+    $response->assign("page_title", "innerHTML", $firstthingsfirst_portal_intro_text);    
+    if ($mobile == FALSE)
+        $response->assign("navigation_container", "innerHTML", get_page_navigation(PAGE_TYPE_PORTAL));
     $html_database_table->get_page($firstthingsfirst_portal_title, $result);
     $response->assign("main_body", "innerHTML", $result->get_result_str());
 

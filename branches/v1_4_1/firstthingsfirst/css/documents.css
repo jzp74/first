@@ -1,0 +1,81 @@
+/*  defines shared settings for all styles */
+* {
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    border: none;
+    z-index: 10;
+    text-decoration: none;
+    text-align: left;
+    font-family: Arial;
+  	font-size: 14px;
+  	color: #1A3337;
+    }
+
+body {
+    margin: 10px 14px 10px 14px;
+    }
+
+#title {
+    font-weight: bold;
+	margin: 8px 0px 6px 0px;
+	font-size: 28px;
+	color: #19799A;
+    }
+
+h1 {
+    font-weight: bold;
+    padding: 0px 0px 0px 0px;
+	margin: 8px 0px 6px 0px;
+	font-size: 28px;
+	color: #19799A;
+    }
+
+h2 {
+    font-weight: bold;
+    padding: 0px 0px 0px 0px;
+	margin: 18px 0px 6px 0px;
+	font-size: 18px;
+	color: #19799A;
+    }
+
+h3 {
+    font-weight: bold;
+    padding: 0px 0px 0px 0px;
+	margin: 14px 0px 6px 0px;
+	font-size: 14px;
+	color: #47BAE1;
+    }
+
+p {
+    margin: 8px 0px 0px 8px;
+    }
+
+a, a:link, a:visited {
+	text-decoration: none;
+	color: #19799A;
+    font-weight: bold;
+    }
+
+a:hover {
+	text-decoration: none;
+	color: #2DA6BE;
+    }
+
+table {
+    margin: 6px 0px 6px 8px;
+    }
+
+table td {
+    padding: 4px 6px 4px 6px;
+    background-color: rgb(240, 240, 240);
+    text-align: left;
+    vertical-align: top;
+    }
+
+ul {
+    margin: 0px 0px 0px 30px;
+    }
+
+li {
+    margin: 4px 0px 0px 0px;
+    }

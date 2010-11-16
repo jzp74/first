@@ -1,0 +1,90 @@
+/* This stylesheet contains all portal styles */
+
+
+/*  defines a listbuilder pane */
+.listbuilder_pane {
+    min-width: 0; /* Fix for IE and slideUp/Down */
+    position: relative;
+    margin: 0px 0px 16px 0px;
+    color: [NORMAL_TEXT_COLOR];
+    background: [TRANSPARENT_IMAGE] left top repeat;
+    display: none;
+    }
+
+/*  defines a listbuilder title */
+.listbuilder_title {
+    padding: 3px 6px 5px 6px;
+    margin: 0px 0px 0px 0px;
+    color: [BOX_HEADER_COLOR];
+    background-color: [BOX_BORDER_COLOR];
+    font-size: 16px;
+    font-weight: bold;
+    }
+
+/*  defines the actual contents */
+.listbuilder_contents {
+    overflow: hidden;
+    position: relative;
+    padding: 2px 0px 4px 0px;
+    }
+
+/*  defines a line */
+.listbuilder_contents_line {
+    overflow: hidden;
+    width: 100%;
+    padding: 6px 4px 6px 4px;
+    }
+
+.listbuilder_contents_line_left {
+    float: left;
+    padding: 0px 6px 0px 0px;
+    width: 240px;
+    text-align: left;
+    font-weight: bold;
+    }
+
+.listbuilder_contents_line_right {
+    float: left;
+    text-align: left;
+    }
+
+.listbuilder_contents_line input, .listbuilder_contents_line textarea {
+    border: 1px solid [BOX_BORDER_COLOR];
+    }
+
+/*  defines the table that contains the list definition */
+#listbuilder_definition {
+    width: 100%;
+    border-collapse: collapse;
+    }
+
+#listbuilder_definition tr {
+    }
+
+#listbuilder_definition tbody tr:hover {
+    background: [TRANSPARENT_IMAGE] left top repeat;
+    }
+
+#listbuilder_definition th {
+    padding: 5px 4px 5px 6px;
+    color: [HEADER_TEXT_COLOR];
+    }
+
+#listbuilder_definition td {
+    padding: 3px 8px 3px 4px;
+    vertical-align: top;
+    color: [LIGHT_TEXT_COLOR];
+    border-top: 1px [LIST_LINE_COLOR];
+    }
+
+#listbuilder_definition select, #listbuilder_definition input {
+    border: 1px solid [BOX_BORDER_COLOR];
+    }
+
+#listbuilder_definition a, #listbuilder_definition a:link, #listbuilder_definition a:visited {
+    color: [LINK_TEXT_COLOR];
+    }
+
+#listbuilder_definition a:hover {
+    color: [LINK_TEXT_HOVER_COLOR];
+    }

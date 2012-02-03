@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Mobile indexm.php as used in this project
+ * Mobile index.php as used in this project
  *
  * @author Jasper de Jong
  * @copyright 2007-2010 Jasper de Jong
@@ -41,7 +41,7 @@ require_once("../php/Class.UserListTablePermissions.php");
 $xajax = new xajax();
 
 
-$logging = new Logging($firstthingsfirst_loglevel, "logs/m_".$firstthingsfirst_logfile);
+$logging = new Logging($firstthingsfirst_loglevel, "../logs/m_".$firstthingsfirst_logfile);
 $database = new Database();
 $list_state = new ListState();
 $user = new User();
@@ -97,6 +97,7 @@ $xajax->processRequest();
     <meta name="viewport" content="width=device-width" />
     <title>First Things First</title>
     <link rel="shortcut icon" href="../images/favicon.ico">
+    <link rel="stylesheet" href="../css/blue.min.css">
     <link rel="stylesheet" href="../css/mobile.min.css">
     <link rel="stylesheet" href="../css/print.min.css" media="print">
 </head>

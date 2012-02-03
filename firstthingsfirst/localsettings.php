@@ -11,6 +11,7 @@ $firstthingsfirst_portal_intro_text = "Welcome to My Portal. Please select a lis
 # choose between the following languages:
 # LANG_EN - English language
 # LANG_NL - Dutch language
+# LANG_ES - Spanish language
 $firstthingsfirst_lang = LANG_EN;
 
 # session time in minutes

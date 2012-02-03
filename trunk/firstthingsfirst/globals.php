@@ -186,13 +186,15 @@ define("VISUAL_EFFECT_TIME", 300);
  */
 define("LANG_EN", "LABEL_USER_LANG_EN");
 define("LANG_NL", "LABEL_USER_LANG_NL");
+define("LANG_ES", "LABEL_USER_LANG_EN");
 
 /**
  * set language prefix names
  */
 $firstthingsfirst_lang_prefix_array = array(
     "LABEL_USER_LANG_EN" => "en",
-    "LABEL_USER_LANG_NL" => "nl"
+    "LABEL_USER_LANG_NL" => "nl",
+    "LABEL_USER_LANG_ES" => "es"
 );
 
 /**

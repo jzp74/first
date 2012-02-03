@@ -5,7 +5,8 @@
  *
  * @package Text_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007-2009 Jasper de Jong
+ * @translator Jasper de Jong
+ * @copyright 2007-2012 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -62,6 +63,7 @@ $text_translations["LABEL_USER_PW"] = "password";
 $text_translations["LABEL_USER_LANG"] = "language";
 $text_translations["LABEL_USER_LANG_EN"] = "English";
 $text_translations["LABEL_USER_LANG_NL"] = "Dutch";
+$text_translations["LABEL_USER_LANG_ES"] = "Spanish";
 $text_translations["LABEL_USER_THEME_BLUE"] = "Original blues";
 $text_translations["LABEL_USER_THEME_BROWN"] = "Ancient writing";
 $text_translations["LABEL_USER_DATE_FORMAT"] = "date format";

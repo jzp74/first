@@ -143,7 +143,7 @@ class User extends UserDatabaseTable
         # reset relevant session parameters
         if (isset($_SESSION["login"]))
         {
-            $this->_log->debug("user session is still active (name=".$this->get_name().")");
+            $this->_log->info("user session is still active (name=".$this->get_name().")");
 
             # adjust cookie life time
             setcookie(USER_SESSION_NAME, $_COOKIE[USER_SESSION_NAME], time() + ($firstthingsfirst_session_time * 60));
@@ -482,7 +482,7 @@ class User extends UserDatabaseTable
                 return FALSE;
             else
             {
-                $this->_log->debug("user logged in (name=".$name.")");
+                $this->_log->info("user logged in (name=".$name.")");
 
                 return TRUE;
             }
@@ -510,7 +510,7 @@ class User extends UserDatabaseTable
         # reset this User object
         $this->reset();
 
-        $this->_log->trace("user logged out (name=".$name.")");
+        $this->_log->info("user logged out (name=".$name.")");
     }
 
     /**

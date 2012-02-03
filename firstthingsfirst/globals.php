@@ -149,13 +149,13 @@ define("PERMISSION_CAN_CREATE_SPECIFIC_LIST", 4);
 define("PERMISSION_IS_ADMIN_SPECIFIC_LIST", 5);
 
 /**
- * field_description_types
+ * field description types
  */
 define("FIELD_DESCRIPTION_NON_SELECTABLE_DATATYPE", 0);
 define("FIELD_DESCRIPTION_SELECTABLE_DATATYPE", 1);
 
 /**
- * field_description_fields
+ * field description fields
  */
 define("FIELD_DESCRIPTION_FIELD_DB_DEFINITION", 0);
 define("FIELD_DESCRIPTION_FIELD_HTML_DEFINITION", 1);
@@ -164,7 +164,7 @@ define("FIELD_DESCRIPTION_FIELD_INITIAL_DATA", 3);
 define("FIELD_DESCRIPTION_FIELD_TYPE", 4);
 
 /**
- *
+ * show id column
  */
 define("ID_COLUMN_SHOW", "do show");
 define("ID_COLUMN_NO_SHOW", "do not show");

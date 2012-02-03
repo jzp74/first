@@ -83,7 +83,9 @@ $objPluginManager->registerPlugin(new custom_response());
 /**
  * register local functions
  */
+$xajax->register(XAJAX_FUNCTION, "set_translations");
 $xajax->register(XAJAX_FUNCTION, "process_url");
+$xajax->register(XAJAX_FUNCTION, "set_browser_compatibility_message");
 
 /**
  * start ajax interactions

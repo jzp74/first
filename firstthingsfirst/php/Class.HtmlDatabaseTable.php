@@ -350,92 +350,10 @@ class HtmlDatabaseTable
                 else
                     $onclick_str = get_onclick(ACTION_GET_LIST_PAGE, $record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], $key_values_string, "below", "window.location.assign(%27index.php?action=".ACTION_GET_LIST_PAGE."&list=".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."%27)");
 
-                if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_BOOL)
-                {
-                    if ($value == 0)
-                        $html_str .= "                        <td ".$onclick_str.">".translate("LABEL_NO")."</td>\n";
-                    else
-                        $html_str .= "                        <td ".$onclick_str.">".translate("LABEL_YES")."</td>\n";
-                }
-                else if (stristr($fields[$db_field_name][1], "DATE"))
-                {
-                    $date_string = str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_FANCY, $value, $this->_user->get_date_format()));
-                    $html_str .= "                        <td ".$onclick_str.">".$date_string."</td>\n";
-                }
-                else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_AUTO_CREATED)
-                {
+                # call function to convert value according to type of field
+                $returned_str = $this->get_field_value($fields[$db_field_name][1], $fields[$db_field_name][2], $db_field_name, $record);
+                $html_str .= "                        <td ".$onclick_str.">$returned_str</td>\n";
 
-                    if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME)
-                        $html_str .= "                        <td ".$onclick_str.">".str_replace('-', '&#8209;', $record[DB_CREATOR_FIELD_NAME])."</td>\n";
-                    else
-                    {
-                        if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
-                        {
-                            $html_str .= "                        <td ".$onclick_str.">";
-                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_FANCY, $record[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format()))."</td>\n";
-                        }
-                        else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
-                        {
-                            $html_str .= "                        <td ".$onclick_str.">";
-                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format()));
-                            $html_str .= "&nbsp;(".$record[DB_CREATOR_FIELD_NAME].")</td>\n";
-                        }
-                    }
-                }
-                else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_AUTO_MODIFIED)
-                {
-                    if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME)
-                        $html_str .= "                        <td ".$onclick_str.">".str_replace('-', '&#8209;', $record[DB_MODIFIER_FIELD_NAME])."</td>\n";
-                    else
-                    {
-                        if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
-                        {
-                            $html_str .= "                        <td ".$onclick_str.">";
-                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_FANCY, $record[DB_TS_MODIFIED_FIELD_NAME], $this->_user->get_date_format()))."</td>\n";
-                        }
-                        else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
-                        {
-                            $html_str .= "                        <td ".$onclick_str.">";
-                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_MODIFIED_FIELD_NAME], $this->_user->get_date_format()));
-                            $html_str .= "&nbsp;(".$record[DB_MODIFIER_FIELD_NAME].")</td>\n";
-                        }
-                    }
-                }
-                else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
-                {
-                    $html_str .= "                        <td ".$onclick_str.">";
-                    if (count($value) > 0)
-                    {
-                        $html_str .= "\n";
-                        foreach ($value as $note_array)
-                        {
-                            $html_str .= "                            <p><span class=\"note_creator\">";
-                            $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_NORMAL, $note_array[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format()));
-                            $html_str .= "&nbsp;(".$note_array[DB_CREATOR_FIELD_NAME].")</span> ";
-                            $html_str .= transform_str($note_array["_note"])."</p>\n";
-                        }
-                    }
-                    else
-                        $html_str .= "-";
-                    $html_str .= "                        </td>\n";
-                }
-                else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_TEXT_FIELD)
-                {
-                    $html_str .= "                        <td ".$onclick_str.">".transform_str($value)."</td>\n";
-                }
-                else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_PASSWORD)
-                {
-                    $html_str .= "                        <td ".$onclick_str.">********</td>\n";
-                }
-                # translate options in user admin page
-                else if (($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_LIST) && ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_SELECTION))
-                {
-                    $html_str .= "                        <td ".$onclick_str.">".translate($value)."</td>\n";
-                }
-                else
-                {
-                    $html_str .= "                        <td ".$onclick_str.">".$value."</td>\n";
-                }
                 $col_number += 1;
             }
 
@@ -880,7 +798,7 @@ class HtmlDatabaseTable
         $this->_log->trace("get action bar (list_title=".$list_title.", action=".$action.")");
 
         $html_str = "";
-        
+
         $html_str .= "\n            <div class=\"corner top_left_normal\"></div>\n";
         $html_str .= "            <div class=\"corner top_right_normal\"></div>\n";
         $html_str .= "            <div id=\"action_bar\" align=\"left\" valign=\"top\">\n";
@@ -998,6 +916,111 @@ class HtmlDatabaseTable
         $html_str .= "                    </div>\n";
 
         $this->_log->trace("got filter");
+
+        return $html_str;
+    }
+
+    /**
+    * get html value of specified type of field
+    * @param $field_type string type of field
+    * @param $field_options string options for given field
+    * @param $db_field_name string db field name
+    * @param $record array array of record name and values
+    * @return string returned html
+    */
+    function get_field_value ($field_type, $field_options, $db_field_name, $record)
+    {
+        $this->_log->error("get field value");
+
+        $field_value = $record[$db_field_name];
+
+        if ($field_type == FIELD_TYPE_DEFINITION_BOOL)
+        {
+            if ($field_value == 0)
+                $html_str = translate("LABEL_NO");
+            else
+                $html_str = translate("LABEL_YES");
+        }
+        else if (stristr($field_type, "DATE"))
+        {
+            $html_str = str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_FANCY, $field_value, $this->_user->get_date_format()));
+        }
+        else if ($field_type == FIELD_TYPE_DEFINITION_AUTO_CREATED)
+        {
+            if ($field_options == NAME_DATE_OPTION_NAME)
+            {
+                $html_str = str_replace('-', '&#8209;', $record[DB_CREATOR_FIELD_NAME]);
+            }
+            else
+            {
+                if ($field_options == NAME_DATE_OPTION_DATE)
+                {
+                    $html_str = str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_FANCY, $record[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format()));
+                }
+                else if ($field_options == NAME_DATE_OPTION_DATE_NAME)
+                {
+                    $html_str = str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format()));
+                    $html_str .= "&nbsp;(".$record[DB_CREATOR_FIELD_NAME].")";
+                }
+            }
+        }
+        else if ($field_type == FIELD_TYPE_DEFINITION_AUTO_MODIFIED)
+        {
+            if ($field_options == NAME_DATE_OPTION_NAME)
+            {
+                $html_str = str_replace('-', '&#8209;', $record[DB_MODIFIER_FIELD_NAME]);
+            }
+            else
+            {
+                if ($field_options == NAME_DATE_OPTION_DATE)
+                {
+                    $html_str = str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_FANCY, $record[DB_TS_MODIFIED_FIELD_NAME], $this->_user->get_date_format()));
+                }
+                else if ($field_options == NAME_DATE_OPTION_DATE_NAME)
+                {
+                    $html_str = str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_MODIFIED_FIELD_NAME], $this->_user->get_date_format()));
+                    $html_str .= "&nbsp;(".$record[DB_MODIFIER_FIELD_NAME].")";
+                }
+            }
+        }
+        else if ($field_type == FIELD_TYPE_DEFINITION_NOTES_FIELD)
+        {
+            if (count($field_value) > 0)
+            {
+                $html_str = "\n";
+                foreach ($field_value as $note_array)
+                {
+                    $html_str .= "                            <p><span class=\"note_creator\">";
+                    $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_NORMAL, $note_array[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format()));
+                    $html_str .= "&nbsp;(".$note_array[DB_CREATOR_FIELD_NAME].")</span> ";
+                    $html_str .= transform_str($note_array["_note"])."</p>";
+                }
+            }
+            else
+                $html_str = "-";
+        }
+        else if ($field_type == FIELD_TYPE_DEFINITION_TEXT_FIELD)
+        {
+            $html_str = transform_str($field_value);
+        }
+        else if ($field_type == FIELD_TYPE_DEFINITION_PASSWORD)
+        {
+            $html_str = "********";
+        }
+        # translate options in user admin page
+        else if ($field_type == FIELD_TYPE_DEFINITION_SELECTION)
+        {
+            if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_LIST)
+            {
+                $html_str = translate($field_value);
+            }
+            else
+                $html_str = $field_value;
+        }
+        else
+            $html_str = $field_value;
+
+        $this->_log->trace("got field value");
 
         return $html_str;
     }

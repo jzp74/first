@@ -5,7 +5,7 @@
  *
  * @package Class_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007-2009 Jasper de Jong
+ * @copyright 2007-2012 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -60,13 +60,13 @@ class ListState
         
     /**
     * selection filter str (human readable)
-    * @var array
+    * @var string
     */
     protected $filter_str;
 
     /**
     * selection filter str (sql 'where' clause string)
-    * @var array
+    * @var string
     */
     protected $filter_str_sql;
 
@@ -149,7 +149,7 @@ class ListState
 
     /**
     * get value of filter_str attribute
-    * @return array value of filter_str attribute
+    * @return string value of filter_str attribute
     */
     function get_filter_str ()
     {
@@ -158,11 +158,10 @@ class ListState
 
     /**
     * get value of filter_str_sql attribute
-    * @return array value of filter_str_sql attribute
+    * @return string value of filter_str_sql attribute
     */
     function get_filter_str_sql ()
     {
-        $this->_log->debug("get (filter_str_sql=".$this->filter_str_sql.")");
         return $this->filter_str_sql;
     }
 
@@ -235,7 +234,7 @@ class ListState
     
     /**
     * set value of filter_str attribute
-    * @param int filter_str value of filter_str attribute
+    * @param string filter_str value of filter_str attribute
     * @return void
     */
     function set_filter_str ($filter_str)
@@ -245,12 +244,11 @@ class ListState
     
     /**
     * set value of filter_str_sql attribute
-    * @param int filter_str_sql value of filter_str_sql attribute
+    * @param string filter_str_sql value of filter_str_sql attribute
     * @return void
     */
     function set_filter_str_sql ($filter_str_sql)
     {
-        $this->_log->debug("set (filter_str_sql=".$filter_str_sql.")");
         $this->filter_str_sql = $filter_str_sql;
     }
     

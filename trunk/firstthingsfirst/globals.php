@@ -4,7 +4,7 @@
  * This file contains global firstthingsfirst definitions
  *
  * @author Jasper de Jong
- * @copyright 2007-2009 Jasper de Jong
+ * @copyright 2007-2012 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -80,12 +80,14 @@ define("DB_DATATYPE_USERNAME", "VARCHAR(20) NOT NULL");
 define("DB_DATATYPE_TEXTLINE", "VARCHAR(100) NOT NULL");
 define("DB_DATATYPE_TEXTMESSAGE", "MEDIUMTEXT NOT NULL");
 define("DB_DATATYPE_INT", "INT NOT NULL");
+define("DB_DATATYPE_FLOAT", "FLOAT (10, 2) NOT NULL");
 define("DB_DATATYPE_PASSWORD", "CHAR(32) BINARY NOT NULL");
 
 /**
  * database data types initial values
  */
 define("DB_INITIAL_DATA_NUMBER", "0");
+define("DB_INITIAL_DATA_FLOAT", "0.0");
 define("DB_INITIAL_DATA_DATE", "1970-01-01");
 define("DB_INITIAL_DATA_DATETIME", DB_NULL_DATETIME);
 define("DB_INITIAL_DATA_STRING", "");
@@ -128,6 +130,8 @@ define("GENERAL_SEPARATOR", "----");
 /**
  * allowed characters regular expression
  */
+define("PREG_ALLOWED_NUMBER", "/^-{0,1}\d*$/");
+define("PREG_ALLOWED_FLOAT", "/^-{0,1}\d*\.{0,1}\d+$/");
 define("PREG_ALLOWED_DATE_US", "/^[0-9\/]+$/");
 define("PREG_ALLOWED_DATE_EU", "/^[0-9-]+$/");
 define("PREG_ALLOWED_CHARS", "/^[A-Za-z0-9\s]+$/");
@@ -164,7 +168,13 @@ define("FIELD_DESCRIPTION_FIELD_INITIAL_DATA", 3);
 define("FIELD_DESCRIPTION_FIELD_TYPE", 4);
 
 /**
- * show id column
+ * number and float column options
+ */
+define("NUMBER_COLUMN_NO_SUMMATION", "no summation");
+define("NUMBER_COLUMN_SUMMATION", "summation");
+
+/**
+ * id column options
  */
 define("ID_COLUMN_SHOW", "do show");
 define("ID_COLUMN_NO_SHOW", "do not show");
@@ -198,7 +208,7 @@ $firstthingsfirst_lang_prefix_array = array(
 );
 
 /**
- * them names
+ * theme names
  */
 define("THEME_BLUE", "LABEL_USER_THEME_BLUE");
 define("THEME_BROWN", "LABEL_USER_THEME_BROWN");
@@ -216,6 +226,7 @@ $firstthingsfirst_theme_prefix_array = array(
  */
 define("FIELD_TYPE_DEFINITION_BOOL", "LABEL_DEFINITION_BOOL");
 define("FIELD_TYPE_DEFINITION_NUMBER", "LABEL_DEFINITION_NUMBER");
+define("FIELD_TYPE_DEFINITION_FLOAT", "LABEL_DEFINITION_FLOAT");
 define("FIELD_TYPE_DEFINITION_AUTO_NUMBER", "LABEL_DEFINITION_AUTO_NUMBER");
 define("FIELD_TYPE_DEFINITION_NON_EDIT_NUMBER", "LABEL_DEFINITION_NON_EDIT_NUMBER");
 define("FIELD_TYPE_DEFINITION_DATE", "LABEL_DEFINITION_DATE");
@@ -254,7 +265,14 @@ $firstthingsfirst_field_descriptions = array(
         "input type=text size=\"10\" maxlength=\"10\"",
         "str_is_number",
         DB_INITIAL_DATA_NUMBER,
-        FIELD_DESCRIPTION_NON_SELECTABLE_DATATYPE
+        FIELD_DESCRIPTION_SELECTABLE_DATATYPE
+    ),
+    FIELD_TYPE_DEFINITION_FLOAT => array(
+        DB_DATATYPE_FLOAT,
+        "input type=text size=\"12\" maxlength=\"12\"",
+        "str_is_float",
+        DB_INITIAL_DATA_FLOAT,
+        FIELD_DESCRIPTION_SELECTABLE_DATATYPE
     ),
     FIELD_TYPE_DEFINITION_AUTO_NUMBER => array(
         DB_DATATYPE_ID,

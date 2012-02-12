@@ -2,6 +2,7 @@
 
 /**
  * This file contains translation of text labels in English
+ * Non translated strings are marked with TO_BE_TRANSLATED
  *
  * @package Text_FirstThingsFirst
  * @author Jasper de Jong
@@ -46,6 +47,8 @@ $text_translations["LABEL_CREATED_BY"] = "created by";
 $text_translations["LABEL_AT"] = "at";
 $text_translations["LABEL_LAST_MODIFICATION_BY"] = "last modification by";
 $text_translations["LABEL_USER_NAME"] = "name";
+$text_translations["LABEL_DEFINITION_NUMBER"] = "whole number&nbsp;&nbsp;";
+$text_translations["LABEL_DEFINITION_FLOAT"] = "floating point number&nbsp;&nbsp;";
 $text_translations["LABEL_DEFINITION_AUTO_NUMBER"] = "number (prefilled)&nbsp;&nbsp;";
 $text_translations["LABEL_DEFINITION_DATE"] = "date&nbsp;&nbsp;";
 $text_translations["LABEL_DEFINITION_AUTO_CREATED"] = "creation (prefilled)&nbsp;&nbsp;";
@@ -129,6 +132,8 @@ $text_translations["LABEL_DEFINE_TABLE_FIELDS"] = "Define list columns";
 $text_translations["LABEL_FIELDTYPE"] = "column type";
 $text_translations["LABEL_FIELDNAME"] = "column name";
 $text_translations["LABEL_OPTIONS"] = "options";
+$text_translations["LABEL_DEFINITION_NUMBER_EXPLANATION"] = "Users can give a whole number in this field";
+$text_translations["LABEL_DEFINITION_FLOAT_EXPLANATION"] = "Users can give a floating point number (with 2 decimals) in this field";
 $text_translations["LABEL_DEFINITION_AUTO_NUMBER_EXPLANATION"] = "This column has a unique number for each row in your list. Please specify if you want to show this column in your list";
 $text_translations["LABEL_DEFINITION_DATE_EXPLANATION"] = "Users can give a date in this field";
 $text_translations["LABEL_DEFINITION_AUTO_CREATED_EXPLANATION"] = "Please specify if this column shows the name of the user that has created this row and the creation date or either one of both";
@@ -141,6 +146,8 @@ $text_translations["LABEL_LIST_MODIFICATIONS_DONE"] = "List modifications done!<
 $text_translations["LABEL_NEW_LIST_CREATED"] = "New list created!<br>Return to the [[portal]] or create another new list";
 $text_translations["LABEL_ID_COLUMN_SHOW"] = "show this column&nbsp;&nbsp;";
 $text_translations["LABEL_ID_COLUMN_NO_SHOW"] = "do not show this column&nbsp;&nbsp;";
+$text_translations["LABEL_NUMBER_COLUMN_NO_SUMMATION"] = "do not show summation of this column&nbsp;&nbsp;";
+$text_translations["LABEL_NUMBER_COLUMN_SUMMATION"] = "show summation of this column&nbsp;&nbsp;";
 $text_translations["LABEL_NAME_ONLY"] = "name only&nbsp;&nbsp;";
 $text_translations["LABEL_DATE_ONLY"] = "date only&nbsp;&nbsp;";
 $text_translations["LABEL_DATE_NAME"] = "date and name&nbsp;&nbsp;";

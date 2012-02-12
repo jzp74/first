@@ -5,7 +5,7 @@
  *
  * @package Class_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007-2009 Jasper de Jong
+ * @copyright 2007-2012 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -107,6 +107,12 @@ class DatabaseTable
     * @var array
     */
     protected $db_field_names;
+    
+    /**
+    * array containing db_field_names of numerical fields that need to be summed
+    * @var array
+    */
+    protected $numerical_field_names_to_sum;
 
     /**
     * string describing which record metadata should be recorded
@@ -165,6 +171,7 @@ class DatabaseTable
         $this->_database =& $database;
 
         $this->user_field_names = array();
+        $this->numerical_field_names_to_sum = array();
 
         $this->table_name = $table_name;
         $this->fields = $fields;
@@ -176,8 +183,15 @@ class DatabaseTable
             $user_field_name = $fields[$db_field_name][0];
             $user_fields[$db_field_name] = $user_field_name;
             $field_type = $fields[$db_field_name][1];
+            $field_options = $fields[$db_field_name][2];
             array_push($this->user_field_names, $user_field_name);
             $this->user_fields[$user_field_name] = $db_field_name;
+            if ((($field_type == FIELD_TYPE_DEFINITION_NUMBER) || ($field_type == FIELD_TYPE_DEFINITION_FLOAT)) &&
+                ($field_options == NUMBER_COLUMN_SUMMATION))
+            {
+                $this->_log->trace("found numerical field to sum (db_field_name=$db_field_name)");
+                array_push($this->numerical_field_names_to_sum, $db_field_name);
+            }
         }
 
         if (strlen($metadata_str) != 3)
@@ -290,6 +304,8 @@ class DatabaseTable
     */
     function _get_key_values_string ($record)
     {
+        if ($record[DB_ID_FIELD_NAME] == "")
+            return "_0";
         return "_".$record[DB_ID_FIELD_NAME];
     }
 
@@ -529,6 +545,37 @@ class DatabaseTable
         else if (strlen($filter_str_sql) > 0)
             $query_where_clause .= " AND ".$filter_str_sql;
 
+        # get the summation for each numerical field_name to sum
+        $sum_result_array = array();
+        if (count($this->numerical_field_names_to_sum) > 0)
+        {
+            $num_of_fields = count($this->numerical_field_names_to_sum);
+            $current_field = 0;
+            $query = "SELECT ";
+            
+            foreach ($this->numerical_field_names_to_sum as $db_field_name)
+            {
+                $query .= "SUM($db_field_name) AS $db_field_name";
+                # do not add seperator after last field
+                if ($current_field < ($num_of_fields - 1))
+                    $query .= ", ";
+                $current_field += 1;
+            }
+            
+            $query .= " FROM ".$this->table_name.$query_where_clause;
+            $result = $this->_database->query($query);
+            if ($result != FALSE)
+            {
+                $sum_result_array = $this->_database->fetch($result);
+            }
+            else
+            {
+                $this->_handle_error("could not get number of DatabaseTable records from database", "ERROR_DATABASE_PROBLEM");
+
+                return array();
+            }
+        }
+
         # get the number of records only if user is not requesting all entries
         $total_records = 0;
         $total_pages = 0;
@@ -651,6 +698,21 @@ class DatabaseTable
             $this->_handle_error("could not read DatabaseTable rows from database", "ERROR_DATABASE_PROBLEM");
 
             return array();
+        }
+
+        # add extra line for summed fields
+        if (count($sum_result_array) > 0)
+        {
+            $row = array();
+            
+            foreach ($db_field_names as $db_field_name)
+            {
+                if (array_key_exists($db_field_name, $sum_result_array))
+                    $row[$db_field_name] = $sum_result_array[$db_field_name];
+                else
+                    $row[$db_field_name] = "";
+            }
+            array_push($rows, $row);
         }
 
         $this->_log->trace("selected DatabaseTable");

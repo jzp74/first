@@ -2,6 +2,7 @@
 
 /**
  * This file contains translation of text labels in Dutch
+ * Non translated strings are marked with TO_BE_TRANSLATED
  *
  * @package Text_FirstThingsFirst
  * @author Jasper de Jong
@@ -46,6 +47,8 @@ $text_translations["LABEL_CREATED_BY"] = "aangemaakt door";
 $text_translations["LABEL_AT"] = "op";
 $text_translations["LABEL_LAST_MODIFICATION_BY"] = "laatste wijziging door";
 $text_translations["LABEL_USER_NAME"] = "naam";
+$text_translations["LABEL_DEFINITION_NUMBER"] = "geheel getal&nbsp;&nbsp;";
+$text_translations["LABEL_DEFINITION_FLOAT"] = "getal met decimalen&nbsp;&nbsp;";
 $text_translations["LABEL_DEFINITION_AUTO_NUMBER"] = "nummer (automatisch)&nbsp;&nbsp;";
 $text_translations["LABEL_DEFINITION_DATE"] = "datum&nbsp;&nbsp;";
 $text_translations["LABEL_DEFINITION_AUTO_CREATED"] = "datum van toevoegen (automatisch)&nbsp;&nbsp;";
@@ -129,18 +132,22 @@ $text_translations["LABEL_DEFINE_TABLE_FIELDS"] = "Lijst kolommen";
 $text_translations["LABEL_FIELDTYPE"] = "Kolomtype";
 $text_translations["LABEL_FIELDNAME"] = "Kolomnaam";
 $text_translations["LABEL_OPTIONS"] = "Opties";
+$text_translations["LABEL_DEFINITION_NUMBER_EXPLANATION"] = "De gebruiker kan een geheel getal in dit veld invoeren";
+$text_translations["LABEL_DEFINITION_FLOAT_EXPLANATION"] = "De gebruiker kan een getal met decimalen in dit veld invoeren";
 $text_translations["LABEL_DEFINITION_AUTO_NUMBER_EXPLANATION"] = "Deze kolom bevat een uniek nummer voor elke rij in je lijst. Geef bij opties aan of je deze kolom wilt tonen in je lijst";
 $text_translations["LABEL_DEFINITION_DATE_EXPLANATION"] = "De gebruiker kan zelf een datum in dit veld invoeren";
 $text_translations["LABEL_DEFINITION_AUTO_CREATED_EXPLANATION"] = "Geef aan of deze kolom de naam van de gebruiker die de rij heeft aangemaakt en de datum waarop deze rij is aangemaakt toont, of een van beiden";
 $text_translations["LABEL_DEFINITION_AUTO_MODIFIED_EXPLANATION"] = "Geef aan of deze kolom de naam van de gebruiker die de rij heeft gewijzigd en de datum waarop deze rij is gewijzigd toont, of een van beiden";
-$text_translations["LABEL_DEFINITION_TEXT_LINE_EXPLANATION"] = "Een korte regel met tekst";
-$text_translations["LABEL_DEFINITION_TEXT_FIELD_EXPLANATION"] = "Een veld met een aantal regels tekst";
+$text_translations["LABEL_DEFINITION_TEXT_LINE_EXPLANATION"] = "De gebruiker kan een korte regel met tekst in dit veld invoeren";
+$text_translations["LABEL_DEFINITION_TEXT_FIELD_EXPLANATION"] = "De gebruiker kan een aantal regels tekst in dit veld invoeren";
 $text_translations["LABEL_DEFINITION_NOTES_FIELD_EXPLANATION"] = "De gebruiker kan hier meerdere opmerkingen toevoegen. Per opmerking is te zien welke gebruiker de opmerking aangemaakt heeft en wanneer";
 $text_translations["LABEL_DEFINITION_SELECTION_EXPLANATION"] = "Geef de verschillende invoermogelijkheden waaruit de gebruiker kan kiezen op, gescheiden door het '|' teken<br>bijvoorbeeld: 'open|bezig|gesloten'";
 $text_translations["LABEL_LIST_MODIFICATIONS_DONE"] = "Lijst wijzigingen doorgevoerd!<br>Keer terug naar [[portal]] of voer andere wijzigingen door";
 $text_translations["LABEL_NEW_LIST_CREATED"] = "Nieuwe lijst gemaakt!<br>Keer terug naar [[portal]] of maak nog een nieuwe lijst";
 $text_translations["LABEL_ID_COLUMN_SHOW"] = "toon dit veld&nbsp;&nbsp;";
 $text_translations["LABEL_ID_COLUMN_NO_SHOW"] = "toon dit veld niet&nbsp;&nbsp;";
+$text_translations["LABEL_NUMBER_COLUMN_NO_SUMMATION"] = "toon totalen van deze kolom niet&nbsp;&nbsp;";
+$text_translations["LABEL_NUMBER_COLUMN_SUMMATION"] = "toon totalen van deze kolom&nbsp;&nbsp;";
 $text_translations["LABEL_NAME_ONLY"] = "alleen naam&nbsp;&nbsp;";
 $text_translations["LABEL_DATE_ONLY"] = "alleen datum&nbsp;&nbsp;";
 $text_translations["LABEL_DATE_NAME"] = "datum en naam&nbsp;&nbsp;";

@@ -2,6 +2,7 @@
 
 /**
  * This file contains translations of error texts in Spanish
+ * Non translated strings are marked with TO_BE_TRANSLATED
  *
  * @package Lang_FirstThingsFirst
  * @author Jasper de Jong
@@ -26,7 +27,8 @@ $text_translations["ERROR_PERMISSION_LIST_ADMIN"] = "No tienes permisos administ
  */
 $text_translations["ERROR_DATE_WRONG_FORMAT_US"] = "Has introducido un formato erróneo de fecha. La fecha debe tener uno de los siguientes formatos:<br>MM/DD/YYYY<br>MM/YYYY<br>MM/DD<br>YYYY";
 $text_translations["ERROR_DATE_WRONG_FORMAT_EU"] = "Has introducido un formato erróneo de fecha. La fecha debe tener uno de los siguientes formatos:<br>MM/DD/YYYY<br>MM/YYYY<br>MM/DD<br>YYYY";
-$text_translations["ERROR_NO_NUMBER_GIVEN"] = "No has introducido un número en este campo. El número debe ser diferente a cero";
+$text_translations["ERROR_NO_NUMBER_GIVEN"] = "No has introducido un número en este campo";
+$text_translations["ERROR_NO_FLOAT_GIVEN"] = "TO_BE_TRANSLATED";
 $text_translations["ERROR_NO_FIELD_VALUE_GIVEN"] = "No has introducido un valor en este campo";
 $text_translations["ERROR_NO_FIELD_NAME_GIVEN"] = "No has introducido un nombre para este campo";
 $text_translations["ERROR_NO_FIELD_OPTIONS_GIVEN"] = "No has introducido ninguna opción";

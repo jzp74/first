@@ -4,7 +4,7 @@
  * General index.php as used in this project
  *
  * @author Jasper de Jong
- * @copyright 2007-2010 Jasper de Jong
+ * @copyright 2007-2012 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  * @todo how much data can we transfer from php to js?
  */

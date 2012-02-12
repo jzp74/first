@@ -2,6 +2,7 @@
 
 /**
  * This file contains translations of error texts in English
+ * Non translated strings are marked with TO_BE_TRANSLATED
  *
  * @package Lang_FirstThingsFirst
  * @author Jasper de Jong
@@ -26,7 +27,8 @@ $text_translations["ERROR_PERMISSION_LIST_ADMIN"] = "You do not have administrat
  */
 $text_translations["ERROR_DATE_WRONG_FORMAT_US"] = "You have given an incorrect date format. Date should be in one of the following formats:<br>MM/DD/YYYY<br>MM/YYYY<br>MM/DD<br>YYYY";
 $text_translations["ERROR_DATE_WRONG_FORMAT_EU"] = "You have given an incorrect date format. Date should be in one of the following formats:<br>DD-MM-YYYY<br>MM/YYYY<br>DD-MM<br>YYYY";
-$text_translations["ERROR_NO_NUMBER_GIVEN"] = "You have not entered a number in this field. A number cannot be zero";
+$text_translations["ERROR_NO_NUMBER_GIVEN"] = "You have not entered a whole number in this field";
+$text_translations["ERROR_NO_FLOAT_GIVEN"] = "You have not entered a floating point number in this field";
 $text_translations["ERROR_NO_FIELD_VALUE_GIVEN"] = "You have not entered a value in this field";
 $text_translations["ERROR_NO_FIELD_NAME_GIVEN"] = "You have not given a name for this field";
 $text_translations["ERROR_NO_FIELD_OPTIONS_GIVEN"] = "You have not given any options";

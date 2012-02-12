@@ -5,7 +5,7 @@
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007-2009 Jasper de Jong
+ * @copyright 2007-2012 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -86,7 +86,7 @@ function action_get_listbuilder_page ($list_title)
         # just create an empty list when list could not be loaded
         if (count($record) == 0)
         {
-            $definition = array(0, $field_types[2], "id", "", 1, $field_types[4], "", "");
+            $definition = array(0, FIELD_TYPE_DEFINITION_AUTO_NUMBER, "id", "", 1, FIELD_TYPE_DEFINITION_NUMBER, "", "");
             $old_definition = htmlentities($json->encode($definition), ENT_QUOTES);
             $largest_id = 1;
         }
@@ -115,7 +115,7 @@ function action_get_listbuilder_page ($list_title)
     # just create an empty list when no title has been given
     else
     {
-        $definition = array(0, $field_types[2], "id", "", 1, $field_types[4], "", "");
+        $definition = array(0, FIELD_TYPE_DEFINITION_AUTO_NUMBER, "id", "", 1, FIELD_TYPE_DEFINITION_NUMBER, "", "");
         $old_definition = htmlentities($json->encode($definition), ENT_QUOTES);
         $largest_id = 1;
     }
@@ -787,6 +787,32 @@ function get_field_definition_table ($definition)
         # the third column - options
         if ($definition[$position_type] == FIELD_TYPE_DEFINITION_SELECTION)
             $html_str .= "                                <td id=\"row_".$row."_3\">".$input_html_name." name=\"row_".$row."_3\" value=\"".$definition[$position_options]."\"></td>\n";
+        else if ($definition[$position_type] == FIELD_TYPE_DEFINITION_NUMBER || $definition[$position_type] == FIELD_TYPE_DEFINITION_FLOAT)
+        {
+            $html_str .= "                                <td id=\"row_".$row."_3\"><select class=\"selection_box\" name=\"row_".$row."_3\">\n";
+            $html_str .= "                                    <option value=\"".NUMBER_COLUMN_NO_SUMMATION."\"";
+            if ($definition[$position_options] == NUMBER_COLUMN_NO_SUMMATION)
+                $html_str .= " selected";
+            $html_str .= ">".translate("LABEL_NUMBER_COLUMN_NO_SUMMATION")."</option>\n";
+            $html_str .= "                                    <option value=\"".NUMBER_COLUMN_SUMMATION."\"";
+            if ($definition[$position_options] == NUMBER_COLUMN_SUMMATION)
+                $html_str .= " selected";
+            $html_str .= ">".translate("LABEL_NUMBER_COLUMN_SUMMATION")."</option>\n";
+            $html_str .= "                                </select></td>\n";
+        }
+        else if ($definition[$position_type] == FIELD_TYPE_DEFINITION_AUTO_NUMBER)
+        {
+            $html_str .= "                                <td id=\"row_".$row."_3\"><select class=\"selection_box\" name=\"row_".$row."_3\">\n";
+            $html_str .= "                                    <option value=\"".ID_COLUMN_SHOW."\"";
+            if ($definition[$position_options] == ID_COLUMN_SHOW)
+                $html_str .= " selected";
+            $html_str .= ">".translate("LABEL_ID_COLUMN_SHOW")."</option>\n";
+            $html_str .= "                                    <option value=\"".ID_COLUMN_NO_SHOW."\"";
+            if ($definition[$position_options] == ID_COLUMN_NO_SHOW)
+                $html_str .= " selected";
+            $html_str .= ">".translate("LABEL_ID_COLUMN_NO_SHOW")."</option>\n";
+            $html_str .= "                                </select></td>\n";
+        }
         else if (($definition[$position_type] == FIELD_TYPE_DEFINITION_AUTO_CREATED) || ($definition[$position_type] == FIELD_TYPE_DEFINITION_AUTO_MODIFIED))
         {
             $html_str .= "                                <td id=\"row_".$row."_3\"><select class=\"selection_box\" name=\"row_".$row."_3\">\n";
@@ -802,19 +828,6 @@ function get_field_definition_table ($definition)
             if ($definition[$position_options] == NAME_DATE_OPTION_NAME)
                 $html_str .= " selected";
             $html_str .= ">".translate("LABEL_NAME_ONLY")."</option>\n";
-            $html_str .= "                                </select></td>\n";
-        }
-        else if ($definition[$position_type] == FIELD_TYPE_DEFINITION_AUTO_NUMBER)
-        {
-            $html_str .= "                                <td id=\"row_".$row."_3\"><select class=\"selection_box\" name=\"row_".$row."_3\">\n";
-            $html_str .= "                                    <option value=\"".ID_COLUMN_SHOW."\"";
-            if ($definition[$position_options] == ID_COLUMN_SHOW)
-                $html_str .= " selected";
-            $html_str .= ">".translate("LABEL_ID_COLUMN_SHOW")."</option>\n";
-            $html_str .= "                                    <option value=\"".ID_COLUMN_NO_SHOW."\"";
-            if ($definition[$position_options] == ID_COLUMN_NO_SHOW)
-                $html_str .= " selected";
-            $html_str .= ">".translate("LABEL_ID_COLUMN_NO_SHOW")."</option>\n";
             $html_str .= "                                </select></td>\n";
         }
         else

@@ -179,7 +179,7 @@ function action_update_user_settings_record ($title, $key_string, $form_values)
     }
 
     # display error when insertion returns false
-    if (!$user->update($key_string, $new_form_values))
+    if (!$user->update($key_string, $new_form_values, TRUE))
     {
         $logging->warn("update user settings record returns false");
         $error_message_str = $user->get_error_message_str();
@@ -190,8 +190,8 @@ function action_update_user_settings_record ($title, $key_string, $form_values)
         return $response;
     }
 
-    # set message for user
-    set_info_message("record_contents_buttons", "right", "LABEL_USER_SETTINGS_CHANGED", $response);
+    # redirect to portal page with new user settings activated
+    $response->script("window.location.assign('index.php?action=".ACTION_GET_PORTAL_PAGE."')");
 
     # check post conditions not necessary
 

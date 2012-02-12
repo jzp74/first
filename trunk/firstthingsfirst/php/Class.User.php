@@ -602,9 +602,10 @@ class User extends UserDatabaseTable
     * update a user in database
     * @param string encoded_key_string encoded_key_string of user
     * @param $name_values array array containing new name-values of record
+    * @param $update_session bool indicates if active user session parameters should be updated (only when user updates own settings)
     * @return bool indicates if user has been updated
     */
-    function update ($encoded_key_string, $name_values_array)
+    function update ($encoded_key_string, $name_values_array, $update_session = FALSE)
     {
         $this->_log->trace("update user (encoded_key_string=".$encoded_key_string.")");
 
@@ -663,6 +664,15 @@ class User extends UserDatabaseTable
 
         if (parent::update($encoded_key_string, $name_values_array) == FALSE)
             return FALSE;
+
+        # set session parameters (only for fields that can be changed in UserSettings page)
+        if ($update_session == TRUE)
+        {
+            $this->set_name($name_values_array[USER_NAME_FIELD_NAME]);
+            $this->set_lang($name_values_array[USER_LANG_FIELD_NAME]);
+            $this->set_date_format($name_values_array[USER_DATE_FORMAT_FIELD_NAME]);
+            $this->set_lines_per_page($name_values_array[USER_LINES_PER_PAGE_FIELD_NAME]);
+        }
 
         $this->_log->info("user updated (encoded_key_string=".$encoded_key_string.")");
 

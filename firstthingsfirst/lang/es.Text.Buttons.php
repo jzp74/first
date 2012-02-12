@@ -2,6 +2,7 @@
 
 /**
  * This file contains translations of button texts in Spanish
+ * Non translated strings are marked with TO_BE_TRANSLATED
  *
  * @package Lang_FirstThingsFirst
  * @author Jasper de Jong

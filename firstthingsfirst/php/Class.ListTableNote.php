@@ -5,7 +5,7 @@
  *
  * @package Class_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007-2009 Jasper de Jong
+ * @copyright 2007-2012 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -35,7 +35,7 @@ define("LISTTABLENOTE_NOTE_FIELD_NAME", "_note");
  */
 $class_listtablenote_fields = array(
     DB_ID_FIELD_NAME => array("LABEL_LIST_ID", FIELD_TYPE_DEFINITION_AUTO_NUMBER, ""),
-    LISTTABLENOTE_RECORD_ID_FIELD_NAME => array("LABEL_MINUS", FIELD_TYPE_DEFINITION_NUMBER, ""),
+    LISTTABLENOTE_RECORD_ID_FIELD_NAME => array("LABEL_MINUS", FIELD_TYPE_DEFINITION_NUMBER, NUMBER_COLUMN_NO_SUMMATION),
     LISTTABLENOTE_FIELD_NAME_FIELD_NAME => array("LABEL_MINUS", FIELD_TYPE_DEFINITION_TEXT_LINE, ""),
     LISTTABLENOTE_NOTE_FIELD_NAME => array("LABEL_MINUS", FIELD_TYPE_DEFINITION_TEXT_FIELD, ""),
 );

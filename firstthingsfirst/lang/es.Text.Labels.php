@@ -2,6 +2,7 @@
 
 /**
  * This file contains translation of text labels in English
+ * Non translated strings are marked with TO_BE_TRANSLATED
  *
  * @package Text_FirstThingsFirst
  * @author Jasper de Jong
@@ -46,6 +47,8 @@ $text_translations["LABEL_CREATED_BY"] = "creado por";
 $text_translations["LABEL_AT"] = "en";
 $text_translations["LABEL_LAST_MODIFICATION_BY"] = "última modificación realizada por";
 $text_translations["LABEL_USER_NAME"] = "nombre";
+$text_translations["LABEL_DEFINITION_NUMBER"] = "índice&nbsp;&nbsp;";
+$text_translations["LABEL_DEFINITION_FLOAT"] = "TO BE TRANSLATED&nbsp;&nbsp;";
 $text_translations["LABEL_DEFINITION_AUTO_NUMBER"] = "índice (autocompletado)&nbsp;&nbsp;";
 $text_translations["LABEL_DEFINITION_DATE"] = "fecha&nbsp;&nbsp;";
 $text_translations["LABEL_DEFINITION_AUTO_CREATED"] = "creación (autocompletado)&nbsp;&nbsp;";
@@ -129,6 +132,8 @@ $text_translations["LABEL_DEFINE_TABLE_FIELDS"] = "Define los campos de la lista
 $text_translations["LABEL_FIELDTYPE"] = "tipo de campo";
 $text_translations["LABEL_FIELDNAME"] = "nombre del campo";
 $text_translations["LABEL_OPTIONS"] = "opciones";
+$text_translations["LABEL_DEFINITION_NUMBER_EXPLANATION"] = "TO_BE_TRANSLATED";
+$text_translations["LABEL_DEFINITION_FLOAT_EXPLANATION"] = "TO_BE_TRANSLATED";
 $text_translations["LABEL_DEFINITION_AUTO_NUMBER_EXPLANATION"] = "Este campo contiene un número único para cada entrada en tu lista. Por favor, especifica si quieres que sea visible o no";
 $text_translations["LABEL_DEFINITION_DATE_EXPLANATION"] = "Los usuarios puede introducir una fecha en este campo";
 $text_translations["LABEL_DEFINITION_AUTO_CREATED_EXPLANATION"] = "Por favor, especifica si quieres que este campo muestre el nombre de usuario que creó la entrada y la fecha, o solamente el nombre o la fecha";
@@ -141,6 +146,8 @@ $text_translations["LABEL_LIST_MODIFICATIONS_DONE"] = "Los cambios en la lista h
 $text_translations["LABEL_NEW_LIST_CREATED"] = "Nueva lista creada.<br>Vuelve a [[portal]] o crea una lista nueva";
 $text_translations["LABEL_ID_COLUMN_SHOW"] = "mostrar este campo&nbsp;&nbsp;";
 $text_translations["LABEL_ID_COLUMN_NO_SHOW"] = "no mostrar este campo&nbsp;&nbsp;";
+$text_translations["LABEL_NUMBER_COLUMN_NO_SUMMATION"] = "TO_BE_TRANSLATED&nbsp;&nbsp;";
+$text_translations["LABEL_NUMBER_COLUMN_SUMMATION"] = "TO_BE_TRANSLATED&nbsp;&nbsp;";
 $text_translations["LABEL_NAME_ONLY"] = "solo el usuario&nbsp;&nbsp;";
 $text_translations["LABEL_DATE_ONLY"] = "solo la fecha&nbsp;&nbsp;";
 $text_translations["LABEL_DATE_NAME"] = "la fecha y el usuario&nbsp;&nbsp;";

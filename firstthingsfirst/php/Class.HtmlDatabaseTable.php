@@ -5,7 +5,7 @@
  *
  * @package Class_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007-2009 Jasper de Jong
+ * @copyright 2007-2012 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -329,6 +329,9 @@ class HtmlDatabaseTable
             # build key string for this record
             $encoded_key_string = $database_table->_get_encoded_key_string($record);
             $key_values_string = $database_table->_get_key_values_string($record);
+            $sum_record = FALSE;
+            if ($key_values_string == "_0")
+                $sum_record = TRUE;
 
             $html_str .= "                    <tr id=\"".$key_values_string."\">\n";
 
@@ -338,27 +341,37 @@ class HtmlDatabaseTable
                 $db_field_name = $user_fields[$field_name];
                 $value = $record[$db_field_name];
 
-                # add onclick actions
-                if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_PORTAL)
+                # sum row is not clickable
+                if ($sum_record == TRUE)
                 {
-                    $action_str = "action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record";
-                    # use different function name when page type is list because we use more types of permissions with lists
-                    if ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_LIST)
-                        $action_str = "action_get_update_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record";
-                    $onclick_str = get_onclick($action_str, $list_title, $key_values_string, "below", "(%27".$list_title."%27, %27".$encoded_key_string."%27)");
+                    if ($value != "")
+                        $html_str .= "                        <td><strong>$value</strong></td>\n";
+                    else
+                        $html_str .= "                        <td></td>\n";
                 }
                 else
-                    $onclick_str = get_onclick(ACTION_GET_LIST_PAGE, $record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], $key_values_string, "below", "window.location.assign(%27index.php?action=".ACTION_GET_LIST_PAGE."&list=".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."%27)");
+                {
+                    # add onclick actions
+                    if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_PORTAL)
+                    {
+                        $action_str = "action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record";
+                        # use different function name when page type is list because we use more types of permissions with lists
+                        if ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_LIST)
+                            $action_str = "action_get_update_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record";
+                        $onclick_str = get_onclick($action_str, $list_title, $key_values_string, "below", "(%27".$list_title."%27, %27".$encoded_key_string."%27)");
+                    }
+                    else
+                        $onclick_str = get_onclick(ACTION_GET_LIST_PAGE, $record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME], $key_values_string, "below", "window.location.assign(%27index.php?action=".ACTION_GET_LIST_PAGE."&list=".$record[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME]."%27)");
 
-                # call function to convert value according to type of field
-                $returned_str = $this->get_field_value($fields[$db_field_name][1], $fields[$db_field_name][2], $db_field_name, $record);
-                $html_str .= "                        <td ".$onclick_str.">$returned_str</td>\n";
-
+                    # call function to convert value according to type of field
+                    $returned_str = $this->get_field_value($fields[$db_field_name][1], $fields[$db_field_name][2], $db_field_name, $record);
+                    $html_str .= "                        <td ".$onclick_str.">$returned_str</td>\n";
+                }
                 $col_number += 1;
             }
 
             # only add buttons when all pages do not need to be displayed at once
-            if ($page != DATABASETABLE_ALL_PAGES)
+            if (($page != DATABASETABLE_ALL_PAGES) && ($sum_record == FALSE))
             {
                 # define delete and archive buttons
                 $js_button_archive ="action_archive_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record";
@@ -397,7 +410,7 @@ class HtmlDatabaseTable
                 }
             }
             # add buttons for portal page
-            else if ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_PORTAL)
+            else if (($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_PORTAL) && ($sum_record == FALSE))
             {
                 # add modify button
                 $html_str .= "                        <td width=\"1%\">";
@@ -656,7 +669,8 @@ class HtmlDatabaseTable
                 # set initial values
                 else
                 {
-                    if (($field_type == FIELD_TYPE_DEFINITION_NUMBER) && ($field_options != ""))
+                    if (($field_type == FIELD_TYPE_DEFINITION_NUMBER) && (($field_options != "") && 
+                        ($field_options != NUMBER_COLUMN_NO_SUMMATION) && ($field_options != NUMBER_COLUMN_SUMMATION)))
                         $html_str .=  " value=\"".$field_options."\"";
                     if ($field_type == FIELD_TYPE_DEFINITION_NON_EDIT_NUMBER)
                         $html_str .=  " value=\"0\"";
@@ -930,7 +944,7 @@ class HtmlDatabaseTable
     */
     function get_field_value ($field_type, $field_options, $db_field_name, $record)
     {
-        $this->_log->error("get field value");
+        $this->_log->trace("get field value (field_type=$field_type, field_options=$field_options, db_field_name=$db_field_name)");
 
         $field_value = $record[$db_field_name];
 

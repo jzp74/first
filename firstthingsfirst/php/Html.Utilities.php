@@ -5,7 +5,7 @@
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007-2009 Jasper de Jong
+ * @copyright 2007-2012 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -228,6 +228,16 @@ function check_field ($check_functions, $field_name, $str, $date_format, $result
                 return;
             }
         }
+        else if ($check_function == "str_is_float")
+        {
+            $result_str = str_is_float($field_name, $result_str);
+            if ($result_str == FALSE_RETURN_STRING)
+            {
+                $result->set_error_message_str("ERROR_NO_FLOAT_GIVEN");
+
+                return;
+            }
+        }
         else if ($check_function == "str_is_date")
         {
             $result_str = str_is_date($field_name, $result_str, $date_format);
@@ -278,7 +288,6 @@ function str_is_not_empty ($field_name, $str)
 
 /**
  * test if given string is a number
- * @todo write checks for this function
  * @param string $field_name name of field that contains this string
  * @param string $str string to test
  * @return bool indicates if string is a number
@@ -289,7 +298,7 @@ function str_is_number ($field_name, $str)
 
     $logging->trace("is_number (field_name=".$field_name.", str=".$str.")");
 
-    if (preg_match("/^\d*$/", $str) == 0)
+    if (preg_match(PREG_ALLOWED_NUMBER, $str) == 0)
     {
         $logging->warn("$field_name is not an integer");
 
@@ -298,15 +307,34 @@ function str_is_number ($field_name, $str)
 
     # create an integer
     $the_number = (int)$str;
-    # check if number equals zero
-    if ($the_number == 0)
+    $logging->trace("is_number");
+
+    return $str;
+}
+
+/**
+ * test if given string is a float number
+ * @todo write checks for this function
+ * @param string $field_name name of field that contains this string
+ * @param string $str string to test
+ * @return bool indicates if string is a number
+ */
+function str_is_float ($field_name, $str)
+{
+    global $logging;
+
+    $logging->trace("is_float (field_name=".$field_name.", str=".$str.")");
+
+    if (preg_match(PREG_ALLOWED_FLOAT, $str) == 0)
     {
-        $logging->warn("$field_name is zero");
+        $logging->warn("$field_name is not a float");
 
         return FALSE_RETURN_STRING;
     }
 
-    $logging->trace("is_number");
+    # create a float
+    $the_number = (float)$str;
+    $logging->trace("is_float");
 
     return $str;
 }

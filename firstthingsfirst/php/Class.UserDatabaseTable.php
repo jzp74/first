@@ -5,7 +5,7 @@
  *
  * @package Class_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007-2009 Jasper de Jong
+ * @copyright 2007-2012 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -25,6 +25,7 @@ class UserDatabaseTable extends DatabaseTable
 
     /**
     * reference to global list_state object
+    * @todo: move this var to DatabaseTable
     * @var ListState
     */
     protected $_list_state;

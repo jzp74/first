@@ -117,7 +117,7 @@ class UserDatabaseTable extends DatabaseTable
                 # order by first field that has a non empty field_name of this UserDatabaseTable
                 foreach ($this->db_field_names as $db_field_name)
                 {
-                    if ((strlen($this->fields[$db_field_name][0]) > 0) && ($this->fields[$db_field_name][2] != ID_COLUMN_NO_SHOW))
+                    if ((strlen($this->fields[$db_field_name][0]) > 0) && ($this->fields[$db_field_name][3] != COLUMN_NO_SHOW))
                     {
                         # set different db_field_names for automatic creator and modifier fields
                         if ($this->fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_AUTO_CREATED)

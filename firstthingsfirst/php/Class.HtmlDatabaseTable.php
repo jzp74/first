@@ -285,8 +285,10 @@ class HtmlDatabaseTable
             if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_LIST)
                 $field_name_replaced = str_replace(' ', '&nbsp;', translate($field_name));
 
+            $this->_log->info("showing field: $field_name, ".$fields[$db_field_name][3]);
+
             # only display field names that have a length
-            if ((strlen($field_name) > 0) && ($fields[$db_field_name][2] != ID_COLUMN_NO_SHOW))
+            if ((strlen($field_name) > 0) && ($fields[$db_field_name][3] != COLUMN_NO_SHOW))
             {
                 $sort_name = $user_fields[$field_name];
                 # change names to sort by for automatic creator and modifier fields
@@ -322,8 +324,15 @@ class HtmlDatabaseTable
         $html_str .= "                </thead>\n";
         $html_str .= "                <tbody>\n";
 
+        # empty records when the first row is the sum_record (that means that the list or selection is empty)
+        if (count($records) == 1)
+        {
+            if ($database_table->_get_key_values_string($records[0]) == "_0")
+                $records = array();
+        }
+        
         # now all the records
-        $record_number = 0;
+        $record_number = 0;        
         foreach ($records as $record)
         {
             # build key string for this record
@@ -422,7 +431,7 @@ class HtmlDatabaseTable
                 $html_str .= "</td>\n                    </tr>\n";
             }
             else
-                $html_str .= "                        <td width=\"1%\">&nbsp;</td>\n                    </tr>\n";
+                $html_str .= "                        <td width=\"1%\" colspan=\"3\">&nbsp;</td>\n                    </tr>\n";
 
             $record_number += 1;
         }

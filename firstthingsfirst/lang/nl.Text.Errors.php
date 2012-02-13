@@ -35,6 +35,7 @@ $text_translations["ERROR_NO_FIELD_OPTIONS_GIVEN"] = "Je hebt geen opties ingevo
 $text_translations["ERROR_NO_USER_NAME_GIVEN"] = "Je hebt geen gebruikersnaam gegeven";
 $text_translations["ERROR_NO_PASSWORD_GIVEN"] = "Je hebt geen wachtwoord gegeven";
 $text_translations["ERROR_INCORRECT_NAME_PASSWORD"] = "De gebruikersnaam/wachtwoord combinatie is onjuist";
+$text_translations["ERROR_NOT_ENOUGH_FIELDS"] = "Je moet tenminste een ander veld definieren dan het 'id' veld";
 $text_translations["ERROR_NO_TITLE_GIVEN"] = "Je hebt deze lijst geen naam gegeven";
 $text_translations["ERROR_NO_DESCRIPTION_GIVEN"] = "Je hebt deze lijst geen beschrijving gegeven";
 $text_translations["ERROR_NOT_WELL_FORMED_STRING"] = "Dit veld mag alleen alfanumerieke tekens bevatten";

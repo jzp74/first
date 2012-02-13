@@ -5,7 +5,7 @@
  *
  * @package Class_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007-2009 Jasper de Jong
+ * @copyright 2007-2012 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -78,7 +78,7 @@ class ListTable extends UserDatabaseTable
         $table_name = $this->_convert_list_name_to_table_name($list_title);
         $db_field_names = array_keys($definition);
         foreach ($db_field_names as $db_field_name)
-            $fields[$db_field_name] = array($this->_get_field_name($db_field_name), $definition[$db_field_name][0], $definition[$db_field_name][1]);
+            $fields[$db_field_name] = array($this->_get_field_name($db_field_name), $definition[$db_field_name][0], $definition[$db_field_name][1], $definition[$db_field_name][2]);
 
         # call parent construct()
         parent::__construct($table_name, $fields, "111");
@@ -552,7 +552,7 @@ class ListTable extends UserDatabaseTable
         # transform the new definition to the correct format
         $correct_new_definition = array();
         foreach ($new_definition as $field_definition)
-            $correct_new_definition[$field_definition[0]] = array($field_definition[1], $field_definition[2]);
+            $correct_new_definition[$field_definition[0]] = array($field_definition[1], $field_definition[2], $field_definition[3]);
 
         # update the existing list table definition
         $name_values_array = array();

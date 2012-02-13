@@ -77,7 +77,8 @@ function action_get_user_settings_page ()
     $html_database_table = new HtmlDatabaseTable ($user_settings_table_configuration);
 
     # create an array with selection of fields that user may change
-    $db_fields_array = array(DB_ID_FIELD_NAME, USER_NAME_FIELD_NAME, USER_PW_FIELD_NAME, USER_LANG_FIELD_NAME, USER_DATE_FORMAT_FIELD_NAME, USER_LINES_PER_PAGE_FIELD_NAME);
+    $db_fields_array = array(DB_ID_FIELD_NAME, USER_NAME_FIELD_NAME, USER_PW_FIELD_NAME, USER_LANG_FIELD_NAME, 
+        USER_DATE_FORMAT_FIELD_NAME, USER_LINES_PER_PAGE_FIELD_NAME, USER_THEME_FIELD_NAME);
     $user_record_key_string = DatabaseTable::_get_encoded_key_string(array(DB_ID_FIELD_NAME => $user->get_id()));
 
     # set page, title, explanation and navigation

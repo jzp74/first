@@ -35,6 +35,7 @@ $text_translations["ERROR_NO_FIELD_OPTIONS_GIVEN"] = "No has introducido ninguna
 $text_translations["ERROR_NO_USER_NAME_GIVEN"] = "No has introducido ningún nombre de usuario";
 $text_translations["ERROR_NO_PASSWORD_GIVEN"] = "No has introducido ninguna contraseña";
 $text_translations["ERROR_INCORRECT_NAME_PASSWORD"] = "Nombre de usuario o contraseña incorrecta";
+$text_translations["ERROR_NOT_ENOUGH_FIELDS"] = "TO_BE_TRANSLATED";
 $text_translations["ERROR_NO_TITLE_GIVEN"] = "No has introducido un nombre para esta lista";
 $text_translations["ERROR_NO_DESCRIPTION_GIVEN"] = "No has introducido una descripción para esta lista";
 $text_translations["ERROR_NOT_WELL_FORMED_STRING"] = "Este campo solamente puede contener caracteres alfanuméricos";

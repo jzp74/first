@@ -35,6 +35,7 @@ $text_translations["ERROR_NO_FIELD_OPTIONS_GIVEN"] = "You have not given any opt
 $text_translations["ERROR_NO_USER_NAME_GIVEN"] = "You have not given a user name";
 $text_translations["ERROR_NO_PASSWORD_GIVEN"] = "You have not given a password";
 $text_translations["ERROR_INCORRECT_NAME_PASSWORD"] = "The name/password combination is incorrect";
+$text_translations["ERROR_NOT_ENOUGH_FIELDS"] = "You have to define at least one onther field than the 'id' field";
 $text_translations["ERROR_NO_TITLE_GIVEN"] = "You have not given a name for this list";
 $text_translations["ERROR_NO_DESCRIPTION_GIVEN"] = "You have not given a description for this list";
 $text_translations["ERROR_NOT_WELL_FORMED_STRING"] = "This field can only contain alpha numerical characters";

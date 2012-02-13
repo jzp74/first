@@ -5,7 +5,7 @@
  *
  * @package Class_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007-2009 Jasper de Jong
+ * @copyright 2007-2012 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -61,6 +61,11 @@ define("USER_DATE_FORMAT_FIELD_NAME", "_date_format");
 define("USER_LINES_PER_PAGE_FIELD_NAME", "_lines_per_page");
 
 /**
+ * definition of theme field name
+ */
+define("USER_THEME_FIELD_NAME", "_theme");
+
+/**
  * definition of create_list field name
  */
 define("USER_CAN_CREATE_LIST_FIELD_NAME", "_create_list");
@@ -79,15 +84,16 @@ define("USER_TIMES_LOGIN_FIELD_NAME", "_times_login");
  * definition of fields
  */
 $class_user_fields = array(
-    DB_ID_FIELD_NAME => array("LABEL_LIST_ID", FIELD_TYPE_DEFINITION_AUTO_NUMBER, ""),
-    USER_NAME_FIELD_NAME => array("LABEL_USER_NAME", FIELD_TYPE_DEFINITION_USERNAME, DATABASETABLE_UNIQUE_FIELD),
-    USER_PW_FIELD_NAME => array("LABEL_USER_PW", FIELD_TYPE_DEFINITION_PASSWORD, ""),
-    USER_LANG_FIELD_NAME => array("LABEL_USER_LANG", FIELD_TYPE_DEFINITION_SELECTION, implode(array_keys($firstthingsfirst_lang_prefix_array), '|')),
-    USER_DATE_FORMAT_FIELD_NAME => array("LABEL_USER_DATE_FORMAT", FIELD_TYPE_DEFINITION_SELECTION, implode(array_keys($firstthingsfirst_date_format_prefix_array), '|')),
-    USER_LINES_PER_PAGE_FIELD_NAME => array("LABEL_USER_LINES_PER_PAGE", FIELD_TYPE_DEFINITION_NUMBER, USER_LINES_PER_PAGE_RESET_VALUE),
-    USER_CAN_CREATE_LIST_FIELD_NAME => array("LABEL_USER_CAN_CREATE_LIST", FIELD_TYPE_DEFINITION_BOOL, ""),
-    USER_IS_ADMIN_FIELD_NAME => array("LABEL_USER_IS_ADMIN", FIELD_TYPE_DEFINITION_BOOL, ""),
-    USER_TIMES_LOGIN_FIELD_NAME => array("LABEL_USER_TIMES_LOGIN", FIELD_TYPE_DEFINITION_NON_EDIT_NUMBER, ""),
+    DB_ID_FIELD_NAME => array("LABEL_LIST_ID", FIELD_TYPE_DEFINITION_AUTO_NUMBER, "", COLUMN_SHOW),
+    USER_NAME_FIELD_NAME => array("LABEL_USER_NAME", FIELD_TYPE_DEFINITION_USERNAME, DATABASETABLE_UNIQUE_FIELD, COLUMN_SHOW),
+    USER_PW_FIELD_NAME => array("LABEL_USER_PW", FIELD_TYPE_DEFINITION_PASSWORD, "", COLUMN_NO_SHOW),
+    USER_LANG_FIELD_NAME => array("LABEL_USER_LANG", FIELD_TYPE_DEFINITION_SELECTION, implode(array_keys($firstthingsfirst_lang_prefix_array), '|'), COLUMN_SHOW),
+    USER_DATE_FORMAT_FIELD_NAME => array("LABEL_USER_DATE_FORMAT", FIELD_TYPE_DEFINITION_SELECTION, implode(array_keys($firstthingsfirst_date_format_prefix_array), '|'), COLUMN_SHOW),
+    USER_LINES_PER_PAGE_FIELD_NAME => array("LABEL_USER_LINES_PER_PAGE", FIELD_TYPE_DEFINITION_NUMBER, USER_LINES_PER_PAGE_RESET_VALUE, COLUMN_SHOW),
+    USER_THEME_FIELD_NAME => array("LABEL_USER_THEME", FIELD_TYPE_DEFINITION_SELECTION, implode(array_keys($firstthingsfirst_theme_prefix_array), '|'), COLUMN_SHOW),
+    USER_CAN_CREATE_LIST_FIELD_NAME => array("LABEL_USER_CAN_CREATE_LIST", FIELD_TYPE_DEFINITION_BOOL, "", COLUMN_SHOW),
+    USER_IS_ADMIN_FIELD_NAME => array("LABEL_USER_IS_ADMIN", FIELD_TYPE_DEFINITION_BOOL, "", COLUMN_SHOW),
+    USER_TIMES_LOGIN_FIELD_NAME => array("LABEL_USER_TIMES_LOGIN", FIELD_TYPE_DEFINITION_NON_EDIT_NUMBER, "", COLUMN_SHOW),
 );
 
 /**
@@ -209,6 +215,15 @@ class User extends UserDatabaseTable
     }
 
     /**
+     * get value of SESSION variable theme.
+     * @return string value of SESSION variable theme.
+     */
+    function get_theme ()
+    {
+        return $_SESSION["theme"];
+    }
+
+    /**
     * get value of SESSION variable create_list.
     * @return bool value of SESSION variable can_create_list.
     */
@@ -320,6 +335,16 @@ class User extends UserDatabaseTable
     }
 
     /**
+     * set value of SESSION variable theme
+     * @param string $theme preferred theme
+     * @return void
+     */
+    function set_theme ($theme)
+    {
+        $_SESSION["theme"] = $theme;
+    }
+
+    /**
     * set value of SESSION variable can_create_list
     * @param bool $permission indicates if current user is allowed to create a new list
     * @return void
@@ -389,6 +414,7 @@ class User extends UserDatabaseTable
         $this->set_lang(LANG_EN);
         $this->set_date_format(DATE_FORMAT_EU);
         $this->set_lines_per_page(12);
+        $this->set_theme(THEME_BLUE);
         $this->set_can_create_list("0");
         $this->set_is_admin("0");
         $this->set_times_login("0");
@@ -433,6 +459,7 @@ class User extends UserDatabaseTable
             $name_value_array[USER_LANG_FIELD_NAME] = $firstthingsfirst_lang;
             $name_value_array[USER_DATE_FORMAT_FIELD_NAME] = DATE_FORMAT_EU;
             $name_value_array[USER_LINES_PER_PAGE_FIELD_NAME] = 12;
+            $name_value_array[USER_THEME_FIELD_NAME] = $firstthingsfirst_theme;
             $name_value_array[USER_CAN_CREATE_LIST_FIELD_NAME] = 1;
             $name_value_array[USER_IS_ADMIN_FIELD_NAME] = 1;
             $name_value_array[USER_TIMES_LOGIN_FIELD_NAME] = 0;
@@ -469,6 +496,7 @@ class User extends UserDatabaseTable
             $this->set_lang($record[USER_LANG_FIELD_NAME]);
             $this->set_date_format($record[USER_DATE_FORMAT_FIELD_NAME]);
             $this->set_lines_per_page($record[USER_LINES_PER_PAGE_FIELD_NAME]);
+            $this->set_theme($record[USER_THEME_FIELD_NAME]);
             $this->set_can_create_list($record[USER_CAN_CREATE_LIST_FIELD_NAME]);
             $this->set_is_admin($record[USER_IS_ADMIN_FIELD_NAME]);
             $this->set_times_login($record[USER_TIMES_LOGIN_FIELD_NAME] + 1);
@@ -672,6 +700,7 @@ class User extends UserDatabaseTable
             $this->set_lang($name_values_array[USER_LANG_FIELD_NAME]);
             $this->set_date_format($name_values_array[USER_DATE_FORMAT_FIELD_NAME]);
             $this->set_lines_per_page($name_values_array[USER_LINES_PER_PAGE_FIELD_NAME]);
+            $this->set_theme($name_values_array[USER_THEME_FIELD_NAME]);
         }
 
         $this->_log->info("user updated (encoded_key_string=".$encoded_key_string.")");

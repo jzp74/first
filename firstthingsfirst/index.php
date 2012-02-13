@@ -50,6 +50,7 @@ $user_list_permissions = new UserListTablePermissions();
 $user_start_time_array = array();
 $mobile = FALSE;
 
+# set translations
 $text_translations = array();
 if ($user->is_login())
     $firstthingsfirst_lang = $user->get_lang();
@@ -57,6 +58,9 @@ require_once("lang/".$firstthingsfirst_lang_prefix_array[$firstthingsfirst_lang]
 require_once("lang/".$firstthingsfirst_lang_prefix_array[$firstthingsfirst_lang].".Text.Errors.php");
 require_once("lang/".$firstthingsfirst_lang_prefix_array[$firstthingsfirst_lang].".Text.Labels.php");
 
+# set theme
+if ($user->is_login())
+    $firstthingsfirst_theme = $user->get_theme();
 
 /**
  * import HTML related files

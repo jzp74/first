@@ -82,7 +82,7 @@ class DatabaseTable
     /**
     * array containing all fields that form a single record
     * this array is of the following structure:
-    *  db_field_name => (user_field_name, field_type, field_options)
+    *  db_field_name => (user_field_name, field_type, field_options, field_visible_in_overview)
     * @var array
     */
     protected $fields;

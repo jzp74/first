@@ -168,16 +168,16 @@ define("FIELD_DESCRIPTION_FIELD_INITIAL_DATA", 3);
 define("FIELD_DESCRIPTION_FIELD_TYPE", 4);
 
 /**
+ * column show options
+ */
+define("COLUMN_SHOW", "do show");
+define("COLUMN_NO_SHOW", "do not show");
+
+/**
  * number and float column options
  */
 define("NUMBER_COLUMN_NO_SUMMATION", "no summation");
 define("NUMBER_COLUMN_SUMMATION", "summation");
-
-/**
- * id column options
- */
-define("ID_COLUMN_SHOW", "do show");
-define("ID_COLUMN_NO_SHOW", "do not show");
 
 /**
  * name_date options
@@ -214,7 +214,7 @@ define("THEME_BLUE", "LABEL_USER_THEME_BLUE");
 define("THEME_BROWN", "LABEL_USER_THEME_BROWN");
 
 /**
- * set language prefix names
+ * set theme prefix names
  */
 $firstthingsfirst_theme_prefix_array = array(
     "LABEL_USER_THEME_BLUE" => "theme_blue",

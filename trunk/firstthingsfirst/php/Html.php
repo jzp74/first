@@ -5,7 +5,7 @@
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007-2009 Jasper de Jong
+ * @copyright 2007-2012 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 

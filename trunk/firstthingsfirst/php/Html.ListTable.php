@@ -5,7 +5,7 @@
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007-2009 Jasper de Jong
+ * @copyright 2007-2012 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -1069,7 +1069,7 @@ function action_export_list_records ($list_title)
             $value = $one_record[$db_field_name];
 
             # only show columns that need to be shown
-            if ($fields[$db_field_name][2] != ID_COLUMN_NO_SHOW)
+            if ($fields[$db_field_name][3] != COLUMN_NO_SHOW)
             {
                 if (stristr($fields[$db_field_name][1], "DATE"))
                     $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $value, $user->get_date_format());

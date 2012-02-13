@@ -104,6 +104,11 @@ function action_get_listbuilder_page ($list_title)
                 $definition[($counter * 4) + 1] = $row[0];
                 $definition[($counter * 4) + 2] = ListTable::_get_field_name($field_name);
                 $definition[($counter * 4) + 3] = $row[1];
+                
+                # copy in field_visible_in_overview
+                if ($field_name == DB_ID_FIELD_NAME)
+                    $definition[($counter * 4) + 3] = $row[2];
+                
                 $counter += 1;
             }
 
@@ -518,8 +523,8 @@ function action_create_list ($title, $description, $definition)
     # transform the new definition to the correct format
     $correct_definition = array();
     foreach ($new_definition as $field_definition)
-        $correct_definition[$field_definition[0]] = array($field_definition[1], $field_definition[2]);
-
+        $correct_definition[$field_definition[0]] = array($field_definition[1], $field_definition[2], $field_definition[3]);
+    
     $name_values_array = array();
     $name_values_array[LISTTABLEDESCRIPTION_TITLE_FIELD_NAME] = $title;
     $name_values_array[LISTTABLEDESCRIPTION_DESCRIPTION_FIELD_NAME] = $description;
@@ -623,6 +628,14 @@ function check_definition ($definition, $response)
     $definition_keys = array_keys($definition);
     $new_definition = array();
 
+    if ((count($definition_values) / 4) < 2)
+    {
+        $logging->warn("list with only one field");
+        set_error_message($definition_keys[2], "right", "ERROR_NOT_ENOUGH_FIELDS", "", "", $response);
+
+        return array();
+    }
+
     for ($position = 0; $position < (count($definition_values) / 4); $position += 1)
     {
         $field_id = $definition_values[($position * 4)];
@@ -668,7 +681,15 @@ function check_definition ($definition, $response)
             }
         }
 
-        $new_definition[$field_id] = array(ListTable::_get_db_field_name($field_name), $field_type, $field_options);
+        # copy in field_visible_in_overview
+        $new_field_name = ListTable::_get_db_field_name($field_name);
+        $field_visible_in_overview = "";
+        if ($new_field_name == DB_ID_FIELD_NAME)
+        {
+            $field_visible_in_overview = $field_options;
+            $field_options = "";
+        }
+        $new_definition[$field_id] = array(ListTable::_get_db_field_name($field_name), $field_type, $field_options, $field_visible_in_overview);
     }
 
     $logging->trace("checked definition");
@@ -803,14 +824,14 @@ function get_field_definition_table ($definition)
         else if ($definition[$position_type] == FIELD_TYPE_DEFINITION_AUTO_NUMBER)
         {
             $html_str .= "                                <td id=\"row_".$row."_3\"><select class=\"selection_box\" name=\"row_".$row."_3\">\n";
-            $html_str .= "                                    <option value=\"".ID_COLUMN_SHOW."\"";
-            if ($definition[$position_options] == ID_COLUMN_SHOW)
+            $html_str .= "                                    <option value=\"".COLUMN_SHOW."\"";
+            if ($definition[$position_options] == COLUMN_SHOW)
                 $html_str .= " selected";
-            $html_str .= ">".translate("LABEL_ID_COLUMN_SHOW")."</option>\n";
-            $html_str .= "                                    <option value=\"".ID_COLUMN_NO_SHOW."\"";
-            if ($definition[$position_options] == ID_COLUMN_NO_SHOW)
+            $html_str .= ">".translate("LABEL_COLUMN_SHOW")."</option>\n";
+            $html_str .= "                                    <option value=\"".COLUMN_NO_SHOW."\"";
+            if ($definition[$position_options] == COLUMN_NO_SHOW)
                 $html_str .= " selected";
-            $html_str .= ">".translate("LABEL_ID_COLUMN_NO_SHOW")."</option>\n";
+            $html_str .= ">".translate("LABEL_COLUMN_NO_SHOW")."</option>\n";
             $html_str .= "                                </select></td>\n";
         }
         else if (($definition[$position_type] == FIELD_TYPE_DEFINITION_AUTO_CREATED) || ($definition[$position_type] == FIELD_TYPE_DEFINITION_AUTO_MODIFIED))

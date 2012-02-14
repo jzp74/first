@@ -200,7 +200,7 @@ function check_field ($check_functions, $field_name, $str, $date_format, $result
 {
     global $logging;
     global $firstthingsfirst_date_string;
-    global $$firstthingsfirst_date_format_prefix_array;
+    global $firstthingsfirst_date_format_prefix_array;
 
     $logging->trace("check_field (field_name=$field_name, str=$str, date_format=$date_format)");
 
@@ -322,10 +322,15 @@ function str_is_number ($field_name, $str)
 function str_is_float ($field_name, $str)
 {
     global $logging;
+    global $user;
 
     $logging->trace("is_float (field_name=".$field_name.", str=".$str.")");
 
-    if (preg_match(PREG_ALLOWED_FLOAT, $str) == 0)
+    $preg_allowed_str = PREG_ALLOWED_FLOAT_POINT;
+    if ($user->get_decimal_mark() == DECIMAL_MARK_COMMA)
+        $preg_allowed_str = PREG_ALLOWED_FLOAT_COMMA;
+
+    if (preg_match($preg_allowed_str, $str) == 0)
     {
         $logging->warn("$field_name is not a float");
 

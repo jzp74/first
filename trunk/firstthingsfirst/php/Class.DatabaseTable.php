@@ -112,7 +112,7 @@ class DatabaseTable
     * array containing db_field_names of numerical fields that need to be summed
     * @var array
     */
-    protected $numerical_field_names_to_sum;
+    protected $db_field_names_to_sum;
 
     /**
     * string describing which record metadata should be recorded
@@ -171,7 +171,7 @@ class DatabaseTable
         $this->_database =& $database;
 
         $this->user_field_names = array();
-        $this->numerical_field_names_to_sum = array();
+        $this->db_field_names_to_sum = array();
 
         $this->table_name = $table_name;
         $this->fields = $fields;
@@ -190,7 +190,7 @@ class DatabaseTable
                 ($field_options == NUMBER_COLUMN_SUMMATION))
             {
                 $this->_log->trace("found numerical field to sum (db_field_name=$db_field_name)");
-                array_push($this->numerical_field_names_to_sum, $db_field_name);
+                array_push($this->db_field_names_to_sum, $db_field_name);
             }
         }
 
@@ -547,13 +547,13 @@ class DatabaseTable
 
         # get the summation for each numerical field_name to sum
         $sum_result_array = array();
-        if (count($this->numerical_field_names_to_sum) > 0)
+        if (count($this->db_field_names_to_sum) > 0)
         {
-            $num_of_fields = count($this->numerical_field_names_to_sum);
+            $num_of_fields = count($this->db_field_names_to_sum);
             $current_field = 0;
             $query = "SELECT ";
             
-            foreach ($this->numerical_field_names_to_sum as $db_field_name)
+            foreach ($this->db_field_names_to_sum as $db_field_name)
             {
                 $query .= "SUM($db_field_name) AS $db_field_name";
                 # do not add seperator after last field
@@ -701,7 +701,7 @@ class DatabaseTable
         }
 
         # add extra line for summed fields
-        if (count($sum_result_array) > 0)
+        if ((count($sum_result_array) > 0) && (count($rows) > 0))
         {
             $row = array();
             

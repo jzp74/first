@@ -18,6 +18,12 @@
 class UserDatabaseTable extends DatabaseTable
 {
     /**
+    * array containing db_field_names of fields that need their decimal mark replaced
+    * @var array
+    */
+    protected $db_field_names_decimal_marks_to_replace;
+
+    /**
     * json object
     * @var Services_JSON
     */
@@ -41,7 +47,7 @@ class UserDatabaseTable extends DatabaseTable
      * @var Database
      */
     protected $_user_list_permissions;
-
+    
     /**
     * overwrite __construct() function
     * @param $table_name string table name of this DatabaseTable object
@@ -68,7 +74,38 @@ class UserDatabaseTable extends DatabaseTable
 
         self::reset();
 
+        $this->db_field_names_decimal_marks_to_replace = array();
+        foreach ($this->db_field_names as $db_field_name)
+        {
+            if ($this->fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_FLOAT)
+            {
+                if ($this->_user->get_decimal_mark() == DECIMAL_MARK_COMMA)
+                {
+                    array_push($this->db_field_names_decimal_marks_to_replace, $db_field_name);
+                }
+            }
+        }
+
         $this->_log->debug("constructed UserDatabaseTable (table_name=".$this->table_name.", metadata_str=".$metadata_str.")");
+    }
+
+    /**
+    * replace decimal marks in records if needed
+    * @param $record array an array containing name-value pairs
+    * @param $replace_for_db bool indicates if the string needs its decimal marks replaced to be ready for the database
+    * @return array array containing name-value pairs with replaced decimal marks
+    */
+    function _replace_decimal_marks ($record, $replace_for_db)
+    {
+        foreach ($this->db_field_names_decimal_marks_to_replace as $db_float_field)
+        {
+            if ($replace_for_db == TRUE)
+                $record[$db_float_field] = str_replace(",", ".", (string)$record[$db_float_field]);
+            else
+                $record[$db_float_field] = str_replace(".", ",", (string)$record[$db_float_field]);
+        }
+        
+        return $record;
     }
 
     /**
@@ -84,7 +121,7 @@ class UserDatabaseTable extends DatabaseTable
 
     /**
     * select a fixed number of records from database
-    * @todo filter sql settings also include note fields. note fields should not be known in this file.
+    * @todo filter sql settings also includes note fields. note fields should not be known in this file.
     * @param $order_by_field string order records by this db_field_name
     * @param $page int the page number to select
     * @param $db_field_names array array containing db_field_names to select for each record
@@ -162,6 +199,15 @@ class UserDatabaseTable extends DatabaseTable
         # call parent select()
         $rows = parent::select($order_by_field, $order_ascending, $archived, $filter_str_sql, $page, $lines_per_page, $db_field_names);
 
+        # replace decimal marks
+        $replaced_rows = array();
+        if (count($this->db_field_names_decimal_marks_to_replace) > 0)
+        {
+            foreach ($rows as $row)
+                array_push($replaced_rows, $this->_replace_decimal_marks($row, FALSE));
+            $rows = $replaced_rows;
+        }
+
         if ($page != DATABASETABLE_ALL_PAGES)
             $this->_list_state->set_current_page($page);
         if (count($rows) > 0)
@@ -194,6 +240,10 @@ class UserDatabaseTable extends DatabaseTable
     {
         $this->_log->trace("inserting record into UserDatabaseTable");
 
+        # replace decimal marks
+        if (count($this->db_field_names_decimal_marks_to_replace) > 0)
+            $name_values_array = $this->_replace_decimal_marks($name_values_array, TRUE);
+        
         # call parent insert()
         $result = parent::insert($name_values_array, $this->_user->get_name());
         if ($result == 0)
@@ -213,6 +263,10 @@ class UserDatabaseTable extends DatabaseTable
     function update ($encoded_key_string, $name_values_array = array())
     {
         $this->_log->trace("updating record from UserDatabaseTable (encoded_key_string=".$encoded_key_string.")");
+
+        # replace decimal marks
+        if (count($this->db_field_names_decimal_marks_to_replace) > 0)
+            $name_values_array = $this->_replace_decimal_marks($name_values_array, TRUE);
 
         # call parent update()
         if (parent::update($encoded_key_string, $this->_user->get_name(), $name_values_array) == FALSE)

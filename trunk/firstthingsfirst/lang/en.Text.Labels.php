@@ -73,11 +73,15 @@ $text_translations["LABEL_USER_THEME_BROWN"] = "Ancient writing";
 $text_translations["LABEL_USER_DATE_FORMAT"] = "date format";
 $text_translations["LABEL_USER_DATE_FORMAT_US"] = "American";
 $text_translations["LABEL_USER_DATE_FORMAT_EU"] = "European";
+$text_translations["LABEL_USER_DECIMAL_MARK"] = "decimal mark";
+$text_translations["LABEL_USER_DECIMAL_MARK_POINT"] = "point";
+$text_translations["LABEL_USER_DECIMAL_MARK_COMMA"] = "comma";
 $text_translations["LABEL_USER_LINES_PER_PAGE"] = "records per page";
-$text_translations["LABEL_USER_CAN_EDIT_LIST"] = "is allowed to edit lists";
-$text_translations["LABEL_USER_CAN_CREATE_LIST"] = "is allowed to create lists";
-$text_translations["LABEL_USER_IS_ADMIN"] = "is administrator";
-$text_translations["LABEL_USER_TIMES_LOGIN"] = "# login";
+$text_translations["LABEL_USER_CAN_EDIT_LIST"] = "edit lists";
+$text_translations["LABEL_USER_CAN_CREATE_LIST"] = "create lists";
+$text_translations["LABEL_USER_CAN_CREATE_USER"] = "create users";
+$text_translations["LABEL_USER_IS_ADMIN"] = "administrator";
+$text_translations["LABEL_USER_TIMES_LOGIN"] = "login";
 $text_translations["LABEL_USER_ADMIN_RECORD"] = "user";
 
 /**
@@ -180,6 +184,5 @@ $text_translations["LABEL_CONFIRM_DELETE"] = "Are you sure you want to delete th
  */
 $text_translations["LABEL_USER_SETTINGS_TITLE"] = "User settings";
 $text_translations["LABEL_USER_SETTINGS_RECORD"] = "user settings of";
-$text_translations["LABEL_USER_SETTINGS_CHANGED"] = "User settings have been changed! Please log off and log on again to activate your changes.";
 
 ?>

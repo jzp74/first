@@ -73,11 +73,15 @@ $text_translations["LABEL_USER_DATE_FORMAT_EU"] = "Europees";
 $text_translations["LABEL_USER_THEME"] = "thema";
 $text_translations["LABEL_USER_THEME_BLUE"] = "Original blues";
 $text_translations["LABEL_USER_THEME_BROWN"] = "Ancient writing";
+$text_translations["LABEL_USER_DECIMAL_MARK"] = "decimaalteken";
+$text_translations["LABEL_USER_DECIMAL_MARK_POINT"] = "punt";
+$text_translations["LABEL_USER_DECIMAL_MARK_COMMA"] = "komma";
 $text_translations["LABEL_USER_LINES_PER_PAGE"] = "rijen per pagina";
-$text_translations["LABEL_USER_CAN_EDIT_LIST"] = "mag lijsten wijzigen";
-$text_translations["LABEL_USER_CAN_CREATE_LIST"] = "mag lijsten maken";
-$text_translations["LABEL_USER_IS_ADMIN"] = "is administrator";
-$text_translations["LABEL_USER_TIMES_LOGIN"] = "# login";
+$text_translations["LABEL_USER_CAN_EDIT_LIST"] = "lijsten wijzigen";
+$text_translations["LABEL_USER_CAN_CREATE_LIST"] = "lijsten maken";
+$text_translations["LABEL_USER_CAN_CREATE_USER"] = "gebruikers maken";
+$text_translations["LABEL_USER_IS_ADMIN"] = "administrator";
+$text_translations["LABEL_USER_TIMES_LOGIN"] = "logins";
 $text_translations["LABEL_USER_ADMIN_RECORD"] = "gebruiker";
 
 /**
@@ -180,6 +184,5 @@ $text_translations["LABEL_CONFIRM_DELETE"] = "Weet je zeker dat je deze lijst wi
  */
 $text_translations["LABEL_USER_SETTINGS_TITLE"] = "Gebruikersinstellingen";
 $text_translations["LABEL_USER_SETTINGS_RECORD"] = "gebruikersinstellingen van";
-$text_translations["LABEL_USER_SETTINGS_CHANGED"] = "Gebruikersinstellingen zijn gewijzigd!<br>Log uit en log opnieuw in zodat de wijzigingen actief worden.";
 
 ?>

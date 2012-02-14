@@ -12,8 +12,6 @@
 /**
  * date format defines
  */
-define("DATE_FORMAT_US", "LABEL_USER_DATE_FORMAT_US");
-define("DATE_FORMAT_EU", "LABEL_USER_DATE_FORMAT_EU");
 define("DATETIME_FORMAT_US", "%m/%d/%Y %H:%M:%S");
 define("DATETIME_FORMAT_EU", "%d-%m-%Y %H:%M:%S");
 define("DATE_FORMAT_NORMAL", 0);
@@ -22,14 +20,6 @@ define("DATE_FORMAT_FANCY", 2);
 define("DATE_FORMAT_USER_DMY", "00:00:00");
 define("DATE_FORMAT_USER_MY", "04:00:00");
 define("DATE_FORMAT_USER_Y", "08:00:00");
-
-/**
- * set language prefix names
- */
-$firstthingsfirst_date_format_prefix_array = array(
-    "LABEL_USER_DATE_FORMAT_US" => "%m/%d/%Y",
-    "LABEL_USER_DATE_FORMAT_EU" => "%d-%m-%Y"
-);
 
 /**
  * day definitions
@@ -131,7 +121,8 @@ define("GENERAL_SEPARATOR", "----");
  * allowed characters regular expression
  */
 define("PREG_ALLOWED_NUMBER", "/^-{0,1}\d*$/");
-define("PREG_ALLOWED_FLOAT", "/^-{0,1}\d*\.{0,1}\d+$/");
+define("PREG_ALLOWED_FLOAT_POINT", "/^-{0,1}\d*\.{0,1}\d+$/");
+define("PREG_ALLOWED_FLOAT_COMMA", "/^-{0,1}\d*\,{0,1}\d+$/");
 define("PREG_ALLOWED_DATE_US", "/^[0-9\/]+$/");
 define("PREG_ALLOWED_DATE_EU", "/^[0-9-]+$/");
 define("PREG_ALLOWED_CHARS", "/^[A-Za-z0-9\s]+$/");
@@ -146,11 +137,12 @@ define("FALSE_RETURN_STRING", "<<FaLsE>>");
  * user permissions
  */
 define("PERMISSION_CAN_CREATE_LIST", 0);
-define("PERMISSION_IS_ADMIN", 1);
-define("PERMISSION_CAN_VIEW_SPECIFIC_LIST", 2);
-define("PERMISSION_CAN_EDIT_SPECIFIC_LIST", 3);
-define("PERMISSION_CAN_CREATE_SPECIFIC_LIST", 4);
-define("PERMISSION_IS_ADMIN_SPECIFIC_LIST", 5);
+define("PERMISSION_CAN_CREATE_USER", 1);
+define("PERMISSION_IS_ADMIN", 2);
+define("PERMISSION_CAN_VIEW_SPECIFIC_LIST", 3);
+define("PERMISSION_CAN_EDIT_SPECIFIC_LIST", 4);
+define("PERMISSION_CAN_CREATE_SPECIFIC_LIST", 5);
+define("PERMISSION_IS_ADMIN_SPECIFIC_LIST", 6);
 
 /**
  * field description types
@@ -187,9 +179,23 @@ define("NAME_DATE_OPTION_DATE", "date");
 define("NAME_DATE_OPTION_DATE_NAME", "namedate");
 
 /**
- * language name
+ * visual effect
  */
 define("VISUAL_EFFECT_TIME", 300);
+
+/**
+ * date format names
+ */
+define("DATE_FORMAT_US", "LABEL_USER_DATE_FORMAT_US");
+define("DATE_FORMAT_EU", "LABEL_USER_DATE_FORMAT_EU");
+
+/**
+ * set language prefix names
+ */
+$firstthingsfirst_date_format_prefix_array = array(
+    "LABEL_USER_DATE_FORMAT_US" => "%m/%d/%Y",
+    "LABEL_USER_DATE_FORMAT_EU" => "%d-%m-%Y"
+);
 
 /**
  * language names
@@ -205,6 +211,20 @@ $firstthingsfirst_lang_prefix_array = array(
     "LABEL_USER_LANG_EN" => "en",
     "LABEL_USER_LANG_NL" => "nl",
     "LABEL_USER_LANG_ES" => "es"
+);
+
+/**
+ * decimal mark names
+ */
+define("DECIMAL_MARK_POINT", "LABEL_USER_DECIMAL_MARK_POINT");
+define("DECIMAL_MARK_COMMA", "LABEL_USER_DECIMAL_MARK_COMMA");
+
+/**
+ * set theme prefix names
+ */
+$firstthingsfirst_decimal_mark_prefix_array = array(
+    "LABEL_USER_DECIMAL_MARK_POINT" => "decimal_mark_point",
+    "LABEL_USER_DECIMAL_MARK_COMMA" => "decimal_mark_comma"
 );
 
 /**
@@ -263,14 +283,14 @@ $firstthingsfirst_field_descriptions = array(
     FIELD_TYPE_DEFINITION_NUMBER => array(
         DB_DATATYPE_INT,
         "input type=text size=\"10\" maxlength=\"10\"",
-        "str_is_number",
+        "str_is_not_empty str_is_number",
         DB_INITIAL_DATA_NUMBER,
         FIELD_DESCRIPTION_SELECTABLE_DATATYPE
     ),
     FIELD_TYPE_DEFINITION_FLOAT => array(
         DB_DATATYPE_FLOAT,
         "input type=text size=\"12\" maxlength=\"12\"",
-        "str_is_float",
+        "str_is_not_empty str_is_float",
         DB_INITIAL_DATA_FLOAT,
         FIELD_DESCRIPTION_SELECTABLE_DATATYPE
     ),

@@ -5,7 +5,7 @@
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007-2009 Jasper de Jong
+ * @copyright 2007-2012 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -34,18 +34,19 @@ $xajax->register(XAJAX_FUNCTION, ACTION_CANCEL_USERLISTTABLEPERMISSIONS_ACTION);
  * definition of action permissions
  * permission are stored in a six character string (P means permissions, - means don't care):
  *  - user has to have create list permission to be able to execute action
+ *  - user has to have create user permission to be able to execute action
  *  - user has to have admin permission to be able to execute action
  *  - user has to have permission to view this list to execute list action for this list
  *  - user has to have permission to edit this list to execute action for this list
  *  - user has to have permission to add to this list to execute action for this list
  *  - user has to have admin permission for this list to exectute action for this list
  */
-$firstthingsfirst_action_description[ACTION_GET_USERLISTTABLEPERMISSIONS_PAGE]      = "-----P";
-$firstthingsfirst_action_description[ACTION_GET_USERLISTTABLEPERMISSIONS_CONTENT]   = "-----P";
-$firstthingsfirst_action_description[ACTION_GET_USERLISTTABLEPERMISSIONS_RECORD]    = "-----P";
-$firstthingsfirst_action_description[ACTION_UPDATE_USERLISTTABLEPERMISSIONS_RECORD] = "-----P";
-$firstthingsfirst_action_description[ACTION_DELETE_USERLISTTABLEPERMISSIONS_RECORD] = "-----P";
-$firstthingsfirst_action_description[ACTION_CANCEL_USERLISTTABLEPERMISSIONS_ACTION] = "-----P";
+$firstthingsfirst_action_description[ACTION_GET_USERLISTTABLEPERMISSIONS_PAGE]      = "------P";
+$firstthingsfirst_action_description[ACTION_GET_USERLISTTABLEPERMISSIONS_CONTENT]   = "------P";
+$firstthingsfirst_action_description[ACTION_GET_USERLISTTABLEPERMISSIONS_RECORD]    = "------P";
+$firstthingsfirst_action_description[ACTION_UPDATE_USERLISTTABLEPERMISSIONS_RECORD] = "------P";
+$firstthingsfirst_action_description[ACTION_DELETE_USERLISTTABLEPERMISSIONS_RECORD] = "------P";
+$firstthingsfirst_action_description[ACTION_CANCEL_USERLISTTABLEPERMISSIONS_ACTION] = "------P";
 
 /**
  * definition of css name prefix

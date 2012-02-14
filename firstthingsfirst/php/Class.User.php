@@ -51,12 +51,17 @@ define("USER_PW_FIELD_NAME", "_pw");
 define("USER_LANG_FIELD_NAME", "_lang");
 
 /**
- * definition of lang field name
+ * definition of date format field name
  */
 define("USER_DATE_FORMAT_FIELD_NAME", "_date_format");
 
 /**
- * definition of lang field name
+ * definition of decimal format field name
+ */
+define("USER_DECIMAL_MARK_FIELD_NAME", "_decimal_mark");
+
+/**
+ * definition of lines per page field name
  */
 define("USER_LINES_PER_PAGE_FIELD_NAME", "_lines_per_page");
 
@@ -69,6 +74,11 @@ define("USER_THEME_FIELD_NAME", "_theme");
  * definition of create_list field name
  */
 define("USER_CAN_CREATE_LIST_FIELD_NAME", "_create_list");
+
+/**
+ * definition of create_list field name
+ */
+define("USER_CAN_CREATE_USER_FIELD_NAME", "_create_user");
 
 /**
  * definition of admin field name
@@ -89,9 +99,11 @@ $class_user_fields = array(
     USER_PW_FIELD_NAME => array("LABEL_USER_PW", FIELD_TYPE_DEFINITION_PASSWORD, "", COLUMN_NO_SHOW),
     USER_LANG_FIELD_NAME => array("LABEL_USER_LANG", FIELD_TYPE_DEFINITION_SELECTION, implode(array_keys($firstthingsfirst_lang_prefix_array), '|'), COLUMN_SHOW),
     USER_DATE_FORMAT_FIELD_NAME => array("LABEL_USER_DATE_FORMAT", FIELD_TYPE_DEFINITION_SELECTION, implode(array_keys($firstthingsfirst_date_format_prefix_array), '|'), COLUMN_SHOW),
+    USER_DECIMAL_MARK_FIELD_NAME => array("LABEL_USER_DECIMAL_MARK", FIELD_TYPE_DEFINITION_SELECTION, implode(array_keys($firstthingsfirst_decimal_mark_prefix_array), '|'), COLUMN_SHOW),
     USER_LINES_PER_PAGE_FIELD_NAME => array("LABEL_USER_LINES_PER_PAGE", FIELD_TYPE_DEFINITION_NUMBER, USER_LINES_PER_PAGE_RESET_VALUE, COLUMN_SHOW),
     USER_THEME_FIELD_NAME => array("LABEL_USER_THEME", FIELD_TYPE_DEFINITION_SELECTION, implode(array_keys($firstthingsfirst_theme_prefix_array), '|'), COLUMN_SHOW),
     USER_CAN_CREATE_LIST_FIELD_NAME => array("LABEL_USER_CAN_CREATE_LIST", FIELD_TYPE_DEFINITION_BOOL, "", COLUMN_SHOW),
+    USER_CAN_CREATE_USER_FIELD_NAME => array("LABEL_USER_CAN_CREATE_USER", FIELD_TYPE_DEFINITION_BOOL, "", COLUMN_SHOW),
     USER_IS_ADMIN_FIELD_NAME => array("LABEL_USER_IS_ADMIN", FIELD_TYPE_DEFINITION_BOOL, "", COLUMN_SHOW),
     USER_TIMES_LOGIN_FIELD_NAME => array("LABEL_USER_TIMES_LOGIN", FIELD_TYPE_DEFINITION_NON_EDIT_NUMBER, "", COLUMN_SHOW),
 );
@@ -149,7 +161,7 @@ class User extends UserDatabaseTable
         # reset relevant session parameters
         if (isset($_SESSION["login"]))
         {
-            $this->_log->info("user session is still active (name=".$this->get_name().")");
+            $this->_log->debug("user session is still active (name=".$this->get_name().")");
 
             # adjust cookie life time
             setcookie(USER_SESSION_NAME, $_COOKIE[USER_SESSION_NAME], time() + ($firstthingsfirst_session_time * 60));
@@ -198,11 +210,20 @@ class User extends UserDatabaseTable
 
     /**
      * get value of SESSION variable date_format.
-     * @return string value of SESSION variable lang.
+     * @return string value of SESSION variable date_format.
      */
     function get_date_format ()
     {
         return $_SESSION["date_format"];
+    }
+
+    /**
+     * get value of SESSION variable decimal_mark.
+     * @return string value of SESSION variable decimal_mark.
+     */
+    function get_decimal_mark ()
+    {
+        return $_SESSION["decimal_mark"];
     }
 
     /**
@@ -230,6 +251,15 @@ class User extends UserDatabaseTable
     function get_can_create_list ()
     {
         return $_SESSION["can_create_list"];
+    }
+
+    /**
+    * get value of SESSION variable create_user.
+    * @return bool value of SESSION variable can_create_user.
+    */
+    function get_can_create_user ()
+    {
+        return $_SESSION["can_create_user"];
     }
 
     /**
@@ -325,6 +355,16 @@ class User extends UserDatabaseTable
     }
 
     /**
+     * set value of SESSION variable decimal_mark
+     * @param string $decimal_mark preferred decimal mark
+     * @return void
+     */
+    function set_decimal_mark ($decimal_mark)
+    {
+        $_SESSION["decimal_mark"] = $decimal_mark;
+    }
+
+    /**
      * set value of SESSION variable lines_per_page
      * @param string $lines_per_page preferred maximum number of lines per page
      * @return void
@@ -352,6 +392,16 @@ class User extends UserDatabaseTable
     function set_can_create_list ($permission)
     {
         $_SESSION["can_create_list"] = $permission;
+    }
+
+    /**
+    * set value of SESSION variable can_create_user
+    * @param bool $permission indicates if current user is allowed to create a new user
+    * @return void
+    */
+    function set_can_create_user ($permission)
+    {
+        $_SESSION["can_create_user"] = $permission;
     }
 
     /**
@@ -413,9 +463,11 @@ class User extends UserDatabaseTable
         $this->set_current_list_name("");
         $this->set_lang(LANG_EN);
         $this->set_date_format(DATE_FORMAT_EU);
+        $this->set_decimal_mark(DECIMAL_MARK_POINT);
         $this->set_lines_per_page(12);
         $this->set_theme(THEME_BLUE);
         $this->set_can_create_list("0");
+        $this->set_can_create_user("0");
         $this->set_is_admin("0");
         $this->set_times_login("0");
         $this->set_login("0");
@@ -458,9 +510,11 @@ class User extends UserDatabaseTable
             $name_value_array[USER_PW_FIELD_NAME] = $firstthingsfirst_admin_passwd;
             $name_value_array[USER_LANG_FIELD_NAME] = $firstthingsfirst_lang;
             $name_value_array[USER_DATE_FORMAT_FIELD_NAME] = DATE_FORMAT_EU;
+            $name_value_array[USER_DECIMAL_MARK_FIELD_NAME] = DECIMAL_MARK_POINT;
             $name_value_array[USER_LINES_PER_PAGE_FIELD_NAME] = 12;
             $name_value_array[USER_THEME_FIELD_NAME] = $firstthingsfirst_theme;
             $name_value_array[USER_CAN_CREATE_LIST_FIELD_NAME] = 1;
+            $name_value_array[USER_CAN_CREATE_USER_FIELD_NAME] = 1;
             $name_value_array[USER_IS_ADMIN_FIELD_NAME] = 1;
             $name_value_array[USER_TIMES_LOGIN_FIELD_NAME] = 0;
 
@@ -495,9 +549,11 @@ class User extends UserDatabaseTable
             $this->set_current_list_name("");
             $this->set_lang($record[USER_LANG_FIELD_NAME]);
             $this->set_date_format($record[USER_DATE_FORMAT_FIELD_NAME]);
+            $this->set_decimal_mark($record[USER_DECIMAL_MARK_FIELD_NAME]);
             $this->set_lines_per_page($record[USER_LINES_PER_PAGE_FIELD_NAME]);
             $this->set_theme($record[USER_THEME_FIELD_NAME]);
             $this->set_can_create_list($record[USER_CAN_CREATE_LIST_FIELD_NAME]);
+            $this->set_can_create_user($record[USER_CAN_CREATE_USER_FIELD_NAME]);
             $this->set_is_admin($record[USER_IS_ADMIN_FIELD_NAME]);
             $this->set_times_login($record[USER_TIMES_LOGIN_FIELD_NAME] + 1);
             $this->set_login(1);
@@ -594,11 +650,23 @@ class User extends UserDatabaseTable
             return FALSE;
         }
 
-        # if user is admin then user must also be able to create lists
+        # if user is admin then user must also be able to create lists and users
         if (array_key_exists(USER_IS_ADMIN_FIELD_NAME, $name_values_array) == TRUE)
         {
-            if ($is_admin == 1)
+            if ($name_values_array[USER_IS_ADMIN_FIELD_NAME] == 1)
+            {
                 $name_values_array[USER_CAN_CREATE_LIST_FIELD_NAME] = 1;
+                $name_values_array[USER_CAN_CREATE_USER_FIELD_NAME] = 1;
+            }
+        }
+
+        # if user is able to create users then user must also be able to create lists
+        if (array_key_exists(USER_CAN_CREATE_USER_FIELD_NAME, $name_values_array) == TRUE)
+        {
+            if ($name_values_array[USER_CAN_CREATE_USER_FIELD_NAME] == 1)
+            {
+                $name_values_array[USER_CAN_CREATE_LIST_FIELD_NAME] = 1;
+            }
         }
 
         if ($this->exists($user_name))
@@ -652,10 +720,24 @@ class User extends UserDatabaseTable
             }
         }
 
-        # if user is admin then user must also be able to create lists
+        # if user is admin then user must also be able to create lists and users
         if (array_key_exists(USER_IS_ADMIN_FIELD_NAME, $name_values_array) == TRUE)
+        {
             if ($name_values_array[USER_IS_ADMIN_FIELD_NAME] == 1)
+            {
                 $name_values_array[USER_CAN_CREATE_LIST_FIELD_NAME] = 1;
+                $name_values_array[USER_CAN_CREATE_USER_FIELD_NAME] = 1;
+            }
+        }
+
+        # if user is able to create users then user must also be able to create lists
+        if (array_key_exists(USER_CAN_CREATE_USER_FIELD_NAME, $name_values_array) == TRUE)
+        {
+            if ($name_values_array[USER_CAN_CREATE_USER_FIELD_NAME] == 1)
+            {
+                $name_values_array[USER_CAN_CREATE_LIST_FIELD_NAME] = 1;
+            }
+        }
 
         # update user name in user_list_permissions
         if (array_key_exists(USER_NAME_FIELD_NAME, $name_values_array) == TRUE)
@@ -699,6 +781,7 @@ class User extends UserDatabaseTable
             $this->set_name($name_values_array[USER_NAME_FIELD_NAME]);
             $this->set_lang($name_values_array[USER_LANG_FIELD_NAME]);
             $this->set_date_format($name_values_array[USER_DATE_FORMAT_FIELD_NAME]);
+            $this->set_decimal_mark($name_values_array[USER_DECIMAL_MARK_FIELD_NAME]);
             $this->set_lines_per_page($name_values_array[USER_LINES_PER_PAGE_FIELD_NAME]);
             $this->set_theme($name_values_array[USER_THEME_FIELD_NAME]);
         }

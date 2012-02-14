@@ -5,7 +5,7 @@
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007-2009 Jasper de Jong
+ * @copyright 2007-2012 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -16,6 +16,7 @@
 define("ACTION_GET_USER_ADMIN_PAGE", "action_get_user_admin_page");
 define("ACTION_GET_USER_ADMIN_CONTENT", "action_get_user_admin_content");
 define("ACTION_GET_USER_ADMIN_RECORD", "action_get_user_admin_record");
+define("ACTION_GET_INSERT_USER_ADMIN_RECORD" , "action_get_insert_user_admin_record");
 define("ACTION_INSERT_USER_ADMIN_RECORD", "action_insert_user_admin_record");
 define("ACTION_UPDATE_USER_ADMIN_RECORD", "action_update_user_admin_record");
 define("ACTION_DELETE_USER_ADMIN_RECORD", "action_delete_user_admin_record");
@@ -27,6 +28,7 @@ define("ACTION_CANCEL_USER_ADMIN_ACTION", "action_cancel_user_admin_action");
 $xajax->register(XAJAX_FUNCTION, ACTION_GET_USER_ADMIN_PAGE);
 $xajax->register(XAJAX_FUNCTION, ACTION_GET_USER_ADMIN_CONTENT);
 $xajax->register(XAJAX_FUNCTION, ACTION_GET_USER_ADMIN_RECORD);
+$xajax->register(XAJAX_FUNCTION, ACTION_GET_INSERT_USER_ADMIN_RECORD);
 $xajax->register(XAJAX_FUNCTION, ACTION_INSERT_USER_ADMIN_RECORD);
 $xajax->register(XAJAX_FUNCTION, ACTION_UPDATE_USER_ADMIN_RECORD);
 $xajax->register(XAJAX_FUNCTION, ACTION_DELETE_USER_ADMIN_RECORD);
@@ -36,19 +38,21 @@ $xajax->register(XAJAX_FUNCTION, ACTION_CANCEL_USER_ADMIN_ACTION);
  * definition of action permissions
  * permission are stored in a six character string (P means permissions, - means don't care):
  *  - user has to have create list permission to be able to execute action
+ *  - user has to have create user permission to be able to execute action
  *  - user has to have admin permission to be able to execute action
  *  - user has to have permission to view this list to execute list action for this list
  *  - user has to have permission to edit this list to execute action for this list
  *  - user has to have permission to add to this list to execute action for this list
  *  - user has to have admin permission for this list to exectute action for this list
  */
-$firstthingsfirst_action_description[ACTION_GET_USER_ADMIN_PAGE]        = "-P----";
-$firstthingsfirst_action_description[ACTION_GET_USER_ADMIN_CONTENT]     = "-P----";
-$firstthingsfirst_action_description[ACTION_GET_USER_ADMIN_RECORD]      = "-P----";
-$firstthingsfirst_action_description[ACTION_INSERT_USER_ADMIN_RECORD]   = "-P----";
-$firstthingsfirst_action_description[ACTION_UPDATE_USER_ADMIN_RECORD]   = "-P----";
-$firstthingsfirst_action_description[ACTION_DELETE_USER_ADMIN_RECORD]   = "-P----";
-$firstthingsfirst_action_description[ACTION_CANCEL_USER_ADMIN_ACTION]   = "-P----";
+$firstthingsfirst_action_description[ACTION_GET_USER_ADMIN_PAGE]          = "-P-----";
+$firstthingsfirst_action_description[ACTION_GET_USER_ADMIN_CONTENT]       = "-P-----";
+$firstthingsfirst_action_description[ACTION_GET_USER_ADMIN_RECORD]        = "--P----";
+$firstthingsfirst_action_description[ACTION_GET_INSERT_USER_ADMIN_RECORD] = "-P-----";
+$firstthingsfirst_action_description[ACTION_INSERT_USER_ADMIN_RECORD]     = "-P-----";
+$firstthingsfirst_action_description[ACTION_UPDATE_USER_ADMIN_RECORD]     = "--P----";
+$firstthingsfirst_action_description[ACTION_DELETE_USER_ADMIN_RECORD]     = "--P----";
+$firstthingsfirst_action_description[ACTION_CANCEL_USER_ADMIN_ACTION]     = "-------";
 
 /**
  * definition of css name prefix
@@ -193,6 +197,34 @@ function action_get_user_admin_record ($title, $key_string)
     # focus on lower part of page
     $response->custom_response->focus("$focus_element_name");
 
+    # log total time for this function
+    $logging->info(get_function_time_str(__METHOD__));
+
+    return $response;
+}
+
+/**
+ * get html of one specified record (only called when user inserts a record)
+ * this function is only a wrapper function for function action_get_user_admin_record
+ * this function is registered in xajax
+ * @param string $title title of page
+ * @param string $key_string comma separated name value pairs
+ * @return xajaxResponse every xajax registered function needs to return this object
+ */
+function action_get_insert_user_admin_record ($title, $key_string)
+{
+    global $logging;
+    global $user;
+    global $user_start_time_array;
+
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", title=$title, key_string=$key_string)");
+
+    # store start time
+    $user_start_time_array[__METHOD__] = microtime(TRUE);
+    
+    # call function get_list_record
+    $response = action_get_user_admin_record($title, $key_string);
+    
     # log total time for this function
     $logging->info(get_function_time_str(__METHOD__));
 

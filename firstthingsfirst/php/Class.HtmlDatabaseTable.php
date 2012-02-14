@@ -285,7 +285,7 @@ class HtmlDatabaseTable
             if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_LIST)
                 $field_name_replaced = str_replace(' ', '&nbsp;', translate($field_name));
 
-            $this->_log->info("showing field: $field_name, ".$fields[$db_field_name][3]);
+            #$this->_log->info("showing field: $field_name, ".$fields[$db_field_name][3]);
 
             # only display field names that have a length
             if ((strlen($field_name) > 0) && ($fields[$db_field_name][3] != COLUMN_NO_SHOW))
@@ -323,13 +323,6 @@ class HtmlDatabaseTable
         $html_str .= "                    </tr>\n";
         $html_str .= "                </thead>\n";
         $html_str .= "                <tbody>\n";
-
-        # empty records when the first row is the sum_record (that means that the list or selection is empty)
-        if (count($records) == 1)
-        {
-            if ($database_table->_get_key_values_string($records[0]) == "_0")
-                $records = array();
-        }
         
         # now all the records
         $record_number = 0;        
@@ -608,6 +601,11 @@ class HtmlDatabaseTable
                 {
                     if ($field_type == FIELD_TYPE_DEFINITION_BOOL)
                     {
+                        # set is_admin checkbox to readonly when this is user admin page and user has no admin permissions
+                        if (($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_USER_ADMIN) && 
+                            ($this->_user->get_is_admin() == FALSE) &&
+                            ($db_field_name == USER_IS_ADMIN_FIELD_NAME))
+                            $html_str .= " disabled=\"disabled\"";
                         if ($record[$db_field_name] == "1")
                             $html_str .= " checked";
                     }
@@ -660,7 +658,7 @@ class HtmlDatabaseTable
                             $html_str .= "\n                                        <option value=\"".$option."\"";
                             if ($option == $record[$db_field_name])
                                 $html_str .= " selected";
-                            # translate selections in user admin page
+                            # translate selections in non list page (user admin)
                             if (($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_LIST) && ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_SELECTION))
                                 $html_str .= ">".translate($option)."&nbsp;&nbsp;"."</option>";
                             else
@@ -678,6 +676,14 @@ class HtmlDatabaseTable
                 # set initial values
                 else
                 {
+                    if ($field_type == FIELD_TYPE_DEFINITION_BOOL)
+                    {
+                        # set to readonly when this is user admin page and user has no admin permissions
+                        if (($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_USER_ADMIN) && 
+                            ($this->_user->get_is_admin() == FALSE) &&
+                            ($db_field_name == USER_IS_ADMIN_FIELD_NAME))
+                            $html_str .= " disabled=\"disabled\"";
+                    }
                     if (($field_type == FIELD_TYPE_DEFINITION_NUMBER) && (($field_options != "") && 
                         ($field_options != NUMBER_COLUMN_NO_SUMMATION) && ($field_options != NUMBER_COLUMN_SUMMATION)))
                         $html_str .=  " value=\"".$field_options."\"";
@@ -841,8 +847,8 @@ class HtmlDatabaseTable
             else if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_USERLISTTABLEPERMISSIONS)
             {
                 $html_str .= "<span id=\"action_bar_button_insert\">";
-                # use different function name when page type is list because we use more types of permissions with lists
-                if ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_LIST)
+                # use different function name when page type is list or user admin because we use more types of permissions
+                if (($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_LIST) || ($this->configuration[HTML_TABLE_PAGE_TYPE] == PAGE_TYPE_USER_ADMIN))
                     $html_str .= get_href(get_onclick("action_get_insert_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record", $this->permissions_list_title, "action_bar_button_insert", "above", "(%27".$list_title."%27, %27%27)"), translate("BUTTON_ADD_RECORD").$this->configuration[HTML_TABLE_RECORD_NAME], "icon_add");
                 else
                     $html_str .= get_href(get_onclick("action_get_".$this->configuration[HTML_TABLE_JS_NAME_PREFIX]."record", $this->permissions_list_title, "action_bar_button_insert", "above", "(%27".$list_title."%27, %27%27)"), translate("BUTTON_ADD_RECORD").$this->configuration[HTML_TABLE_RECORD_NAME], "icon_add");

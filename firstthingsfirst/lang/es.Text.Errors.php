@@ -16,6 +16,7 @@
  * permission errors
  */
 $text_translations["ERROR_PERMISSION_CREATE_LIST"] = "No tienes permisos para crear listas";
+$text_translations["ERROR_PERMISSION_CREATE_USER"] = "TO_BE_TRANSLATED";
 $text_translations["ERROR_PERMISSION_ADMIN"] = "No tienes permisos administartivos";
 $text_translations["ERROR_PERMISSION_LIST_VIEW"] = "No tienes permisos para ver esta lista";
 $text_translations["ERROR_PERMISSION_LIST_EDIT"] = "No tienes permisos para modificar las entradas de esta lista";

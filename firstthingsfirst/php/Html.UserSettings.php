@@ -5,7 +5,7 @@
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007-2009 Jasper de Jong
+ * @copyright 2007-2012 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -26,14 +26,15 @@ $xajax->register(XAJAX_FUNCTION, ACTION_UPDATE_USER_SETTINGS_RECORD);
  * definition of action permissions
  * permission are stored in a six character string (P means permissions, - means don't care):
  *  - user has to have create list permission to be able to execute action
+ *  - user has to have create user permission to be able to execute action
  *  - user has to have admin permission to be able to execute action
  *  - user has to have permission to view this list to execute list action for this list
  *  - user has to have permission to edit this list to execute action for this list
  *  - user has to have permission to add to this list to execute action for this list
  *  - user has to have admin permission for this list to exectute action for this list
  */
-$firstthingsfirst_action_description[ACTION_GET_USER_SETTINGS_PAGE]         = "------";
-$firstthingsfirst_action_description[ACTION_UPDATE_USER_SETTINGS_RECORD]    = "------";
+$firstthingsfirst_action_description[ACTION_GET_USER_SETTINGS_PAGE]         = "-------";
+$firstthingsfirst_action_description[ACTION_UPDATE_USER_SETTINGS_RECORD]    = "-------";
 
 /**
  * definition of css name prefix
@@ -66,7 +67,7 @@ function action_get_user_settings_page ()
     global $firstthingsfirst_portal_title;
     global $user_start_time_array;
 
-    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", title=$title)");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().")");
 
     # store start time
     $user_start_time_array[__METHOD__] = microtime(TRUE);
@@ -78,7 +79,7 @@ function action_get_user_settings_page ()
 
     # create an array with selection of fields that user may change
     $db_fields_array = array(DB_ID_FIELD_NAME, USER_NAME_FIELD_NAME, USER_PW_FIELD_NAME, USER_LANG_FIELD_NAME, 
-        USER_DATE_FORMAT_FIELD_NAME, USER_LINES_PER_PAGE_FIELD_NAME, USER_THEME_FIELD_NAME);
+        USER_DATE_FORMAT_FIELD_NAME, USER_DECIMAL_MARK_FIELD_NAME, USER_LINES_PER_PAGE_FIELD_NAME, USER_THEME_FIELD_NAME);
     $user_record_key_string = DatabaseTable::_get_encoded_key_string(array(DB_ID_FIELD_NAME => $user->get_id()));
 
     # set page, title, explanation and navigation

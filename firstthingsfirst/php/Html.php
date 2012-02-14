@@ -112,10 +112,13 @@ function check_permissions ($action, $error_element, $error_position, $mixed_str
 
     # set permissions
     $can_create_list = FALSE;
+    $can_create_user = FALSE;
     $is_admin = FALSE;
     $action_permissions_str = $firstthingsfirst_action_description[$action];
     if ($action_permissions_str[PERMISSION_CAN_CREATE_LIST] == "P")
         $can_create_list = TRUE;
+    if ($action_permissions_str[PERMISSION_CAN_CREATE_USER] == "P")
+        $can_create_user = TRUE;
     if ($action_permissions_str[PERMISSION_IS_ADMIN] == "P")
         $is_admin = TRUE;
 
@@ -137,6 +140,15 @@ function check_permissions ($action, $error_element, $error_position, $mixed_str
     {
         # display error message
         set_error_message($error_element, $error_position, "ERROR_PERMISSION_CREATE_LIST", "", "", $response);
+
+        return $response;
+    }
+
+    # check if create_list permission is required
+    if ($can_create_user && !$user->get_can_create_user())
+    {
+        # display error message
+        set_error_message($error_element, $error_position, "ERROR_PERMISSION_CREATE_USER", "", "", $response);
 
         return $response;
     }
@@ -570,8 +582,8 @@ function get_page_navigation ($page_type)
         else if ($page_type == PAGE_TYPE_USERLISTTABLEPERMISSIONS)
             $html_str .= get_tab_navigation(HTML_TAB_TYPE_HIGHLIGHT, "tab_list_table_permissions_id", "<div $highlight_class>".translate("BUTTON_USERLISTTABLEPERMISSIONS")."</div>");
 
-        # show user admin link only when user has admin permissions
-        if ($user->is_login() && $user->get_is_admin())
+        # show user admin link only when user has at least can_create_user permissions
+        if ($user->is_login() && $user->get_can_create_user())
         {
             # show user admin link clickable when this is not the user admin page
             if ($page_type != PAGE_TYPE_USER_ADMIN)

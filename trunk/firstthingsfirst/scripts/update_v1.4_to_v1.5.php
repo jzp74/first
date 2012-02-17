@@ -101,7 +101,7 @@ foreach($all_lists as $one_list)
             fatal ("definition of list has incorrect number of columns");
 
         # add field_visible_in_overview
-        if (($field_name == DB_ID_FIELD_NAME) && ($field_options == ID_COLUMN_NO_SHOW))
+        if (($field_name == DB_ID_FIELD_NAME) && ($field_options == COLUMN_NO_SHOW))
             array_push($field_definition, COLUMN_NO_SHOW);
         else
             array_push($field_definition, COLUMN_SHOW);
@@ -139,9 +139,9 @@ echo "added columns to users table<br>";
 echo "update users table<br>";
 $query = "UPDATE ".USER_TABLE_NAME." SET ";
 # set BLUE theme for all users
-$query .= USER_THEME_FIELD_NAME."='".LABEL_USER_THEME_BLUE."'";
+$query .= USER_THEME_FIELD_NAME."='LABEL_USER_THEME_BLUE'";
 # set POINT as decimal mark for all users
-$query .= ", ".USER_DECIMAL_MARK_FIELD_NAME."='".LABEL_USER_DECIMAL_MARK_POINT."'";
+$query .= ", ".USER_DECIMAL_MARK_FIELD_NAME."='LABEL_USER_DECIMAL_MARK_POINT'";
 # set FALSE as can create user for all users
 $query .= ", ".USER_CAN_CREATE_USER_FIELD_NAME."=0";
 #echo "query=".$query."<br>";

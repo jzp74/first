@@ -232,6 +232,31 @@ class UserDatabaseTable extends DatabaseTable
     }
 
     /**
+    * select exactly one record from database
+    * @param $db_field_names array array containing db_field_names to select for record
+    * @param $encoded_key_string string unique identifier of record
+    * @return array array containing exactly one record (which is an array)
+    */
+    function select_record ($encoded_key_string, $db_field_names = array())
+    {
+        # decode key string
+        $key_string = $this->_decode_key_string($encoded_key_string);
+
+        $this->_log->trace("selecting UserDatabaseTable row (key_string=".$key_string.")");
+
+        # call parent insert()
+        $row = parent::select_record($encoded_key_string, $db_field_names);
+
+        # replace decimal marks
+        if (count($this->db_field_names_decimal_marks_to_replace) > 0)
+            $row = $this->_replace_decimal_marks($row, FALSE);
+
+        $this->_log->trace("selected UserDatabaseTable row");
+        
+        return $row;
+    }
+    
+    /**
     * add a new record to database
     * @param $name_values_array array array containing name-values of the record
     * @return int number indicates the id of the new record or 0 when no record was added

@@ -495,6 +495,7 @@ class User extends UserDatabaseTable
     {
         global $firstthingsfirst_admin_passwd;
         global $firstthingsfirst_lang;
+        global $firstthingsfirst_theme;
 
         $this->_log->trace("login (name=".$name.")");
 

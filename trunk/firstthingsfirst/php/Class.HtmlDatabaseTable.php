@@ -959,9 +959,9 @@ class HtmlDatabaseTable
     */
     function get_field_value ($field_type, $field_options, $db_field_name, $record)
     {
-        $this->_log->trace("get field value (field_type=$field_type, field_options=$field_options, db_field_name=$db_field_name)");
-
         $field_value = $record[$db_field_name];
+
+        $this->_log->trace("get field value (field_type=$field_type, field_options=$field_options, db_field_name=$db_field_name, field_value=$field_value)");
 
         if ($field_type == FIELD_TYPE_DEFINITION_BOOL)
         {

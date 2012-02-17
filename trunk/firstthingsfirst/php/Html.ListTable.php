@@ -1063,65 +1063,74 @@ function action_export_list_records ($list_title)
     foreach ($all_records as $one_record)
     {
         $new_record = array();
-
-        # cycle through all fields and transform several fields
-        foreach($db_field_names as $db_field_name)
+        
+        $key_values_string = $list_table->_get_key_values_string($one_record);
+        $sum_record = FALSE;
+        if ($key_values_string == "_0")
+            $sum_record = TRUE;
+        
+        # do not export the sum record
+        if ($sum_record == FALSE)
         {
-            $value = $one_record[$db_field_name];
-
-            # only show columns that need to be shown
-            if ($fields[$db_field_name][3] != COLUMN_NO_SHOW)
+            # cycle through all fields and transform several fields
+            foreach($db_field_names as $db_field_name)
             {
-                if (stristr($fields[$db_field_name][1], "DATE"))
-                    $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $value, $user->get_date_format());
-                else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_AUTO_CREATED)
+                $value = $one_record[$db_field_name];
+
+                # only show columns that need to be shown
+                if ($fields[$db_field_name][3] != COLUMN_NO_SHOW)
                 {
-                    if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME)
-                        $new_record[$db_field_name] = $one_record[DB_CREATOR_FIELD_NAME];
-                    else
+                    if (stristr($fields[$db_field_name][1], "DATE"))
+                        $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $value, $user->get_date_format());
+                    else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_AUTO_CREATED)
                     {
-                        if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
-                            $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $one_record[DB_TS_CREATED_FIELD_NAME], $user->get_date_format());
-                        else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
-                            $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $one_record[DB_TS_CREATED_FIELD_NAME], $user->get_date_format())." ".$one_record[DB_CREATOR_FIELD_NAME];
-                    }
-                }
-                else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_AUTO_MODIFIED)
-                {
-                    if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME)
-                        $new_record[$db_field_name] = $one_record[DB_MODIFIER_FIELD_NAME];
-                    else
-                    {
-                        if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
-                            $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $one_record[DB_TS_MODIFIED_FIELD_NAME], $user->get_date_format());
-                        else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
-                            $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $one_record[DB_TS_MODIFIED_FIELD_NAME], $user->get_date_format())." ".$one_record[DB_MODIFIER_FIELD_NAME];
-                    }
-                }
-                else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
-                {
-                    $notes_str = "";
-                    if (count($value) > 0)
-                    {
-                        foreach ($value as $note_array)
+                        if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME)
+                            $new_record[$db_field_name] = $one_record[DB_CREATOR_FIELD_NAME];
+                        else
                         {
-                            $notes_str .= get_date_str(DATE_FORMAT_NORMAL, $note_array[DB_TS_CREATED_FIELD_NAME], $user->get_date_format());
-                            $notes_str .= "(".$note_array[DB_CREATOR_FIELD_NAME]."): ".str_replace("\n", "", $note_array["_note"]).", ";
+                            if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
+                                $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $one_record[DB_TS_CREATED_FIELD_NAME], $user->get_date_format());
+                            else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
+                                $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $one_record[DB_TS_CREATED_FIELD_NAME], $user->get_date_format())." ".$one_record[DB_CREATOR_FIELD_NAME];
                         }
                     }
+                    else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_AUTO_MODIFIED)
+                    {
+                        if ($fields[$db_field_name][2] == NAME_DATE_OPTION_NAME)
+                            $new_record[$db_field_name] = $one_record[DB_MODIFIER_FIELD_NAME];
+                        else
+                        {
+                            if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE)
+                                $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $one_record[DB_TS_MODIFIED_FIELD_NAME], $user->get_date_format());
+                            else if ($fields[$db_field_name][2] == NAME_DATE_OPTION_DATE_NAME)
+                                $new_record[$db_field_name] = get_date_str(DATE_FORMAT_NORMAL, $one_record[DB_TS_MODIFIED_FIELD_NAME], $user->get_date_format())." ".$one_record[DB_MODIFIER_FIELD_NAME];
+                        }
+                    }
+                    else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
+                    {
+                        $notes_str = "";
+                        if (count($value) > 0)
+                        {
+                            foreach ($value as $note_array)
+                            {
+                                $notes_str .= get_date_str(DATE_FORMAT_NORMAL, $note_array[DB_TS_CREATED_FIELD_NAME], $user->get_date_format());
+                                $notes_str .= "(".$note_array[DB_CREATOR_FIELD_NAME]."): ".str_replace("\n", "", $note_array["_note"]).", ";
+                            }
+                        }
+                        else
+                            $notes_str .= "-";
+                        $new_record[$db_field_name] = $notes_str;
+                    }
+                    else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_TEXT_FIELD)
+                        $new_record[$db_field_name] = str_replace("\n", "", $value);
                     else
-                        $notes_str .= "-";
-                    $new_record[$db_field_name] = $notes_str;
+                        $new_record[$db_field_name] = $value;
                 }
-                else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_TEXT_FIELD)
-                    $new_record[$db_field_name] = str_replace("\n", "", $value);
-                else
-                    $new_record[$db_field_name] = $value;
             }
-        }
 
-        # dump this record to file
-        fputcsv($handler, $new_record, ",");
+            # dump this record to file
+            fputcsv($handler, $new_record, ",");
+        }
     }
 
     # close file

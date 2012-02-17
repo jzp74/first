@@ -1,7 +1,7 @@
-<?php
+﻿<?php
 
 /**
- * This file contains translations of error texts in Spanish
+ * This file contains translation of error texts in Spanish
  * Non translated strings are marked with TO_BE_TRANSLATED
  *
  * @package Lang_FirstThingsFirst
@@ -16,7 +16,7 @@
  * permission errors
  */
 $text_translations["ERROR_PERMISSION_CREATE_LIST"] = "No tienes permisos para crear listas";
-$text_translations["ERROR_PERMISSION_CREATE_USER"] = "TO_BE_TRANSLATED";
+$text_translations["ERROR_PERMISSION_CREATE_USER"] = "No tienes permisos para crear usuarios";
 $text_translations["ERROR_PERMISSION_ADMIN"] = "No tienes permisos administartivos";
 $text_translations["ERROR_PERMISSION_LIST_VIEW"] = "No tienes permisos para ver esta lista";
 $text_translations["ERROR_PERMISSION_LIST_EDIT"] = "No tienes permisos para modificar las entradas de esta lista";
@@ -29,14 +29,14 @@ $text_translations["ERROR_PERMISSION_LIST_ADMIN"] = "No tienes permisos administ
 $text_translations["ERROR_DATE_WRONG_FORMAT_US"] = "Has introducido un formato erróneo de fecha. La fecha debe tener uno de los siguientes formatos:<br>MM/DD/YYYY<br>MM/YYYY<br>MM/DD<br>YYYY";
 $text_translations["ERROR_DATE_WRONG_FORMAT_EU"] = "Has introducido un formato erróneo de fecha. La fecha debe tener uno de los siguientes formatos:<br>MM/DD/YYYY<br>MM/YYYY<br>MM/DD<br>YYYY";
 $text_translations["ERROR_NO_NUMBER_GIVEN"] = "No has introducido un número en este campo";
-$text_translations["ERROR_NO_FLOAT_GIVEN"] = "TO_BE_TRANSLATED";
+$text_translations["ERROR_NO_FLOAT_GIVEN"] = "No has introducido un número de punto flotante en este campo";
 $text_translations["ERROR_NO_FIELD_VALUE_GIVEN"] = "No has introducido un valor en este campo";
 $text_translations["ERROR_NO_FIELD_NAME_GIVEN"] = "No has introducido un nombre para este campo";
 $text_translations["ERROR_NO_FIELD_OPTIONS_GIVEN"] = "No has introducido ninguna opción";
 $text_translations["ERROR_NO_USER_NAME_GIVEN"] = "No has introducido ningún nombre de usuario";
 $text_translations["ERROR_NO_PASSWORD_GIVEN"] = "No has introducido ninguna contraseña";
 $text_translations["ERROR_INCORRECT_NAME_PASSWORD"] = "Nombre de usuario o contraseña incorrecta";
-$text_translations["ERROR_NOT_ENOUGH_FIELDS"] = "TO_BE_TRANSLATED";
+$text_translations["ERROR_NOT_ENOUGH_FIELDS"] = "Tienes que crear por lo menos un campo más que el campo 'id'";
 $text_translations["ERROR_NO_TITLE_GIVEN"] = "No has introducido un nombre para esta lista";
 $text_translations["ERROR_NO_DESCRIPTION_GIVEN"] = "No has introducido una descripción para esta lista";
 $text_translations["ERROR_NOT_WELL_FORMED_STRING"] = "Este campo solamente puede contener caracteres alfanuméricos";

@@ -4,7 +4,7 @@
  * This file contains translation of text labels in English
  * Non translated strings are marked with TO_BE_TRANSLATED
  *
- * @package Text_FirstThingsFirst
+ * @package Lang_FirstThingsFirst
  * @author Jasper de Jong
  * @translator Jasper de Jong
  * @copyright 2007-2012 Jasper de Jong

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 /**
  * This file contains translations of button texts in Spanish

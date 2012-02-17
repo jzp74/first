@@ -692,7 +692,7 @@ class ListTable extends UserDatabaseTable
             {
                 foreach($note_fields_array as $note_field)
                 {
-                    if ($record[$note_field] > 0)
+                    if ((int)$record[$note_field] > 0)
                     {
                         $result = $this->_list_table_note->select($record[DB_ID_FIELD_NAME], $note_field);
                         if (count($result) == 0 || count($result) != $record[$note_field])
@@ -703,7 +703,8 @@ class ListTable extends UserDatabaseTable
                         else
                             $record[$note_field] = $result;
                     }
-                    else
+                    # only set an empty array when this is not the sum record
+                    else if ($record[$note_field] != "")
                         $record[$note_field] = array();
                 }
                 array_push($records_with_notes, $record);

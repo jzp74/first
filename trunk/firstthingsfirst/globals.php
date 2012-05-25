@@ -126,7 +126,7 @@ define("PREG_ALLOWED_FLOAT_COMMA", "/^-{0,1}\d*\,{0,1}\d+$/");
 define("PREG_ALLOWED_DATE_US", "/^[0-9\/]+$/");
 define("PREG_ALLOWED_DATE_EU", "/^[0-9-]+$/");
 define("PREG_ALLOWED_CHARS", "/^[A-Za-z0-9\s]+$/");
-define("PREG_ALLOWED_CHARS_EXTRA", "/^[A-Za-z0-9|]+$/");
+define("PREG_ALLOWED_CHARS_EXTRA", "/^[A-Za-z0-9_|\s]+$/");
 
 /**
  * a false return string

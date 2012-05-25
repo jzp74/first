@@ -40,7 +40,7 @@ $text_translations["ERROR_NOT_ENOUGH_FIELDS"] = "Tienes que crear por lo menos u
 $text_translations["ERROR_NO_TITLE_GIVEN"] = "No has introducido un nombre para esta lista";
 $text_translations["ERROR_NO_DESCRIPTION_GIVEN"] = "No has introducido una descripción para esta lista";
 $text_translations["ERROR_NOT_WELL_FORMED_STRING"] = "Este campo solamente puede contener caracteres alfanuméricos";
-$text_translations["ERROR_NOT_WELL_FORMED_SELECTION_STRING"] = "Este campo solamente puede contener caracteres alfanuméricos y el signo |";
+$text_translations["ERROR_NOT_WELL_FORMED_SELECTION_STRING"] = "Este campo solamente puede contener caracteres alfanuméricos, el signo |, espacios y el signo _";
 
 /**
  * database errors

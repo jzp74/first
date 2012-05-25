@@ -145,7 +145,7 @@ function action_get_listbuilder_page ($list_title)
     $html_str .= "             <div class=\"corner top_right_normal\"></div>\n";
 
     # display the selection box to add a new column
-    $html_str .= "             ".get_select("add_select", "add_it", "")."\n";
+    $html_str .= "             ".get_select("add_select", 0, "")."\n";
     $args_str = "(document.getElementById('add_select').value, xajax.getFormValues('database_definition_form'), ";
     $args_str .= "document.getElementById('largest_id').innerHTML)";
     $html_str .= "             <span id=\"action_bar_button_add\">";
@@ -386,18 +386,18 @@ function action_delete_listbuilder_row ($row_number, $definition)
 }
 
 /**
- * add a listbuilder row (function is called when user changes field_type of a row)
+ * change the listbuilder row (function is called when user changes field_type of a row)
  * this function is registered in xajax
  * @param array $definition defintion of current list that is being build
  * @return xajaxResponse every xajax registered function needs to return this object
  */
-function action_refresh_listbuilder ($definition)
+function action_refresh_listbuilder ($row_number, $definition)
 {
     global $logging;
     global $user;
     global $user_start_time_array;
 
-    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().")");
+    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", row_number=$row_number)");
 
     # store start time
     $user_start_time_array[__METHOD__] = microtime(TRUE);
@@ -405,7 +405,13 @@ function action_refresh_listbuilder ($definition)
     # create necessary objects
     $response = new xajaxResponse();
 
-    $html_str = get_field_definition_table(array_values($definition));
+    $definition = array_values($definition);
+
+    # reset the options string for row with changed field_type
+    $position = ($row_number * 4) + 3;
+    $definition[$position] =  "";
+
+    $html_str = get_field_definition_table($definition);
     $response->custom_response->assign_with_effect("listbuilder_configuration_pane", $html_str);
 
     # log total time for this function
@@ -701,11 +707,12 @@ function check_definition ($definition, $response)
 /**
  * return the html for a select box
  * @param string $id id parameter of this new select box
- * @param string $name name parameter of this new select box
+ * @param string $row row of this new select box
  * @param string $selection option to preselect
+ * @todo add fourth param with id of options field: $('#$options_id > input').val('');
  * @return void
  */
-function get_select ($id, $name, $selection)
+function get_select ($id, $row, $selection)
 {
     global $firstthingsfirst_field_descriptions;
     global $logging;
@@ -714,13 +721,15 @@ function get_select ($id, $name, $selection)
     # remove the first item from this array (auto number)
     array_shift($field_types);
 
-    $logging->trace("getting select (id=".$id.", name=".$name.", selection=".$selection.")");
+    $logging->trace("getting select (id=$id, row=$row, selection=$selection)");
 
-    $html_str = "<select class=\"selection_box\" name=\"".$name."\"";
     if ($id != "")
-        $html_str .= " id=\"".$id."\"";
+            $html_str = "<select class=\"selection_box\" name=\"add_it\" id=\"".$id."\"";
     else
-        $html_str .= " onChange=\"handleFunction('".ACTION_REFRESH_LISTBUILDER."', xajax.getFormValues('database_definition_form')); \"";
+    {
+        $html_str = "<select class=\"selection_box\" name=\"row_".$row."_1\" ";
+        $html_str .= "onChange=\"handleFunction('".ACTION_REFRESH_LISTBUILDER."', $row, xajax.getFormValues('database_definition_form')); \"";
+    }
     $html_str .= ">\n";
 
     foreach ($field_types as $field_type)
@@ -753,7 +762,7 @@ function get_field_definition_table ($definition)
 
     $input_html_id = "<input type=text size=\"2\" maxlength=\"2\"";
     $input_html_name = "<input type=text size=\"24\" maxlength=\"40\"";
-    $input_html_options = "<input type=text size=\"32\" maxlength=\"100\"";
+    $input_html_options = "<input type=text size=\"32\" maxlength=\"200\"";
     $input_html_value_invisible = "<input style=\"visibility: hidden;\" type=text size=\"1\" maxlength=\"100\"";
     $html_str = "";
 
@@ -796,7 +805,7 @@ function get_field_definition_table ($definition)
             $html_str .= "                                </select></td>\n";
         }
         else
-            $html_str .= "                                <td id=\"row_".$row."_1\">".get_select("", "row_".$row."_1", $definition[$position_type])."</td>\n";
+            $html_str .= "                                <td id=\"row_".$row."_1\">".get_select("", $row, $definition[$position_type])."</td>\n";
 
         # the second column - name
         $html_str .= "                                <td id=\"row_".$row."_2\">".$input_html_name." name=\"row_".$row."_2\" ";
@@ -808,7 +817,7 @@ function get_field_definition_table ($definition)
 
         # the third column - options
         if ($definition[$position_type] == FIELD_TYPE_DEFINITION_SELECTION)
-            $html_str .= "                                <td id=\"row_".$row."_3\">".$input_html_name." name=\"row_".$row."_3\" value=\"".$definition[$position_options]."\"></td>\n";
+            $html_str .= "                                <td id=\"row_".$row."_3\">".$input_html_options." name=\"row_".$row."_3\" value=\"".$definition[$position_options]."\"></td>\n";
         else if ($definition[$position_type] == FIELD_TYPE_DEFINITION_NUMBER || $definition[$position_type] == FIELD_TYPE_DEFINITION_FLOAT)
         {
             $html_str .= "                                <td id=\"row_".$row."_3\"><select class=\"selection_box\" name=\"row_".$row."_3\">\n";

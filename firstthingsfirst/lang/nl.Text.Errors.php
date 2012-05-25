@@ -40,7 +40,7 @@ $text_translations["ERROR_NOT_ENOUGH_FIELDS"] = "Je moet tenminste een ander vel
 $text_translations["ERROR_NO_TITLE_GIVEN"] = "Je hebt deze lijst geen naam gegeven";
 $text_translations["ERROR_NO_DESCRIPTION_GIVEN"] = "Je hebt deze lijst geen beschrijving gegeven";
 $text_translations["ERROR_NOT_WELL_FORMED_STRING"] = "Dit veld mag alleen alfanumerieke tekens bevatten";
-$text_translations["ERROR_NOT_WELL_FORMED_SELECTION_STRING"] = "Dit veld mag alleen alfanumerieke tekens en het | teken bevatten";
+$text_translations["ERROR_NOT_WELL_FORMED_SELECTION_STRING"] = "Dit veld mag alleen alfanumerieke tekens, het | teken, spaties en het _ teken bevatten";
 
 /**
  * database errors

@@ -40,7 +40,7 @@ $text_translations["ERROR_NOT_ENOUGH_FIELDS"] = "You have to define at least one
 $text_translations["ERROR_NO_TITLE_GIVEN"] = "You have not given a name for this list";
 $text_translations["ERROR_NO_DESCRIPTION_GIVEN"] = "You have not given a description for this list";
 $text_translations["ERROR_NOT_WELL_FORMED_STRING"] = "This field can only contain alpha numerical characters";
-$text_translations["ERROR_NOT_WELL_FORMED_SELECTION_STRING"] = "This field can only contain alpha numerical characters and the | character";
+$text_translations["ERROR_NOT_WELL_FORMED_SELECTION_STRING"] = "This field can only contain alpha numerical characters, the | character, spaces and the _ character";
 
 /**
  * database errors

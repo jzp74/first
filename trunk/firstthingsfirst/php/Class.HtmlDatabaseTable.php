@@ -622,12 +622,9 @@ class HtmlDatabaseTable
                         {
                             $ts_created = get_date_str(DATE_FORMAT_FANCY, $record[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format());
                             if ($field_options == NAME_DATE_OPTION_DATE)
-                                $html_str .= " value=\"".get_date_str(DATE_FORMAT_FANCY, $record[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format())."\"";
+                                $html_str .= " value=\"$ts_created\"";
                             else if ($field_options == NAME_DATE_OPTION_DATE_NAME)
-                            {
-                                $html_str .= " value=\"".get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_CREATED_FIELD_NAME], $this->_user->get_date_format());
-                                $html_str .= "&nbsp;(".$record[DB_CREATOR_FIELD_NAME].")\"";
-                            }
+                                $html_str .= " value=\"$ts_created&nbsp;(".$record[DB_CREATOR_FIELD_NAME].")\"";
                         }
                     }
                     else if ($field_type == FIELD_TYPE_DEFINITION_AUTO_MODIFIED)
@@ -636,13 +633,11 @@ class HtmlDatabaseTable
                             $html_str .= " value=\"".$record[DB_MODIFIER_FIELD_NAME]."\"";
                         else
                         {
+                            $ts_modified = get_date_str(DATE_FORMAT_FANCY, $record[DB_TS_MODIFIED_FIELD_NAME], $this->_user->get_date_format());
                             if ($field_options == NAME_DATE_OPTION_DATE)
-                                $html_str .= " value=\"".get_date_str(DATE_FORMAT_FANCY, $record[DB_TS_MODIFIED_FIELD_NAME], $this->_user->get_date_format())."\"";
+                                $html_str .= " value=\"$ts_modified\"";
                             else if ($field_options == NAME_DATE_OPTION_DATE_NAME)
-                            {
-                                $html_str .= " value=\"".get_date_str(DATE_FORMAT_NORMAL, $record[DB_TS_MODIFIED_FIELD_NAME], $this->_user->get_date_format());
-                                $html_str .= "&nbsp;(".$record[DB_MODIFIER_FIELD_NAME].")\"";
-                            }
+                                $html_str .= " value=\"$ts_modified&nbsp;(".$record[DB_MODIFIER_FIELD_NAME].")\"";
                         }
                     }
                     else if ($field_type == FIELD_TYPE_DEFINITION_TEXT_FIELD)
@@ -689,8 +684,24 @@ class HtmlDatabaseTable
                         $html_str .=  " value=\"".$field_options."\"";
                     if ($field_type == FIELD_TYPE_DEFINITION_NON_EDIT_NUMBER)
                         $html_str .=  " value=\"0\"";
+                    else if (stristr($field_type, "DATE"))
+                    {
+                        $date_string = get_date_str(DATE_FORMAT_NORMAL, strftime(DB_DATETIME_FORMAT), $this->_user->get_date_format());
+                        $html_str .= " value=\"".$date_string."\"";
+                    }
                     else if (($field_type == FIELD_TYPE_DEFINITION_AUTO_CREATED) || ($field_type == FIELD_TYPE_DEFINITION_AUTO_MODIFIED))
-                        $html_str .=  " value=\"-\"";
+                    {
+                        if ($field_options == NAME_DATE_OPTION_NAME)
+                            $html_str .= " value=\"".$this->_user->get_name()."\"";
+                        else
+                        {
+                            $ts = get_date_str(DATE_FORMAT_FANCY, strftime(DB_DATETIME_FORMAT), $this->_user->get_date_format());
+                            if ($field_options == NAME_DATE_OPTION_DATE)
+                                $html_str .= " value=\"$ts\"";
+                            else if ($field_options == NAME_DATE_OPTION_DATE_NAME)
+                                $html_str .= " value=\"$ts&nbsp;(".$this->_user->get_name().")\"";
+                        }
+                    }
                     else if ($field_type == FIELD_TYPE_DEFINITION_TEXT_FIELD)
                         $html_str .= "></textarea";
                     else if ($field_type == FIELD_TYPE_DEFINITION_NOTES_FIELD)

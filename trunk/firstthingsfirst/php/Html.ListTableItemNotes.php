@@ -300,7 +300,7 @@ function get_list_record_note ($db_field_name, $count, $is_last, $id, $note_arra
     $textarea_name = $db_field_name.GENERAL_SEPARATOR.FIELD_TYPE_DEFINITION_NOTES_FIELD.GENERAL_SEPARATOR.$id;
     # set the text of note when this is not a new note
     if ($id != 0)
-        $note_str = $note_array["_note"];
+        $note_str = str_replace("\n", "\\n", $note_array["_note"]);
     else
         $note_str = "";
 

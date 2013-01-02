@@ -488,7 +488,7 @@ function action_delete_user_admin_record ($title, $key_string)
     $response = new xajaxResponse();
     $html_database_table = new HtmlDatabaseTable ($user_admin_table_configuration);
 
-    $logging->info("get user record");
+    $logging->debug("get user record");
     $user_array = $user->select_record($key_string);
     if (count($user_array) == 0)
     {
@@ -501,7 +501,7 @@ function action_delete_user_admin_record ($title, $key_string)
         return $response;
     }
     $user_name = $user_array[USER_NAME_FIELD_NAME];
-    $logging->info("found user: ".$user_name);
+    $logging->debug("found user: ".$user_name);
 
     # display error when current user wants to delete user admin
     if ($user_name == "admin")

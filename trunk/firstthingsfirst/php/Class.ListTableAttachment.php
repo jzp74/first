@@ -178,7 +178,7 @@ class ListTableAttachment extends DatabaseTable
     */
     function insert ($record_id, $attachment_id, $attachment_str)
     {
-        $this->_log->info("inserting ListTableAttachment (record_id=$record_id, attachment_id=$attachment_id, attachments_str=$attachment_str)");
+        $this->_log->trace("inserting ListTableAttachment (record_id=$record_id, attachment_id=$attachment_id, attachments_str=$attachment_str)");
 
         $return_value = TRUE;
         $attachment_array = explode('|', $attachment_str);
@@ -215,7 +215,6 @@ class ListTableAttachment extends DatabaseTable
         # add slashes to attachment
         $name_values_array[LISTTABLEATTACHMENT_ATTACHMENT_FIELD_NAME] = addslashes($read_file_str);
 
-        $this->_log->info("calling insert from parent");
         # call parent insert()
         $new_attachment_id = parent::insert($name_values_array, $this->_user->get_name());
         if ($new_attachment_id == 0)

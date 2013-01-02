@@ -482,7 +482,7 @@ function action_get_list_import ($list_title)
     ");
 
     # focus on lower part of page
-    $response->custom_response->focus("$focus_on_this_input");
+    $response->custom_response->focus("#focus_on_this_input");
 
     # log total time for this function
     $logging->info(get_function_time_str(__METHOD__));
@@ -530,7 +530,7 @@ function action_insert_list_record ($list_title, $form_values)
         $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_INPUT_CHECKS]);
         $result->reset();
 
-        $logging->info("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
+        $logging->debug("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
 
         # check field values
         check_field($check_functions, $db_field_name, $form_values[$name_key], $user->get_date_format(), $result);
@@ -565,7 +565,7 @@ function action_insert_list_record ($list_title, $form_values)
             $new_attachment_array = array($field_number, $form_values[$name_key]);
             array_push($attachments_array, $new_attachment_array);
             $new_form_values[$db_field_name_attachments] = $attachments_array;
-            $logging->info("found an attachment (count = ".count($attachments_array).")");
+            $logging->debug("found an attachment (count = ".count($attachments_array).")");
         }
         else
             $new_form_values[$db_field_name] = $new_form_value;
@@ -659,7 +659,7 @@ function action_update_list_record ($list_title, $key_string, $form_values)
         $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_INPUT_CHECKS]);
         $result->reset();
 
-        $logging->info("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
+        $logging->debug("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
 
         # check field values
         check_field($check_functions, $db_field_name, $form_values[$name_key], $user->get_date_format(), $result);
@@ -694,7 +694,7 @@ function action_update_list_record ($list_title, $key_string, $form_values)
             $new_attachment_array = array($field_number, $form_values[$name_key]);
             array_push($attachments_array, $new_attachment_array);
             $new_form_values[$db_field_name_attachments] = $attachments_array;
-            $logging->info("found an attachment (count = ".count($attachments_array).")");
+            $logging->debug("found an attachment (count = ".count($attachments_array).")");
         }
         else
             $new_form_values[$db_field_name] = $new_form_value;
@@ -960,16 +960,19 @@ function action_import_list_records ($list_title, $file_specs, $field_seperator)
     }
 
     # read a line from the file to import
-    while (($line_str = fgetcsv($file_handler, 10000, $field_seperator)) !== FALSE)
+    while (($line_array = fgetcsv($file_handler, 10000, $field_seperator)) !== FALSE)
     {
         $logging->debug("reading line (line_number=$line_number)");
 
-        $num_of_columns = count($line_str);
+        # add dummy column for attachments
+        array_push ($line_array, "@");
+
+        $num_of_columns = count($line_array);
         # check if number of columns is correct
         if ($num_of_columns != $num_of_import_db_field_names)
         {
             $logging->warn("wrong colum count (num_of_columns=$num_of_columns, num_of_import_db_field_names=$num_of_import_db_field_names)");
-            $error_message_str = LABEL_IMPORT_LINE_NUMBER." $line_number <br> ".ERROR_IMPORT_WRONG_COLUMN_COUNT;
+            $error_message_str = "LABEL_IMPORT_LINE_NUMBER $line_number <br> ERROR_IMPORT_WRONG_COLUMN_COUNT";
             set_error_message("button_import", "above", $error_message_str, "", "", $response);
 
             return $response;
@@ -985,18 +988,18 @@ function action_import_list_records ($list_title, $file_specs, $field_seperator)
             $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_INPUT_CHECKS]);
             $result->reset();
 
-            $logging->debug("field (name=$db_field_name, type=$field_type)");
-
             # check field values and store new field value in result
-            check_field($check_functions, $db_field_name, $line_str[$counter], $user->get_date_format(), $result);
+            check_field($check_functions, $db_field_name, $line_array[$counter], $user->get_date_format(), $result);
             if (strlen($result->get_error_message_str()) > 0)
             {
-                $error_message_str = LABEL_IMPORT_LINE_NUMBER." $line_number <br> ".LABEL_IMPORT_FIELDNAME." $field_name <br> ".$result->get_error_message_str();
+                $error_message_str = "LABEL_IMPORT_LINE_NUMBER $line_number <br> LABEL_IMPORT_FIELDNAME $field_name <br> ".$result->get_error_message_str();
                 #$error_message_str = $result->get_error_message_str();
                 set_error_message(button_import, "above", $error_message_str, "", "", $response);
 
                 return $response;
             }
+
+            $logging->debug("field (name=$db_field_name, type=$field_type, content=".$result->get_result_str().")");
 
             # convert auto created and auto modified fields
             if (($field_type == FIELD_TYPE_DEFINITION_AUTO_CREATED) || ($field_type == FIELD_TYPE_DEFINITION_AUTO_MODIFIED))
@@ -1005,6 +1008,8 @@ function action_import_list_records ($list_title, $file_specs, $field_seperator)
             # store the new field value (either as note or as normal value)
             if ($field_type == FIELD_TYPE_DEFINITION_NOTES_FIELD)
                 $insert_array[$db_field_name] = array(array(0, $result->get_result_str()));
+            else if ($field_type == FIELD_TYPE_DEFINITION_ATTACHMENTS)
+                $insert_array[$db_field_name] = array(array(0, LISTTABLEATTACHMENT_EMPTY_ATTACHMENT."|-|-|-"));
             else
                 $insert_array[$db_field_name] = $result->get_result_str();
 
@@ -1031,6 +1036,7 @@ function action_import_list_records ($list_title, $file_specs, $field_seperator)
     $logging->debug("imported all lines from file (line_number=$line_number)");
 
     # delete the import file
+    fclose($file_handler);
     unlink($full_file_name);
 
     # set content
@@ -1121,8 +1127,6 @@ function action_export_list_records ($list_title)
     # cycle through the records
     foreach ($all_records as $one_record)
     {
-        $new_record = array();
-        
         $key_values_string = $list_table->_get_key_values_string($one_record);
         $sum_record = FALSE;
         if ($key_values_string == "_0")
@@ -1131,12 +1135,15 @@ function action_export_list_records ($list_title)
         # do not export the sum record
         if ($sum_record == FALSE)
         {
+            $new_record = array();
+            
             # cycle through all fields and transform several fields
             foreach($db_field_names as $db_field_name)
             {
                 $value = $one_record[$db_field_name];
 
                 # only show columns that need to be shown
+                $logging->debug("column (type=".$fields[$db_field_name][1].", show=".$fields[$db_field_name][3].")");
                 if ($fields[$db_field_name][3] != COLUMN_NO_SHOW)
                 {
                     if (stristr($fields[$db_field_name][1], "DATE"))
@@ -1173,12 +1180,16 @@ function action_export_list_records ($list_title)
                             foreach ($value as $note_array)
                             {
                                 $notes_str .= get_date_str(DATE_FORMAT_NORMAL, $note_array[DB_TS_CREATED_FIELD_NAME], $user->get_date_format());
-                                $notes_str .= "(".$note_array[DB_CREATOR_FIELD_NAME]."): ".str_replace("\n", "", $note_array["_note"]).", ";
+                                $notes_str .= "(".$note_array[DB_CREATOR_FIELD_NAME]."): ".str_replace("\n", "", $note_array["_note"])."|";
                             }
                         }
                         else
                             $notes_str .= "-";
                         $new_record[$db_field_name] = $notes_str;
+                    }
+                    else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_ATTACHMENTS)
+                    {
+                        # do nothing
                     }
                     else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_TEXT_FIELD)
                         $new_record[$db_field_name] = str_replace("\n", "", $value);

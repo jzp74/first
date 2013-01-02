@@ -35,7 +35,7 @@ else
     $logging->warn("parameter file_name not given, assuming list_export.csv");
 }
 
-$logging->info("exporting file (tmp_file=$tmp_file, file_name=$file_name)");
+$logging->debug("exporting file (tmp_file=$tmp_file, file_name=$file_name)");
 
 header("Pragma: public");
 header("Expires: 0");
@@ -55,6 +55,6 @@ if (readfile($full_tmp_file_name) == FALSE)
 # delete the tmp file
 unlink($full_tmp_file_name);
 
-$logging->info("exported file")
+$logging->debug("exported file")
 
 ?>

@@ -64,7 +64,7 @@ if(isset($_FILES['upload_file']))
     # we want to save the file in the uploads directory
     $save_path = "../uploads";
 
-    $logging->info("uploading file (name=$tmp_name, size=$upload_file_size, lang=$lang, mode=$mode)");
+    $logging->debug("uploading file (name=$tmp_name, size=$upload_file_size, lang=$lang, mode=$mode)");
 
     # only allow files smaller than 1Mb
     if ($upload_file_size > 1048576)
@@ -91,7 +91,7 @@ if(isset($_FILES['upload_file']))
     }
 
     # file has been moved
-    $logging->info("moved uploaded file to $full_file_name");
+    $logging->debug("moved uploaded file to $full_file_name");
     die("SUCCES $file_name|$upload_file_type|$upload_file_size|$upload_file_name");
 }
 else

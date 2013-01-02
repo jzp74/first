@@ -1132,6 +1132,17 @@ class ListTable extends UserDatabaseTable
             }
         }
 
+        # delete all attachments for this record
+        if ($this->_list_table_attachment->delete_record_attachments($record_id) == FALSE)
+        {
+            # copy error strings from list_table_note
+            $this->error_message_str = $this->_list_table_attachment->get_error_message_str();
+            $this->error_log_str = $this->_list_table_attachment->get_error_log_str();
+            $this->error_str = $this->_list_table_attachment->get_error_str();
+
+            return FALSE;
+        }
+        
         # delete record
         if (parent::delete($encoded_key_string) == FALSE)
             return FALSE;

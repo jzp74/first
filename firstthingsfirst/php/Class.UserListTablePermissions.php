@@ -292,7 +292,33 @@ class UserListTablePermissions extends UserDatabaseTable
         return TRUE;
     }
 
+    /**
+     * delete specific user permissions
+     * this function is used to check if a user has list permissions
+     * @param $key_string string permissions key string
+     * @return bool indicates if record has been deleted
+     */
+    function delete ($key_string)
+    {
+        $this->_log->trace("delete user list permissions (key_string=$key_string)");
+        
+        # rerurn TRUE when database has not yet been created
+        if (!$this->_database->table_exists($this->table_name))
+        {
+            $this->_log->warn("table does not exist");
+            
+            return TRUE;
+        }
+        
+        # call parent delete
+        if (parent::delete($key_string) == FALSE)
+            return FALSE;
 
+        $this->_log->trace("deleted user list permissions");
+
+        return TRUE;
+    }
+    
 }
 
 ?>

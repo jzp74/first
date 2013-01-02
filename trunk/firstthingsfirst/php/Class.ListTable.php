@@ -16,6 +16,11 @@
 define("LISTTABLE_TABLE_NAME_PREFIX", $firstthingsfirst_db_table_prefix."listtable_");
 
 /**
+ * definition of attachements field name
+ */
+define("LISTTABLE_ATTACHMENTS_FIELD_NAME", "_attachments");
+
+/**
  * definition of prefix that is used for all user-defined field names
  */
 define("LISTTABLE_FIELD_PREFIX", "_user_defined_");
@@ -51,9 +56,15 @@ class ListTable extends UserDatabaseTable
 
     /**
     * list_table_note object
-    * @var ListTableItemNotes
+    * @var ListTableNote
     */
     protected $_list_table_note;
+
+    /**
+    * list_table_attachment object
+    * @var ListTableAttachment
+    */
+    protected $_list_table_attachment;
 
     /**
     * overwrite __construct() function
@@ -85,6 +96,9 @@ class ListTable extends UserDatabaseTable
 
         # initialize ListTableNote
         $this->_list_table_note = new ListTableNote ($list_title);
+
+        # initialize ListTableAttachment
+        $this->_list_table_attachment = new ListTableAttachment ($list_title);
 
         $this->is_valid = TRUE;
 
@@ -751,6 +765,22 @@ class ListTable extends UserDatabaseTable
                     else
                         $record[$db_field_name] = array();
                 }
+                if ($this->fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_ATTACHMENTS)
+                {
+                    if ($record[$db_field_name] > 0)
+                    {
+                        $result = $this->_list_table_attachment->select($record[DB_ID_FIELD_NAME]);
+                        if (count($result) == 0 || count($result) != $record[$db_field_name])
+                        {
+                            $this->_log->warn("unexpected number of attachments found (expected=".$record[$db_field_name].", found=".count($result).")");
+                            $record[$db_field_name] = $result;
+                        }
+                        else
+                            $record[$db_field_name] = $result;
+                    }
+                    else
+                        $record[$db_field_name] = array();
+                }
             }
             $this->_log->trace("selected record form ListTable record");
 
@@ -769,6 +799,7 @@ class ListTable extends UserDatabaseTable
     {
         $db_field_names = array_keys($name_values);
         $all_notes_array = array();
+        $all_attachments_array = array();
 
         $this->_log->trace("inserting record into ListTable");
 
@@ -777,9 +808,12 @@ class ListTable extends UserDatabaseTable
             global $list_table_description;
 
             $notes_array = array();
+            $field_type = $this->fields[$db_field_name][1];
             $value = $name_values[$db_field_name];
+            $this->_log->debug("processing (db_field_name=$db_field_name, field_type=$field_type)");
 
-            if ($this->fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
+            # insert all notes one by one
+            if ($field_type == FIELD_TYPE_DEFINITION_NOTES_FIELD)
             {
                 foreach ($value as $note)
                 {
@@ -792,6 +826,14 @@ class ListTable extends UserDatabaseTable
                 }
                 $name_values[$db_field_name] = count($notes_array);
                 array_push($all_notes_array, $notes_array);
+            }
+            if ($field_type == FIELD_TYPE_DEFINITION_ATTACHMENTS)
+            {
+                $all_attachments_array = $value;
+                # there is always 1 empty attachment present
+                $num_of_attachments = count($all_attachments_array) - 1;
+                $name_values[$db_field_name] = $num_of_attachments;
+                $this->_log->debug("found ".$num_of_attachments." attachments");
             }
         }
 
@@ -810,6 +852,30 @@ class ListTable extends UserDatabaseTable
                     $this->error_message_str = $this->_list_table_note->get_error_message_str();
                     $this->error_log_str = $this->_list_table_note->get_error_log_str();
                     $this->error_str = $this->_list_table_note->get_error_str();
+
+                    return 0;
+                }
+            }
+        }
+
+        # insert attachments
+        foreach ($all_attachments_array as $attachment)
+        {
+            $attachment_str = $attachment[1];
+            $attachment_array = explode('|', $attachment_str);
+            $tmp_file_name = $attachment_array[0];
+
+            # do nothing with the empty array
+            if ($tmp_file_name == LISTTABLEATTACHMENT_EMPTY_ATTACHMENT)
+                $this->_log->debug("found the empty attachment");
+            else
+            {
+                if ($this->_list_table_attachment->insert($new_record_id, $attachment[0], $attachment[1]) == FALSE)
+                {
+                    # copy error strings from _list_table_attachment
+                    $this->error_message_str = $this->_list_table_attachment->get_error_message_str();
+                    $this->error_log_str = $this->_list_table_attachment->get_error_log_str();
+                    $this->error_str = $this->_list_table_attachment->get_error_str();
 
                     return 0;
                 }
@@ -842,22 +908,25 @@ class ListTable extends UserDatabaseTable
 
         $db_field_names = array_keys($name_values_array);
         $all_notes_array = array();
+        $attachments_to_be_inserted_array = array();
+        $attachments_to_be_deleted_array = array();
 
-        $this->_log->trace("updating record from ListTable (encoded_key_string=".$encoded_key_string.")");
+        $this->_log->trace("updating record from ListTable (encoded_key_string=$encoded_key_string)");
 
         foreach ($db_field_names as $db_field_name)
         {
+            $field_type = $this->fields[$db_field_name][1];
             $value = $name_values_array[$db_field_name];
             $notes_array = array();
 
-            if ($this->fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_NOTES_FIELD)
+            if ($field_type == FIELD_TYPE_DEFINITION_NOTES_FIELD)
             {
                 $note_count = 0;
                 foreach ($value as $note)
                 {
                     # do nothing with an empty node
                     if ($note[1] == "")
-                        $this->_log->debug("found an empty note (field=".$db_field_name.")");
+                        $this->_log->debug("found an empty note (field=$db_field_name)");
                     else
                     {
                         array_push($notes_array, array($db_field_name, $note[0], $note[1]));
@@ -874,6 +943,43 @@ class ListTable extends UserDatabaseTable
                 }
                 $name_values_array[$db_field_name] = $note_count;
                 array_push($all_notes_array, $notes_array);
+            }
+            if ($field_type == FIELD_TYPE_DEFINITION_ATTACHMENTS)
+            {
+                $attachment_count = 0;
+                foreach ($value as $attachment)
+                {
+                    $attachment_id = $attachment[0];
+                    $attachment_str = $attachment[1];
+                    $attachment_array = explode('|', $attachment_str);
+                    $tmp_file_name = $attachment_array[0];
+                    $this->_log->debug("found an attachment (attachment_id=$attachment_id, tmp_file_name=$tmp_file_name)");
+
+                    # do not count an attachment that is about to be deleted
+                    if ($tmp_file_name == LISTTABLEATTACHMENT_DELETE_ATTACHMENT)
+                    {
+                        $this->_log->debug("found an attachment to be deleted (attachment_id=$attachment_id)");
+                        array_push($attachments_to_be_deleted_array, $attachment);
+                    }
+                    else if ($tmp_file_name == LISTTABLEATTACHMENT_EMPTY_ATTACHMENT)
+                        $this->_log->debug("found an empty attachment (attachment_id=$attachment_id)");
+                    else
+                    {
+                        $attachment_count++;
+                        
+                        if ($tmp_file_name == LISTTABLEATTACHMENT_EXISTING_ATTACHMENT)
+                        {
+                            $this->_log->debug("found an existing attachment (attachment_id=$attachment_id)");
+                        }
+                        else
+                        {
+                            $this->_log->debug("found a new attachment (attachment_id=$attachment_id)");
+                            array_push($attachments_to_be_inserted_array, $attachment);
+                        }
+                    }
+                }
+                $name_values_array[$db_field_name] = $attachment_count;
+                $this->_log->debug("found $attachment_count attachments");
             }
         }
 
@@ -946,6 +1052,36 @@ class ListTable extends UserDatabaseTable
                 }
             }
         }
+        
+        # delete all attachments to be deleted
+        foreach ($attachments_to_be_deleted_array as $attachment)
+        {
+            $this->_log->debug("found an attachment to be deleted");
+            if ($this->_list_table_attachment->delete($attachment[0]) == FALSE)
+            {
+                # copy error strings from _list_table_attachment
+                $this->error_message_str = $this->_list_table_attachment->get_error_message_str();
+                $this->error_log_str = $this->_list_table_attachment->get_error_log_str();
+                $this->error_str = $this->_list_table_attachment->get_error_str();
+
+                return FALSE;
+            }
+        }
+
+        # insert all new attachments
+        foreach ($attachments_to_be_inserted_array as $attachment)
+        {
+            $this->_log->debug("found a new attachment");
+            if ($this->_list_table_attachment->insert($record_id[0], $attachment[0], $attachment[1]) == FALSE)
+            {
+                # copy error strings from _list_table_attachment
+                $this->error_message_str = $this->_list_table_attachment->get_error_message_str();
+                $this->error_log_str = $this->_list_table_attachment->get_error_log_str();
+                $this->error_str = $this->_list_table_attachment->get_error_str();
+
+                return FALSE;
+            }
+        }
 
         # update list table description
         if ($this->_update_list_table_description_statistics() == FALSE)
@@ -963,7 +1099,7 @@ class ListTable extends UserDatabaseTable
 
     /**
     * delete an existing ListTableItem from database
-    * delete all connected ListTableItemNotes objects
+    * delete all connected ListTableNote objects
     * @param $encoded_key_string string unique identifier of ListTableItem to be deleted
     * @return bool indicates if ListTableItem has been deleted
     */

@@ -65,14 +65,18 @@ $text_translations["ERROR_CANNOT_DELETE_USER_ADMIN"] = "No se puede borrar el us
 $text_translations["ERROR_CANNOT_DELETE_YOURSELF"] = "No puedes borrarte a ti mismo";
 
 /**
+ * upload errors
+ */
+$text_translations["ERROR_UPLOAD_FILE_NOT_MOVE"] = "Ha sido imposible copiar el archivo subido al directorio de archivos subidos";
+$text_translations["ERROR_UPLOAD_FILE_NOT_FOUND"] = "Ha sido imposible encontrar el archivo subido";
+$text_translations["ERROR_UPLOAD_SELECT_FILE"] = "No has seleccionado un archivo para subir. Por favor, selecciona un archivo antes de continuar";
+$text_translations["ERROR_UPLOAD_COULD_NOT_OPEN"] = "Ha sido imposible abrir el archivo subido";
+
+/**
  * import errors
  */
 $text_translations["ERROR_IMPORT_FILE_SIZE_TOO_LARGE"] = "No se pueden importar archivos superiores a 1Mb";
 $text_translations["ERROR_IMPORT_FILE_WRONG_EXTENSION"] = "No se pueden importar archivos con extensión diferente a .cvs y .txt";
-$text_translations["ERROR_IMPORT_FILE_NOT_MOVE"] = "Ha sido imposible copiar el archivo subido al directorio de archivos subidos";
-$text_translations["ERROR_IMPORT_FILE_NOT_FOUND"] = "Ha sido imposible encontrar el archivo subido";
-$text_translations["ERROR_IMPORT_SELECT_FILE_UPLOAD"] = "No has seleccionado un archivo para subir. Por favor, selecciona un archivo antes de continuar";
-$text_translations["ERROR_IMPORT_COULD_NOT_OPEN"] = "Ha sido imposible abrir el archivo subido";
 $text_translations["ERROR_IMPORT_WRONG_COLUMN_COUNT"] = "El número de campos del archivo subido no coincide con el número de campos de esta lista";
 
 /**

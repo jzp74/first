@@ -351,6 +351,7 @@ function get_list_record ($list_title, $key_string)
     global $user;
     global $list_table_configuration;
     global $user_start_time_array;
+    global $firstthingsfirst_lang;
 
     $logging->trace("get list record (list_title=$list_title, key_string=$key_string)");
 
@@ -382,6 +383,36 @@ function get_list_record ($list_title, $key_string)
 
     # focus on lower part of page
     $response->custom_response->focus("$focus_element_name");
+    
+    # set button action for attachments
+    $user_name = $user->get_name();
+    $response->custom_response->script("
+        var button = $('#button_upload'), interval;
+        new AjaxUpload(button,
+        {
+            action: 'php/Html.Upload.php?user_name=$user_name&lang=$firstthingsfirst_lang',
+            name: 'upload_file',
+            onSubmit: function(file, ext)
+            {
+                this.disable();
+                $('#upload_animation').html('<img src=\"images/wait_animation.gif\">');
+            },
+            onComplete: function(file, response)
+            {
+                this.enable();
+                if (response.substring(0, 6) != 'SUCCES')
+                {
+                    $('#upload_animation').html('&nbsp;');
+                    showTooltip('#button_upload', response, 'error', 'right');
+                }
+                else
+                {
+                    $('#upload_animation').html('');
+                    handleFunction('action_add_attachment', '$list_title', $('#upload_attachment_id').html(), response.substring(7));
+                }
+            }
+        });
+    ");
 
     $logging->trace("got list record");
 
@@ -420,13 +451,13 @@ function action_get_list_import ($list_title)
     $response->custom_response->script("$('#button_import').hide();");
 
     # create ajax upload button for the import button
-    $file_name = "upload_".$user->get_name()."_".strftime("%d%m%Y_%H%M%S.csv");
+    $user_name = $user->get_name();
     $response->custom_response->script("
         var button = $('#button_upload'), interval;
         new AjaxUpload(button,
         {
-            action: 'php/Html.Upload.php?file_name=$file_name&lang=$firstthingsfirst_lang',
-            name: 'import_file',
+            action: 'php/Html.Upload.php?user_name=$user_name&lang=$firstthingsfirst_lang',
+            name: 'upload_file',
             onSubmit: function(file, ext)
             {
                 this.disable();
@@ -442,7 +473,7 @@ function action_get_list_import ($list_title)
                 }
                 else
                 {
-                    $('#file_to_upload_id').html(file);
+                    $('#file_to_upload_id').html(file.replace(/ /g, '&nbsp;') + '&nbsp;&nbsp;');
                     $('#button_import').show();
                     $('#uploaded_file_name').html(response.substring(7));
                 }
@@ -476,7 +507,9 @@ function action_insert_list_record ($list_title, $form_values)
 
     $html_str = "";
     $name_keys = array_keys($form_values);
+    $db_field_name_attachments = ListTable::_get_db_field_name(DB_ATTACHMENTS_NAME);
     $new_form_values = array();
+    $attachments_array = array();
 
     $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title)");
 
@@ -497,7 +530,7 @@ function action_insert_list_record ($list_title, $form_values)
         $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_INPUT_CHECKS]);
         $result->reset();
 
-        $logging->debug("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
+        $logging->info("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
 
         # check field values
         check_field($check_functions, $db_field_name, $form_values[$name_key], $user->get_date_format(), $result);
@@ -510,10 +543,13 @@ function action_insert_list_record ($list_title, $form_values)
         # set new value to the old value
         $new_form_value = $result->get_result_str();
 
+        # create an array of notes for the notes field
         if ($field_type == FIELD_TYPE_DEFINITION_NOTES_FIELD)
         {
+            # create an array with note details
             $new_note_array = array($field_number, $form_values[$name_key]);
 
+            # create a new array of notes if none exist, otherwise add the new note to existing node array
             if (array_key_exists($db_field_name, $new_form_values))
             {
                 $notes_array = $new_form_values[$db_field_name];
@@ -522,6 +558,14 @@ function action_insert_list_record ($list_title, $form_values)
             }
             else
                 $new_form_values[$db_field_name] = array($new_note_array);
+        }
+        else if ($field_type == FIELD_TYPE_DEFINITION_ATTACHMENTS)
+        {
+            # add the new attachment to the attachments array
+            $new_attachment_array = array($field_number, $form_values[$name_key]);
+            array_push($attachments_array, $new_attachment_array);
+            $new_form_values[$db_field_name_attachments] = $attachments_array;
+            $logging->info("found an attachment (count = ".count($attachments_array).")");
         }
         else
             $new_form_values[$db_field_name] = $new_form_value;
@@ -592,7 +636,9 @@ function action_update_list_record ($list_title, $key_string, $form_values)
 
     $html_str = "";
     $name_keys = array_keys($form_values);
+    $db_field_name_attachments = ListTable::_get_db_field_name(DB_ATTACHMENTS_NAME);
     $new_form_values = array();
+    $attachments_array = array();
 
     $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title, key_string=$key_string)");
 
@@ -613,7 +659,7 @@ function action_update_list_record ($list_title, $key_string, $form_values)
         $check_functions = explode(" ", $firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_INPUT_CHECKS]);
         $result->reset();
 
-        $logging->debug("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
+        $logging->info("field (name=".$db_field_name.", type=".$field_type.", number=".$field_number.")");
 
         # check field values
         check_field($check_functions, $db_field_name, $form_values[$name_key], $user->get_date_format(), $result);
@@ -626,10 +672,13 @@ function action_update_list_record ($list_title, $key_string, $form_values)
         # set new value to the old value
         $new_form_value = $result->get_result_str();
 
+        # create an array of notes for the notes field
         if ($field_type == FIELD_TYPE_DEFINITION_NOTES_FIELD)
         {
+            # create an array with note details
             $new_note_array = array($field_number, $form_values[$name_key]);
 
+            # create a new array of notes if none exist, otherwise add the new note to existing node array
             if (array_key_exists($db_field_name, $new_form_values))
             {
                 $notes_array = $new_form_values[$db_field_name];
@@ -638,6 +687,14 @@ function action_update_list_record ($list_title, $key_string, $form_values)
             }
             else
                 $new_form_values[$db_field_name] = array($new_note_array);
+        }
+        else if ($field_type == FIELD_TYPE_DEFINITION_ATTACHMENTS)
+        {
+            # add the new attachment to the attachments array
+            $new_attachment_array = array($field_number, $form_values[$name_key]);
+            array_push($attachments_array, $new_attachment_array);
+            $new_form_values[$db_field_name_attachments] = $attachments_array;
+            $logging->info("found an attachment (count = ".count($attachments_array).")");
         }
         else
             $new_form_values[$db_field_name] = $new_form_value;
@@ -826,10 +883,10 @@ function action_activate_list_record ($list_title, $key_string)
  * import uploaded list records to current list
  * this function is registered in xajax
  * @param string $list_title title of list
- * @param string $file_name name of uploaded file to be precessed
+ * @param string $file_specs specifications of uploaded file to be precessed
  * @return xajaxResponse every xajax registered function needs to return this object
  */
-function action_import_list_records ($list_title, $file_name, $field_seperator)
+function action_import_list_records ($list_title, $file_specs, $field_seperator)
 {
     global $logging;
     global $user;
@@ -837,7 +894,13 @@ function action_import_list_records ($list_title, $file_name, $field_seperator)
     global $user_start_time_array;
     global $firstthingsfirst_field_descriptions;
 
-    $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title, file_name=$file_name, field_seperator=$field_seperator)");
+    $file_specs_array = explode("|", $file_specs);
+    $file_name = $file_specs_array[0];
+    $file_org_name = $file_specs_array[1];
+    $file_size = $file_specs_array[2];
+    $file_type = $file_specs_array[3];
+
+    $logging->error("USER_ACTION ".__METHOD__." (user=".$user->get_name().", list_title=$list_title, file_name=$file_name ($file_size), field_seperator=$field_seperator)");
 
     # store start time
     $user_start_time_array[__METHOD__] = microtime(TRUE);
@@ -851,7 +914,7 @@ function action_import_list_records ($list_title, $file_name, $field_seperator)
     if ($file_name == "NO_FILE")
     {
         $logging->warn("no file was uploaded");
-        set_error_message("button_import", "above", "ERROR_IMPORT_SELECT_FILE_UPLOAD", "", "", $response);
+        set_error_message("button_import", "above", "ERROR_UPLOAD_SELECT_FILE", "", "", $response);
 
         return $response;
     }
@@ -875,13 +938,10 @@ function action_import_list_records ($list_title, $file_name, $field_seperator)
     if (file_exists($full_file_name) == FALSE)
     {
         $logging->warn("cannot find uploaded file");
-        set_error_message("button_import", "above", "ERROR_IMPORT_FILE_NOT_FOUND", "", "", $response);
+        set_error_message("button_import", "above", "ERROR_UPLOAD_FILE_NOT_FOUND", "", "", $response);
 
         return $response;
     }
-
-    $file_size = filesize($full_file_name);
-    $logging->debug("get filesize (file_size=".$file_size.")");
 
     $fields = $list_table->get_fields();
     # line number counter
@@ -894,7 +954,7 @@ function action_import_list_records ($list_title, $file_name, $field_seperator)
     if ($file_handler == FALSE)
     {
         $logging->warn("could not open file to import (file_name=$full_file_name)");
-        set_error_message("button_import", "above", "ERROR_IMPORT_COULD_NOT_OPEN", "", "", $response);
+        set_error_message("button_import", "above", "ERROR_UPLOAD_COULD_NOT_OPEN", "", "", $response);
 
         return $response;
     }
@@ -998,10 +1058,9 @@ function action_import_list_records ($list_title, $file_name, $field_seperator)
 }
 
 /**
- * import uploaded list records to current list
+ * export list records to a file
  * this function is registered in xajax
  * @param string $list_title title of list
- * @param string $file_name name of uploaded file to be precessed
  * @return xajaxResponse every xajax registered function needs to return this object
  */
 function action_export_list_records ($list_title)

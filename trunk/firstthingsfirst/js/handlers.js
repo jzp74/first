@@ -2,7 +2,7 @@
  * This file contains js code for function handlers
  *
  * @author Jasper de Jong
- * @copyright 2007-2010 Jasper de Jong
+ * @copyright 2007-2012 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -11,6 +11,14 @@
 
 // time for visuals
 var visualTime = 500;
+
+// returns minimum of 2 digits for an input digit
+// @param int digit any digit
+// @return string a string consisting of two digits minimum
+function minTwoDigits (digit) 
+{
+  return (digit < 10 ? '0' : '') + digit;
+}
 
 // call check_permissions php function via xajax
 // @param array variable array of arguments

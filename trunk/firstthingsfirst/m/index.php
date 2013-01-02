@@ -32,6 +32,7 @@ require_once("../php/Class.User.php");
 require_once("../php/Class.ListTableDescription.php");
 require_once("../php/Class.ListTable.php");
 require_once("../php/Class.ListTableNote.php");
+require_once("../php/Class.ListTableAttachment.php");
 require_once("../php/Class.UserListTablePermissions.php");
 
 
@@ -65,7 +66,8 @@ require_once("../php/Html.Login.php");
 require_once("../php/Html.Portal.php");
 require_once("../php/Html.UserAdministration.php");
 require_once("../php/Html.ListTable.php");
-require_once("../php/Html.ListTableItemNotes.php");
+require_once("../php/Html.ListTableNote.php");
+require_once("../php/Html.ListTableAttachment.php");
 
 
 /**

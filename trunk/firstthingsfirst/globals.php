@@ -72,6 +72,7 @@ define("DB_DATATYPE_TEXTMESSAGE", "MEDIUMTEXT NOT NULL");
 define("DB_DATATYPE_INT", "INT NOT NULL");
 define("DB_DATATYPE_FLOAT", "FLOAT (10, 2) NOT NULL");
 define("DB_DATATYPE_PASSWORD", "CHAR(32) BINARY NOT NULL");
+define("DB_DATATYPE_ATTACHMENT", "LONGBLOB NOT NULL");
 
 /**
  * database data types initial values
@@ -99,6 +100,7 @@ define("DB_CURRENT_PAGE", "_current_page");
 define("DB_TOTAL_PAGES", "_total_pages");
 # this fieldname is only used in select queries and contains the number of records
 define("DB_TOTAL_RECORDS", "_total_records");
+define("DB_ATTACHMENTS_NAME", "attachments");
 
 
 /**
@@ -220,6 +222,12 @@ define("DECIMAL_MARK_POINT", "LABEL_USER_DECIMAL_MARK_POINT");
 define("DECIMAL_MARK_COMMA", "LABEL_USER_DECIMAL_MARK_COMMA");
 
 /**
+ * upload modes
+ */
+define("UPLOAD_MODE_CSV", "upload_csv");
+define("UPLOAD_MODE_ATTACHMENT", "upload_attachment");
+
+/**
  * set theme prefix names
  */
 $firstthingsfirst_decimal_mark_prefix_array = array(
@@ -260,6 +268,8 @@ define("FIELD_TYPE_DEFINITION_NON_EDIT_TEXT_LINE", "LABEL_DEFINITION_NON_EDIT_TE
 define("FIELD_TYPE_DEFINITION_TEXT_FIELD", "LABEL_DEFINITION_TEXT_FIELD");
 define("FIELD_TYPE_DEFINITION_NOTES_FIELD", "LABEL_DEFINITION_NOTES_FIELD");
 define("FIELD_TYPE_DEFINITION_SELECTION", "LABEL_DEFINITION_SELECTION");
+define("FIELD_TYPE_DEFINITION_ATTACHMENTS", "LABEL_DEFINITION_ATTACHMENTS");
+define("FIELD_TYPE_DEFINITION_ATTACHMENTFILE", "LABEL_DEFINITION_ATTACHMENTFILE");
 
 /**
  * this array contains all supported field types
@@ -384,6 +394,20 @@ $firstthingsfirst_field_descriptions = array(
         "",
         DB_INITIAL_DATA_STRING,
         FIELD_DESCRIPTION_SELECTABLE_DATATYPE
+    ),
+    FIELD_TYPE_DEFINITION_ATTACHMENTS => array(
+        DB_DATATYPE_INT,
+        "",
+        "",
+        DB_INITIAL_DATA_NUMBER,
+        FIELD_DESCRIPTION_NON_SELECTABLE_DATATYPE
+    ),
+    FIELD_TYPE_DEFINITION_ATTACHMENTFILE => array(
+        DB_DATATYPE_ATTACHMENT,
+        "",
+        "",
+        DB_INITIAL_DATA_STRING,
+        FIELD_DESCRIPTION_NON_SELECTABLE_DATATYPE
     )
 );
 

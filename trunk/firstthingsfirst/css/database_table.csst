@@ -214,6 +214,7 @@
     }
 
 #database_table_record_contents .note_box {
+    float: left;
     }
 
 #database_table_record_contents .note_box_header {
@@ -286,6 +287,10 @@
 
 #database_table_record_contents a:hover {
     color: [LINK_TEXT_HOVER_COLOR];
+    }
+    
+#database_table_record_contents .attachment_line, #database_table_record_contents .upload_line {
+    margin: 0px 0px 5px 0px;
     }
 
 #database_table_record_contents_pane #record_contents_buttons {

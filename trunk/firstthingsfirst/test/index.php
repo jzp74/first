@@ -26,6 +26,7 @@ require_once("../php/Class.User.php");
 require_once("../php/Class.ListTableDescription.php");
 require_once("../php/Class.ListTable.php");
 require_once("../php/Class.ListTableNote.php");
+require_once("../php/Class.ListTableAttachment.php");
 require_once("../php/Class.UserListTablePermissions.php");
 
 
@@ -98,7 +99,7 @@ $xajax->processRequest();
             <div class="corner top_left_normal"></div>
             <div class="corner top_right_normal"></div>
             <div id="header_contents_status">
-                <div id="header_contents_status_software_version"><?php print(file_get_contents("VERSION")); ?></div>
+                <div id="header_contents_status_software_version"><?php print(file_get_contents("../VERSION")); ?></div>
                 <div id="header_contents_status_login_status">&nbsp;</div>
             </div> <!-- header_contents_status -->
             <div id="portal_title"><?php print($firstthingsfirst_portal_title); ?></div>

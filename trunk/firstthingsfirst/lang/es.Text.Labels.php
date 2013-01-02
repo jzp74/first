@@ -57,6 +57,8 @@ $text_translations["LABEL_DEFINITION_TEXT_LINE"] = "línea de texto&nbsp;&nbsp;"
 $text_translations["LABEL_DEFINITION_TEXT_FIELD"] = "caja con múltiples líneas de texto&nbsp;&nbsp;";
 $text_translations["LABEL_DEFINITION_NOTES_FIELD"] = "notas&nbsp;&nbsp;";
 $text_translations["LABEL_DEFINITION_SELECTION"] = "caja de selección&nbsp;&nbsp;";
+$text_translations["LABEL_DEFINITION_ATTACHMENTS"] = "adjuntos&nbsp;&nbsp;";
+$text_translations["LABEL_DEFINITION_ATTACHMENTFILE"] = "adjunto&nbsp;&nbsp;";
 
 /**
  * user administration labels

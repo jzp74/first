@@ -113,6 +113,7 @@ class ListTableNote extends DatabaseTable
         $this->_log->trace("selecting ListTableNote (record_id=".$record_id.", field_name=".$field_name.")");
 
         # get lines per page from session
+        # todo: remove this line because of DATABASETABLE_ALL_PAGES
         $lines_per_page = $this->_user->get_lines_per_page();
 
         # set filter string SQL
@@ -122,7 +123,7 @@ class ListTableNote extends DatabaseTable
         if (count($records) == 0)
             return array();
 
-        $this->_log->trace("selected ListTableNote");
+        $this->_log->trace("selected ListTableNotes");
 
         return $records;
     }
@@ -155,7 +156,7 @@ class ListTableNote extends DatabaseTable
 
     /**
     * update an existing note in database
-    * @param $note_id int unique identifier of a specific ListTableItemNote object
+    * @param $note_id int unique identifier of a specific ListTableNote object
     * @param $note string the updated note
     * @return bool indicates if ListTableNote has been updated
     */
@@ -180,7 +181,7 @@ class ListTableNote extends DatabaseTable
 
     /**
      * delete an existing notes from database with given id
-     * @param $note_id int unique identifier of a specific ListTableItemNote object
+     * @param $note_id int unique identifier of a specific ListTableNote object
      * @return bool indicates if ListTableNote has been deleted
      */
     function delete ($note_id)

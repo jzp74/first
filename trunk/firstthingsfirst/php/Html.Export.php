@@ -5,7 +5,7 @@
  *
  * @package HTML_FirstThingsFirst
  * @author Jasper de Jong
- * @copyright 2007-2009 Jasper de Jong
+ * @copyright 2007-2012 Jasper de Jong
  * @license http://www.opensource.org/licenses/gpl-license.php
  */
 
@@ -26,7 +26,7 @@ else
     $tmp_file = 'tmp.txt';
     $logging->warn("parameter tmp_file not given, assuming tmp.txt");
 }
-# the tmp file name has to be given by means of a parameter
+# the original file name has to be given by means of a parameter
 if (isset($_GET['file_name']))
     $file_name = $_GET['file_name'];
 else
@@ -41,7 +41,7 @@ header("Pragma: public");
 header("Expires: 0");
 header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 header("Cache-Control: private, false");
-header("Content-Type: text/plain" );
+#header("Content-Type: text/plain" );
 header("Content-Disposition: attachment; filename=\"$file_name\";");
 header("Content-Transfer-Encoding:­ binary");
 ob_clean();

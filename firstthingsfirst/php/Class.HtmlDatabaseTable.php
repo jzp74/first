@@ -284,6 +284,9 @@ class HtmlDatabaseTable
             # translate field_name when this is not a list table
             if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_LIST)
                 $field_name_replaced = str_replace(' ', '&nbsp;', translate($field_name));
+            # use a different field_name for the attachments field
+            else if ($fields[$db_field_name][1] == FIELD_TYPE_DEFINITION_ATTACHMENTS)
+                $field_name_replaced = "@";
 
             #$this->_log->info("showing field: $field_name, ".$fields[$db_field_name][3]);
 
@@ -574,17 +577,22 @@ class HtmlDatabaseTable
             # translate field_name when this is not a list table
             if ($this->configuration[HTML_TABLE_PAGE_TYPE] != PAGE_TYPE_LIST)
                 $field_name_replaced = str_replace(' ', '&nbsp;', translate($field_name));
+            # also use a translation for the attachments field
+            else if ($field_type == FIELD_TYPE_DEFINITION_ATTACHMENTS)
+                $field_name_replaced = str_replace(' ', '&nbsp;', translate("LABEL_DEFINITION_ATTACHMENTS"));
 
             # only add non auto_increment field types (check database definition for this)
             if (($field_type != FIELD_TYPE_DEFINITION_AUTO_NUMBER) && (strlen($field_name) > 0))
             {
                 $html_str .= "                                <tr>\n";
+                
+                # translate the attachments field
                 $html_str .= "                                    <th>".$field_name_replaced."</th>\n";
 
                 # the name tag
                 $tag = $db_field_name.GENERAL_SEPARATOR.$field_type.GENERAL_SEPARATOR."0";
 
-                if ($field_type != FIELD_TYPE_DEFINITION_NOTES_FIELD)
+                if (($field_type != FIELD_TYPE_DEFINITION_NOTES_FIELD) && ($field_type != FIELD_TYPE_DEFINITION_ATTACHMENTS))
                 {
                     $html_str .= "                                    <td id=\"".$db_field_name;
                     $html_str .= "\" tabindex=\"".$tab_index."\"><".$firstthingsfirst_field_descriptions[$field_type][FIELD_DESCRIPTION_FIELD_HTML_DEFINITION];
@@ -644,6 +652,8 @@ class HtmlDatabaseTable
                         $html_str .= ">".$record[$db_field_name]."</textarea";
                     else if ($field_type == FIELD_TYPE_DEFINITION_PASSWORD)
                         $html_str .= " value=\"\"";
+                    else if ($field_type == FIELD_TYPE_DEFINITION_ATTACHMENTS)
+                        $html_str .= get_list_record_attachments($list_title, $record[$db_field_name]);
                     else if ($field_type == FIELD_TYPE_DEFINITION_SELECTION)
                     {
                         $html_str .= ">";
@@ -704,6 +714,8 @@ class HtmlDatabaseTable
                     }
                     else if ($field_type == FIELD_TYPE_DEFINITION_TEXT_FIELD)
                         $html_str .= "></textarea";
+                    else if ($field_type == FIELD_TYPE_DEFINITION_ATTACHMENTS)
+                        $html_str .= get_list_record_attachments($list_title, array());
                     else if ($field_type == FIELD_TYPE_DEFINITION_NOTES_FIELD)
                         $html_str .= get_list_record_notes($db_field_name, array());
                     else if ($field_type == FIELD_TYPE_DEFINITION_SELECTION)
@@ -723,9 +735,9 @@ class HtmlDatabaseTable
                     else
                         $html_str .= " value=\"\"";
                 }
-                if ($field_type != FIELD_TYPE_DEFINITION_NOTES_FIELD)
+                if (($field_type != FIELD_TYPE_DEFINITION_NOTES_FIELD) && ($field_type != FIELD_TYPE_DEFINITION_ATTACHMENTS))
                     $html_str .= "></td>\n";
-                    $html_str .= "                                    <td class=\"super_width\">&nbsp;</td>\n";
+                $html_str .= "                                    <td class=\"super_width\">&nbsp;</td>\n";
                 $html_str .= "                                </tr>\n";
             }
 
@@ -791,13 +803,8 @@ class HtmlDatabaseTable
         $html_str .= "                    <table id=\"".$this->configuration[HTML_TABLE_CSS_NAME_PREFIX]."record_contents\" align=\"left\" border=\"0\" cellspacing=\"2\">\n";
         $html_str .= "                        <tbody>\n";
         $html_str .= "                            <tr>\n";
-        $html_str .= "                                <th><div class=\"invisible_collapsed\" id=\"uploaded_file_name\">NO_FILE</div></th>\n";
-        $html_str .= "                                <td><div id=\"button_upload\" class=\"icon icon_add\">".translate("BUTTON_SELECT_UPLOAD_FILE")."</a></td>\n";
-        $html_str .= "                                <td class=\"super_width\">&nbsp;</td>\n";
-        $html_str .= "                            </tr>\n";
-        $html_str .= "                            <tr>\n";
-        $html_str .= "                                <th>".translate("LABEL_IMPORT_FILE_NAME")."</th>\n";
-        $html_str .= "                                <td id=\"file_to_upload_id\">-</td>\n";
+        $html_str .= "                                <th><span class=\"invisible_collapsed\" id=\"uploaded_file_name\">NO_FILE</span><span>".translate("LABEL_IMPORT_FILE_NAME")."</span></th>\n";
+        $html_str .= "                                <td><span id=\"file_to_upload_id\">-&nbsp;&nbsp;</span><span id=\"button_upload\" class=\"icon icon_add\">".translate("BUTTON_SELECT_UPLOAD_FILE")."</a></span></td>\n";
         $html_str .= "                                <td class=\"super_width\">&nbsp;</td>\n";
         $html_str .= "                            </tr>\n";
         $html_str .= "                            <tr>\n";
@@ -1046,6 +1053,13 @@ class HtmlDatabaseTable
         else if ($field_type == FIELD_TYPE_DEFINITION_PASSWORD)
         {
             $html_str = "********";
+        }
+        else if ($field_type == FIELD_TYPE_DEFINITION_ATTACHMENTS)
+        {
+            if ($field_value == 0)
+                $html_str = "&nbsp;";
+            else
+                $html_str = "<span class=\"icon icon_attachment\">&nbsp;</span>";
         }
         # translate options in user admin page
         else if ($field_type == FIELD_TYPE_DEFINITION_SELECTION)

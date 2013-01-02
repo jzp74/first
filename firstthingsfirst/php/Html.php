@@ -122,7 +122,7 @@ function check_permissions ($action, $error_element, $error_position, $mixed_str
     if ($action_permissions_str[PERMISSION_IS_ADMIN] == "P")
         $is_admin = TRUE;
 
-    $logging->debug("check permissions for action: ".$action." (permissions=".$action_permissions_str.")");
+    $logging->info("check permissions for action: ".$action." (permissions=".$action_permissions_str.")");
 
     # check if user is logged in
     if (!$user->is_login())
@@ -205,7 +205,7 @@ function check_list_permissions ($action, $list_title, $error_element, $error_po
     if ($action_permissions_str[PERMISSION_IS_ADMIN_SPECIFIC_LIST] == "P")
         $is_admin_specific_list = TRUE;
 
-    $logging->debug("check list permissions for list: $list_title and action: $action (permissions=$action_permissions_str)");
+    $logging->info("check list permissions for list: $list_title and action: $action (permissions=$action_permissions_str)");
 
     # check if user is logged in
     if (!$user->is_login())

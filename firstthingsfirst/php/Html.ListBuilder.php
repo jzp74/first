@@ -87,9 +87,9 @@ function action_get_listbuilder_page ($list_title)
         # just create an empty list when list could not be loaded
         if (count($record) == 0)
         {
-            $definition = array(0, FIELD_TYPE_DEFINITION_AUTO_NUMBER, "id", "", 1, FIELD_TYPE_DEFINITION_NUMBER, "", "");
+            $definition = array(0, FIELD_TYPE_DEFINITION_AUTO_NUMBER, "id", "", 1, FIELD_TYPE_DEFINITION_TEXT_LINE, "", "", 2, FIELD_TYPE_DEFINITION_ATTACHMENTS, DB_ATTACHMENTS_NAME, "");
             $old_definition = htmlentities($json->encode($definition), ENT_QUOTES);
-            $largest_id = 1;
+            $largest_id = 2;
         }
         else
         {
@@ -121,9 +121,9 @@ function action_get_listbuilder_page ($list_title)
     # just create an empty list when no title has been given
     else
     {
-        $definition = array(0, FIELD_TYPE_DEFINITION_AUTO_NUMBER, "id", "", 1, FIELD_TYPE_DEFINITION_NUMBER, "", "");
+        $definition = array(0, FIELD_TYPE_DEFINITION_AUTO_NUMBER, "id", "", 1, FIELD_TYPE_DEFINITION_TEXT_LINE, "", "", 2, FIELD_TYPE_DEFINITION_ATTACHMENTS, DB_ATTACHMENTS_NAME, "");
         $old_definition = htmlentities($json->encode($definition), ENT_QUOTES);
-        $largest_id = 1;
+        $largest_id = 2;
     }
 
     # different page title when list title has been given
@@ -258,9 +258,11 @@ function action_insert_listbuilder_row ($field_type, $definition, $largest_id)
     global $user;
     global $user_start_time_array;
 
-    $new_row = array($largest_id + 1, $field_type, "", "");
-    # get rid of keynames
-    $new_definition = array_merge(array_values($definition), $new_row);
+    $new_row = array($largest_id + 1, $field_type, "", "");    
+    $last_row = array_slice($definition, count($definition) - 4, 4);
+    $definition = array_slice($definition, 0, count($definition) - 4);
+    # get rid of key names
+    $new_definition = array_merge(array_values($definition), $new_row, array_values($last_row));
 
     $logging->info("USER_ACTION ".__METHOD__." (user=".$user->get_name().", field_type=$field_type)");
 
@@ -690,7 +692,7 @@ function check_definition ($definition, $response)
 
         # copy in field_visible_in_overview
         $new_field_name = ListTable::_get_db_field_name($field_name);
-        $field_visible_in_overview = "";
+        $field_visible_in_overview = COLUMN_SHOW;
         if ($new_field_name == DB_ID_FIELD_NAME)
         {
             $field_visible_in_overview = $field_options;
@@ -785,7 +787,6 @@ function get_field_definition_table ($definition)
 
     for ($row = 0; $row < (count($definition) / 4); $row += 1)
     {
-        $html_str .= "                            <tr>\n";
         $position_id = $row * 4;
         $position_type = ($row * 4) + 1;
         $position_name = ($row * 4) + 2;
@@ -793,12 +794,19 @@ function get_field_definition_table ($definition)
 
         $logging->debug("row ".$row." (id=".$definition[$position_id].", type=".$definition[$position_type].", name=".$definition[$position_name].", opt=".$definition[$position_options].")");
 
+        # do not display a row for the attachment field
+        if (($definition[$position_type] == FIELD_TYPE_DEFINITION_ATTACHMENTS) && ($definition[$position_name] == DB_ATTACHMENTS_NAME))
+            $html_str .= "                            <tr class=\"invisible_collapsed\">\n";
+        else
+            $html_str .= "                            <tr>\n";
+        
         # first an invisible column
         $html_str .= "                                <td class=\"invisible_collapsed\">".$input_html_id." readonly ";
         $html_str .= "name=\"row_".$row."_0\" value=\"".$definition[$position_id]."\"</td>\n";
 
         # the first column - type
-        if ($row == 0)
+        # create a different kind of select for the first row and for the attachment row
+        if (($row == 0) || (($definition[$position_type] == FIELD_TYPE_DEFINITION_ATTACHMENTS) && ($definition[$position_name] == DB_ATTACHMENTS_NAME)))
         {
             $html_str .= "                                <td id=\"row_".$row."_1\"><select class=\"inactive_input\" name=\"row_".$row."_1\">\n";
             $html_str .= "                                    <option value=\"".$definition[$position_type]."\" selected>".translate($definition[$position_type])."</option>\n";
@@ -868,7 +876,7 @@ function get_field_definition_table ($definition)
         $html_str .= "                                <td>".translate($definition[$position_type]."_EXPLANATION")."</td>\n";
 
         # the fifth column - up
-        if ($row > 1)
+        if ($row > 1 && $row < ((count($definition) / 4) - 1))
         {
             $html_str .= "                                <td width=\"1%\">";
             $html_str .= get_href(get_onclick(ACTION_MOVE_LISTBUILDER_ROW, HTML_NO_LIST_PERMISSION_CHECK, "", "", "($row, %27up%27, xajax.getFormValues(%27database_definition_form%27))"), "&nbsp;", "icon_up");
@@ -882,7 +890,7 @@ function get_field_definition_table ($definition)
         }
 
         # the sixth column - down
-        if ($row > 0 && $row < ((count($definition) / 4) - 1))
+        if ($row > 0 && $row < ((count($definition) / 4) - 2))
         {
             $html_str .= "                                <td width=\"1%\">";
             $html_str .= get_href(get_onclick(ACTION_MOVE_LISTBUILDER_ROW, HTML_NO_LIST_PERMISSION_CHECK, "", "", "($row, %27down%27, xajax.getFormValues(%27database_definition_form%27))"), "&nbsp;", "icon_down");
@@ -896,7 +904,7 @@ function get_field_definition_table ($definition)
         }
 
         # the seventh column - delete
-        if ($row > 0)
+        if ($row > 0 && $row < ((count($definition) / 4) - 1))
         {
             $html_str .= "                                <td width=\"1%\">";
             $html_str .= get_href(get_onclick(ACTION_DELETE_LISTBUILDER_ROW, HTML_NO_LIST_PERMISSION_CHECK, "", "", "($row, xajax.getFormValues(%27database_definition_form%27))"), translate("BUTTON_DELETE"), "icon_delete");

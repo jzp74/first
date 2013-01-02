@@ -57,6 +57,8 @@ $text_translations["LABEL_DEFINITION_TEXT_LINE"] = "regel met tekst&nbsp;&nbsp;"
 $text_translations["LABEL_DEFINITION_TEXT_FIELD"] = "veld met meerdere regels tekst&nbsp;&nbsp;";
 $text_translations["LABEL_DEFINITION_NOTES_FIELD"] = "opmerkingen&nbsp;&nbsp;";
 $text_translations["LABEL_DEFINITION_SELECTION"] = "selectie veld&nbsp;&nbsp;";
+$text_translations["LABEL_DEFINITION_ATTACHMENTS"] = "bijlagen&nbsp;&nbsp;";
+$text_translations["LABEL_DEFINITION_ATTACHMENTFILE"] = "bijlage&nbsp;&nbsp;";
 
 /**
  * user administration labels

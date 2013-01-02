@@ -162,6 +162,14 @@ a, a:link, a:visited {
     background-position: 0px -1410px;
     }
 
+.icon_attachment {
+    background-position: 0px -1620px;
+    }
+
+.icon_attachment:hover {
+    background-position: 0px -1680px;
+    }
+
 /*  defines standard tags */
 em, strong {
     font-size: inherit;

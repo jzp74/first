@@ -161,7 +161,7 @@ function action_add_note ($db_field_name, $current_note_number, $next_note_numbe
 }
 
 /**
- * hide the current note and show an active or new note (by changing classnames in DOM)
+ * delete the current note
  * this function is registered in xajax
  * @param string $db_field_name name of the field that contains the notes
  * @param int $current_note_number note number of current note
@@ -247,6 +247,7 @@ function get_list_record_notes ($db_field_name, $notes_array)
     $logging->trace("getting list_record_notes (db_field_name=".$db_field_name.", count_notes=".count($notes_array).")");
 
     $num_of_notes = count($notes_array);
+    $last_note = 0;
     for ($note=0; $note<$num_of_notes; $note++)
     {
         $is_last = 0;
@@ -255,10 +256,11 @@ function get_list_record_notes ($db_field_name, $notes_array)
             $is_last = 1;
         # get html for this note
         $html_str .= get_list_record_note($db_field_name, $note, $is_last, $notes_array[$note][DB_ID_FIELD_NAME], $notes_array[$note]);
+        $last_note = $note;
     }
 
     # add an empty note
-    $html_str .= get_list_record_note($db_field_name, $note, 1, 0, $notes_array[$note]);
+    $html_str .= get_list_record_note($db_field_name, $note, 1, 0, array());
 
     $logging->trace("got list_record_notes");
 
@@ -332,7 +334,7 @@ function get_list_record_note ($db_field_name, $count, $is_last, $id, $note_arra
     $html_str .= "                                            <div class=\"note_box_header\">";
     if ($id != 0)
     {
-        $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_WEEKDAY, $note_array[DB_TS_CREATED_FIELD_NAME], $user->get_date_format()));
+        $html_str .= str_replace('-', '&#8209;', get_date_str(DATE_FORMAT_NORMAL, $note_array[DB_TS_CREATED_FIELD_NAME], $user->get_date_format()));
         $html_str .= "&nbsp;(".$note_array[DB_CREATOR_FIELD_NAME].")";
     }
     else
